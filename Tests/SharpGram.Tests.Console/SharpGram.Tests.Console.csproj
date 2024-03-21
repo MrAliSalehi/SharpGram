@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>SharpGram.Tests.BindingGen</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Src\SharpGram.Client\SharpGram.Client.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="NetCoreServer" Version="8.0.7"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+       
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="devSecrets.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
+</Project>
