@@ -19,7 +19,7 @@ using SharpGram.Tl.Types;
 var secrets = ((dynamic)JObject.Parse(await File.ReadAllTextAsync("devSecrets.json")));
 var cts = new CancellationTokenSource();
 var session = await Session.LoadOrCreateAsync();
-using var auth = (await Authentication.NewAsync(6)).AsT0;
+using var auth = (await Authentication.NewAsync(7)).AsT0;
 
 var result = await auth.AuthorizeAsync();
 var authKey = AuthKey.FromBytes(result.AuthKey);
@@ -34,7 +34,7 @@ var request = getConfig.TlSerialize().ToList();
 
 var enc = new AuthConnection { Session = session };
 
-var requestManager = new NetworkManager<Intermediate>(enc, con);
+using var requestManager = new NetworkManager<Intermediate>(enc, con);
 await requestManager.RunAsync(cts.Token);
 
 
@@ -63,10 +63,6 @@ var config = await InvokeAsync(new InvokeWithLayer<HelpGetConfig, ConfigBase>
 var config2 = await InvokeWithLayer<HelpGetConfig, ConfigBase>(new HelpGetConfig());
 
 Console.WriteLine($"success : {_config.IsT0 && config2.IsT0}");
-while (true)
-{
-    await Task.Delay(10000);
-}
 
 Console.ReadKey();
 await cts.CancelAsync();

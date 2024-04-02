@@ -13,9 +13,10 @@ using ResultChannel = System.Threading.Channels.Channel<OneOf.OneOf<byte[], Shar
 
 namespace SharpGram.Core.Network;
 
-public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthConnection, T> tcpConnection)
+public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthConnection, T> tcpConnection) : IDisposable
     where T : ITransport, new()
 {
+    // ReSharper disable once StaticMemberInGenericType
     private static readonly BoundedChannelOptions ChannelOptions = new(1)
     {
         FullMode = BoundedChannelFullMode.Wait,
@@ -27,11 +28,12 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
     private BlockingCollection<Request> RequestQueue { get; set; } = [];
     private readonly ConcurrentDictionary<MsgId, ResultChannel> _resultChannels = [];
     private readonly SemaphoreSlim _pushLock = new(1);
+    private readonly Task[] _handles = new Task[3];
     public async Task RunAsync(CancellationToken ct)
     {
-        _ = Task.Run(async () => await RunListenerAsync(ct), ct);
-        _ = Task.Run(async () => await RunSenderAsync(ct), ct);
-        _ = Task.Run(async () => await AckHandlerAsync(ct), ct);
+        _handles[0] = Task.Run(async () => await RunListenerAsync(ct), ct);
+        _handles[1] = Task.Run(async () => await RunSenderAsync(ct), ct);
+        _handles[2] = Task.Run(async () => await AckHandlerAsync(ct), ct);
         await SaltHandlerAsync(ct);
         await PingHandlerAsync(ct);
     }
@@ -167,6 +169,15 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
             Tcp.Connection.Session.FutureSalts.Clear();
             Tcp.Connection.Session.FutureSalts.AddRange(futureSalts.Salts);
         });
+    }
+    public void Dispose()
+    {
+        _pushLock.Dispose();
+        tcpConnection.Dispose();
+        Tcp.Dispose();
+        RequestQueue.Dispose();
+        foreach (var handle in _handles) handle.Dispose();
+        Console.WriteLine("NetworkManager Disposed");
     }
 }
 
