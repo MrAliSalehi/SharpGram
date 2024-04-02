@@ -120,7 +120,7 @@ public class AuthConnection : IConnection
         Session.PendingAcknowledges.Add(msg.MsgId);
 
         var ctor = msg.Body.AsSpan(0, 4);
-        //TODO rpc err
+
         if (ctor.SequenceEqual(RpcResult.Identifier))
         {
             var rpcResult = RpcResult.TlDeserialize(Deserializer.New(msg.Body));
@@ -191,7 +191,8 @@ public class AuthConnection : IConnection
         }
         else if (ctor.SequenceEqual(GzipPacked.Identifier))
         {
-            msg.Body = GzipPacked.Decompress(Deserializer.New(msg.Body));
+            var body = GzipPacked.Decompress(Deserializer.New(msg.Body));
+            CheckContent(new Message { Body = body, Len = msg.Len, MsgId = msg.MsgId, Seqno = msg.Seqno });
         }
         else if (ctor.SequenceEqual(Pong.Identifier))
         {
@@ -199,14 +200,9 @@ public class AuthConnection : IConnection
             RpcResultList.Add((pongMsgId, msg.Body));
         }
         else if (ctor.IsOneOf(UnsupportedTypes))
-        {
             throw new NotImplementedException($"ctor [{BitConverter.ToString(ctor.ToArray())}] is not implemented.");
-        }
         else
-        {
             CheckForUpdates(msg.Body);
-            //TODO check for updates
-        }
     }
     private void CheckForUpdates(byte[] data)
     {
