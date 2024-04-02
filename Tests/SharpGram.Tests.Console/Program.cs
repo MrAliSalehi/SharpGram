@@ -16,10 +16,10 @@ using SharpGram.Tl.Functions.Help;
 using SharpGram.Tl.Mtproto;
 using SharpGram.Tl.Types;
 
-var secrets = ((dynamic)JObject.Parse(await File.ReadAllTextAsync("devSecrets.json")));
+var secrets = (dynamic)JObject.Parse(await File.ReadAllTextAsync("devSecrets.json"));
 var cts = new CancellationTokenSource();
 var session = await Session.LoadOrCreateAsync();
-using var auth = (await Authentication.NewAsync(7)).AsT0;
+using var auth = (await Authentication.NewAsync(6)).AsT0;
 
 var result = await auth.AuthorizeAsync();
 var authKey = AuthKey.FromBytes(result.AuthKey);
@@ -37,6 +37,11 @@ var enc = new AuthConnection { Session = session };
 using var requestManager = new NetworkManager<Intermediate>(enc, con);
 await requestManager.RunAsync(cts.Token);
 
+requestManager.UpdateEvent += async (sender, ofs) =>
+{
+    await Task.Delay(TimeSpan.FromSeconds(10));
+    Console.WriteLine("process finished");
+};
 
 var _config = await InvokeAsync(new InvokeWithLayer<InitConnection<HelpGetConfig, ConfigBase>, ConfigBase>
 {

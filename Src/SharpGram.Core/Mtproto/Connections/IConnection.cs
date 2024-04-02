@@ -12,7 +12,6 @@ namespace SharpGram.Core.Mtproto.Connections;
 public interface IConnection
 {
     OneOf<MsgId, ConnectionError> Wrap(byte[] request, bool isContent);
-
     List<byte> Pop();
     void ClearBuffer();
     OneOf<RawRpcResponse, ErrorBase> Deserialize(byte[] payload);

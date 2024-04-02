@@ -9,6 +9,7 @@ using SharpGram.Core.Models.Errors;
 using SharpGram.Core.Mtproto.Connections;
 using SharpGram.Core.Mtproto.Transport;
 using SharpGram.Tl.Mtproto;
+using SharpGram.Tl.Types;
 using ResultChannel = System.Threading.Channels.Channel<OneOf.OneOf<byte[], SharpGram.Core.Models.Errors.ErrorBase>>;
 
 namespace SharpGram.Core.Network;
@@ -29,6 +30,7 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
     private readonly ConcurrentDictionary<MsgId, ResultChannel> _resultChannels = [];
     private readonly SemaphoreSlim _pushLock = new(1);
     private readonly Task[] _handles = new Task[3];
+    public event EventHandler<List<OneOf<UpdatesBase, UpdateGap>>>? UpdateEvent;
     public async Task RunAsync(CancellationToken ct)
     {
         _handles[0] = Task.Run(async () => await RunListenerAsync(ct), ct);
@@ -45,24 +47,6 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
         RequestQueue.Add(new Request(request, rp, isContent), ct);
         _pushLock.Release();
         return rp.Reader;
-    }
-    private async Task PingHandlerAsync(CancellationToken ct)
-    {
-        //TODO dynamic ping delay
-        await AsyncObservable.Timer(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(20)).SubscribeAsync(async _ =>
-        {
-            if (!IsAuthorized()) return;
-
-            var request = new Ping { PingId = Tcp.Connection.Session.PingId }.TlSerialize();
-            Console.WriteLine($"sending ping: {Tcp.Connection.Session.PingId}.");
-            var reader = Push(request);
-            await reader.WaitToReadAsync(ct);
-            if ((await reader.ReadAsync(ct)).TryPickT1(out var e, out var result)) throw e;
-            var pong = Pong.TlDeserialize(result);
-            Console.WriteLine($"[{pong.MsgId}] received pong: {pong.PingId}");
-            ArgumentOutOfRangeException.ThrowIfNotEqual(pong.PingId, Tcp.Connection.Session.PingId);
-            Tcp.Connection.Session.PingId++;
-        });
     }
     private async Task RunListenerAsync(CancellationToken ct)
     {
@@ -94,6 +78,11 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
                 }
             }
 
+            if (!Tcp.Connection.Session.IgnoreUpdates && deserialization.Updates.Count != 0)
+            {
+                UpdateEvent?.Invoke(null, deserialization.Updates);
+            }
+
             //TODO is this really useful ?
             //return ack response
             /*foreach (var id in Tcp.Connection.ReceivedAckList)
@@ -107,7 +96,6 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
             }*/
         }
     }
-
     private async Task RunSenderAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
@@ -127,7 +115,6 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
             }
         }
     }
-
     private async Task AckHandlerAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
@@ -144,7 +131,6 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
             Console.WriteLine($"Pushed Ack List: {acks}");
         }
     }
-
     private async Task SaltHandlerAsync(CancellationToken ct)
     {
 #if DEBUG
@@ -168,6 +154,24 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
             Console.WriteLine($"[{futureSalts.ReqMsgId}] fetched some new Salts ({futureSalts.Now}): {futureSalts}");
             Tcp.Connection.Session.FutureSalts.Clear();
             Tcp.Connection.Session.FutureSalts.AddRange(futureSalts.Salts);
+        });
+    }
+    private async Task PingHandlerAsync(CancellationToken ct)
+    {
+        //TODO dynamic ping delay
+        await AsyncObservable.Timer(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(20)).SubscribeAsync(async _ =>
+        {
+            if (!IsAuthorized()) return;
+
+            var request = new Ping { PingId = Tcp.Connection.Session.PingId }.TlSerialize();
+            Console.WriteLine($"sending ping: {Tcp.Connection.Session.PingId}.");
+            var reader = Push(request);
+            await reader.WaitToReadAsync(ct);
+            if ((await reader.ReadAsync(ct)).TryPickT1(out var e, out var result)) throw e;
+            var pong = Pong.TlDeserialize(result);
+            Console.WriteLine($"[{pong.MsgId}] received pong: {pong.PingId}");
+            ArgumentOutOfRangeException.ThrowIfNotEqual(pong.PingId, Tcp.Connection.Session.PingId);
+            Tcp.Connection.Session.PingId++;
         });
     }
     public void Dispose()

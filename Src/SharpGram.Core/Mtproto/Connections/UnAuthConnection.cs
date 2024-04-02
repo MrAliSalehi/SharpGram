@@ -52,7 +52,8 @@ public class UnAuthConnection : IConnection
         _reader.Reset();
         return new RawRpcResponse
         {
-            RpcResult = [(new MsgId(0), payload[20..(20 + len)])]
+            RpcResult = [(new MsgId(0), payload[20..(20 + len)])],
+            Updates = []
         };
     }
 }

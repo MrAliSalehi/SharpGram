@@ -7,6 +7,7 @@ using SharpGram.Core.Cryptography;
 using SharpGram.Core.Models;
 using SharpGram.Core.Models.Errors;
 using SharpGram.Tl.Mtproto;
+using SharpGram.Tl.Types;
 using RpcError = SharpGram.Tl.Mtproto.RpcError;
 
 namespace SharpGram.Core.Mtproto.Connections;
@@ -16,7 +17,10 @@ public class AuthConnection : IConnection
     private static readonly byte[][] UnsupportedTypes = [MsgCopy.Identifier, DestroySession.Identifier, DestroySessionOk.Identifier, DestroySessionNone.Identifier, HttpWait.Identifier, RpcAnswerUnknown.Identifier, RpcAnswerDropped.Identifier, RpcAnswerDroppedRunning.Identifier, MsgsStateInfo.Identifier, MsgsStateReq.Identifier, MsgsAllInfo.Identifier, MsgDetailedInfo.Identifier, MsgNewDetailedInfo.Identifier, MsgResendReq.Identifier];
     private List<byte> Buffer { get; set; } = [];
     private List<(MsgId id, OneOf<byte[], ErrorBase> result)> RpcResultList { get; } = [];
+    private List<OneOf<UpdatesBase, UpdateGap>> Updates { get; set; } = [];
+
     public Session Session { get; init; } = default!;
+
     //internal readonly List<long> ReceivedAckList = [];
 
     public OneOf<MsgId, ConnectionError> Wrap(byte[] request, bool isContent = true)
@@ -76,7 +80,15 @@ public class AuthConnection : IConnection
         ArgumentOutOfRangeException.ThrowIfLessThan(responseDecrypted.Length, msg.Len);
 
         CheckContent(msg);
-        return new RawRpcResponse { RpcResult = [..RpcResultList, (msg.MsgId, msg.Body)], };
+        Console.WriteLine($"rpcList len: {RpcResultList.Count}");
+        var r = new RawRpcResponse
+        {
+            RpcResult = [..RpcResultList, (msg.MsgId, msg.Body)],
+            Updates = Updates
+        };
+        Updates.Clear();
+        RpcResultList.Clear();
+        return r;
     }
 
     private void FixTimeOffset(long msgId)
@@ -117,14 +129,18 @@ public class AuthConnection : IConnection
             if (innerCtor.SequenceEqual(GzipPacked.Identifier))
             {
                 var d = GzipPacked.Decompress(Deserializer.New(rpcResult.Result));
+                CheckForUpdates(d);
                 RpcResultList.Add((rpcResult.ReqMsgId, d));
             }
             else if (innerCtor.SequenceEqual(RpcError.Identifier))
                 RpcResultList.Add((rpcResult.ReqMsgId, Models.Errors.RpcError.FromBytes(rpcResult.Result)));
             else if (innerCtor.IsOneOf(UnsupportedTypes))
                 throw new NotImplementedException($"ctor [{BitConverter.ToString(ctor.ToArray())}] is not implemented.");
-            else //TODO check for updates
+            else
+            {
+                CheckForUpdates(rpcResult.Result);
                 RpcResultList.Add((rpcResult.ReqMsgId, rpcResult.Result));
+            }
         }
         else if (ctor.SequenceEqual(FutureSalts.Identifier))
         {
@@ -188,7 +204,22 @@ public class AuthConnection : IConnection
         }
         else
         {
+            CheckForUpdates(msg.Body);
             //TODO check for updates
+        }
+    }
+    private void CheckForUpdates(byte[] data)
+    {
+        if (Session.IgnoreUpdates) return;
+
+        try
+        {
+            var updatesBase = UpdatesBase.TlDeserialize(Deserializer.New(data));
+            Updates.Add(updatesBase);
+        }
+        catch (DeserializationException)
+        {
+            Updates.Add(new UpdateGap(data, UpdateState.Gap));
         }
     }
 }

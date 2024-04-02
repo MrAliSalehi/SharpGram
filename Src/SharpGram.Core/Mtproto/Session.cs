@@ -27,6 +27,8 @@ public sealed class Session
     public ConcurrentBag<long> PendingAcknowledges = [];
     public uint MsgCount { get; set; }
     public long PingId { get; set; }
+    public bool IgnoreUpdates { get; set; } = false;
+
     public Task SaveAsync()
     {
         var data = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(this, DefOption)));
