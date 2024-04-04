@@ -14,7 +14,7 @@ using SharpGram.Core.Network;
 using SharpGram.Tl.Mtproto;
 using Int128 = SharpGram.Core.Models.Types.Int128;
 
-namespace SharpGram.Core.Auth;
+namespace EasyTg.Client;
 
 public sealed record AuthResult([ReadOnly(true)] byte[] AuthKey, [ReadOnly(true)] int Offset, [ReadOnly(true)] long Salt);
 

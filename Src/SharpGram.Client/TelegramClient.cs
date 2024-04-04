@@ -1,5 +1,4 @@
 using OneOf;
-using SharpGram.Core.Auth;
 using SharpGram.Core.Contracts;
 using SharpGram.Core.Conversions;
 using SharpGram.Core.Cryptography;
