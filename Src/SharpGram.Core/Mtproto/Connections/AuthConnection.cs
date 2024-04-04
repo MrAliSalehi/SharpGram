@@ -19,7 +19,7 @@ public class AuthConnection : IConnection
     private List<(MsgId id, OneOf<byte[], ErrorBase> result)> RpcResultList { get; } = [];
     private List<OneOf<UpdatesBase, UpdateGap>> Updates { get; set; } = [];
 
-    public Session Session { get; init; } = default!;
+    public ConnectionSession ConnectionSession { get; init; } = default!;
 
     //internal readonly List<long> ReceivedAckList = [];
 
@@ -32,8 +32,8 @@ public class AuthConnection : IConnection
         var padding = 12 + (unPad != 0 ? 16 - unPad : 0);
 
         var bytes = new List<byte>();
-        bytes.AddRange(Session.FutureSalts.First().Salt.TlSerialize()); //todo take a newer salt
-        bytes.AddRange(Session.SessionId.TlSerialize());
+        bytes.AddRange(ConnectionSession.FutureSalts.First().Salt.TlSerialize()); //todo take a newer salt
+        bytes.AddRange(ConnectionSession.SessionId.TlSerialize());
         bytes.AddRange(msgId.TlSerialize());
         bytes.AddRange(seq.TlSerialize());
         bytes.AddRange(request.Length.TlSerialize());
@@ -41,13 +41,13 @@ public class AuthConnection : IConnection
         bytes.AddRange(Helpers.GenRandomBytes(padding));
 
         var plainData = bytes.ToArray();
-        var msgK = SHA256.HashData(Session.AuthKey.AuthKeyData[88..120].Concat(plainData).ToArray())[8..24];
-        var encryptedData = Ige.From(Session.AuthKey, msgK, false).Encrypt(plainData);
+        var msgK = SHA256.HashData(ConnectionSession.AuthKey.AuthKeyData[88..120].Concat(plainData).ToArray())[8..24];
+        var encryptedData = Ige.From(ConnectionSession.AuthKey, msgK, false).Encrypt(plainData);
         ArgumentOutOfRangeException.ThrowIfNotEqual(encryptedData.Length % 16, 0);
-        Buffer.AddRange(Session.AuthKey.KeyId);
+        Buffer.AddRange(ConnectionSession.AuthKey.KeyId);
         Buffer.AddRange(msgK);
         Buffer.AddRange(encryptedData);
-        Session.MsgCount++;
+        ConnectionSession.MsgCount++;
         return new MsgId(msgId);
     }
     public List<byte> Pop()
@@ -60,13 +60,13 @@ public class AuthConnection : IConnection
     public OneOf<RawRpcResponse, ErrorBase> Deserialize(byte[] payload)
     {
         var responseAuthKeyId = payload[..8];
-        ArgumentOutOfRangeException.ThrowIfNotEqual(responseAuthKeyId.SequenceEqual(Session.AuthKey.KeyId), true);
+        ArgumentOutOfRangeException.ThrowIfNotEqual(responseAuthKeyId.SequenceEqual(ConnectionSession.AuthKey.KeyId), true);
 
         var responseMsgKey = payload[8..(8 + 16)];
 
-        var responseDecrypted = Ige.From(Session.AuthKey, responseMsgKey, true).Decrypt(payload[24..]).ToArray();
+        var responseDecrypted = Ige.From(ConnectionSession.AuthKey, responseMsgKey, true).Decrypt(payload[24..]).ToArray();
 
-        var ourKey = SHA256.HashData(Session.AuthKey.AuthKeyData[(88 + 8)..(88 + 8 + 32)].Concat(responseDecrypted).ToArray())[8..(8 + 16)];
+        var ourKey = SHA256.HashData(ConnectionSession.AuthKey.AuthKeyData[(88 + 8)..(88 + 8 + 32)].Concat(responseDecrypted).ToArray())[8..(8 + 16)];
 
         ArgumentOutOfRangeException.ThrowIfNotEqual(responseMsgKey.SequenceEqual(ourKey), true);
 
@@ -74,7 +74,7 @@ public class AuthConnection : IConnection
 
         _ = reader.As<long>().Read(); //ignore salt
         var responseSessionId = reader.As<long>().Read();
-        ArgumentOutOfRangeException.ThrowIfNotEqual(responseSessionId, Session.SessionId);
+        ArgumentOutOfRangeException.ThrowIfNotEqual(responseSessionId, ConnectionSession.SessionId);
         var msg = Message.TlDeserialize(reader);
 
         ArgumentOutOfRangeException.ThrowIfLessThan(responseDecrypted.Length, msg.Len);
@@ -94,7 +94,7 @@ public class AuthConnection : IConnection
     private void FixTimeOffset(long msgId)
     {
         var now = DateTime.Now - StaticData.EpochTime;
-        Session.TimeOffsetSeconds = (int)(msgId >> 32) - (int)now.TotalSeconds;
+        ConnectionSession.TimeOffsetSeconds = (int)(msgId >> 32) - (int)now.TotalSeconds;
     }
     private long GetNewMsgId()
     {
@@ -102,22 +102,22 @@ public class AuthConnection : IConnection
         var nanoseconds = (int)((now - Math.Floor((double)now)) * 1e9);
         var newMsgId = (now << 32) | (uint)(nanoseconds << 2);
 
-        if (Session.LastMsgId >= newMsgId)
-            newMsgId = Session.LastMsgId + 4;
+        if (ConnectionSession.LastMsgId >= newMsgId)
+            newMsgId = ConnectionSession.LastMsgId + 4;
 
-        Session.LastMsgId = newMsgId;
+        ConnectionSession.LastMsgId = newMsgId;
 
         return newMsgId;
     }
     private int GetSequenceNumber(bool content)
     {
-        if (!content) return Session.Sequence;
-        Session.Sequence += 2;
-        return Session.Sequence - 1;
+        if (!content) return ConnectionSession.Sequence;
+        ConnectionSession.Sequence += 2;
+        return ConnectionSession.Sequence - 1;
     }
     private void CheckContent(Message msg)
     {
-        Session.PendingAcknowledges.Add(msg.MsgId);
+        ConnectionSession.PendingAcknowledges.Add(msg.MsgId);
 
         var ctor = msg.Body.AsSpan(0, 4);
 
@@ -159,7 +159,7 @@ public class AuthConnection : IConnection
                         break;
                     case 32 or 33:
                         //TODO restart the session
-                        Console.WriteLine($"[{badMsg.BadMsgId}]seqNO either too low or too high ({badMsg.ErrorCode}), seq: [{badMsg.BadMsgSeqno}], sent seq : {Session.Sequence}");
+                        Console.WriteLine($"[{badMsg.BadMsgId}]seqNO either too low or too high ({badMsg.ErrorCode}), seq: [{badMsg.BadMsgSeqno}], sent seq : {ConnectionSession.Sequence}");
                         RpcResultList.Add((badMsg.BadMsgId, TransportError.New(TransportErrType.RetryRequest)));
                         break;
                     default:
@@ -186,8 +186,8 @@ public class AuthConnection : IConnection
         else if (ctor.SequenceEqual(NewSessionCreated.Identifier))
         {
             var newSession = NewSessionCreated.TlDeserialize(Deserializer.New(msg.Body));
-            Session.FutureSalts.Clear();
-            Session.FutureSalts.Add(FutureSalt.New(newSession.ServerSalt));
+            ConnectionSession.FutureSalts.Clear();
+            ConnectionSession.FutureSalts.Add(FutureSalt.New(newSession.ServerSalt));
         }
         else if (ctor.SequenceEqual(GzipPacked.Identifier))
         {
@@ -206,7 +206,7 @@ public class AuthConnection : IConnection
     }
     private void CheckForUpdates(byte[] data)
     {
-        if (Session.IgnoreUpdates) return;
+        if (ConnectionSession.IgnoreUpdates) return;
 
         try
         {

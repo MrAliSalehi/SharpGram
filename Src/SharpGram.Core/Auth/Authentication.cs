@@ -18,7 +18,7 @@ namespace SharpGram.Core.Auth;
 
 public sealed record AuthResult([ReadOnly(true)] byte[] AuthKey, [ReadOnly(true)] int Offset, [ReadOnly(true)] long Salt);
 
-public sealed class Authentication : IDisposable
+public sealed class Authentication
 {
     private readonly Int128 _nonce;
     private ResPq _resPq = null!;
@@ -184,6 +184,4 @@ public sealed class Authentication : IDisposable
 
         _authKey = authKey.AuthKeyData;
     }
-
-    public void Dispose() => _tcp.Dispose();
 }

@@ -39,7 +39,6 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
         await SaltHandlerAsync(ct);
         await PingHandlerAsync(ct);
     }
-    public bool IsAuthorized() => Tcp.Connection.Session.AuthKey.AuthKeyData.Length != 0;
     public ChannelReader<OneOf<byte[], ErrorBase>> Push(byte[] request, bool isContent = true, CancellationToken ct = default)
     {
         var rp = Channel.CreateBounded<OneOf<byte[], ErrorBase>>(ChannelOptions);
@@ -78,7 +77,7 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
                 }
             }
 
-            if (!Tcp.Connection.Session.IgnoreUpdates && deserialization.Updates.Count != 0)
+            if (!Tcp.Connection.ConnectionSession.IgnoreUpdates && deserialization.Updates.Count != 0)
             {
                 UpdateEvent?.Invoke(null, deserialization.Updates);
             }
@@ -119,14 +118,14 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
     {
         while (!ct.IsCancellationRequested)
         {
-            if (Tcp.Connection.Session.PendingAcknowledges.IsEmpty)
+            if (Tcp.Connection.ConnectionSession.PendingAcknowledges.IsEmpty)
             {
                 await Task.Delay(TimeSpan.FromMilliseconds(100), ct);
                 continue;
             }
 
-            var acks = new MsgsAck { MsgIds = Tcp.Connection.Session.PendingAcknowledges.ToList() };
-            Tcp.Connection.Session.PendingAcknowledges.Clear();
+            var acks = new MsgsAck { MsgIds = Tcp.Connection.ConnectionSession.PendingAcknowledges.ToList() };
+            Tcp.Connection.ConnectionSession.PendingAcknowledges.Clear();
             Push(acks.TlSerialize(), false, ct);
             Console.WriteLine($"Pushed Ack List: {acks}");
         }
@@ -141,7 +140,7 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
         //TODO dynamic salt delay maybe?
         await AsyncObservable.Timer(TimeSpan.FromSeconds(6), every).SubscribeAsync(async _ =>
         {
-            if (!IsAuthorized()) return;
+            if (!Tcp.Connection.ConnectionSession.IsAuthorized()) return;
             Console.WriteLine("asking for salts...");
             var getSalt = new GetFutureSalts { Num = 1 }.TlSerialize();
             var reader = Push(getSalt, true, ct);
@@ -152,8 +151,8 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
 
             var futureSalts = FutureSalts.TlDeserialize(Deserializer.New(result));
             Console.WriteLine($"[{futureSalts.ReqMsgId}] fetched some new Salts ({futureSalts.Now}): {futureSalts}");
-            Tcp.Connection.Session.FutureSalts.Clear();
-            Tcp.Connection.Session.FutureSalts.AddRange(futureSalts.Salts);
+            Tcp.Connection.ConnectionSession.FutureSalts.Clear();
+            Tcp.Connection.ConnectionSession.FutureSalts.AddRange(futureSalts.Salts);
         });
     }
     private async Task PingHandlerAsync(CancellationToken ct)
@@ -161,17 +160,17 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
         //TODO dynamic ping delay
         await AsyncObservable.Timer(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(20)).SubscribeAsync(async _ =>
         {
-            if (!IsAuthorized()) return;
+            if (!Tcp.Connection.ConnectionSession.IsAuthorized()) return;
 
-            var request = new Ping { PingId = Tcp.Connection.Session.PingId }.TlSerialize();
-            Console.WriteLine($"sending ping: {Tcp.Connection.Session.PingId}.");
+            var request = new Ping { PingId = Tcp.Connection.ConnectionSession.PingId }.TlSerialize();
+            Console.WriteLine($"sending ping: {Tcp.Connection.ConnectionSession.PingId}.");
             var reader = Push(request);
             await reader.WaitToReadAsync(ct);
             if ((await reader.ReadAsync(ct)).TryPickT1(out var e, out var result)) throw e;
             var pong = Pong.TlDeserialize(result);
             Console.WriteLine($"[{pong.MsgId}] received pong: {pong.PingId}");
-            ArgumentOutOfRangeException.ThrowIfNotEqual(pong.PingId, Tcp.Connection.Session.PingId);
-            Tcp.Connection.Session.PingId++;
+            ArgumentOutOfRangeException.ThrowIfNotEqual(pong.PingId, Tcp.Connection.ConnectionSession.PingId);
+            Tcp.Connection.ConnectionSession.PingId++;
         });
     }
     public void Dispose()

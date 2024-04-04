@@ -11,12 +11,10 @@ using SharpGram.Tl.Mtproto;
 
 namespace SharpGram.Core.Mtproto;
 
-//todo save in file is hard coded here
 //TODO this is not secure
-public sealed class Session
+public sealed class ConnectionSession
 {
-    private static readonly JsonTypeInfo<Session> DefOption = SessionSerializerContext.Default.Session;
-    private static readonly string SessionPath = Path.Combine(Environment.CurrentDirectory, "SgSession.txt");
+    private static readonly JsonTypeInfo<ConnectionSession> DefOption = SessionSerializerContext.Default.ConnectionSession;
 
     public AuthKey AuthKey { get; set; } = AuthKey.Empty;
     public long SessionId { get; init; } = BinaryPrimitives.ReadInt64LittleEndian(Helpers.GenRandomBytes(8));
@@ -28,25 +26,23 @@ public sealed class Session
     public uint MsgCount { get; set; }
     public long PingId { get; set; }
     public bool IgnoreUpdates { get; set; } = false;
-
-    public Task SaveAsync()
+    private ConnectionSession() { }
+    public byte[] Save() => Encoding.UTF8.GetBytes(Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(this, DefOption))));
+    public bool IsAuthorized() => AuthKey.AuthKeyData.Length != 0;
+    public static ConnectionSession LoadOrCreate(byte[]? data = null)
     {
-        var data = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(this, DefOption)));
-        return File.WriteAllTextAsync(SessionPath, data);
-    }
-    public static async Task<Session> LoadOrCreateAsync()
-    {
-        if (!File.Exists(SessionPath))
+        try
         {
-            var s = new Session();
-            await s.SaveAsync();
-            return s;
+            if (data is null) return new();
+            var bs = Convert.FromBase64String(Encoding.UTF8.GetString(data));
+            return Deserialize(bs) ?? new();
         }
-
-        var txt = await File.ReadAllTextAsync(SessionPath);
-        return Deserialize(Convert.FromBase64String(txt)) ?? new();
+        catch (Exception)
+        {
+            return new();
+        }
     }
-    private static Session? Deserialize(byte[] d)
+    private static ConnectionSession? Deserialize(byte[] d)
     {
         try
         {
@@ -60,5 +56,5 @@ public sealed class Session
 }
 
 [JsonSourceGenerationOptions(WriteIndented = true)]
-[JsonSerializable(typeof(Session))]
+[JsonSerializable(typeof(ConnectionSession))]
 internal partial class SessionSerializerContext : JsonSerializerContext;
