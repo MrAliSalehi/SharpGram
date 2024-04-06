@@ -9,11 +9,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="OneOf" Version="3.0.263" />
-      <PackageReference Include="System.IO.Hashing" Version="8.0.0" />
-      <PackageReference Include="System.IO.Pipelines" Version="9.0.0-preview.2.24128.5" />
-        <PackageReference Include="NetEscapades.EnumGenerators" Version="1.0.0-beta08" PrivateAssets="all" ExcludeAssets="runtime" />
-        <PackageReference Include="System.Reactive.Async" Version="6.0.0-alpha.18" />
+        <PackageReference Include="OneOf" Version="3.0.263"/>
+        <PackageReference Include="System.IO.Hashing" Version="8.0.0"/>
+        <PackageReference Include="NetEscapades.EnumGenerators" Version="1.0.0-beta08" PrivateAssets="all" ExcludeAssets="runtime"/>
+        <PackageReference Include="System.Reactive.Async" Version="6.0.0-alpha.18"/>
     </ItemGroup>
 
 </Project>

@@ -14,7 +14,7 @@ public class FatalException : Exception
             Message = eb switch
             {
                 TransportError te => te.TransportErr.ToStringFast(),
-                RpcError r        => r.Msg,
+                RpcError r        => r.Msg.ToStringFast(),
                 _                 => throw new NotSupportedException()
             };
     }

@@ -11,13 +11,13 @@ using SharpGram.Core.Mtproto.Transport;
 using SharpGram.Tl.Mtproto;
 using SharpGram.Tl.Types;
 using ResultChannel = System.Threading.Channels.Channel<OneOf.OneOf<byte[], SharpGram.Core.Models.Errors.ErrorBase>>;
+// ReSharper disable StaticMemberInGenericType
 
 namespace SharpGram.Core.Network;
-
 public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthConnection, T> tcpConnection) : IDisposable
     where T : ITransport, new()
 {
-    // ReSharper disable once StaticMemberInGenericType
+
     private static readonly BoundedChannelOptions ChannelOptions = new(1)
     {
         FullMode = BoundedChannelFullMode.Wait,

@@ -2,7 +2,6 @@ using System.Collections.Concurrent;
 using System.Numerics;
 using System.Security.Cryptography;
 using OneOf;
-using OneOf.Types;
 using SharpGram.Core.Models;
 using SharpGram.Core.Models.Errors;
 using Crc32 = System.IO.Hashing.Crc32;

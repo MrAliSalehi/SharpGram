@@ -68,13 +68,53 @@ public enum TransportErrType
 
 public sealed class RpcError : ErrorBase
 {
-    public string Msg { get; set; } = "";
-    public static RpcError FromBytes(byte[] result)
+    public RpcErrors Msg { get; private init; } = RpcErrors.None;
+    public static RpcError FromBytes(byte[] result) => new()
     {
-        //TODO match rpc errors to enum
-        return new()
-        {
-            Msg = Encoding.UTF8.GetString(result[8..])
-        };
-    }
+        Msg = Encoding.UTF8.GetString(result[8..]).ParseRpcErr()
+    };
+}
+
+//TODO add more errors
+[EnumExtensions]
+public enum RpcErrors
+{
+    PhoneCodeEmpty,
+    PhoneCodeExpired,
+    PhoneCodeHashEmpty,
+    SendCodeUnavailable,
+    ApiIdInvalid,
+    ApiIdPublishedFlood,
+    AuthRestart,
+    PhoneNumberAppSignupForbidden,
+    PhoneNumberBanned,
+    PhoneNumberFlood,
+    PhoneNumberInvalid,
+    PhonePasswordFlood,
+    PhonePasswordProtected,
+    SmsCodeCreateFailed,
+    None
+}
+
+internal static class EnumExt
+{
+    //maybe EnumGenerator can do this? IDK
+    public static RpcErrors ParseRpcErr(this string str) => str switch
+    {
+        "PHONE_CODE_EMPTY"                  => RpcErrors.PhoneCodeEmpty,
+        "PHONE_CODE_EXPIRED"                => RpcErrors.PhoneCodeExpired,
+        "PHONE_CODE_HASH_EMPTY"             => RpcErrors.PhoneCodeHashEmpty,
+        "SEND_CODE_UNAVAILABLE"             => RpcErrors.SendCodeUnavailable,
+        "API_ID_INVALID"                    => RpcErrors.ApiIdInvalid,
+        "API_ID_PUBLISHED_FLOOD"            => RpcErrors.ApiIdPublishedFlood,
+        "AUTH_RESTART"                      => RpcErrors.AuthRestart,
+        "PHONE_NUMBER_APP_SIGNUP_FORBIDDEN" => RpcErrors.PhoneNumberAppSignupForbidden,
+        "PHONE_NUMBER_BANNED"               => RpcErrors.PhoneNumberBanned,
+        "PHONE_NUMBER_FLOOD"                => RpcErrors.PhoneNumberFlood,
+        "PHONE_NUMBER_INVALID"              => RpcErrors.PhoneNumberInvalid,
+        "PHONE_PASSWORD_FLOOD"              => RpcErrors.PhonePasswordFlood,
+        "PHONE_PASSWORD_PROTECTED"          => RpcErrors.PhonePasswordProtected,
+        "SMS_CODE_CREATE_FAILED"            => RpcErrors.SmsCodeCreateFailed,
+        _                                   => RpcErrors.None
+    };
 }
