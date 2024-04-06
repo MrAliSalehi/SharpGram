@@ -63,6 +63,15 @@ public static class Serializer
             bytes.AddRange(item.TlSerialize());
         return bytes;
     }
+    public static IEnumerable<byte> TlSerialize<T>(this T[] list) where T : ITlSerializable
+    {
+        var bytes = new List<byte>();
+        bytes.AddRange(VectorByteId);
+        bytes.AddRange(list.Length.TlSerialize());
+        foreach (var item in list)
+            bytes.AddRange(item.TlSerialize());
+        return bytes;
+    }
     public static IEnumerable<byte> TlSerialize(this List<int> list)
     {
         var bytes = new List<byte>();

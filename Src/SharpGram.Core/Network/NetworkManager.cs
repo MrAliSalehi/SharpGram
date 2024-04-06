@@ -25,6 +25,8 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
         SingleReader = false,
     };
 
+    //TODO this is stupid as well, ig the whole "Event" thing needs to be changed...
+    private static readonly object Sender = "NetworkManager";
     private TcpConnection<AuthConnection, T> Tcp { get; } = tcpConnection.IntoAuthenticated(comm);
     private BlockingCollection<Request> RequestQueue { get; set; } = [];
     private readonly ConcurrentDictionary<MsgId, ResultChannel> _resultChannels = [];
@@ -33,6 +35,9 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
     public event EventHandler<List<OneOf<UpdatesBase, UpdateGap>>>? UpdateEvent;
     public async Task RunAsync(CancellationToken ct)
     {
+        if (!Tcp.IsConnected())
+            await Tcp.ConnectAsync(ct);
+
         _handles[0] = Task.Run(async () => await RunListenerAsync(ct), ct);
         _handles[1] = Task.Run(async () => await RunSenderAsync(ct), ct);
         _handles[2] = Task.Run(async () => await AckHandlerAsync(ct), ct);
@@ -79,20 +84,8 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
 
             if (!Tcp.Connection.ConnectionSession.IgnoreUpdates && deserialization.Updates.Count != 0)
             {
-                UpdateEvent?.Invoke(null, deserialization.Updates);
+                UpdateEvent?.Invoke(Sender, deserialization.Updates);
             }
-
-            //TODO is this really useful ?
-            //return ack response
-            /*foreach (var id in Tcp.Connection.ReceivedAckList)
-            {
-                if (_resultChannels.TryGetValue(id, out var channel))
-                {
-                    Console.WriteLine($"rpc query was ignored for msg : {id}");
-                    await channel.Writer.WriteAsync(TransportError.New(TransportErrType.AckWithoutResult), ct);
-                    //_resultChannels.Remove(id, out _);
-                }
-            }*/
         }
     }
     private async Task RunSenderAsync(CancellationToken ct)

@@ -25,6 +25,7 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
         TcpConnection<UnAuthConnection, Intermediate> con;
         if (Session.ConnectionSession.IsAuthorized())
         {
+            // we created the authKey through AuthKey Generation Process. we can now begin an authorized connection. https://core.telegram.org/mtproto/auth_key
             var tryConnect = TcpConnection<UnAuthConnection, Intermediate>.New<UnAuthConnection, Intermediate>(dcId);
             if (tryConnect.IsT1) return tryConnect.AsT1;
             con = tryConnect.AsT0;
@@ -46,7 +47,6 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
             Session.ConnectionSession.TimeOffsetSeconds = result.Offset;
         }
 
-        // we created the authKey through AuthKey Generation Process. we can now begin an authorized connection. https://core.telegram.org/mtproto/auth_key
         var authorizedConnection = new AuthConnection { ConnectionSession = Session.ConnectionSession };
 
         _requestManager = new NetworkManager<Intermediate>(authorizedConnection, con);
@@ -71,8 +71,7 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
         Session.Config = (Config)initConn.AsT0; //the only possibility
 
-
-        return true;
+        return true; //might be a "false" case in the future ?
     }
     public Task<OneOf<TRet, ErrorBase>> InvokeWithLayerAsync<TF, TRet>(TF func) where TRet : ITlDeserializable<TRet> where TF : TlFunction<TRet>
         => InvokeAsync(new InvokeWithLayer<TF, TRet>
@@ -93,7 +92,7 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
             if (err.Is(TransportErrType.RetryRequest))
             {
                 Console.WriteLine("retrying the request");
-                goto retry;
+                goto retry; //TODO perhaps there is no need of this
             }
 
             return err;

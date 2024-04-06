@@ -1,33 +1,60 @@
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using SharpGram.Core.Cryptography;
 using SharpGram.Core.Mtproto;
 using SharpGram.Tl.Constructors.ConfigNs;
+using SharpGram.Tl.Mtproto;
 
 namespace EasyTg.Client;
 
 public sealed class TelegramSession
 {
-    internal ConnectionSession ConnectionSession { get; set; }
-    public string ApiHash { get; init; }
-    public int ApiId { get; init; }
+    [JsonIgnore]
+    public ConnectionSession ConnectionSession { get; internal set; } = new();
+
+    public string ApiHash { get; init; } = "";
+    public int ApiId { get; set; }
     public Config Config { get; internal set; } = new();
     public ClientOptions ClientOptions { get; set; } = new();
 
-    private static readonly JsonTypeInfo<TelegramSession> DefOption = TelegramSessionSerializerContext.Default.TelegramSession;
-    private TelegramSession(string apiHash, int apiId, ConnectionSession cs)
+    private static readonly JsonTypeInfo<TelegramSession> DefOption = SessionSerializerContext.Default.TelegramSession;
+    [JsonInclude, JsonRequired] internal ConnectionSessionPoco ConnSessionPoco = default!;
+    public static TelegramSession LoadOrCreate(byte[] sessionData)
     {
-        ApiHash = apiHash;
-        ApiId = apiId;
-        ConnectionSession = cs;
+        try
+        {
+            if (sessionData.Length < 100) return new();
+            var result = JsonSerializer.Deserialize(sessionData, DefOption) ?? new();
+            result.ConnectionSession = result.ConnSessionPoco.Into();
+            return result;
+        }
+        catch
+        {
+            return new TelegramSession();
+        }
     }
-
-    public static TelegramSession? LoadUnsafe(byte[] sessionData) => JsonSerializer.Deserialize(sessionData, DefOption);
-
-
-    public static TelegramSession New(string apiHash, int apiId) => new(apiHash, apiId, ConnectionSession.LoadOrCreate());
+    //this should not fail in any way
+    public byte[] Save()
+    {
+        ConnSessionPoco = ConnectionSession.Into();
+        return Encoding.UTF8.GetBytes(JsonSerializer.Serialize(this, DefOption));
+    }
 }
 
 [JsonSourceGenerationOptions(WriteIndented = true)]
 [JsonSerializable(typeof(TelegramSession))]
-internal partial class TelegramSessionSerializerContext : JsonSerializerContext;
+internal partial class SessionSerializerContext : JsonSerializerContext;
+
+internal sealed record ConnectionSessionPoco(
+    long SessionId,
+    int TimeOffsetSeconds,
+    List<FutureSalt> FutureSalts,
+    int Sequence,
+    long LastMsgId,
+    List<long> PendingAcknowledges,
+    uint MsgCount,
+    long PingId,
+    bool IgnoreUpdates,
+    AuthKey AuthKey);
