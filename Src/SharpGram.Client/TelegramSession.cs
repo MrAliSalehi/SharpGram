@@ -12,10 +12,11 @@ namespace EasyTg.Client;
 public sealed class TelegramSession
 {
     [JsonIgnore]
-    public ConnectionSession ConnectionSession { get; internal set; } = new();
+    public ConnectionSession ConnectionSession { get; private set; } = new();
 
-    public string ApiHash { get; init; } = "";
+    public string ApiHash { get; set; } = "";
     public int ApiId { get; set; }
+    public string Phone { get; set; } = "-";
     public Config Config { get; internal set; } = new();
     public ClientOptions ClientOptions { get; set; } = new();
 

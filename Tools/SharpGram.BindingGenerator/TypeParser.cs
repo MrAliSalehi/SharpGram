@@ -47,7 +47,7 @@ public static class TypeParser
         b.AppendLine("];");
     }
     public static void GenerateTlSerializer(StringBuilder b, List<Param> parameters, int indent = 2, bool @new = true)
-    {//todo handle flags
+    {
         var space = new string(' ', 4 * indent);
         b.AppendLine($"{space}public{(@new ? " new" : "")} byte[] TlSerialize() {{");
 
@@ -56,8 +56,30 @@ public static class TypeParser
 
         foreach (var param in parameters)
         {
+            if (param.IsFlag)
+            {
+                var pm = parameters.Where(p => p is { IsFlag: false, IsNullable: true }).ToList();
+                if (pm.Count == 0)
+                {
+                    b.AppendLine($"{space}    bytes.AddRange(0.TlSerialize());");
+                }else
+                {
+                    b.Append($"{space}    bytes.AddRange((0 |");
+                    foreach (var (param2, i) in pm.Select((v, i) => (v, i)))
+                    {
+                        b.Append($" ({param2.Name}{(param2.IsNullable ? " is not null" : "")} ? {param2.FlagOffset} : 0) ");
+                        if (i +1 < pm.Count)
+                            b.Append('|');
+                    }
+                    b.AppendLine(").TlSerialize());");
+                }
+
+                continue;
+            }
+
+            if (param.Type is "bool") continue; // they are set through flags
             if (param.IsNullable)
-                b.AppendLine($"{space}    bytes.AddRange({param.Name} is null ? [0x0] : {param.Name}.TlSerialize());");
+                b.AppendLine($"{space}    if({param.Name} is not null) bytes.AddRange({param.Name}.TlSerialize());");
             else
                 b.AppendLine($"{space}    bytes.AddRange({param.Name}.TlSerialize());");
         }

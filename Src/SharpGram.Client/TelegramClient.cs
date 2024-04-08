@@ -6,7 +6,9 @@ using SharpGram.Core.Models.Errors;
 using SharpGram.Core.Mtproto.Connections;
 using SharpGram.Core.Mtproto.Transport;
 using SharpGram.Core.Network;
+using SharpGram.Tl.Constructors.CodeSettingsNs;
 using SharpGram.Tl.Constructors.ConfigNs;
+using SharpGram.Tl.Functions.Auth;
 using SharpGram.Tl.Functions.Help;
 using SharpGram.Tl.Mtproto;
 using SharpGram.Tl.Types;
@@ -73,6 +75,20 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
         return true; //might be a "false" case in the future ?
     }
+    public async Task AuthorizeAsync()
+    {
+        if (Session.ClientOptions.IsLocalServer)
+            Session.Phone = "9996621234"; //DC 2 with 4 random numbers (1234)
+        //TODO login
+
+        var send = await InvokeWithLayerAsync<AuthSendCode, AuthSentCodeBase>(new AuthSendCode
+        {
+            Settings = new CodeSettings(),
+            ApiHash = Session.ApiHash,
+            ApiId = Session.ApiId,
+            PhoneNumber = Session.Phone
+        });
+    }
     public Task<OneOf<TRet, ErrorBase>> InvokeWithLayerAsync<TF, TRet>(TF func) where TRet : ITlDeserializable<TRet> where TF : TlFunction<TRet>
         => InvokeAsync(new InvokeWithLayer<TF, TRet>
         {
@@ -92,6 +108,8 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
             if (err.Is(TransportErrType.RetryRequest))
             {
                 Console.WriteLine("retrying the request");
+                if (ct.IsCancellationRequested)
+                    return err;
                 goto retry; //TODO perhaps there is no need of this
             }
 

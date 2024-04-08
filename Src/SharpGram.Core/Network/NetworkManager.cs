@@ -40,9 +40,9 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
 
         _handles[0] = Task.Run(async () => await RunListenerAsync(ct), ct);
         _handles[1] = Task.Run(async () => await RunSenderAsync(ct), ct);
-        _handles[2] = Task.Run(async () => await AckHandlerAsync(ct), ct);
-        await SaltHandlerAsync(ct);
-        await PingHandlerAsync(ct);
+        //_handles[2] = Task.Run(async () => await AckHandlerAsync(ct), ct);
+        //await SaltHandlerAsync(ct);
+        //await PingHandlerAsync(ct);
     }
     public ChannelReader<OneOf<byte[], ErrorBase>> Push(byte[] request, bool isContent = true, CancellationToken ct = default)
     {
@@ -56,6 +56,7 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
     {
         while (!ct.IsCancellationRequested)
         {
+            Console.WriteLine("listening");
             var response = await Tcp.ReadFullAsync(ct);
             if (response.TryPickT1(out var err, out var deserialization)) //if failed
             {
@@ -87,6 +88,8 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
                 UpdateEvent?.Invoke(Sender, deserialization.Updates);
             }
         }
+
+        Console.WriteLine("disposing the listener");
     }
     private async Task RunSenderAsync(CancellationToken ct)
     {
