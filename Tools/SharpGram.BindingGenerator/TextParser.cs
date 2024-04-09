@@ -5,7 +5,6 @@ namespace SharpGram.BindingGenerator;
 
 public static class TextParser
 {
-    private static bool Cont(this string a, string b) => a.Contains(b, StringComparison.OrdinalIgnoreCase);
     private static string FixType(this string type)
     {
         if (string.IsNullOrEmpty(type)) return type;

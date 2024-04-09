@@ -7,11 +7,12 @@ var baseApiPath = Path.Combine(Directory.GetParent(Environment.CurrentDirectory)
 const string warnings = "// ReSharper disable IdentifierTypo PartialTypeWithSinglePart InconsistentNaming CheckNamespace MemberCanBePrivate.Global ClassNeverInstantiated.Global PropertyCanBeMadeInitOnly.Global UnusedAutoPropertyAccessor.Global CollectionNeverUpdated.Global";
 var schema = Schema.ApiSchema;
 
+if (!Directory.Exists(baseApiPath)) Directory.CreateDirectory(baseApiPath);
+
 TextParser.FixSchema(schema);
 //todo 2 flags at the same time, flags1 flags2
 
 var groups = TypeParser.Group(schema);
-
 
 
 Dictionary<string, List<Param>> commonParams = [];
@@ -127,16 +128,15 @@ async Task GenerateConstructors()
             {
                 Console.WriteLine();
             }
+
             var commonProps = commonParams[group.Key];
 
             strCtor.AppendLine($"    public class {type.Name} : {group.Key}Base, ITlSerializable, ITlDeserializable<{type.Name}> {{");
             TypeParser.GenerateId(strCtor, type.Id, false);
-            foreach (var param in type.Params.Where(p => !commonProps.Contains(p)).ToList()) //don't redefine inherited properties
+            foreach (var param in type.Params.Where(p => !p.IsFlag && !commonProps.Contains(p)).ToList()) //don't redefine inherited properties
             {
-                if (param.IsFlag)
-                    strCtor.AppendLine($"        private {param.Type} {param.Name};");
-                else
-                    strCtor.AppendLine($"        public{(param.IsNullable || param.Type == "bool" ? "": " required")} {param.Type} {param.Name} {{get;set;}}");
+                var cantBeNull = param.Type.IsBuiltinType() && param.Type is not ("string" or "byte[]");
+                strCtor.AppendLine($"        public{(param.IsNullable || cantBeNull ? "" : " required")} {param.Type} {param.Name} {{get;set;}}");
             }
 
             TypeParser.GenerateTlSerializer(strCtor, type.Params);
@@ -184,7 +184,7 @@ async Task GenerateConstructors()
             }
 
             strCtor.AppendLine("            return new() {");
-            foreach (var param in type.Params)
+            foreach (var param in type.Params.Where(p => !p.IsFlag))
                 strCtor.AppendLine($"            {param.Name} = {param.Name.Camelize()}Local,");
 
             strCtor.AppendLine("            };");

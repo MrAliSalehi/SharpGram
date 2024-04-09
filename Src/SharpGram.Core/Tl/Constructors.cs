@@ -32,7 +32,7 @@ namespace SharpGram.Tl.Constructors.InputPeerNs {
     }
     public class InputPeerChat : InputPeerBase, ITlSerializable, ITlDeserializable<InputPeerChat> {
         public static readonly byte[] Identifier = [185,92,169,53,];
-        public required long ChatId {get;set;}
+        public long ChatId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -50,8 +50,8 @@ namespace SharpGram.Tl.Constructors.InputPeerNs {
     }
     public class InputPeerUser : InputPeerBase, ITlSerializable, ITlDeserializable<InputPeerUser> {
         public static readonly byte[] Identifier = [76,165,232,221,];
-        public required long UserId {get;set;}
-        public required long AccessHash {get;set;}
+        public long UserId {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -72,8 +72,8 @@ namespace SharpGram.Tl.Constructors.InputPeerNs {
     }
     public class InputPeerChannel : InputPeerBase, ITlSerializable, ITlDeserializable<InputPeerChannel> {
         public static readonly byte[] Identifier = [252,187,188,39,];
-        public required long ChannelId {get;set;}
-        public required long AccessHash {get;set;}
+        public long ChannelId {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -95,8 +95,8 @@ namespace SharpGram.Tl.Constructors.InputPeerNs {
     public class InputPeerUserFromMessage : InputPeerBase, ITlSerializable, ITlDeserializable<InputPeerUserFromMessage> {
         public static readonly byte[] Identifier = [28,10,123,168,];
         public required InputPeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
-        public required long UserId {get;set;}
+        public int MsgId {get;set;}
+        public long UserId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -121,8 +121,8 @@ namespace SharpGram.Tl.Constructors.InputPeerNs {
     public class InputPeerChannelFromMessage : InputPeerBase, ITlSerializable, ITlDeserializable<InputPeerChannelFromMessage> {
         public static readonly byte[] Identifier = [64,8,42,189,];
         public required InputPeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
-        public required long ChannelId {get;set;}
+        public int MsgId {get;set;}
+        public long ChannelId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -178,8 +178,8 @@ namespace SharpGram.Tl.Constructors.InputUserNs {
     }
     public class InputUser : InputUserBase, ITlSerializable, ITlDeserializable<InputUser> {
         public static readonly byte[] Identifier = [198,88,17,242,];
-        public required long UserId {get;set;}
-        public required long AccessHash {get;set;}
+        public long UserId {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -201,8 +201,8 @@ namespace SharpGram.Tl.Constructors.InputUserNs {
     public class InputUserFromMessage : InputUserBase, ITlSerializable, ITlDeserializable<InputUserFromMessage> {
         public static readonly byte[] Identifier = [226,72,164,29,];
         public required InputPeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
-        public required long UserId {get;set;}
+        public int MsgId {get;set;}
+        public long UserId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -230,7 +230,7 @@ namespace SharpGram.Tl.Constructors.InputUserNs {
 namespace SharpGram.Tl.Constructors.InputContactNs {
     public class InputPhoneContact : InputContactBase, ITlSerializable, ITlDeserializable<InputPhoneContact> {
         public static readonly byte[] Identifier = [244,183,146,243,];
-        public required long ClientId {get;set;}
+        public long ClientId {get;set;}
         public required string Phone {get;set;}
         public required string FirstName {get;set;}
         public required string LastName {get;set;}
@@ -332,7 +332,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     }
     public class InputMediaUploadedPhoto : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaUploadedPhoto> {
         public static readonly byte[] Identifier = [4,125,40,30,];
-        private int Flags;
         public bool Spoiler {get;set;}
         public required InputFileBase File {get;set;}
         public List<InputDocumentBase>? Stickers {get;set;}
@@ -355,7 +354,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var stickersLocal = (flagsLocal & 1) is 0 ? default : des.Read<InputDocumentBase>() ;
             var ttlSecondsLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Spoiler = spoilerLocal,
             File = fileLocal,
             Stickers = stickersLocal,
@@ -365,7 +363,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     }
     public class InputMediaPhoto : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaPhoto> {
         public static readonly byte[] Identifier = [53,6,186,179,];
-        private int Flags;
         public bool Spoiler {get;set;}
         public required InputPhotoBase Id {get;set;}
         public int? TtlSeconds {get;set;}
@@ -385,7 +382,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var idLocal =  InputPhotoBase.TlDeserialize(des);
             var ttlSecondsLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Spoiler = spoilerLocal,
             Id = idLocal,
             TtlSeconds = ttlSecondsLocal,
@@ -442,7 +438,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     }
     public class InputMediaUploadedDocument : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaUploadedDocument> {
         public static readonly byte[] Identifier = [193,198,56,91,];
-        private int Flags;
         public bool NosoundVideo {get;set;}
         public bool ForceFile {get;set;}
         public bool Spoiler {get;set;}
@@ -478,7 +473,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var stickersLocal = (flagsLocal & 1) is 0 ? default : des.Read<InputDocumentBase>() ;
             var ttlSecondsLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             NosoundVideo = nosoundVideoLocal,
             ForceFile = forceFileLocal,
             Spoiler = spoilerLocal,
@@ -493,7 +487,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     }
     public class InputMediaDocument : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaDocument> {
         public static readonly byte[] Identifier = [88,48,71,51,];
-        private int Flags;
         public bool Spoiler {get;set;}
         public required InputDocumentBase Id {get;set;}
         public int? TtlSeconds {get;set;}
@@ -516,7 +509,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var ttlSecondsLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             var queryLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Spoiler = spoilerLocal,
             Id = idLocal,
             TtlSeconds = ttlSecondsLocal,
@@ -564,7 +556,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     }
     public class InputMediaPhotoExternal : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaPhotoExternal> {
         public static readonly byte[] Identifier = [26,254,187,229,];
-        private int Flags;
         public bool Spoiler {get;set;}
         public required string Url {get;set;}
         public int? TtlSeconds {get;set;}
@@ -584,7 +575,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var urlLocal =  des.As<string>().Read();
             var ttlSecondsLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Spoiler = spoilerLocal,
             Url = urlLocal,
             TtlSeconds = ttlSecondsLocal,
@@ -593,7 +583,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     }
     public class InputMediaDocumentExternal : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaDocumentExternal> {
         public static readonly byte[] Identifier = [153,220,82,251,];
-        private int Flags;
         public bool Spoiler {get;set;}
         public required string Url {get;set;}
         public int? TtlSeconds {get;set;}
@@ -613,7 +602,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var urlLocal =  des.As<string>().Read();
             var ttlSecondsLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Spoiler = spoilerLocal,
             Url = urlLocal,
             TtlSeconds = ttlSecondsLocal,
@@ -640,7 +628,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     }
     public class InputMediaInvoice : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaInvoice> {
         public static readonly byte[] Identifier = [213,166,181,142,];
-        private int Flags;
         public required string Title {get;set;}
         public required string Description {get;set;}
         public InputWebDocumentBase? Photo {get;set;}
@@ -679,7 +666,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var startParamLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var extendedMediaLocal = (flagsLocal & 4) is 0 ? default : InputMediaBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Title = titleLocal,
             Description = descriptionLocal,
             Photo = photoLocal,
@@ -694,7 +680,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     }
     public class InputMediaGeoLive : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaGeoLive> {
         public static readonly byte[] Identifier = [67,168,31,151,];
-        private int Flags;
         public bool Stopped {get;set;}
         public required InputGeoPointBase GeoPoint {get;set;}
         public int? Heading {get;set;}
@@ -720,7 +705,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var periodLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             var proximityNotificationRadiusLocal = (flagsLocal & 8) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Stopped = stoppedLocal,
             GeoPoint = geoPointLocal,
             Heading = headingLocal,
@@ -731,7 +715,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     }
     public class InputMediaPoll : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaPoll> {
         public static readonly byte[] Identifier = [241,229,148,15,];
-        private int Flags;
         public required PollBase Poll {get;set;}
         public List<byte[]>? CorrectAnswers {get;set;}
         public string? Solution {get;set;}
@@ -755,7 +738,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var solutionLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var solutionEntitiesLocal = (flagsLocal & 2) is 0 ? default : des.Read<MessageEntityBase>() ;
             return new() {
-            Flags = flagsLocal,
             Poll = pollLocal,
             CorrectAnswers = correctAnswersLocal,
             Solution = solutionLocal,
@@ -784,7 +766,7 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     public class InputMediaStory : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaStory> {
         public static readonly byte[] Identifier = [120,215,253,137,];
         public required InputPeerBase Peer {get;set;}
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -805,7 +787,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
     }
     public class InputMediaWebPage : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaWebPage> {
         public static readonly byte[] Identifier = [73,136,27,194,];
-        private int Flags;
         public bool ForceLargeMedia {get;set;}
         public bool ForceSmallMedia {get;set;}
         public bool Optional {get;set;}
@@ -826,7 +807,6 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var optionalLocal = (flagsLocal & 4) is 0 ? default : true ;
             var urlLocal =  des.As<string>().Read();
             return new() {
-            Flags = flagsLocal,
             ForceLargeMedia = forceLargeMediaLocal,
             ForceSmallMedia = forceSmallMediaLocal,
             Optional = optionalLocal,
@@ -854,7 +834,6 @@ namespace SharpGram.Tl.Constructors.InputChatPhotoNs {
     }
     public class InputChatUploadedPhoto : InputChatPhotoBase, ITlSerializable, ITlDeserializable<InputChatUploadedPhoto> {
         public static readonly byte[] Identifier = [192,174,205,189,];
-        private int Flags;
         public InputFileBase? File {get;set;}
         public InputFileBase? Video {get;set;}
         public double? VideoStartTs {get;set;}
@@ -878,7 +857,6 @@ namespace SharpGram.Tl.Constructors.InputChatPhotoNs {
             var videoStartTsLocal = (flagsLocal & 4) is 0 ? default : des.As<double>().Read() ;
             var videoEmojiMarkupLocal = (flagsLocal & 8) is 0 ? default : VideoSizeBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             File = fileLocal,
             Video = videoLocal,
             VideoStartTs = videoStartTsLocal,
@@ -924,9 +902,8 @@ namespace SharpGram.Tl.Constructors.InputGeoPointNs {
     }
     public class InputGeoPoint : InputGeoPointBase, ITlSerializable, ITlDeserializable<InputGeoPoint> {
         public static readonly byte[] Identifier = [175,47,34,72,];
-        private int Flags;
-        public required double Lat {get;set;}
-        public required double Long {get;set;}
+        public double Lat {get;set;}
+        public double Long {get;set;}
         public int? AccuracyRadius {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -945,7 +922,6 @@ namespace SharpGram.Tl.Constructors.InputGeoPointNs {
             var longLocal =  des.As<double>().Read();
             var accuracyRadiusLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Lat = latLocal,
             Long = longLocal,
             AccuracyRadius = accuracyRadiusLocal,
@@ -972,8 +948,8 @@ namespace SharpGram.Tl.Constructors.InputPhotoNs {
     }
     public class InputPhoto : InputPhotoBase, ITlSerializable, ITlDeserializable<InputPhoto> {
         public static readonly byte[] Identifier = [74,185,179,59,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public required byte[] FileReference {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -1002,9 +978,9 @@ namespace SharpGram.Tl.Constructors.InputPhotoNs {
 namespace SharpGram.Tl.Constructors.InputFileLocationNs {
     public class InputFileLocation : InputFileLocationBase, ITlSerializable, ITlDeserializable<InputFileLocation> {
         public static readonly byte[] Identifier = [225,171,218,223,];
-        public required long VolumeId {get;set;}
-        public required int LocalId {get;set;}
-        public required long Secret {get;set;}
+        public long VolumeId {get;set;}
+        public int LocalId {get;set;}
+        public long Secret {get;set;}
         public required byte[] FileReference {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -1032,8 +1008,8 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
     }
     public class InputEncryptedFileLocation : InputFileLocationBase, ITlSerializable, ITlDeserializable<InputEncryptedFileLocation> {
         public static readonly byte[] Identifier = [85,93,35,245,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1054,8 +1030,8 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
     }
     public class InputDocumentFileLocation : InputFileLocationBase, ITlSerializable, ITlDeserializable<InputDocumentFileLocation> {
         public static readonly byte[] Identifier = [132,117,208,186,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public required byte[] FileReference {get;set;}
         public required string ThumbSize {get;set;}
         public new byte[] TlSerialize() {
@@ -1084,8 +1060,8 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
     }
     public class InputSecureFileLocation : InputFileLocationBase, ITlSerializable, ITlDeserializable<InputSecureFileLocation> {
         public static readonly byte[] Identifier = [40,238,199,203,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1120,8 +1096,8 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
     }
     public class InputPhotoFileLocation : InputFileLocationBase, ITlSerializable, ITlDeserializable<InputPhotoFileLocation> {
         public static readonly byte[] Identifier = [254,31,24,64,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public required byte[] FileReference {get;set;}
         public required string ThumbSize {get;set;}
         public new byte[] TlSerialize() {
@@ -1150,12 +1126,12 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
     }
     public class InputPhotoLegacyFileLocation : InputFileLocationBase, ITlSerializable, ITlDeserializable<InputPhotoLegacyFileLocation> {
         public static readonly byte[] Identifier = [243,102,52,216,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public required byte[] FileReference {get;set;}
-        public required long VolumeId {get;set;}
-        public required int LocalId {get;set;}
-        public required long Secret {get;set;}
+        public long VolumeId {get;set;}
+        public int LocalId {get;set;}
+        public long Secret {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1188,10 +1164,9 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
     }
     public class InputPeerPhotoFileLocation : InputFileLocationBase, ITlSerializable, ITlDeserializable<InputPeerPhotoFileLocation> {
         public static readonly byte[] Identifier = [153,126,37,55,];
-        private int Flags;
         public bool Big {get;set;}
         public required InputPeerBase Peer {get;set;}
-        public required long PhotoId {get;set;}
+        public long PhotoId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1208,7 +1183,6 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
             var peerLocal =  InputPeerBase.TlDeserialize(des);
             var photoIdLocal =  des.As<long>().Read();
             return new() {
-            Flags = flagsLocal,
             Big = bigLocal,
             Peer = peerLocal,
             PhotoId = photoIdLocal,
@@ -1218,7 +1192,7 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
     public class InputStickerSetThumb : InputFileLocationBase, ITlSerializable, ITlDeserializable<InputStickerSetThumb> {
         public static readonly byte[] Identifier = [219,243,132,157,];
         public required InputStickerSetBase Stickerset {get;set;}
-        public required int ThumbVersion {get;set;}
+        public int ThumbVersion {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1239,10 +1213,9 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
     }
     public class InputGroupCallStream : InputFileLocationBase, ITlSerializable, ITlDeserializable<InputGroupCallStream> {
         public static readonly byte[] Identifier = [42,169,152,5,];
-        private int Flags;
         public required InputGroupCallBase Call {get;set;}
-        public required long TimeMs {get;set;}
-        public required int Scale {get;set;}
+        public long TimeMs {get;set;}
+        public int Scale {get;set;}
         public int? VideoChannel {get;set;}
         public int? VideoQuality {get;set;}
         public new byte[] TlSerialize() {
@@ -1266,7 +1239,6 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
             var videoChannelLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             var videoQualityLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Call = callLocal,
             TimeMs = timeMsLocal,
             Scale = scaleLocal,
@@ -1281,7 +1253,7 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
 namespace SharpGram.Tl.Constructors.PeerNs {
     public class PeerUser : PeerBase, ITlSerializable, ITlDeserializable<PeerUser> {
         public static readonly byte[] Identifier = [34,23,81,89,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1299,7 +1271,7 @@ namespace SharpGram.Tl.Constructors.PeerNs {
     }
     public class PeerChat : PeerBase, ITlSerializable, ITlDeserializable<PeerChat> {
         public static readonly byte[] Identifier = [154,1,198,54,];
-        public required long ChatId {get;set;}
+        public long ChatId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1317,7 +1289,7 @@ namespace SharpGram.Tl.Constructors.PeerNs {
     }
     public class PeerChannel : PeerBase, ITlSerializable, ITlDeserializable<PeerChannel> {
         public static readonly byte[] Identifier = [30,55,165,162,];
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1500,7 +1472,6 @@ namespace SharpGram.Tl.Constructors.UserNs {
     }
     public class User : UserBase, ITlSerializable, ITlDeserializable<User> {
         public static readonly byte[] Identifier = [56,68,92,33,];
-        private int Flags;
         public bool Self {get;set;}
         public bool Contact {get;set;}
         public bool MutualContact {get;set;}
@@ -1519,7 +1490,6 @@ namespace SharpGram.Tl.Constructors.UserNs {
         public bool BotAttachMenu {get;set;}
         public bool Premium {get;set;}
         public bool AttachMenuEnabled {get;set;}
-        private int Flags2;
         public bool BotCanEdit {get;set;}
         public bool CloseFriend {get;set;}
         public bool StoriesHidden {get;set;}
@@ -1609,7 +1579,6 @@ namespace SharpGram.Tl.Constructors.UserNs {
             var colorLocal = (flags2Local & 256) is 0 ? default : PeerColorBase.TlDeserialize(des) ;
             var profileColorLocal = (flags2Local & 512) is 0 ? default : PeerColorBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Self = selfLocal,
             Contact = contactLocal,
             MutualContact = mutualContactLocal,
@@ -1628,7 +1597,6 @@ namespace SharpGram.Tl.Constructors.UserNs {
             BotAttachMenu = botAttachMenuLocal,
             Premium = premiumLocal,
             AttachMenuEnabled = attachMenuEnabledLocal,
-            Flags2 = flags2Local,
             BotCanEdit = botCanEditLocal,
             CloseFriend = closeFriendLocal,
             StoriesHidden = storiesHiddenLocal,
@@ -1673,12 +1641,11 @@ namespace SharpGram.Tl.Constructors.UserProfilePhotoNs {
     }
     public class UserProfilePhoto : UserProfilePhotoBase, ITlSerializable, ITlDeserializable<UserProfilePhoto> {
         public static readonly byte[] Identifier = [6,247,209,130,];
-        private int Flags;
         public bool HasVideo {get;set;}
         public bool Personal {get;set;}
-        public required long PhotoId {get;set;}
+        public long PhotoId {get;set;}
         public byte[]? StrippedThumb {get;set;}
-        public required int DcId {get;set;}
+        public int DcId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1698,7 +1665,6 @@ namespace SharpGram.Tl.Constructors.UserProfilePhotoNs {
             var strippedThumbLocal = (flagsLocal & 2) is 0 ? default : des.As<byte[]>().Read() ;
             var dcIdLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             HasVideo = hasVideoLocal,
             Personal = personalLocal,
             PhotoId = photoIdLocal,
@@ -1727,7 +1693,7 @@ namespace SharpGram.Tl.Constructors.UserStatusNs {
     }
     public class UserStatusOnline : UserStatusBase, ITlSerializable, ITlDeserializable<UserStatusOnline> {
         public static readonly byte[] Identifier = [73,57,185,237,];
-        public required int Expires {get;set;}
+        public int Expires {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1745,7 +1711,7 @@ namespace SharpGram.Tl.Constructors.UserStatusNs {
     }
     public class UserStatusOffline : UserStatusBase, ITlSerializable, ITlDeserializable<UserStatusOffline> {
         public static readonly byte[] Identifier = [63,112,140,0,];
-        public required int WasOnline {get;set;}
+        public int WasOnline {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -1826,7 +1792,6 @@ namespace SharpGram.Tl.Constructors.ChatNs {
     }
     public class Chat : ChatBase, ITlSerializable, ITlDeserializable<Chat> {
         public static readonly byte[] Identifier = [86,242,203,65,];
-        private int Flags;
         public bool Creator {get;set;}
         public bool Left {get;set;}
         public bool Deactivated {get;set;}
@@ -1835,9 +1800,9 @@ namespace SharpGram.Tl.Constructors.ChatNs {
         public bool Noforwards {get;set;}
         public required string Title {get;set;}
         public required ChatPhotoBase Photo {get;set;}
-        public required int ParticipantsCount {get;set;}
-        public required int Date {get;set;}
-        public required int Version {get;set;}
+        public int ParticipantsCount {get;set;}
+        public int Date {get;set;}
+        public int Version {get;set;}
         public InputChannelBase? MigratedTo {get;set;}
         public ChatAdminRightsBase? AdminRights {get;set;}
         public ChatBannedRightsBase? DefaultBannedRights {get;set;}
@@ -1876,7 +1841,6 @@ namespace SharpGram.Tl.Constructors.ChatNs {
             var adminRightsLocal = (flagsLocal & 16384) is 0 ? default : ChatAdminRightsBase.TlDeserialize(des) ;
             var defaultBannedRightsLocal = (flagsLocal & 262144) is 0 ? default : ChatBannedRightsBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Creator = creatorLocal,
             Left = leftLocal,
             Deactivated = deactivatedLocal,
@@ -1918,7 +1882,6 @@ namespace SharpGram.Tl.Constructors.ChatNs {
     }
     public class Channel : ChatBase, ITlSerializable, ITlDeserializable<Channel> {
         public static readonly byte[] Identifier = [143,252,173,10,];
-        private int Flags;
         public bool Creator {get;set;}
         public bool Left {get;set;}
         public bool Broadcast {get;set;}
@@ -1939,7 +1902,6 @@ namespace SharpGram.Tl.Constructors.ChatNs {
         public bool JoinToSend {get;set;}
         public bool JoinRequest {get;set;}
         public bool Forum {get;set;}
-        private int Flags2;
         public bool StoriesHidden {get;set;}
         public bool StoriesHiddenMin {get;set;}
         public bool StoriesUnavailable {get;set;}
@@ -1947,7 +1909,7 @@ namespace SharpGram.Tl.Constructors.ChatNs {
         public required string Title {get;set;}
         public string? Username {get;set;}
         public required ChatPhotoBase Photo {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public List<RestrictionReasonBase>? RestrictionReason {get;set;}
         public ChatAdminRightsBase? AdminRights {get;set;}
         public ChatBannedRightsBase? BannedRights {get;set;}
@@ -2029,7 +1991,6 @@ namespace SharpGram.Tl.Constructors.ChatNs {
             var emojiStatusLocal = (flags2Local & 512) is 0 ? default : EmojiStatusBase.TlDeserialize(des) ;
             var levelLocal = (flags2Local & 1024) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Creator = creatorLocal,
             Left = leftLocal,
             Broadcast = broadcastLocal,
@@ -2050,7 +2011,6 @@ namespace SharpGram.Tl.Constructors.ChatNs {
             JoinToSend = joinToSendLocal,
             JoinRequest = joinRequestLocal,
             Forum = forumLocal,
-            Flags2 = flags2Local,
             StoriesHidden = storiesHiddenLocal,
             StoriesHiddenMin = storiesHiddenMinLocal,
             StoriesUnavailable = storiesUnavailableLocal,
@@ -2076,10 +2036,9 @@ namespace SharpGram.Tl.Constructors.ChatNs {
     }
     public class ChannelForbidden : ChatBase, ITlSerializable, ITlDeserializable<ChannelForbidden> {
         public static readonly byte[] Identifier = [213,147,212,23,];
-        private int Flags;
         public bool Broadcast {get;set;}
         public bool Megagroup {get;set;}
-        public required long AccessHash {get;set;}
+        public long AccessHash {get;set;}
         public required string Title {get;set;}
         public int? UntilDate {get;set;}
         public new byte[] TlSerialize() {
@@ -2103,7 +2062,6 @@ namespace SharpGram.Tl.Constructors.ChatNs {
             var titleLocal =  des.As<string>().Read();
             var untilDateLocal = (flagsLocal & 65536) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Broadcast = broadcastLocal,
             Megagroup = megagroupLocal,
             Id = idLocal,
@@ -2168,7 +2126,6 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             var recentRequestersLocal = (flagsLocal & 131072) is 0 ? default : des.ReadNumbers<long>() ;
             var availableReactionsLocal = (flagsLocal & 262144) is 0 ? default : ChatReactionsBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             CanSetUsername = canSetUsernameLocal,
             HasScheduled = hasScheduledLocal,
             TranslationsDisabled = translationsDisabledLocal,
@@ -2199,7 +2156,6 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
         public bool CanSetLocation {get;set;}
         public bool CanViewStats {get;set;}
         public bool Blocked {get;set;}
-        private int Flags2;
         public bool CanDeleteChannel {get;set;}
         public bool Antispam {get;set;}
         public bool ParticipantsHidden {get;set;}
@@ -2210,9 +2166,9 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
         public int? KickedCount {get;set;}
         public int? BannedCount {get;set;}
         public int? OnlineCount {get;set;}
-        public required int ReadInboxMaxId {get;set;}
-        public required int ReadOutboxMaxId {get;set;}
-        public required int UnreadCount {get;set;}
+        public int ReadInboxMaxId {get;set;}
+        public int ReadOutboxMaxId {get;set;}
+        public int UnreadCount {get;set;}
         public required PhotoBase ChatPhoto {get;set;}
         public required List<BotInfoBase> BotInfo {get;set;}
         public long? MigratedFromChatId {get;set;}
@@ -2224,7 +2180,7 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
         public int? SlowmodeSeconds {get;set;}
         public int? SlowmodeNextSendDate {get;set;}
         public int? StatsDc {get;set;}
-        public required int Pts {get;set;}
+        public int Pts {get;set;}
         public List<string>? PendingSuggestions {get;set;}
         public PeerBase? DefaultSendAs {get;set;}
         public PeerStoriesBase? Stories {get;set;}
@@ -2330,7 +2286,6 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             var storiesLocal = (flags2Local & 16) is 0 ? default : PeerStoriesBase.TlDeserialize(des) ;
             var wallpaperLocal = (flags2Local & 128) is 0 ? default : WallPaperBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             CanViewParticipants = canViewParticipantsLocal,
             CanSetUsername = canSetUsernameLocal,
             CanSetStickers = canSetStickersLocal,
@@ -2339,7 +2294,6 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             HasScheduled = hasScheduledLocal,
             CanViewStats = canViewStatsLocal,
             Blocked = blockedLocal,
-            Flags2 = flags2Local,
             CanDeleteChannel = canDeleteChannelLocal,
             Antispam = antispamLocal,
             ParticipantsHidden = participantsHiddenLocal,
@@ -2392,8 +2346,8 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
 namespace SharpGram.Tl.Constructors.ChatParticipantNs {
     public class ChatParticipant : ChatParticipantBase, ITlSerializable, ITlDeserializable<ChatParticipant> {
         public static readonly byte[] Identifier = [7,64,45,192,];
-        public required long InviterId {get;set;}
-        public required int Date {get;set;}
+        public long InviterId {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -2434,8 +2388,8 @@ namespace SharpGram.Tl.Constructors.ChatParticipantNs {
     }
     public class ChatParticipantAdmin : ChatParticipantBase, ITlSerializable, ITlDeserializable<ChatParticipantAdmin> {
         public static readonly byte[] Identifier = [91,63,147,160,];
-        public required long InviterId {get;set;}
-        public required int Date {get;set;}
+        public long InviterId {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -2463,7 +2417,6 @@ namespace SharpGram.Tl.Constructors.ChatParticipantNs {
 namespace SharpGram.Tl.Constructors.ChatParticipantsNs {
     public class ChatParticipantsForbidden : ChatParticipantsBase, ITlSerializable, ITlDeserializable<ChatParticipantsForbidden> {
         public static readonly byte[] Identifier = [225,211,99,135,];
-        private int Flags;
         public ChatParticipantBase? SelfParticipant {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -2480,7 +2433,6 @@ namespace SharpGram.Tl.Constructors.ChatParticipantsNs {
             var chatIdLocal =  des.As<long>().Read();
             var selfParticipantLocal = (flagsLocal & 1) is 0 ? default : ChatParticipantBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             ChatId = chatIdLocal,
             SelfParticipant = selfParticipantLocal,
             };
@@ -2489,7 +2441,7 @@ namespace SharpGram.Tl.Constructors.ChatParticipantsNs {
     public class ChatParticipants : ChatParticipantsBase, ITlSerializable, ITlDeserializable<ChatParticipants> {
         public static readonly byte[] Identifier = [248,147,188,60,];
         public required List<ChatParticipantBase> Participants {get;set;}
-        public required int Version {get;set;}
+        public int Version {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -2531,11 +2483,10 @@ namespace SharpGram.Tl.Constructors.ChatPhotoNs {
     }
     public class ChatPhoto : ChatPhotoBase, ITlSerializable, ITlDeserializable<ChatPhoto> {
         public static readonly byte[] Identifier = [17,28,110,28,];
-        private int Flags;
         public bool HasVideo {get;set;}
-        public required long PhotoId {get;set;}
+        public long PhotoId {get;set;}
         public byte[]? StrippedThumb {get;set;}
-        public required int DcId {get;set;}
+        public int DcId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -2554,7 +2505,6 @@ namespace SharpGram.Tl.Constructors.ChatPhotoNs {
             var strippedThumbLocal = (flagsLocal & 2) is 0 ? default : des.As<byte[]>().Read() ;
             var dcIdLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             HasVideo = hasVideoLocal,
             PhotoId = photoIdLocal,
             StrippedThumb = strippedThumbLocal,
@@ -2584,7 +2534,6 @@ namespace SharpGram.Tl.Constructors.MessageNs {
             var idLocal =  des.As<int>().Read();
             var peerIdLocal = (flagsLocal & 1) is 0 ? default : PeerBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             PeerId = peerIdLocal,
             };
@@ -2609,7 +2558,7 @@ namespace SharpGram.Tl.Constructors.MessageNs {
         public MessageFwdHeaderBase? FwdFrom {get;set;}
         public long? ViaBotId {get;set;}
         public MessageReplyHeaderBase? ReplyTo {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public required string MessageInner {get;set;}
         public MessageMediaBase? Media {get;set;}
         public ReplyMarkupBase? ReplyMarkup {get;set;}
@@ -2687,7 +2636,6 @@ namespace SharpGram.Tl.Constructors.MessageNs {
             var restrictionReasonLocal = (flagsLocal & 4194304) is 0 ? default : des.Read<RestrictionReasonBase>() ;
             var ttlPeriodLocal = (flagsLocal & 33554432) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Out = outLocal,
             Mentioned = mentionedLocal,
             MediaUnread = mediaUnreadLocal,
@@ -2734,7 +2682,7 @@ namespace SharpGram.Tl.Constructors.MessageNs {
         public PeerBase? FromId {get;set;}
         public required PeerBase PeerId {get;set;}
         public MessageReplyHeaderBase? ReplyTo {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public required MessageActionBase Action {get;set;}
         public int? TtlPeriod {get;set;}
         public new byte[] TlSerialize() {
@@ -2768,7 +2716,6 @@ namespace SharpGram.Tl.Constructors.MessageNs {
             var actionLocal =  MessageActionBase.TlDeserialize(des);
             var ttlPeriodLocal = (flagsLocal & 33554432) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Out = outLocal,
             Mentioned = mentionedLocal,
             MediaUnread = mediaUnreadLocal,
@@ -2805,7 +2752,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
     }
     public class MessageMediaPhoto : MessageMediaBase, ITlSerializable, ITlDeserializable<MessageMediaPhoto> {
         public static readonly byte[] Identifier = [215,80,81,105,];
-        private int Flags;
         public bool Spoiler {get;set;}
         public PhotoBase? Photo {get;set;}
         public int? TtlSeconds {get;set;}
@@ -2825,7 +2771,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
             var photoLocal = (flagsLocal & 1) is 0 ? default : PhotoBase.TlDeserialize(des) ;
             var ttlSecondsLocal = (flagsLocal & 4) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Spoiler = spoilerLocal,
             Photo = photoLocal,
             TtlSeconds = ttlSecondsLocal,
@@ -2856,7 +2801,7 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
         public required string FirstName {get;set;}
         public required string LastName {get;set;}
         public required string Vcard {get;set;}
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -2900,7 +2845,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
     }
     public class MessageMediaDocument : MessageMediaBase, ITlSerializable, ITlDeserializable<MessageMediaDocument> {
         public static readonly byte[] Identifier = [45,215,244,76,];
-        private int Flags;
         public bool Nopremium {get;set;}
         public bool Spoiler {get;set;}
         public bool Video {get;set;}
@@ -2931,7 +2875,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
             var altDocumentLocal = (flagsLocal & 32) is 0 ? default : DocumentBase.TlDeserialize(des) ;
             var ttlSecondsLocal = (flagsLocal & 4) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Nopremium = nopremiumLocal,
             Spoiler = spoilerLocal,
             Video = videoLocal,
@@ -2945,7 +2888,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
     }
     public class MessageMediaWebPage : MessageMediaBase, ITlSerializable, ITlDeserializable<MessageMediaWebPage> {
         public static readonly byte[] Identifier = [59,12,241,221,];
-        private int Flags;
         public bool ForceLargeMedia {get;set;}
         public bool ForceSmallMedia {get;set;}
         public bool Manual {get;set;}
@@ -2968,7 +2910,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
             var safeLocal = (flagsLocal & 16) is 0 ? default : true ;
             var webpageLocal =  WebPageBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             ForceLargeMedia = forceLargeMediaLocal,
             ForceSmallMedia = forceSmallMediaLocal,
             Manual = manualLocal,
@@ -3035,7 +2976,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
     }
     public class MessageMediaInvoice : MessageMediaBase, ITlSerializable, ITlDeserializable<MessageMediaInvoice> {
         public static readonly byte[] Identifier = [211,72,165,246,];
-        private int Flags;
         public bool ShippingAddressRequested {get;set;}
         public bool Test {get;set;}
         public required string Title {get;set;}
@@ -3043,7 +2983,7 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
         public WebDocumentBase? Photo {get;set;}
         public int? ReceiptMsgId {get;set;}
         public required string Currency {get;set;}
-        public required long TotalAmount {get;set;}
+        public long TotalAmount {get;set;}
         public required string StartParam {get;set;}
         public MessageExtendedMediaBase? ExtendedMedia {get;set;}
         public new byte[] TlSerialize() {
@@ -3075,7 +3015,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
             var startParamLocal =  des.As<string>().Read();
             var extendedMediaLocal = (flagsLocal & 16) is 0 ? default : MessageExtendedMediaBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             ShippingAddressRequested = shippingAddressRequestedLocal,
             Test = testLocal,
             Title = titleLocal,
@@ -3091,10 +3030,9 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
     }
     public class MessageMediaGeoLive : MessageMediaBase, ITlSerializable, ITlDeserializable<MessageMediaGeoLive> {
         public static readonly byte[] Identifier = [102,198,64,185,];
-        private int Flags;
         public required GeoPointBase Geo {get;set;}
         public int? Heading {get;set;}
-        public required int Period {get;set;}
+        public int Period {get;set;}
         public int? ProximityNotificationRadius {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -3115,7 +3053,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
             var periodLocal =  des.As<int>().Read();
             var proximityNotificationRadiusLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Geo = geoLocal,
             Heading = headingLocal,
             Period = periodLocal,
@@ -3147,7 +3084,7 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
     }
     public class MessageMediaDice : MessageMediaBase, ITlSerializable, ITlDeserializable<MessageMediaDice> {
         public static readonly byte[] Identifier = [139,229,126,63,];
-        public required int Value {get;set;}
+        public int Value {get;set;}
         public required string Emoticon {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -3169,10 +3106,9 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
     }
     public class MessageMediaStory : MessageMediaBase, ITlSerializable, ITlDeserializable<MessageMediaStory> {
         public static readonly byte[] Identifier = [131,98,203,104,];
-        private int Flags;
         public bool ViaMention {get;set;}
         public required PeerBase Peer {get;set;}
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public StoryItemBase? Story {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -3192,7 +3128,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
             var idLocal =  des.As<int>().Read();
             var storyLocal = (flagsLocal & 1) is 0 ? default : StoryItemBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             ViaMention = viaMentionLocal,
             Peer = peerLocal,
             Id = idLocal,
@@ -3202,15 +3137,14 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
     }
     public class MessageMediaGiveaway : MessageMediaBase, ITlSerializable, ITlDeserializable<MessageMediaGiveaway> {
         public static readonly byte[] Identifier = [176,133,173,218,];
-        private int Flags;
         public bool OnlyNewSubscribers {get;set;}
         public bool WinnersAreVisible {get;set;}
         public required List<long> Channels {get;set;}
         public List<string>? CountriesIso2 {get;set;}
         public string? PrizeDescription {get;set;}
-        public required int Quantity {get;set;}
-        public required int Months {get;set;}
-        public required int UntilDate {get;set;}
+        public int Quantity {get;set;}
+        public int Months {get;set;}
+        public int UntilDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -3236,7 +3170,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
             var monthsLocal =  des.As<int>().Read();
             var untilDateLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             OnlyNewSubscribers = onlyNewSubscribersLocal,
             WinnersAreVisible = winnersAreVisibleLocal,
             Channels = channelsLocal,
@@ -3250,18 +3183,17 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
     }
     public class MessageMediaGiveawayResults : MessageMediaBase, ITlSerializable, ITlDeserializable<MessageMediaGiveawayResults> {
         public static readonly byte[] Identifier = [104,16,153,198,];
-        private int Flags;
         public bool OnlyNewSubscribers {get;set;}
         public bool Refunded {get;set;}
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public int? AdditionalPeersCount {get;set;}
-        public required int LaunchMsgId {get;set;}
-        public required int WinnersCount {get;set;}
-        public required int UnclaimedCount {get;set;}
+        public int LaunchMsgId {get;set;}
+        public int WinnersCount {get;set;}
+        public int UnclaimedCount {get;set;}
         public required List<long> Winners {get;set;}
-        public required int Months {get;set;}
+        public int Months {get;set;}
         public string? PrizeDescription {get;set;}
-        public required int UntilDate {get;set;}
+        public int UntilDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -3293,7 +3225,6 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
             var prizeDescriptionLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var untilDateLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             OnlyNewSubscribers = onlyNewSubscribersLocal,
             Refunded = refundedLocal,
             ChannelId = channelIdLocal,
@@ -3418,7 +3349,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionChatDeleteUser : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionChatDeleteUser> {
         public static readonly byte[] Identifier = [204,48,63,164,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -3436,7 +3367,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionChatJoinedByLink : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionChatJoinedByLink> {
         public static readonly byte[] Identifier = [195,36,18,3,];
-        public required long InviterId {get;set;}
+        public long InviterId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -3472,7 +3403,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionChatMigrateTo : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionChatMigrateTo> {
         public static readonly byte[] Identifier = [146,127,3,225,];
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -3491,7 +3422,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     public class MessageActionChannelMigrateFrom : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionChannelMigrateFrom> {
         public static readonly byte[] Identifier = [233,72,57,234,];
         public required string Title {get;set;}
-        public required long ChatId {get;set;}
+        public long ChatId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -3540,8 +3471,8 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionGameScore : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionGameScore> {
         public static readonly byte[] Identifier = [118,40,167,146,];
-        public required long GameId {get;set;}
-        public required int Score {get;set;}
+        public long GameId {get;set;}
+        public int Score {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -3562,11 +3493,10 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionPaymentSentMe : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionPaymentSentMe> {
         public static readonly byte[] Identifier = [39,179,49,143,];
-        private int Flags;
         public bool RecurringInit {get;set;}
         public bool RecurringUsed {get;set;}
         public required string Currency {get;set;}
-        public required long TotalAmount {get;set;}
+        public long TotalAmount {get;set;}
         public required byte[] Payload {get;set;}
         public PaymentRequestedInfoBase? Info {get;set;}
         public string? ShippingOptionId {get;set;}
@@ -3596,7 +3526,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var shippingOptionIdLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var chargeLocal =  PaymentChargeBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             RecurringInit = recurringInitLocal,
             RecurringUsed = recurringUsedLocal,
             Currency = currencyLocal,
@@ -3610,11 +3539,10 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionPaymentSent : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionPaymentSent> {
         public static readonly byte[] Identifier = [86,63,22,150,];
-        private int Flags;
         public bool RecurringInit {get;set;}
         public bool RecurringUsed {get;set;}
         public required string Currency {get;set;}
-        public required long TotalAmount {get;set;}
+        public long TotalAmount {get;set;}
         public string? InvoiceSlug {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -3635,7 +3563,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var totalAmountLocal =  des.As<long>().Read();
             var invoiceSlugLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             RecurringInit = recurringInitLocal,
             RecurringUsed = recurringUsedLocal,
             Currency = currencyLocal,
@@ -3646,9 +3573,8 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionPhoneCall : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionPhoneCall> {
         public static readonly byte[] Identifier = [127,26,225,128,];
-        private int Flags;
         public bool Video {get;set;}
-        public required long CallId {get;set;}
+        public long CallId {get;set;}
         public PhoneCallDiscardReasonBase? Reason {get;set;}
         public int? Duration {get;set;}
         public new byte[] TlSerialize() {
@@ -3669,7 +3595,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var reasonLocal = (flagsLocal & 1) is 0 ? default : PhoneCallDiscardReasonBase.TlDeserialize(des) ;
             var durationLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Video = videoLocal,
             CallId = callIdLocal,
             Reason = reasonLocal,
@@ -3711,7 +3636,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionBotAllowed : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionBotAllowed> {
         public static readonly byte[] Identifier = [121,214,22,197,];
-        private int Flags;
         public bool AttachMenu {get;set;}
         public bool FromRequest {get;set;}
         public string? Domain {get;set;}
@@ -3733,7 +3657,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var domainLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             var appLocal = (flagsLocal & 4) is 0 ? default : BotAppBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             AttachMenu = attachMenuLocal,
             FromRequest = fromRequestLocal,
             Domain = domainLocal,
@@ -3799,7 +3722,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
         public static readonly byte[] Identifier = [151,214,224,152,];
         public required PeerBase FromId {get;set;}
         public required PeerBase ToId {get;set;}
-        public required int Distance {get;set;}
+        public int Distance {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -3823,7 +3746,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionGroupCall : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionGroupCall> {
         public static readonly byte[] Identifier = [66,127,13,122,];
-        private int Flags;
         public required InputGroupCallBase Call {get;set;}
         public int? Duration {get;set;}
         public new byte[] TlSerialize() {
@@ -3841,7 +3763,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var callLocal =  InputGroupCallBase.TlDeserialize(des);
             var durationLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Call = callLocal,
             Duration = durationLocal,
             };
@@ -3871,8 +3792,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionSetMessagesTTL : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionSetMessagesTTL> {
         public static readonly byte[] Identifier = [123,77,19,60,];
-        private int Flags;
-        public required int Period {get;set;}
+        public int Period {get;set;}
         public long? AutoSettingFrom {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -3889,7 +3809,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var periodLocal =  des.As<int>().Read();
             var autoSettingFromLocal = (flagsLocal & 1) is 0 ? default : des.As<long>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Period = periodLocal,
             AutoSettingFrom = autoSettingFromLocal,
             };
@@ -3898,7 +3817,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     public class MessageActionGroupCallScheduled : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionGroupCallScheduled> {
         public static readonly byte[] Identifier = [97,118,160,179,];
         public required InputGroupCallBase Call {get;set;}
-        public required int ScheduleDate {get;set;}
+        public int ScheduleDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -3991,10 +3910,9 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionGiftPremium : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionGiftPremium> {
         public static readonly byte[] Identifier = [236,106,61,200,];
-        private int Flags;
         public required string Currency {get;set;}
-        public required long Amount {get;set;}
-        public required int Months {get;set;}
+        public long Amount {get;set;}
+        public int Months {get;set;}
         public string? CryptoCurrency {get;set;}
         public long? CryptoAmount {get;set;}
         public new byte[] TlSerialize() {
@@ -4018,7 +3936,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var cryptoCurrencyLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             var cryptoAmountLocal = (flagsLocal & 1) is 0 ? default : des.As<long>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Currency = currencyLocal,
             Amount = amountLocal,
             Months = monthsLocal,
@@ -4029,9 +3946,8 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionTopicCreate : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionTopicCreate> {
         public static readonly byte[] Identifier = [86,146,153,13,];
-        private int Flags;
         public required string Title {get;set;}
-        public required int IconColor {get;set;}
+        public int IconColor {get;set;}
         public long? IconEmojiId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -4050,7 +3966,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var iconColorLocal =  des.As<int>().Read();
             var iconEmojiIdLocal = (flagsLocal & 1) is 0 ? default : des.As<long>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Title = titleLocal,
             IconColor = iconColorLocal,
             IconEmojiId = iconEmojiIdLocal,
@@ -4059,7 +3974,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionTopicEdit : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionTopicEdit> {
         public static readonly byte[] Identifier = [32,72,148,192,];
-        private int Flags;
         public string? Title {get;set;}
         public long? IconEmojiId {get;set;}
         public bool Closed {get;set;}
@@ -4081,7 +3995,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var closedLocal = (flagsLocal & 4) is 0 ? default : true ;
             var hiddenLocal = (flagsLocal & 8) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             Title = titleLocal,
             IconEmojiId = iconEmojiIdLocal,
             Closed = closedLocal,
@@ -4109,7 +4022,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionRequestedPeer : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionRequestedPeer> {
         public static readonly byte[] Identifier = [155,142,81,49,];
-        public required int ButtonId {get;set;}
+        public int ButtonId {get;set;}
         public required List<PeerBase> Peers {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -4131,7 +4044,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionSetChatWallPaper : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionSetChatWallPaper> {
         public static readonly byte[] Identifier = [244,163,96,80,];
-        private int Flags;
         public bool Same {get;set;}
         public bool ForBoth {get;set;}
         public required WallPaperBase Wallpaper {get;set;}
@@ -4150,7 +4062,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var forBothLocal = (flagsLocal & 2) is 0 ? default : true ;
             var wallpaperLocal =  WallPaperBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Same = sameLocal,
             ForBoth = forBothLocal,
             Wallpaper = wallpaperLocal,
@@ -4159,11 +4070,10 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionGiftCode : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionGiftCode> {
         public static readonly byte[] Identifier = [9,46,140,103,];
-        private int Flags;
         public bool ViaGiveaway {get;set;}
         public bool Unclaimed {get;set;}
         public PeerBase? BoostPeer {get;set;}
-        public required int Months {get;set;}
+        public int Months {get;set;}
         public required string Slug {get;set;}
         public string? Currency {get;set;}
         public long? Amount {get;set;}
@@ -4196,7 +4106,6 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             var cryptoCurrencyLocal = (flagsLocal & 8) is 0 ? default : des.As<string>().Read() ;
             var cryptoAmountLocal = (flagsLocal & 8) is 0 ? default : des.As<long>().Read() ;
             return new() {
-            Flags = flagsLocal,
             ViaGiveaway = viaGiveawayLocal,
             Unclaimed = unclaimedLocal,
             BoostPeer = boostPeerLocal,
@@ -4225,8 +4134,8 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
     }
     public class MessageActionGiveawayResults : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionGiveawayResults> {
         public static readonly byte[] Identifier = [197,173,159,42,];
-        public required int WinnersCount {get;set;}
-        public required int UnclaimedCount {get;set;}
+        public int WinnersCount {get;set;}
+        public int UnclaimedCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -4253,11 +4162,11 @@ namespace SharpGram.Tl.Constructors.DialogNs {
         public static readonly byte[] Identifier = [198,8,138,213,];
         public bool UnreadMark {get;set;}
         public bool ViewForumAsMessages {get;set;}
-        public required int ReadInboxMaxId {get;set;}
-        public required int ReadOutboxMaxId {get;set;}
-        public required int UnreadCount {get;set;}
-        public required int UnreadMentionsCount {get;set;}
-        public required int UnreadReactionsCount {get;set;}
+        public int ReadInboxMaxId {get;set;}
+        public int ReadOutboxMaxId {get;set;}
+        public int UnreadCount {get;set;}
+        public int UnreadMentionsCount {get;set;}
+        public int UnreadReactionsCount {get;set;}
         public required PeerNotifySettingsBase NotifySettings {get;set;}
         public int? Pts {get;set;}
         public DraftMessageBase? Draft {get;set;}
@@ -4301,7 +4210,6 @@ namespace SharpGram.Tl.Constructors.DialogNs {
             var folderIdLocal = (flagsLocal & 16) is 0 ? default : des.As<int>().Read() ;
             var ttlPeriodLocal = (flagsLocal & 32) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Pinned = pinnedLocal,
             UnreadMark = unreadMarkLocal,
             ViewForumAsMessages = viewForumAsMessagesLocal,
@@ -4323,10 +4231,10 @@ namespace SharpGram.Tl.Constructors.DialogNs {
     public class DialogFolder : DialogBase, ITlSerializable, ITlDeserializable<DialogFolder> {
         public static readonly byte[] Identifier = [76,19,189,113,];
         public required FolderBase Folder {get;set;}
-        public required int UnreadMutedPeersCount {get;set;}
-        public required int UnreadUnmutedPeersCount {get;set;}
-        public required int UnreadMutedMessagesCount {get;set;}
-        public required int UnreadUnmutedMessagesCount {get;set;}
+        public int UnreadMutedPeersCount {get;set;}
+        public int UnreadUnmutedPeersCount {get;set;}
+        public int UnreadMutedMessagesCount {get;set;}
+        public int UnreadUnmutedMessagesCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -4353,7 +4261,6 @@ namespace SharpGram.Tl.Constructors.DialogNs {
             var unreadMutedMessagesCountLocal =  des.As<int>().Read();
             var unreadUnmutedMessagesCountLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Pinned = pinnedLocal,
             Folder = folderLocal,
             Peer = peerLocal,
@@ -4388,14 +4295,13 @@ namespace SharpGram.Tl.Constructors.PhotoNs {
     }
     public class Photo : PhotoBase, ITlSerializable, ITlDeserializable<Photo> {
         public static readonly byte[] Identifier = [101,122,25,251,];
-        private int Flags;
         public bool HasStickers {get;set;}
-        public required long AccessHash {get;set;}
+        public long AccessHash {get;set;}
         public required byte[] FileReference {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public required List<PhotoSizeBase> Sizes {get;set;}
         public List<VideoSizeBase>? VideoSizes {get;set;}
-        public required int DcId {get;set;}
+        public int DcId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -4422,7 +4328,6 @@ namespace SharpGram.Tl.Constructors.PhotoNs {
             var videoSizesLocal = (flagsLocal & 2) is 0 ? default : des.Read<VideoSizeBase>() ;
             var dcIdLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             HasStickers = hasStickersLocal,
             Id = idLocal,
             AccessHash = accessHashLocal,
@@ -4457,9 +4362,9 @@ namespace SharpGram.Tl.Constructors.PhotoSizeNs {
     }
     public class PhotoSize : PhotoSizeBase, ITlSerializable, ITlDeserializable<PhotoSize> {
         public static readonly byte[] Identifier = [96,142,199,117,];
-        public required int W {get;set;}
-        public required int H {get;set;}
-        public required int Size {get;set;}
+        public int W {get;set;}
+        public int H {get;set;}
+        public int Size {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -4486,8 +4391,8 @@ namespace SharpGram.Tl.Constructors.PhotoSizeNs {
     }
     public class PhotoCachedSize : PhotoSizeBase, ITlSerializable, ITlDeserializable<PhotoCachedSize> {
         public static readonly byte[] Identifier = [214,26,30,2,];
-        public required int W {get;set;}
-        public required int H {get;set;}
+        public int W {get;set;}
+        public int H {get;set;}
         public required byte[] Bytes {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -4536,8 +4441,8 @@ namespace SharpGram.Tl.Constructors.PhotoSizeNs {
     }
     public class PhotoSizeProgressive : PhotoSizeBase, ITlSerializable, ITlDeserializable<PhotoSizeProgressive> {
         public static readonly byte[] Identifier = [149,251,62,250,];
-        public required int W {get;set;}
-        public required int H {get;set;}
+        public int W {get;set;}
+        public int H {get;set;}
         public required List<int> Sizes {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -4604,10 +4509,9 @@ namespace SharpGram.Tl.Constructors.GeoPointNs {
     }
     public class GeoPoint : GeoPointBase, ITlSerializable, ITlDeserializable<GeoPoint> {
         public static readonly byte[] Identifier = [99,246,162,178,];
-        private int Flags;
-        public required double Long {get;set;}
-        public required double Lat {get;set;}
-        public required long AccessHash {get;set;}
+        public double Long {get;set;}
+        public double Lat {get;set;}
+        public long AccessHash {get;set;}
         public int? AccuracyRadius {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -4628,7 +4532,6 @@ namespace SharpGram.Tl.Constructors.GeoPointNs {
             var accessHashLocal =  des.As<long>().Read();
             var accuracyRadiusLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Long = longLocal,
             Lat = latLocal,
             AccessHash = accessHashLocal,
@@ -4642,7 +4545,6 @@ namespace SharpGram.Tl.Constructors.GeoPointNs {
 namespace SharpGram.Tl.Constructors.AuthSentCodeNs {
     public class AuthSentCode : AuthSentCodeBase, ITlSerializable, ITlDeserializable<AuthSentCode> {
         public static readonly byte[] Identifier = [2,37,0,94,];
-        private int Flags;
         public required AuthSentCodeTypeBase Type {get;set;}
         public required string PhoneCodeHash {get;set;}
         public AuthCodeTypeBase? NextType {get;set;}
@@ -4666,7 +4568,6 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeNs {
             var nextTypeLocal = (flagsLocal & 2) is 0 ? default : AuthCodeTypeBase.TlDeserialize(des) ;
             var timeoutLocal = (flagsLocal & 4) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Type = typeLocal,
             PhoneCodeHash = phoneCodeHashLocal,
             NextType = nextTypeLocal,
@@ -4723,7 +4624,6 @@ namespace SharpGram.Tl.Constructors.AuthAuthorizationNs {
             var futureAuthTokenLocal = (flagsLocal & 4) is 0 ? default : des.As<byte[]>().Read() ;
             var userLocal =  UserBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             SetupPasswordRequired = setupPasswordRequiredLocal,
             OtherwiseReloginDays = otherwiseReloginDaysLocal,
             TmpSessions = tmpSessionsLocal,
@@ -4748,7 +4648,6 @@ namespace SharpGram.Tl.Constructors.AuthAuthorizationNs {
             var flagsLocal =  des.As<int>().Read();
             var termsOfServiceLocal = (flagsLocal & 1) is 0 ? default : HelpTermsOfServiceBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             TermsOfService = termsOfServiceLocal,
             };
         }
@@ -4759,7 +4658,7 @@ namespace SharpGram.Tl.Constructors.AuthAuthorizationNs {
 namespace SharpGram.Tl.Constructors.AuthExportedAuthorizationNs {
     public class AuthExportedAuthorization : AuthExportedAuthorizationBase, ITlSerializable, ITlDeserializable<AuthExportedAuthorization> {
         public static readonly byte[] Identifier = [184,226,52,180,];
-        public required long Id {get;set;}
+        public long Id {get;set;}
         public required byte[] Bytes {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -4846,7 +4745,7 @@ namespace SharpGram.Tl.Constructors.InputNotifyPeerNs {
     public class InputNotifyForumTopic : InputNotifyPeerBase, ITlSerializable, ITlDeserializable<InputNotifyForumTopic> {
         public static readonly byte[] Identifier = [146,121,70,92,];
         public required InputPeerBase Peer {get;set;}
-        public required int TopMsgId {get;set;}
+        public int TopMsgId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -4871,7 +4770,6 @@ namespace SharpGram.Tl.Constructors.InputNotifyPeerNs {
 namespace SharpGram.Tl.Constructors.InputPeerNotifySettingsNs {
     public class InputPeerNotifySettings : InputPeerNotifySettingsBase, ITlSerializable, ITlDeserializable<InputPeerNotifySettings> {
         public static readonly byte[] Identifier = [226,106,203,202,];
-        private int Flags;
         public bool ShowPreviews {get;set;}
         public bool Silent {get;set;}
         public int? MuteUntil {get;set;}
@@ -4900,7 +4798,6 @@ namespace SharpGram.Tl.Constructors.InputPeerNotifySettingsNs {
             var storiesHideSenderLocal = (flagsLocal & 128) is 0 ? default : true ;
             var storiesSoundLocal = (flagsLocal & 256) is 0 ? default : NotificationSoundBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             ShowPreviews = showPreviewsLocal,
             Silent = silentLocal,
             MuteUntil = muteUntilLocal,
@@ -4917,7 +4814,6 @@ namespace SharpGram.Tl.Constructors.InputPeerNotifySettingsNs {
 namespace SharpGram.Tl.Constructors.PeerNotifySettingsNs {
     public class PeerNotifySettings : PeerNotifySettingsBase, ITlSerializable, ITlDeserializable<PeerNotifySettings> {
         public static readonly byte[] Identifier = [12,44,98,153,];
-        private int Flags;
         public bool ShowPreviews {get;set;}
         public bool Silent {get;set;}
         public int? MuteUntil {get;set;}
@@ -4958,7 +4854,6 @@ namespace SharpGram.Tl.Constructors.PeerNotifySettingsNs {
             var storiesAndroidSoundLocal = (flagsLocal & 512) is 0 ? default : NotificationSoundBase.TlDeserialize(des) ;
             var storiesOtherSoundLocal = (flagsLocal & 1024) is 0 ? default : NotificationSoundBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             ShowPreviews = showPreviewsLocal,
             Silent = silentLocal,
             MuteUntil = muteUntilLocal,
@@ -4979,7 +4874,6 @@ namespace SharpGram.Tl.Constructors.PeerNotifySettingsNs {
 namespace SharpGram.Tl.Constructors.PeerSettingsNs {
     public class PeerSettings : PeerSettingsBase, ITlSerializable, ITlDeserializable<PeerSettings> {
         public static readonly byte[] Identifier = [13,17,24,165,];
-        private int Flags;
         public bool ReportSpam {get;set;}
         public bool AddContact {get;set;}
         public bool BlockContact {get;set;}
@@ -5018,7 +4912,6 @@ namespace SharpGram.Tl.Constructors.PeerSettingsNs {
             var requestChatTitleLocal = (flagsLocal & 512) is 0 ? default : des.As<string>().Read() ;
             var requestChatDateLocal = (flagsLocal & 512) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             ReportSpam = reportSpamLocal,
             AddContact = addContactLocal,
             BlockContact = blockContactLocal,
@@ -5042,7 +4935,7 @@ namespace SharpGram.Tl.Constructors.WallPaperNs {
         public static readonly byte[] Identifier = [237,195,55,164,];
         public bool Creator {get;set;}
         public bool Pattern {get;set;}
-        public required long AccessHash {get;set;}
+        public long AccessHash {get;set;}
         public required string Slug {get;set;}
         public required DocumentBase Document {get;set;}
         public new byte[] TlSerialize() {
@@ -5071,7 +4964,6 @@ namespace SharpGram.Tl.Constructors.WallPaperNs {
             var settingsLocal = (flagsLocal & 4) is 0 ? default : WallPaperSettingsBase.TlDeserialize(des) ;
             return new() {
             Id = idLocal,
-            Flags = flagsLocal,
             Creator = creatorLocal,
             Default = defaultLocal,
             Pattern = patternLocal,
@@ -5103,7 +4995,6 @@ namespace SharpGram.Tl.Constructors.WallPaperNs {
             var settingsLocal = (flagsLocal & 4) is 0 ? default : WallPaperSettingsBase.TlDeserialize(des) ;
             return new() {
             Id = idLocal,
-            Flags = flagsLocal,
             Default = defaultLocal,
             Dark = darkLocal,
             Settings = settingsLocal,
@@ -5260,7 +5151,6 @@ namespace SharpGram.Tl.Constructors.ReportReasonNs {
 namespace SharpGram.Tl.Constructors.UserFullNs {
     public class UserFull : UserFullBase, ITlSerializable, ITlDeserializable<UserFull> {
         public static readonly byte[] Identifier = [108,44,177,185,];
-        private int Flags;
         public bool Blocked {get;set;}
         public bool PhoneCallsAvailable {get;set;}
         public bool PhoneCallsPrivate {get;set;}
@@ -5272,7 +5162,7 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
         public bool StoriesPinnedAvailable {get;set;}
         public bool BlockedMyStoriesFrom {get;set;}
         public bool WallpaperOverridden {get;set;}
-        public required long Id {get;set;}
+        public long Id {get;set;}
         public string? About {get;set;}
         public required PeerSettingsBase Settings {get;set;}
         public PhotoBase? PersonalPhoto {get;set;}
@@ -5281,7 +5171,7 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
         public required PeerNotifySettingsBase NotifySettings {get;set;}
         public BotInfoBase? BotInfo {get;set;}
         public int? PinnedMsgId {get;set;}
-        public required int CommonChatsCount {get;set;}
+        public int CommonChatsCount {get;set;}
         public int? FolderId {get;set;}
         public int? TtlPeriod {get;set;}
         public string? ThemeEmoticon {get;set;}
@@ -5351,7 +5241,6 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
             var wallpaperLocal = (flagsLocal & 16777216) is 0 ? default : WallPaperBase.TlDeserialize(des) ;
             var storiesLocal = (flagsLocal & 33554432) is 0 ? default : PeerStoriesBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Blocked = blockedLocal,
             PhoneCallsAvailable = phoneCallsAvailableLocal,
             PhoneCallsPrivate = phoneCallsPrivateLocal,
@@ -5391,7 +5280,7 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
 namespace SharpGram.Tl.Constructors.ContactNs {
     public class Contact : ContactBase, ITlSerializable, ITlDeserializable<Contact> {
         public static readonly byte[] Identifier = [11,222,90,20,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public bool Mutual {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -5416,8 +5305,8 @@ namespace SharpGram.Tl.Constructors.ContactNs {
 namespace SharpGram.Tl.Constructors.ImportedContactNs {
     public class ImportedContact : ImportedContactBase, ITlSerializable, ITlDeserializable<ImportedContact> {
         public static readonly byte[] Identifier = [80,60,62,193,];
-        public required long UserId {get;set;}
-        public required long ClientId {get;set;}
+        public long UserId {get;set;}
+        public long ClientId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -5442,7 +5331,7 @@ namespace SharpGram.Tl.Constructors.ImportedContactNs {
 namespace SharpGram.Tl.Constructors.ContactStatusNs {
     public class ContactStatus : ContactStatusBase, ITlSerializable, ITlDeserializable<ContactStatus> {
         public static readonly byte[] Identifier = [59,112,217,22,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public required UserStatusBase Status {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -5483,7 +5372,7 @@ namespace SharpGram.Tl.Constructors.ContactsContactsNs {
     public class ContactsContacts : ContactsContactsBase, ITlSerializable, ITlDeserializable<ContactsContacts> {
         public static readonly byte[] Identifier = [66,126,232,234,];
         public required List<ContactBase> Contacts {get;set;}
-        public required int SavedCount {get;set;}
+        public int SavedCount {get;set;}
         public required List<UserBase> Users {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -5569,7 +5458,7 @@ namespace SharpGram.Tl.Constructors.ContactsBlockedNs {
     }
     public class ContactsBlockedSlice : ContactsBlockedBase, ITlSerializable, ITlDeserializable<ContactsBlockedSlice> {
         public static readonly byte[] Identifier = [148,65,102,225,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -5630,7 +5519,7 @@ namespace SharpGram.Tl.Constructors.MessagesDialogsNs {
     }
     public class MessagesDialogsSlice : MessagesDialogsBase, ITlSerializable, ITlDeserializable<MessagesDialogsSlice> {
         public static readonly byte[] Identifier = [243,148,224,113,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<DialogBase> Dialogs {get;set;}
         public required List<MessageBase> Messages {get;set;}
         public required List<ChatBase> Chats {get;set;}
@@ -5664,7 +5553,7 @@ namespace SharpGram.Tl.Constructors.MessagesDialogsNs {
     }
     public class MessagesDialogsNotModified : MessagesDialogsBase, ITlSerializable, ITlDeserializable<MessagesDialogsNotModified> {
         public static readonly byte[] Identifier = [150,229,227,240,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -5712,9 +5601,8 @@ namespace SharpGram.Tl.Constructors.MessagesMessagesNs {
     }
     public class MessagesMessagesSlice : MessagesMessagesBase, ITlSerializable, ITlDeserializable<MessagesMessagesSlice> {
         public static readonly byte[] Identifier = [94,104,84,58,];
-        private int Flags;
         public bool Inexact {get;set;}
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public int? NextRate {get;set;}
         public int? OffsetIdOffset {get;set;}
         public required List<MessageBase> Messages {get;set;}
@@ -5744,7 +5632,6 @@ namespace SharpGram.Tl.Constructors.MessagesMessagesNs {
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Inexact = inexactLocal,
             Count = countLocal,
             NextRate = nextRateLocal,
@@ -5757,10 +5644,9 @@ namespace SharpGram.Tl.Constructors.MessagesMessagesNs {
     }
     public class MessagesChannelMessages : MessagesMessagesBase, ITlSerializable, ITlDeserializable<MessagesChannelMessages> {
         public static readonly byte[] Identifier = [78,186,118,199,];
-        private int Flags;
         public bool Inexact {get;set;}
-        public required int Pts {get;set;}
-        public required int Count {get;set;}
+        public int Pts {get;set;}
+        public int Count {get;set;}
         public int? OffsetIdOffset {get;set;}
         public required List<MessageBase> Messages {get;set;}
         public required List<ForumTopicBase> Topics {get;set;}
@@ -5792,7 +5678,6 @@ namespace SharpGram.Tl.Constructors.MessagesMessagesNs {
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Inexact = inexactLocal,
             Pts = ptsLocal,
             Count = countLocal,
@@ -5806,7 +5691,7 @@ namespace SharpGram.Tl.Constructors.MessagesMessagesNs {
     }
     public class MessagesMessagesNotModified : MessagesMessagesBase, ITlSerializable, ITlDeserializable<MessagesMessagesNotModified> {
         public static readonly byte[] Identifier = [33,95,83,116,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -5845,7 +5730,7 @@ namespace SharpGram.Tl.Constructors.MessagesChatsNs {
     }
     public class MessagesChatsSlice : MessagesChatsBase, ITlSerializable, ITlDeserializable<MessagesChatsSlice> {
         public static readonly byte[] Identifier = [68,17,216,156,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -5900,9 +5785,9 @@ namespace SharpGram.Tl.Constructors.MessagesChatFullNs {
 namespace SharpGram.Tl.Constructors.MessagesAffectedHistoryNs {
     public class MessagesAffectedHistory : MessagesAffectedHistoryBase, ITlSerializable, ITlDeserializable<MessagesAffectedHistory> {
         public static readonly byte[] Identifier = [209,105,92,180,];
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
-        public required int Offset {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
+        public int Offset {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6070,7 +5955,6 @@ namespace SharpGram.Tl.Constructors.MessagesFilterNs {
     }
     public class InputMessagesFilterPhoneCalls : MessagesFilterBase, ITlSerializable, ITlDeserializable<InputMessagesFilterPhoneCalls> {
         public static readonly byte[] Identifier = [104,151,201,128,];
-        private int Flags;
         public bool Missed {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -6084,7 +5968,6 @@ namespace SharpGram.Tl.Constructors.MessagesFilterNs {
             var flagsLocal =  des.As<int>().Read();
             var missedLocal = (flagsLocal & 1) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             Missed = missedLocal,
             };
         }
@@ -6180,8 +6063,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateNewMessage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateNewMessage> {
         public static readonly byte[] Identifier = [253,10,43,31,];
         public required MessageBase Message {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6205,8 +6088,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateMessageID : UpdateBase, ITlSerializable, ITlDeserializable<UpdateMessageID> {
         public static readonly byte[] Identifier = [214,191,144,78,];
-        public required int Id {get;set;}
-        public required long RandomId {get;set;}
+        public int Id {get;set;}
+        public long RandomId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6228,8 +6111,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateDeleteMessages : UpdateBase, ITlSerializable, ITlDeserializable<UpdateDeleteMessages> {
         public static readonly byte[] Identifier = [229,176,13,162,];
         public required List<int> Messages {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6253,7 +6136,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateUserTyping : UpdateBase, ITlSerializable, ITlDeserializable<UpdateUserTyping> {
         public static readonly byte[] Identifier = [127,133,30,192,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public required SendMessageActionBase Action {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -6275,7 +6158,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChatUserTyping : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChatUserTyping> {
         public static readonly byte[] Identifier = [240,122,72,131,];
-        public required long ChatId {get;set;}
+        public long ChatId {get;set;}
         public required PeerBase FromId {get;set;}
         public required SendMessageActionBase Action {get;set;}
         public new byte[] TlSerialize() {
@@ -6319,7 +6202,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateUserStatus : UpdateBase, ITlSerializable, ITlDeserializable<UpdateUserStatus> {
         public static readonly byte[] Identifier = [222,248,189,229,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public required UserStatusBase Status {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -6341,7 +6224,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateUserName : UpdateBase, ITlSerializable, ITlDeserializable<UpdateUserName> {
         public static readonly byte[] Identifier = [36,137,132,167,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public required string FirstName {get;set;}
         public required string LastName {get;set;}
         public required List<UsernameBase> Usernames {get;set;}
@@ -6371,9 +6254,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateNewAuthorization : UpdateBase, ITlSerializable, ITlDeserializable<UpdateNewAuthorization> {
         public static readonly byte[] Identifier = [239,171,81,137,];
-        private int Flags;
         public bool Unconfirmed {get;set;}
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public int? Date {get;set;}
         public string? Device {get;set;}
         public string? Location {get;set;}
@@ -6397,7 +6279,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var deviceLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             var locationLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Unconfirmed = unconfirmedLocal,
             Hash = hashLocal,
             Date = dateLocal,
@@ -6409,7 +6290,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateNewEncryptedMessage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateNewEncryptedMessage> {
         public static readonly byte[] Identifier = [154,189,188,18,];
         public required EncryptedMessageBase Message {get;set;}
-        public required int Qts {get;set;}
+        public int Qts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6430,7 +6311,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateEncryptedChatTyping : UpdateBase, ITlSerializable, ITlDeserializable<UpdateEncryptedChatTyping> {
         public static readonly byte[] Identifier = [86,241,16,23,];
-        public required int ChatId {get;set;}
+        public int ChatId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6449,7 +6330,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateEncryption : UpdateBase, ITlSerializable, ITlDeserializable<UpdateEncryption> {
         public static readonly byte[] Identifier = [141,232,162,180,];
         public required EncryptedChatBase Chat {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6470,9 +6351,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateEncryptedMessagesRead : UpdateBase, ITlSerializable, ITlDeserializable<UpdateEncryptedMessagesRead> {
         public static readonly byte[] Identifier = [183,37,254,56,];
-        public required int ChatId {get;set;}
-        public required int MaxDate {get;set;}
-        public required int Date {get;set;}
+        public int ChatId {get;set;}
+        public int MaxDate {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6496,11 +6377,11 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChatParticipantAdd : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChatParticipantAdd> {
         public static readonly byte[] Identifier = [81,84,218,61,];
-        public required long ChatId {get;set;}
-        public required long UserId {get;set;}
-        public required long InviterId {get;set;}
-        public required int Date {get;set;}
-        public required int Version {get;set;}
+        public long ChatId {get;set;}
+        public long UserId {get;set;}
+        public long InviterId {get;set;}
+        public int Date {get;set;}
+        public int Version {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6530,9 +6411,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChatParticipantDelete : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChatParticipantDelete> {
         public static readonly byte[] Identifier = [119,61,47,227,];
-        public required long ChatId {get;set;}
-        public required long UserId {get;set;}
-        public required int Version {get;set;}
+        public long ChatId {get;set;}
+        public long UserId {get;set;}
+        public int Version {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6596,7 +6477,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateServiceNotification : UpdateBase, ITlSerializable, ITlDeserializable<UpdateServiceNotification> {
         public static readonly byte[] Identifier = [25,104,228,235,];
-        private int Flags;
         public bool Popup {get;set;}
         public bool InvertMedia {get;set;}
         public int? InboxDate {get;set;}
@@ -6627,7 +6507,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var mediaLocal =  MessageMediaBase.TlDeserialize(des);
             var entitiesLocal =  des.Read<MessageEntityBase>();
             return new() {
-            Flags = flagsLocal,
             Popup = popupLocal,
             InvertMedia = invertMediaLocal,
             InboxDate = inboxDateLocal,
@@ -6662,7 +6541,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateUserPhone : UpdateBase, ITlSerializable, ITlDeserializable<UpdateUserPhone> {
         public static readonly byte[] Identifier = [19,42,73,5,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public required string Phone {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -6684,13 +6563,12 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateReadHistoryInbox : UpdateBase, ITlSerializable, ITlDeserializable<UpdateReadHistoryInbox> {
         public static readonly byte[] Identifier = [223,79,151,156,];
-        private int Flags;
         public int? FolderId {get;set;}
         public required PeerBase Peer {get;set;}
-        public required int MaxId {get;set;}
-        public required int StillUnreadCount {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int MaxId {get;set;}
+        public int StillUnreadCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6714,7 +6592,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var ptsLocal =  des.As<int>().Read();
             var ptsCountLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             FolderId = folderIdLocal,
             Peer = peerLocal,
             MaxId = maxIdLocal,
@@ -6727,9 +6604,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateReadHistoryOutbox : UpdateBase, ITlSerializable, ITlDeserializable<UpdateReadHistoryOutbox> {
         public static readonly byte[] Identifier = [191,33,47,47,];
         public required PeerBase Peer {get;set;}
-        public required int MaxId {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int MaxId {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6757,8 +6634,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateWebPage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateWebPage> {
         public static readonly byte[] Identifier = [19,18,137,127,];
         public required WebPageBase Webpage {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6782,10 +6659,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateReadMessagesContents : UpdateBase, ITlSerializable, ITlDeserializable<UpdateReadMessagesContents> {
         public static readonly byte[] Identifier = [129,113,34,248,];
-        private int Flags;
         public required List<int> Messages {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public int? Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -6806,7 +6682,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var ptsCountLocal =  des.As<int>().Read();
             var dateLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Messages = messagesLocal,
             Pts = ptsLocal,
             PtsCount = ptsCountLocal,
@@ -6816,8 +6691,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelTooLong : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelTooLong> {
         public static readonly byte[] Identifier = [31,148,141,16,];
-        private int Flags;
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public int? Pts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -6834,7 +6708,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var channelIdLocal =  des.As<long>().Read();
             var ptsLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             ChannelId = channelIdLocal,
             Pts = ptsLocal,
             };
@@ -6842,7 +6715,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannel : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannel> {
         public static readonly byte[] Identifier = [9,76,91,99,];
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6861,8 +6734,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateNewChannelMessage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateNewChannelMessage> {
         public static readonly byte[] Identifier = [217,4,186,98,];
         public required MessageBase Message {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6886,12 +6759,11 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateReadChannelInbox : UpdateBase, ITlSerializable, ITlDeserializable<UpdateReadChannelInbox> {
         public static readonly byte[] Identifier = [16,110,46,146,];
-        private int Flags;
         public int? FolderId {get;set;}
-        public required long ChannelId {get;set;}
-        public required int MaxId {get;set;}
-        public required int StillUnreadCount {get;set;}
-        public required int Pts {get;set;}
+        public long ChannelId {get;set;}
+        public int MaxId {get;set;}
+        public int StillUnreadCount {get;set;}
+        public int Pts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6913,7 +6785,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var stillUnreadCountLocal =  des.As<int>().Read();
             var ptsLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             FolderId = folderIdLocal,
             ChannelId = channelIdLocal,
             MaxId = maxIdLocal,
@@ -6924,10 +6795,10 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateDeleteChannelMessages : UpdateBase, ITlSerializable, ITlDeserializable<UpdateDeleteChannelMessages> {
         public static readonly byte[] Identifier = [18,91,45,195,];
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public required List<int> Messages {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6954,9 +6825,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelMessageViews : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelMessageViews> {
         public static readonly byte[] Identifier = [8,172,38,242,];
-        public required long ChannelId {get;set;}
-        public required int Id {get;set;}
-        public required int Views {get;set;}
+        public long ChannelId {get;set;}
+        public int Id {get;set;}
+        public int Views {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -6980,10 +6851,10 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChatParticipantAdmin : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChatParticipantAdmin> {
         public static readonly byte[] Identifier = [162,97,202,215,];
-        public required long ChatId {get;set;}
-        public required long UserId {get;set;}
+        public long ChatId {get;set;}
+        public long UserId {get;set;}
         public bool IsAdmin {get;set;}
-        public required int Version {get;set;}
+        public int Version {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -7027,7 +6898,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateStickerSetsOrder : UpdateBase, ITlSerializable, ITlDeserializable<UpdateStickerSetsOrder> {
         public static readonly byte[] Identifier = [1,210,178,11,];
-        private int Flags;
         public bool Masks {get;set;}
         public bool Emojis {get;set;}
         public required List<long> Order {get;set;}
@@ -7046,7 +6916,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var emojisLocal = (flagsLocal & 2) is 0 ? default : true ;
             var orderLocal =  des.ReadNumbers<long>();
             return new() {
-            Flags = flagsLocal,
             Masks = masksLocal,
             Emojis = emojisLocal,
             Order = orderLocal,
@@ -7055,7 +6924,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateStickerSets : UpdateBase, ITlSerializable, ITlDeserializable<UpdateStickerSets> {
         public static readonly byte[] Identifier = [8,72,194,49,];
-        private int Flags;
         public bool Masks {get;set;}
         public bool Emojis {get;set;}
         public new byte[] TlSerialize() {
@@ -7071,7 +6939,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var masksLocal = (flagsLocal & 1) is 0 ? default : true ;
             var emojisLocal = (flagsLocal & 2) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             Masks = masksLocal,
             Emojis = emojisLocal,
             };
@@ -7093,9 +6960,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateBotInlineQuery : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotInlineQuery> {
         public static readonly byte[] Identifier = [156,55,111,73,];
-        private int Flags;
-        public required long QueryId {get;set;}
-        public required long UserId {get;set;}
+        public long QueryId {get;set;}
+        public long UserId {get;set;}
         public required string Query {get;set;}
         public GeoPointBase? Geo {get;set;}
         public InlineQueryPeerTypeBase? PeerType {get;set;}
@@ -7123,7 +6989,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var peerTypeLocal = (flagsLocal & 2) is 0 ? default : InlineQueryPeerTypeBase.TlDeserialize(des) ;
             var offsetLocal =  des.As<string>().Read();
             return new() {
-            Flags = flagsLocal,
             QueryId = queryIdLocal,
             UserId = userIdLocal,
             Query = queryLocal,
@@ -7135,8 +7000,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateBotInlineSend : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotInlineSend> {
         public static readonly byte[] Identifier = [7,42,241,18,];
-        private int Flags;
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public required string Query {get;set;}
         public GeoPointBase? Geo {get;set;}
         public required string Id {get;set;}
@@ -7162,7 +7026,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var idLocal =  des.As<string>().Read();
             var msgIdLocal = (flagsLocal & 2) is 0 ? default : InputBotInlineMessageIDBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             UserId = userIdLocal,
             Query = queryLocal,
             Geo = geoLocal,
@@ -7174,8 +7037,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateEditChannelMessage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateEditChannelMessage> {
         public static readonly byte[] Identifier = [247,77,63,27,];
         public required MessageBase Message {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -7199,12 +7062,11 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateBotCallbackQuery : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotCallbackQuery> {
         public static readonly byte[] Identifier = [141,196,207,185,];
-        private int Flags;
-        public required long QueryId {get;set;}
-        public required long UserId {get;set;}
+        public long QueryId {get;set;}
+        public long UserId {get;set;}
         public required PeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
-        public required long ChatInstance {get;set;}
+        public int MsgId {get;set;}
+        public long ChatInstance {get;set;}
         public byte[]? Data {get;set;}
         public string? GameShortName {get;set;}
         public new byte[] TlSerialize() {
@@ -7232,7 +7094,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var dataLocal = (flagsLocal & 1) is 0 ? default : des.As<byte[]>().Read() ;
             var gameShortNameLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             QueryId = queryIdLocal,
             UserId = userIdLocal,
             Peer = peerLocal,
@@ -7246,8 +7107,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateEditMessage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateEditMessage> {
         public static readonly byte[] Identifier = [163,112,3,228,];
         public required MessageBase Message {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -7271,11 +7132,10 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateInlineBotCallbackQuery : UpdateBase, ITlSerializable, ITlDeserializable<UpdateInlineBotCallbackQuery> {
         public static readonly byte[] Identifier = [82,144,30,105,];
-        private int Flags;
-        public required long QueryId {get;set;}
-        public required long UserId {get;set;}
+        public long QueryId {get;set;}
+        public long UserId {get;set;}
         public required InputBotInlineMessageIDBase MsgId {get;set;}
-        public required long ChatInstance {get;set;}
+        public long ChatInstance {get;set;}
         public byte[]? Data {get;set;}
         public string? GameShortName {get;set;}
         public new byte[] TlSerialize() {
@@ -7301,7 +7161,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var dataLocal = (flagsLocal & 1) is 0 ? default : des.As<byte[]>().Read() ;
             var gameShortNameLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             QueryId = queryIdLocal,
             UserId = userIdLocal,
             MsgId = msgIdLocal,
@@ -7313,8 +7172,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateReadChannelOutbox : UpdateBase, ITlSerializable, ITlDeserializable<UpdateReadChannelOutbox> {
         public static readonly byte[] Identifier = [169,153,95,183,];
-        public required long ChannelId {get;set;}
-        public required int MaxId {get;set;}
+        public long ChannelId {get;set;}
+        public int MaxId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -7335,7 +7194,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateDraftMessage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateDraftMessage> {
         public static readonly byte[] Identifier = [109,236,73,27,];
-        private int Flags;
         public required PeerBase Peer {get;set;}
         public int? TopMsgId {get;set;}
         public required DraftMessageBase Draft {get;set;}
@@ -7356,7 +7214,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var topMsgIdLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             var draftLocal =  DraftMessageBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Peer = peerLocal,
             TopMsgId = topMsgIdLocal,
             Draft = draftLocal,
@@ -7421,10 +7278,10 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelWebPage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelWebPage> {
         public static readonly byte[] Identifier = [159,169,43,47,];
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public required WebPageBase Webpage {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -7451,7 +7308,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateDialogPinned : UpdateBase, ITlSerializable, ITlDeserializable<UpdateDialogPinned> {
         public static readonly byte[] Identifier = [28,229,111,110,];
-        private int Flags;
         public bool Pinned {get;set;}
         public int? FolderId {get;set;}
         public required DialogPeerBase Peer {get;set;}
@@ -7471,7 +7327,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var folderIdLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             var peerLocal =  DialogPeerBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Pinned = pinnedLocal,
             FolderId = folderIdLocal,
             Peer = peerLocal,
@@ -7480,7 +7335,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdatePinnedDialogs : UpdateBase, ITlSerializable, ITlDeserializable<UpdatePinnedDialogs> {
         public static readonly byte[] Identifier = [162,60,15,250,];
-        private int Flags;
         public int? FolderId {get;set;}
         public List<DialogPeerBase>? Order {get;set;}
         public new byte[] TlSerialize() {
@@ -7498,7 +7352,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var folderIdLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             var orderLocal = (flagsLocal & 1) is 0 ? default : des.Read<DialogPeerBase>() ;
             return new() {
-            Flags = flagsLocal,
             FolderId = folderIdLocal,
             Order = orderLocal,
             };
@@ -7524,9 +7377,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateBotWebhookJSONQuery : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotWebhookJSONQuery> {
         public static readonly byte[] Identifier = [166,64,146,155,];
-        public required long QueryId {get;set;}
+        public long QueryId {get;set;}
         public required DataJSONBase Data {get;set;}
-        public required int Timeout {get;set;}
+        public int Timeout {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -7550,8 +7403,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateBotShippingQuery : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotShippingQuery> {
         public static readonly byte[] Identifier = [125,253,174,181,];
-        public required long QueryId {get;set;}
-        public required long UserId {get;set;}
+        public long QueryId {get;set;}
+        public long UserId {get;set;}
         public required byte[] Payload {get;set;}
         public required PostAddressBase ShippingAddress {get;set;}
         public new byte[] TlSerialize() {
@@ -7580,14 +7433,13 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateBotPrecheckoutQuery : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotPrecheckoutQuery> {
         public static readonly byte[] Identifier = [150,154,170,140,];
-        private int Flags;
-        public required long QueryId {get;set;}
-        public required long UserId {get;set;}
+        public long QueryId {get;set;}
+        public long UserId {get;set;}
         public required byte[] Payload {get;set;}
         public PaymentRequestedInfoBase? Info {get;set;}
         public string? ShippingOptionId {get;set;}
         public required string Currency {get;set;}
-        public required long TotalAmount {get;set;}
+        public long TotalAmount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -7613,7 +7465,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var currencyLocal =  des.As<string>().Read();
             var totalAmountLocal =  des.As<long>().Read();
             return new() {
-            Flags = flagsLocal,
             QueryId = queryIdLocal,
             UserId = userIdLocal,
             Payload = payloadLocal,
@@ -7694,8 +7545,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelReadMessagesContents : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelReadMessagesContents> {
         public static readonly byte[] Identifier = [93,5,41,234,];
-        private int Flags;
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public int? TopMsgId {get;set;}
         public required List<int> Messages {get;set;}
         public new byte[] TlSerialize() {
@@ -7715,7 +7565,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var topMsgIdLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             var messagesLocal =  des.ReadNumbers<int>();
             return new() {
-            Flags = flagsLocal,
             ChannelId = channelIdLocal,
             TopMsgId = topMsgIdLocal,
             Messages = messagesLocal,
@@ -7738,8 +7587,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelAvailableMessages : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelAvailableMessages> {
         public static readonly byte[] Identifier = [152,198,63,178,];
-        public required long ChannelId {get;set;}
-        public required int AvailableMinId {get;set;}
+        public long ChannelId {get;set;}
+        public int AvailableMinId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -7760,7 +7609,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateDialogUnreadMark : UpdateBase, ITlSerializable, ITlDeserializable<UpdateDialogUnreadMark> {
         public static readonly byte[] Identifier = [195,89,100,225,];
-        private int Flags;
         public bool Unread {get;set;}
         public required DialogPeerBase Peer {get;set;}
         public new byte[] TlSerialize() {
@@ -7777,7 +7625,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var unreadLocal = (flagsLocal & 1) is 0 ? default : true ;
             var peerLocal =  DialogPeerBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Unread = unreadLocal,
             Peer = peerLocal,
             };
@@ -7785,8 +7632,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateMessagePoll : UpdateBase, ITlSerializable, ITlDeserializable<UpdateMessagePoll> {
         public static readonly byte[] Identifier = [123,101,161,172,];
-        private int Flags;
-        public required long PollId {get;set;}
+        public long PollId {get;set;}
         public PollBase? Poll {get;set;}
         public required PollResultsBase Results {get;set;}
         public new byte[] TlSerialize() {
@@ -7806,7 +7652,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var pollLocal = (flagsLocal & 1) is 0 ? default : PollBase.TlDeserialize(des) ;
             var resultsLocal =  PollResultsBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             PollId = pollIdLocal,
             Poll = pollLocal,
             Results = resultsLocal,
@@ -7817,7 +7662,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public static readonly byte[] Identifier = [80,24,192,84,];
         public required PeerBase Peer {get;set;}
         public required ChatBannedRightsBase DefaultBannedRights {get;set;}
-        public required int Version {get;set;}
+        public int Version {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -7842,8 +7687,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateFolderPeers : UpdateBase, ITlSerializable, ITlDeserializable<UpdateFolderPeers> {
         public static readonly byte[] Identifier = [192,13,54,25,];
         public required List<FolderPeerBase> FolderPeers {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -7966,7 +7811,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateGeoLiveViewed : UpdateBase, ITlSerializable, ITlDeserializable<UpdateGeoLiveViewed> {
         public static readonly byte[] Identifier = [57,185,31,135,];
         public required PeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
+        public int MsgId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8001,10 +7846,10 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateMessagePollVote : UpdateBase, ITlSerializable, ITlDeserializable<UpdateMessagePollVote> {
         public static readonly byte[] Identifier = [119,14,244,36,];
-        public required long PollId {get;set;}
+        public long PollId {get;set;}
         public required PeerBase Peer {get;set;}
         public required List<byte[]> Options {get;set;}
-        public required int Qts {get;set;}
+        public int Qts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8031,8 +7876,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateDialogFilter : UpdateBase, ITlSerializable, ITlDeserializable<UpdateDialogFilter> {
         public static readonly byte[] Identifier = [125,222,255,38,];
-        private int Flags;
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public DialogFilterBase? Filter {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -8049,7 +7893,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var idLocal =  des.As<int>().Read();
             var filterLocal = (flagsLocal & 1) is 0 ? default : DialogFilterBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             Filter = filterLocal,
             };
@@ -8089,7 +7932,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdatePhoneCallSignalingData : UpdateBase, ITlSerializable, ITlDeserializable<UpdatePhoneCallSignalingData> {
         public static readonly byte[] Identifier = [9,191,97,38,];
-        public required long PhoneCallId {get;set;}
+        public long PhoneCallId {get;set;}
         public required byte[] Data {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -8111,9 +7954,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelMessageForwards : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelMessageForwards> {
         public static readonly byte[] Identifier = [244,39,154,210,];
-        public required long ChannelId {get;set;}
-        public required int Id {get;set;}
-        public required int Forwards {get;set;}
+        public long ChannelId {get;set;}
+        public int Id {get;set;}
+        public int Forwards {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8137,10 +7980,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateReadChannelDiscussionInbox : UpdateBase, ITlSerializable, ITlDeserializable<UpdateReadChannelDiscussionInbox> {
         public static readonly byte[] Identifier = [70,149,177,214,];
-        private int Flags;
-        public required long ChannelId {get;set;}
-        public required int TopMsgId {get;set;}
-        public required int ReadMaxId {get;set;}
+        public long ChannelId {get;set;}
+        public int TopMsgId {get;set;}
+        public int ReadMaxId {get;set;}
         public long? BroadcastId {get;set;}
         public int? BroadcastPost {get;set;}
         public new byte[] TlSerialize() {
@@ -8164,7 +8006,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var broadcastIdLocal = (flagsLocal & 1) is 0 ? default : des.As<long>().Read() ;
             var broadcastPostLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             ChannelId = channelIdLocal,
             TopMsgId = topMsgIdLocal,
             ReadMaxId = readMaxIdLocal,
@@ -8175,9 +8016,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateReadChannelDiscussionOutbox : UpdateBase, ITlSerializable, ITlDeserializable<UpdateReadChannelDiscussionOutbox> {
         public static readonly byte[] Identifier = [124,158,92,105,];
-        public required long ChannelId {get;set;}
-        public required int TopMsgId {get;set;}
-        public required int ReadMaxId {get;set;}
+        public long ChannelId {get;set;}
+        public int TopMsgId {get;set;}
+        public int ReadMaxId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8201,7 +8042,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdatePeerBlocked : UpdateBase, ITlSerializable, ITlDeserializable<UpdatePeerBlocked> {
         public static readonly byte[] Identifier = [82,119,224,235,];
-        private int Flags;
         public bool Blocked {get;set;}
         public bool BlockedMyStoriesFrom {get;set;}
         public required PeerBase PeerId {get;set;}
@@ -8220,7 +8060,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var blockedMyStoriesFromLocal = (flagsLocal & 2) is 0 ? default : true ;
             var peerIdLocal =  PeerBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Blocked = blockedLocal,
             BlockedMyStoriesFrom = blockedMyStoriesFromLocal,
             PeerId = peerIdLocal,
@@ -8229,8 +8068,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelUserTyping : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelUserTyping> {
         public static readonly byte[] Identifier = [35,201,136,140,];
-        private int Flags;
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public int? TopMsgId {get;set;}
         public required PeerBase FromId {get;set;}
         public required SendMessageActionBase Action {get;set;}
@@ -8253,7 +8091,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var fromIdLocal =  PeerBase.TlDeserialize(des);
             var actionLocal =  SendMessageActionBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             ChannelId = channelIdLocal,
             TopMsgId = topMsgIdLocal,
             FromId = fromIdLocal,
@@ -8263,12 +8100,11 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdatePinnedMessages : UpdateBase, ITlSerializable, ITlDeserializable<UpdatePinnedMessages> {
         public static readonly byte[] Identifier = [181,234,133,237,];
-        private int Flags;
         public bool Pinned {get;set;}
         public required PeerBase Peer {get;set;}
         public required List<int> Messages {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8289,7 +8125,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var ptsLocal =  des.As<int>().Read();
             var ptsCountLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Pinned = pinnedLocal,
             Peer = peerLocal,
             Messages = messagesLocal,
@@ -8300,12 +8135,11 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdatePinnedChannelMessages : UpdateBase, ITlSerializable, ITlDeserializable<UpdatePinnedChannelMessages> {
         public static readonly byte[] Identifier = [8,134,185,91,];
-        private int Flags;
         public bool Pinned {get;set;}
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public required List<int> Messages {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8326,7 +8160,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var ptsLocal =  des.As<int>().Read();
             var ptsCountLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Pinned = pinnedLocal,
             ChannelId = channelIdLocal,
             Messages = messagesLocal,
@@ -8337,7 +8170,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChat : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChat> {
         public static readonly byte[] Identifier = [78,106,154,248,];
-        public required long ChatId {get;set;}
+        public long ChatId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8357,7 +8190,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public static readonly byte[] Identifier = [78,219,235,242,];
         public required InputGroupCallBase Call {get;set;}
         public required List<GroupCallParticipantBase> Participants {get;set;}
-        public required int Version {get;set;}
+        public int Version {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8381,7 +8214,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateGroupCall : UpdateBase, ITlSerializable, ITlDeserializable<UpdateGroupCall> {
         public static readonly byte[] Identifier = [0,69,178,20,];
-        public required long ChatId {get;set;}
+        public long ChatId {get;set;}
         public required GroupCallBase Call {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -8403,7 +8236,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdatePeerHistoryTTL : UpdateBase, ITlSerializable, ITlDeserializable<UpdatePeerHistoryTTL> {
         public static readonly byte[] Identifier = [165,185,155,187,];
-        private int Flags;
         public required PeerBase Peer {get;set;}
         public int? TtlPeriod {get;set;}
         public new byte[] TlSerialize() {
@@ -8421,7 +8253,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var peerLocal =  PeerBase.TlDeserialize(des);
             var ttlPeriodLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Peer = peerLocal,
             TtlPeriod = ttlPeriodLocal,
             };
@@ -8429,15 +8260,14 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChatParticipant : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChatParticipant> {
         public static readonly byte[] Identifier = [58,102,135,208,];
-        private int Flags;
-        public required long ChatId {get;set;}
-        public required int Date {get;set;}
-        public required long ActorId {get;set;}
-        public required long UserId {get;set;}
+        public long ChatId {get;set;}
+        public int Date {get;set;}
+        public long ActorId {get;set;}
+        public long UserId {get;set;}
         public ChatParticipantBase? PrevParticipant {get;set;}
         public ChatParticipantBase? NewParticipant {get;set;}
         public ExportedChatInviteBase? Invite {get;set;}
-        public required int Qts {get;set;}
+        public int Qts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8465,7 +8295,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var inviteLocal = (flagsLocal & 4) is 0 ? default : ExportedChatInviteBase.TlDeserialize(des) ;
             var qtsLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             ChatId = chatIdLocal,
             Date = dateLocal,
             ActorId = actorIdLocal,
@@ -8479,16 +8308,15 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelParticipant : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelParticipant> {
         public static readonly byte[] Identifier = [187,58,93,152,];
-        private int Flags;
         public bool ViaChatlist {get;set;}
-        public required long ChannelId {get;set;}
-        public required int Date {get;set;}
-        public required long ActorId {get;set;}
-        public required long UserId {get;set;}
+        public long ChannelId {get;set;}
+        public int Date {get;set;}
+        public long ActorId {get;set;}
+        public long UserId {get;set;}
         public ChannelParticipantBase? PrevParticipant {get;set;}
         public ChannelParticipantBase? NewParticipant {get;set;}
         public ExportedChatInviteBase? Invite {get;set;}
-        public required int Qts {get;set;}
+        public int Qts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8517,7 +8345,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var inviteLocal = (flagsLocal & 4) is 0 ? default : ExportedChatInviteBase.TlDeserialize(des) ;
             var qtsLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             ViaChatlist = viaChatlistLocal,
             ChannelId = channelIdLocal,
             Date = dateLocal,
@@ -8532,10 +8359,10 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateBotStopped : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotStopped> {
         public static readonly byte[] Identifier = [73,10,135,196,];
-        public required long UserId {get;set;}
-        public required int Date {get;set;}
+        public long UserId {get;set;}
+        public int Date {get;set;}
         public bool Stopped {get;set;}
-        public required int Qts {get;set;}
+        public int Qts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8561,7 +8388,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateGroupCallConnection : UpdateBase, ITlSerializable, ITlDeserializable<UpdateGroupCallConnection> {
         public static readonly byte[] Identifier = [130,57,120,11,];
-        private int Flags;
         public bool Presentation {get;set;}
         public required DataJSONBase Params {get;set;}
         public new byte[] TlSerialize() {
@@ -8578,7 +8404,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var presentationLocal = (flagsLocal & 1) is 0 ? default : true ;
             var paramsLocal =  DataJSONBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Presentation = presentationLocal,
             Params = paramsLocal,
             };
@@ -8587,7 +8412,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateBotCommands : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotCommands> {
         public static readonly byte[] Identifier = [46,47,113,77,];
         public required PeerBase Peer {get;set;}
-        public required long BotId {get;set;}
+        public long BotId {get;set;}
         public required List<BotCommandBase> Commands {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -8613,7 +8438,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdatePendingJoinRequests : UpdateBase, ITlSerializable, ITlDeserializable<UpdatePendingJoinRequests> {
         public static readonly byte[] Identifier = [219,195,99,112,];
         public required PeerBase Peer {get;set;}
-        public required int RequestsPending {get;set;}
+        public int RequestsPending {get;set;}
         public required List<long> RecentRequesters {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -8639,11 +8464,11 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateBotChatInviteRequester : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotChatInviteRequester> {
         public static readonly byte[] Identifier = [134,169,223,17,];
         public required PeerBase Peer {get;set;}
-        public required int Date {get;set;}
-        public required long UserId {get;set;}
+        public int Date {get;set;}
+        public long UserId {get;set;}
         public required string About {get;set;}
         public required ExportedChatInviteBase Invite {get;set;}
-        public required int Qts {get;set;}
+        public int Qts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8676,9 +8501,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateMessageReactions : UpdateBase, ITlSerializable, ITlDeserializable<UpdateMessageReactions> {
         public static readonly byte[] Identifier = [184,60,27,94,];
-        private int Flags;
         public required PeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
+        public int MsgId {get;set;}
         public int? TopMsgId {get;set;}
         public required MessageReactionsBase Reactions {get;set;}
         public new byte[] TlSerialize() {
@@ -8700,7 +8524,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var topMsgIdLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             var reactionsLocal =  MessageReactionsBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Peer = peerLocal,
             MsgId = msgIdLocal,
             TopMsgId = topMsgIdLocal,
@@ -8724,7 +8547,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateWebViewResultSent : UpdateBase, ITlSerializable, ITlDeserializable<UpdateWebViewResultSent> {
         public static readonly byte[] Identifier = [157,183,146,21,];
-        public required long QueryId {get;set;}
+        public long QueryId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8742,7 +8565,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateBotMenuButton : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotMenuButton> {
         public static readonly byte[] Identifier = [19,88,184,20,];
-        public required long BotId {get;set;}
+        public long BotId {get;set;}
         public required BotMenuButtonBase Button {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -8778,11 +8601,10 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateTranscribedAudio : UpdateBase, ITlSerializable, ITlDeserializable<UpdateTranscribedAudio> {
         public static readonly byte[] Identifier = [90,205,132,0,];
-        private int Flags;
         public bool Pending {get;set;}
         public required PeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
-        public required long TranscriptionId {get;set;}
+        public int MsgId {get;set;}
+        public long TranscriptionId {get;set;}
         public required string Text {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -8804,7 +8626,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var transcriptionIdLocal =  des.As<long>().Read();
             var textLocal =  des.As<string>().Read();
             return new() {
-            Flags = flagsLocal,
             Pending = pendingLocal,
             Peer = peerLocal,
             MsgId = msgIdLocal,
@@ -8829,7 +8650,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateUserEmojiStatus : UpdateBase, ITlSerializable, ITlDeserializable<UpdateUserEmojiStatus> {
         public static readonly byte[] Identifier = [153,53,55,40,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public required EmojiStatusBase EmojiStatus {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -8879,10 +8700,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateMoveStickerSetToTop : UpdateBase, ITlSerializable, ITlDeserializable<UpdateMoveStickerSetToTop> {
         public static readonly byte[] Identifier = [133,207,252,134,];
-        private int Flags;
         public bool Masks {get;set;}
         public bool Emojis {get;set;}
-        public required long Stickerset {get;set;}
+        public long Stickerset {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8898,7 +8718,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var emojisLocal = (flagsLocal & 2) is 0 ? default : true ;
             var stickersetLocal =  des.As<long>().Read();
             return new() {
-            Flags = flagsLocal,
             Masks = masksLocal,
             Emojis = emojisLocal,
             Stickerset = stickersetLocal,
@@ -8908,7 +8727,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateMessageExtendedMedia : UpdateBase, ITlSerializable, ITlDeserializable<UpdateMessageExtendedMedia> {
         public static readonly byte[] Identifier = [140,169,115,90,];
         public required PeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
+        public int MsgId {get;set;}
         public required MessageExtendedMediaBase ExtendedMedia {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -8933,10 +8752,9 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelPinnedTopic : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelPinnedTopic> {
         public static readonly byte[] Identifier = [227,251,46,25,];
-        private int Flags;
         public bool Pinned {get;set;}
-        public required long ChannelId {get;set;}
-        public required int TopicId {get;set;}
+        public long ChannelId {get;set;}
+        public int TopicId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8953,7 +8771,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var channelIdLocal =  des.As<long>().Read();
             var topicIdLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Pinned = pinnedLocal,
             ChannelId = channelIdLocal,
             TopicId = topicIdLocal,
@@ -8962,8 +8779,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelPinnedTopics : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelPinnedTopics> {
         public static readonly byte[] Identifier = [2,134,25,254,];
-        private int Flags;
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public List<int>? Order {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -8980,7 +8796,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var channelIdLocal =  des.As<long>().Read();
             var orderLocal = (flagsLocal & 1) is 0 ? default : des.ReadNumbers<int>() ;
             return new() {
-            Flags = flagsLocal,
             ChannelId = channelIdLocal,
             Order = orderLocal,
             };
@@ -8988,7 +8803,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateUser : UpdateBase, ITlSerializable, ITlDeserializable<UpdateUser> {
         public static readonly byte[] Identifier = [56,148,82,32,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9020,7 +8835,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateGroupInvitePrivacyForbidden : UpdateBase, ITlSerializable, ITlDeserializable<UpdateGroupInvitePrivacyForbidden> {
         public static readonly byte[] Identifier = [214,138,240,204,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9061,7 +8876,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateReadStories : UpdateBase, ITlSerializable, ITlDeserializable<UpdateReadStories> {
         public static readonly byte[] Identifier = [43,147,78,247,];
         public required PeerBase Peer {get;set;}
-        public required int MaxId {get;set;}
+        public int MaxId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9082,8 +8897,8 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateStoryID : UpdateBase, ITlSerializable, ITlDeserializable<UpdateStoryID> {
         public static readonly byte[] Identifier = [185,53,243,27,];
-        public required int Id {get;set;}
-        public required long RandomId {get;set;}
+        public int Id {get;set;}
+        public long RandomId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9123,7 +8938,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateSentStoryReaction : UpdateBase, ITlSerializable, ITlDeserializable<UpdateSentStoryReaction> {
         public static readonly byte[] Identifier = [131,118,98,125,];
         public required PeerBase Peer {get;set;}
-        public required int StoryId {get;set;}
+        public int StoryId {get;set;}
         public required ReactionBase Reaction {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -9150,7 +8965,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public static readonly byte[] Identifier = [156,212,77,144,];
         public required PeerBase Peer {get;set;}
         public required BoostBase Boost {get;set;}
-        public required int Qts {get;set;}
+        public int Qts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9174,7 +8989,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateChannelViewForumAsMessages : UpdateBase, ITlSerializable, ITlDeserializable<UpdateChannelViewForumAsMessages> {
         public static readonly byte[] Identifier = [32,137,182,7,];
-        public required long ChannelId {get;set;}
+        public long ChannelId {get;set;}
         public bool Enabled {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -9195,7 +9010,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdatePeerWallpaper : UpdateBase, ITlSerializable, ITlDeserializable<UpdatePeerWallpaper> {
         public static readonly byte[] Identifier = [29,16,63,174,];
-        private int Flags;
         public bool WallpaperOverridden {get;set;}
         public required PeerBase Peer {get;set;}
         public WallPaperBase? Wallpaper {get;set;}
@@ -9215,7 +9029,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var peerLocal =  PeerBase.TlDeserialize(des);
             var wallpaperLocal = (flagsLocal & 1) is 0 ? default : WallPaperBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             WallpaperOverridden = wallpaperOverriddenLocal,
             Peer = peerLocal,
             Wallpaper = wallpaperLocal,
@@ -9225,12 +9038,12 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateBotMessageReaction : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotMessageReaction> {
         public static readonly byte[] Identifier = [206,211,33,172,];
         public required PeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
-        public required int Date {get;set;}
+        public int MsgId {get;set;}
+        public int Date {get;set;}
         public required PeerBase Actor {get;set;}
         public required List<ReactionBase> OldReactions {get;set;}
         public required List<ReactionBase> NewReactions {get;set;}
-        public required int Qts {get;set;}
+        public int Qts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9267,10 +9080,10 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     public class UpdateBotMessageReactions : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotMessageReactions> {
         public static readonly byte[] Identifier = [89,119,203,9,];
         public required PeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
-        public required int Date {get;set;}
+        public int MsgId {get;set;}
+        public int Date {get;set;}
         public required List<ReactionCountBase> Reactions {get;set;}
-        public required int Qts {get;set;}
+        public int Qts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9300,7 +9113,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdateSavedDialogPinned : UpdateBase, ITlSerializable, ITlDeserializable<UpdateSavedDialogPinned> {
         public static readonly byte[] Identifier = [116,158,175,174,];
-        private int Flags;
         public bool Pinned {get;set;}
         public required DialogPeerBase Peer {get;set;}
         public new byte[] TlSerialize() {
@@ -9317,7 +9129,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var pinnedLocal = (flagsLocal & 1) is 0 ? default : true ;
             var peerLocal =  DialogPeerBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Pinned = pinnedLocal,
             Peer = peerLocal,
             };
@@ -9325,7 +9136,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
     }
     public class UpdatePinnedSavedDialogs : UpdateBase, ITlSerializable, ITlDeserializable<UpdatePinnedSavedDialogs> {
         public static readonly byte[] Identifier = [166,133,108,104,];
-        private int Flags;
         public List<DialogPeerBase>? Order {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -9340,7 +9150,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var flagsLocal =  des.As<int>().Read();
             var orderLocal = (flagsLocal & 1) is 0 ? default : des.Read<DialogPeerBase>() ;
             return new() {
-            Flags = flagsLocal,
             Order = orderLocal,
             };
         }
@@ -9351,11 +9160,11 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
 namespace SharpGram.Tl.Constructors.UpdatesStateNs {
     public class UpdatesState : UpdatesStateBase, ITlSerializable, ITlDeserializable<UpdatesState> {
         public static readonly byte[] Identifier = [62,42,108,165,];
-        public required int Pts {get;set;}
-        public required int Qts {get;set;}
-        public required int Date {get;set;}
-        public required int Seq {get;set;}
-        public required int UnreadCount {get;set;}
+        public int Pts {get;set;}
+        public int Qts {get;set;}
+        public int Date {get;set;}
+        public int Seq {get;set;}
+        public int UnreadCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9389,8 +9198,8 @@ namespace SharpGram.Tl.Constructors.UpdatesStateNs {
 namespace SharpGram.Tl.Constructors.UpdatesDifferenceNs {
     public class UpdatesDifferenceEmpty : UpdatesDifferenceBase, ITlSerializable, ITlDeserializable<UpdatesDifferenceEmpty> {
         public static readonly byte[] Identifier = [56,161,117,93,];
-        public required int Date {get;set;}
-        public required int Seq {get;set;}
+        public int Date {get;set;}
+        public int Seq {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9487,7 +9296,7 @@ namespace SharpGram.Tl.Constructors.UpdatesDifferenceNs {
     }
     public class UpdatesDifferenceTooLong : UpdatesDifferenceBase, ITlSerializable, ITlDeserializable<UpdatesDifferenceTooLong> {
         public static readonly byte[] Identifier = [109,143,254,74,];
-        public required int Pts {get;set;}
+        public int Pts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9523,17 +9332,16 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
     }
     public class UpdateShortMessage : UpdatesBase, ITlSerializable, ITlDeserializable<UpdateShortMessage> {
         public static readonly byte[] Identifier = [248,199,59,49,];
-        private int Flags;
         public bool Out {get;set;}
         public bool Mentioned {get;set;}
         public bool MediaUnread {get;set;}
         public bool Silent {get;set;}
-        public required int Id {get;set;}
-        public required long UserId {get;set;}
+        public int Id {get;set;}
+        public long UserId {get;set;}
         public required string Message {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
-        public required int Date {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
+        public int Date {get;set;}
         public MessageFwdHeaderBase? FwdFrom {get;set;}
         public long? ViaBotId {get;set;}
         public MessageReplyHeaderBase? ReplyTo {get;set;}
@@ -9576,7 +9384,6 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
             var entitiesLocal = (flagsLocal & 128) is 0 ? default : des.Read<MessageEntityBase>() ;
             var ttlPeriodLocal = (flagsLocal & 33554432) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Out = outLocal,
             Mentioned = mentionedLocal,
             MediaUnread = mediaUnreadLocal,
@@ -9597,18 +9404,17 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
     }
     public class UpdateShortChatMessage : UpdatesBase, ITlSerializable, ITlDeserializable<UpdateShortChatMessage> {
         public static readonly byte[] Identifier = [165,238,109,77,];
-        private int Flags;
         public bool Out {get;set;}
         public bool Mentioned {get;set;}
         public bool MediaUnread {get;set;}
         public bool Silent {get;set;}
-        public required int Id {get;set;}
-        public required long FromId {get;set;}
-        public required long ChatId {get;set;}
+        public int Id {get;set;}
+        public long FromId {get;set;}
+        public long ChatId {get;set;}
         public required string Message {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
-        public required int Date {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
+        public int Date {get;set;}
         public MessageFwdHeaderBase? FwdFrom {get;set;}
         public long? ViaBotId {get;set;}
         public MessageReplyHeaderBase? ReplyTo {get;set;}
@@ -9653,7 +9459,6 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
             var entitiesLocal = (flagsLocal & 128) is 0 ? default : des.Read<MessageEntityBase>() ;
             var ttlPeriodLocal = (flagsLocal & 33554432) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Out = outLocal,
             Mentioned = mentionedLocal,
             MediaUnread = mediaUnreadLocal,
@@ -9676,7 +9481,7 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
     public class UpdateShort : UpdatesBase, ITlSerializable, ITlDeserializable<UpdateShort> {
         public static readonly byte[] Identifier = [193,222,212,120,];
         public required UpdateBase Update {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9700,9 +9505,9 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
         public required List<UpdateBase> Updates {get;set;}
         public required List<UserBase> Users {get;set;}
         public required List<ChatBase> Chats {get;set;}
-        public required int Date {get;set;}
-        public required int SeqStart {get;set;}
-        public required int Seq {get;set;}
+        public int Date {get;set;}
+        public int SeqStart {get;set;}
+        public int Seq {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9738,8 +9543,8 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
         public required List<UpdateBase> UpdatesInner {get;set;}
         public required List<UserBase> Users {get;set;}
         public required List<ChatBase> Chats {get;set;}
-        public required int Date {get;set;}
-        public required int Seq {get;set;}
+        public int Date {get;set;}
+        public int Seq {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9769,12 +9574,11 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
     }
     public class UpdateShortSentMessage : UpdatesBase, ITlSerializable, ITlDeserializable<UpdateShortSentMessage> {
         public static readonly byte[] Identifier = [1,225,21,144,];
-        private int Flags;
         public bool Out {get;set;}
-        public required int Id {get;set;}
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
-        public required int Date {get;set;}
+        public int Id {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
+        public int Date {get;set;}
         public MessageMediaBase? Media {get;set;}
         public List<MessageEntityBase>? Entities {get;set;}
         public int? TtlPeriod {get;set;}
@@ -9804,7 +9608,6 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
             var entitiesLocal = (flagsLocal & 128) is 0 ? default : des.Read<MessageEntityBase>() ;
             var ttlPeriodLocal = (flagsLocal & 33554432) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Out = outLocal,
             Id = idLocal,
             Pts = ptsLocal,
@@ -9842,7 +9645,7 @@ namespace SharpGram.Tl.Constructors.PhotosPhotosNs {
     }
     public class PhotosPhotosSlice : PhotosPhotosBase, ITlSerializable, ITlDeserializable<PhotosPhotosSlice> {
         public static readonly byte[] Identifier = [84,31,5,21,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -9897,7 +9700,7 @@ namespace SharpGram.Tl.Constructors.UploadFileNs {
     public class UploadFile : UploadFileBase, ITlSerializable, ITlDeserializable<UploadFile> {
         public static readonly byte[] Identifier = [213,24,106,9,];
         public required StorageFileTypeBase Type {get;set;}
-        public required int Mtime {get;set;}
+        public int Mtime {get;set;}
         public required byte[] Bytes {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -9922,7 +9725,7 @@ namespace SharpGram.Tl.Constructors.UploadFileNs {
     }
     public class UploadFileCdnRedirect : UploadFileBase, ITlSerializable, ITlDeserializable<UploadFileCdnRedirect> {
         public static readonly byte[] Identifier = [68,218,140,241,];
-        public required int DcId {get;set;}
+        public int DcId {get;set;}
         public required byte[] FileToken {get;set;}
         public required byte[] EncryptionKey {get;set;}
         public required byte[] EncryptionIv {get;set;}
@@ -9960,16 +9763,15 @@ namespace SharpGram.Tl.Constructors.UploadFileNs {
 namespace SharpGram.Tl.Constructors.DcOptionNs {
     public class DcOption : DcOptionBase, ITlSerializable, ITlDeserializable<DcOption> {
         public static readonly byte[] Identifier = [13,161,183,24,];
-        private int Flags;
         public bool Ipv6 {get;set;}
         public bool MediaOnly {get;set;}
         public bool TcpoOnly {get;set;}
         public bool Cdn {get;set;}
         public bool Static {get;set;}
         public bool ThisPortOnly {get;set;}
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public required string IpAddress {get;set;}
-        public required int Port {get;set;}
+        public int Port {get;set;}
         public byte[]? Secret {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -9996,7 +9798,6 @@ namespace SharpGram.Tl.Constructors.DcOptionNs {
             var portLocal =  des.As<int>().Read();
             var secretLocal = (flagsLocal & 1024) is 0 ? default : des.As<byte[]>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Ipv6 = ipv6Local,
             MediaOnly = mediaOnlyLocal,
             TcpoOnly = tcpoOnlyLocal,
@@ -10016,49 +9817,48 @@ namespace SharpGram.Tl.Constructors.DcOptionNs {
 namespace SharpGram.Tl.Constructors.ConfigNs {
     public class Config : ConfigBase, ITlSerializable, ITlDeserializable<Config> {
         public static readonly byte[] Identifier = [30,36,26,204,];
-        private int Flags;
         public bool DefaultP2pContacts {get;set;}
         public bool PreloadFeaturedStickers {get;set;}
         public bool RevokePmInbox {get;set;}
         public bool BlockedMode {get;set;}
         public bool ForceTryIpv6 {get;set;}
-        public required int Date {get;set;}
-        public required int Expires {get;set;}
+        public int Date {get;set;}
+        public int Expires {get;set;}
         public bool TestMode {get;set;}
-        public required int ThisDc {get;set;}
+        public int ThisDc {get;set;}
         public required List<DcOptionBase> DcOptions {get;set;}
         public required string DcTxtDomainName {get;set;}
-        public required int ChatSizeMax {get;set;}
-        public required int MegagroupSizeMax {get;set;}
-        public required int ForwardedCountMax {get;set;}
-        public required int OnlineUpdatePeriodMs {get;set;}
-        public required int OfflineBlurTimeoutMs {get;set;}
-        public required int OfflineIdleTimeoutMs {get;set;}
-        public required int OnlineCloudTimeoutMs {get;set;}
-        public required int NotifyCloudDelayMs {get;set;}
-        public required int NotifyDefaultDelayMs {get;set;}
-        public required int PushChatPeriodMs {get;set;}
-        public required int PushChatLimit {get;set;}
-        public required int EditTimeLimit {get;set;}
-        public required int RevokeTimeLimit {get;set;}
-        public required int RevokePmTimeLimit {get;set;}
-        public required int RatingEDecay {get;set;}
-        public required int StickersRecentLimit {get;set;}
-        public required int ChannelsReadMediaPeriod {get;set;}
+        public int ChatSizeMax {get;set;}
+        public int MegagroupSizeMax {get;set;}
+        public int ForwardedCountMax {get;set;}
+        public int OnlineUpdatePeriodMs {get;set;}
+        public int OfflineBlurTimeoutMs {get;set;}
+        public int OfflineIdleTimeoutMs {get;set;}
+        public int OnlineCloudTimeoutMs {get;set;}
+        public int NotifyCloudDelayMs {get;set;}
+        public int NotifyDefaultDelayMs {get;set;}
+        public int PushChatPeriodMs {get;set;}
+        public int PushChatLimit {get;set;}
+        public int EditTimeLimit {get;set;}
+        public int RevokeTimeLimit {get;set;}
+        public int RevokePmTimeLimit {get;set;}
+        public int RatingEDecay {get;set;}
+        public int StickersRecentLimit {get;set;}
+        public int ChannelsReadMediaPeriod {get;set;}
         public int? TmpSessions {get;set;}
-        public required int CallReceiveTimeoutMs {get;set;}
-        public required int CallRingTimeoutMs {get;set;}
-        public required int CallConnectTimeoutMs {get;set;}
-        public required int CallPacketTimeoutMs {get;set;}
+        public int CallReceiveTimeoutMs {get;set;}
+        public int CallRingTimeoutMs {get;set;}
+        public int CallConnectTimeoutMs {get;set;}
+        public int CallPacketTimeoutMs {get;set;}
         public required string MeUrlPrefix {get;set;}
         public string? AutoupdateUrlPrefix {get;set;}
         public string? GifSearchUsername {get;set;}
         public string? VenueSearchUsername {get;set;}
         public string? ImgSearchUsername {get;set;}
         public string? StaticMapsProvider {get;set;}
-        public required int CaptionLengthMax {get;set;}
-        public required int MessageLengthMax {get;set;}
-        public required int WebfileDcId {get;set;}
+        public int CaptionLengthMax {get;set;}
+        public int MessageLengthMax {get;set;}
+        public int WebfileDcId {get;set;}
         public string? SuggestedLangCode {get;set;}
         public int? LangPackVersion {get;set;}
         public int? BaseLangPackVersion {get;set;}
@@ -10163,7 +9963,6 @@ namespace SharpGram.Tl.Constructors.ConfigNs {
             var reactionsDefaultLocal = (flagsLocal & 32768) is 0 ? default : ReactionBase.TlDeserialize(des) ;
             var autologinTokenLocal = (flagsLocal & 65536) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             DefaultP2pContacts = defaultP2pContactsLocal,
             PreloadFeaturedStickers = preloadFeaturedStickersLocal,
             RevokePmInbox = revokePmInboxLocal,
@@ -10221,8 +10020,8 @@ namespace SharpGram.Tl.Constructors.NearestDcNs {
     public class NearestDc : NearestDcBase, ITlSerializable, ITlDeserializable<NearestDc> {
         public static readonly byte[] Identifier = [117,23,26,142,];
         public required string Country {get;set;}
-        public required int ThisDc {get;set;}
-        public required int NearestDcInner {get;set;}
+        public int ThisDc {get;set;}
+        public int NearestDcInner {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -10250,9 +10049,8 @@ namespace SharpGram.Tl.Constructors.NearestDcNs {
 namespace SharpGram.Tl.Constructors.HelpAppUpdateNs {
     public class HelpAppUpdate : HelpAppUpdateBase, ITlSerializable, ITlDeserializable<HelpAppUpdate> {
         public static readonly byte[] Identifier = [48,206,187,204,];
-        private int Flags;
         public bool CanNotSkip {get;set;}
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public required string Version {get;set;}
         public required string Text {get;set;}
         public required List<MessageEntityBase> Entities {get;set;}
@@ -10285,7 +10083,6 @@ namespace SharpGram.Tl.Constructors.HelpAppUpdateNs {
             var urlLocal = (flagsLocal & 4) is 0 ? default : des.As<string>().Read() ;
             var stickerLocal = (flagsLocal & 8) is 0 ? default : DocumentBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             CanNotSkip = canNotSkipLocal,
             Id = idLocal,
             Version = versionLocal,
@@ -10356,10 +10153,10 @@ namespace SharpGram.Tl.Constructors.EncryptedChatNs {
     }
     public class EncryptedChatWaiting : EncryptedChatBase, ITlSerializable, ITlDeserializable<EncryptedChatWaiting> {
         public static readonly byte[] Identifier = [83,89,178,102,];
-        public required long AccessHash {get;set;}
-        public required int Date {get;set;}
-        public required long AdminId {get;set;}
-        public required long ParticipantId {get;set;}
+        public long AccessHash {get;set;}
+        public int Date {get;set;}
+        public long AdminId {get;set;}
+        public long ParticipantId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -10389,12 +10186,11 @@ namespace SharpGram.Tl.Constructors.EncryptedChatNs {
     }
     public class EncryptedChatRequested : EncryptedChatBase, ITlSerializable, ITlDeserializable<EncryptedChatRequested> {
         public static readonly byte[] Identifier = [76,217,241,72,];
-        private int Flags;
         public int? FolderId {get;set;}
-        public required long AccessHash {get;set;}
-        public required int Date {get;set;}
-        public required long AdminId {get;set;}
-        public required long ParticipantId {get;set;}
+        public long AccessHash {get;set;}
+        public int Date {get;set;}
+        public long AdminId {get;set;}
+        public long ParticipantId {get;set;}
         public required byte[] GA {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -10421,7 +10217,6 @@ namespace SharpGram.Tl.Constructors.EncryptedChatNs {
             var participantIdLocal =  des.As<long>().Read();
             var gALocal =  des.As<byte[]>().Read();
             return new() {
-            Flags = flagsLocal,
             FolderId = folderIdLocal,
             Id = idLocal,
             AccessHash = accessHashLocal,
@@ -10434,12 +10229,12 @@ namespace SharpGram.Tl.Constructors.EncryptedChatNs {
     }
     public class EncryptedChat : EncryptedChatBase, ITlSerializable, ITlDeserializable<EncryptedChat> {
         public static readonly byte[] Identifier = [199,212,240,97,];
-        public required long AccessHash {get;set;}
-        public required int Date {get;set;}
-        public required long AdminId {get;set;}
-        public required long ParticipantId {get;set;}
+        public long AccessHash {get;set;}
+        public int Date {get;set;}
+        public long AdminId {get;set;}
+        public long ParticipantId {get;set;}
         public required byte[] GAOrB {get;set;}
-        public required long KeyFingerprint {get;set;}
+        public long KeyFingerprint {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -10475,7 +10270,6 @@ namespace SharpGram.Tl.Constructors.EncryptedChatNs {
     }
     public class EncryptedChatDiscarded : EncryptedChatBase, ITlSerializable, ITlDeserializable<EncryptedChatDiscarded> {
         public static readonly byte[] Identifier = [69,124,28,30,];
-        private int Flags;
         public bool HistoryDeleted {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -10491,7 +10285,6 @@ namespace SharpGram.Tl.Constructors.EncryptedChatNs {
             var historyDeletedLocal = (flagsLocal & 1) is 0 ? default : true ;
             var idLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             HistoryDeleted = historyDeletedLocal,
             Id = idLocal,
             };
@@ -10503,8 +10296,8 @@ namespace SharpGram.Tl.Constructors.EncryptedChatNs {
 namespace SharpGram.Tl.Constructors.InputEncryptedChatNs {
     public class InputEncryptedChat : InputEncryptedChatBase, ITlSerializable, ITlDeserializable<InputEncryptedChat> {
         public static readonly byte[] Identifier = [225,181,65,241,];
-        public required int ChatId {get;set;}
-        public required long AccessHash {get;set;}
+        public int ChatId {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -10543,11 +10336,11 @@ namespace SharpGram.Tl.Constructors.EncryptedFileNs {
     }
     public class EncryptedFile : EncryptedFileBase, ITlSerializable, ITlDeserializable<EncryptedFile> {
         public static readonly byte[] Identifier = [216,140,0,168,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
-        public required long Size {get;set;}
-        public required int DcId {get;set;}
-        public required int KeyFingerprint {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
+        public long Size {get;set;}
+        public int DcId {get;set;}
+        public int KeyFingerprint {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -10595,10 +10388,10 @@ namespace SharpGram.Tl.Constructors.InputEncryptedFileNs {
     }
     public class InputEncryptedFileUploaded : InputEncryptedFileBase, ITlSerializable, ITlDeserializable<InputEncryptedFileUploaded> {
         public static readonly byte[] Identifier = [6,3,189,100,];
-        public required long Id {get;set;}
-        public required int Parts {get;set;}
+        public long Id {get;set;}
+        public int Parts {get;set;}
         public required string Md5Checksum {get;set;}
-        public required int KeyFingerprint {get;set;}
+        public int KeyFingerprint {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -10625,8 +10418,8 @@ namespace SharpGram.Tl.Constructors.InputEncryptedFileNs {
     }
     public class InputEncryptedFile : InputEncryptedFileBase, ITlSerializable, ITlDeserializable<InputEncryptedFile> {
         public static readonly byte[] Identifier = [229,181,23,90,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -10647,9 +10440,9 @@ namespace SharpGram.Tl.Constructors.InputEncryptedFileNs {
     }
     public class InputEncryptedFileBigUploaded : InputEncryptedFileBase, ITlSerializable, ITlDeserializable<InputEncryptedFileBigUploaded> {
         public static readonly byte[] Identifier = [200,115,193,45,];
-        public required long Id {get;set;}
-        public required int Parts {get;set;}
-        public required int KeyFingerprint {get;set;}
+        public long Id {get;set;}
+        public int Parts {get;set;}
+        public int KeyFingerprint {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -10754,9 +10547,9 @@ namespace SharpGram.Tl.Constructors.MessagesDhConfigNs {
     }
     public class MessagesDhConfig : MessagesDhConfigBase, ITlSerializable, ITlDeserializable<MessagesDhConfig> {
         public static readonly byte[] Identifier = [221,30,34,44,];
-        public required int G {get;set;}
+        public int G {get;set;}
         public required byte[] P {get;set;}
-        public required int Version {get;set;}
+        public int Version {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -10843,8 +10636,8 @@ namespace SharpGram.Tl.Constructors.InputDocumentNs {
     }
     public class InputDocument : InputDocumentBase, ITlSerializable, ITlDeserializable<InputDocument> {
         public static readonly byte[] Identifier = [117,181,191,26,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public required byte[] FileReference {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -10890,15 +10683,14 @@ namespace SharpGram.Tl.Constructors.DocumentNs {
     }
     public class Document : DocumentBase, ITlSerializable, ITlDeserializable<Document> {
         public static readonly byte[] Identifier = [216,196,212,143,];
-        private int Flags;
-        public required long AccessHash {get;set;}
+        public long AccessHash {get;set;}
         public required byte[] FileReference {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public required string MimeType {get;set;}
-        public required long Size {get;set;}
+        public long Size {get;set;}
         public List<PhotoSizeBase>? Thumbs {get;set;}
         public List<VideoSizeBase>? VideoThumbs {get;set;}
-        public required int DcId {get;set;}
+        public int DcId {get;set;}
         public required List<DocumentAttributeBase> Attributes {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -10931,7 +10723,6 @@ namespace SharpGram.Tl.Constructors.DocumentNs {
             var dcIdLocal =  des.As<int>().Read();
             var attributesLocal =  des.Read<DocumentAttributeBase>();
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             AccessHash = accessHashLocal,
             FileReference = fileReferenceLocal,
@@ -11038,7 +10829,7 @@ namespace SharpGram.Tl.Constructors.NotifyPeerNs {
     public class NotifyForumTopic : NotifyPeerBase, ITlSerializable, ITlDeserializable<NotifyForumTopic> {
         public static readonly byte[] Identifier = [8,99,110,34,];
         public required PeerBase Peer {get;set;}
-        public required int TopMsgId {get;set;}
+        public int TopMsgId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -11105,7 +10896,7 @@ namespace SharpGram.Tl.Constructors.SendMessageActionNs {
     }
     public class SendMessageUploadVideoAction : SendMessageActionBase, ITlSerializable, ITlDeserializable<SendMessageUploadVideoAction> {
         public static readonly byte[] Identifier = [236,58,118,233,];
-        public required int Progress {get;set;}
+        public int Progress {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -11137,7 +10928,7 @@ namespace SharpGram.Tl.Constructors.SendMessageActionNs {
     }
     public class SendMessageUploadAudioAction : SendMessageActionBase, ITlSerializable, ITlDeserializable<SendMessageUploadAudioAction> {
         public static readonly byte[] Identifier = [171,215,81,243,];
-        public required int Progress {get;set;}
+        public int Progress {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -11155,7 +10946,7 @@ namespace SharpGram.Tl.Constructors.SendMessageActionNs {
     }
     public class SendMessageUploadPhotoAction : SendMessageActionBase, ITlSerializable, ITlDeserializable<SendMessageUploadPhotoAction> {
         public static readonly byte[] Identifier = [38,74,211,209,];
-        public required int Progress {get;set;}
+        public int Progress {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -11173,7 +10964,7 @@ namespace SharpGram.Tl.Constructors.SendMessageActionNs {
     }
     public class SendMessageUploadDocumentAction : SendMessageActionBase, ITlSerializable, ITlDeserializable<SendMessageUploadDocumentAction> {
         public static readonly byte[] Identifier = [228,217,12,170,];
-        public required int Progress {get;set;}
+        public int Progress {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -11247,7 +11038,7 @@ namespace SharpGram.Tl.Constructors.SendMessageActionNs {
     }
     public class SendMessageUploadRoundAction : SendMessageActionBase, ITlSerializable, ITlDeserializable<SendMessageUploadRoundAction> {
         public static readonly byte[] Identifier = [102,28,62,36,];
-        public required int Progress {get;set;}
+        public int Progress {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -11279,7 +11070,7 @@ namespace SharpGram.Tl.Constructors.SendMessageActionNs {
     }
     public class SendMessageHistoryImportAction : SendMessageActionBase, ITlSerializable, ITlDeserializable<SendMessageHistoryImportAction> {
         public static readonly byte[] Identifier = [70,146,218,219,];
-        public required int Progress {get;set;}
+        public int Progress {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -11312,7 +11103,7 @@ namespace SharpGram.Tl.Constructors.SendMessageActionNs {
     public class SendMessageEmojiInteraction : SendMessageActionBase, ITlSerializable, ITlDeserializable<SendMessageEmojiInteraction> {
         public static readonly byte[] Identifier = [203,43,151,37,];
         public required string Emoticon {get;set;}
-        public required int MsgId {get;set;}
+        public int MsgId {get;set;}
         public required DataJSONBase Interaction {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -12003,7 +11794,7 @@ namespace SharpGram.Tl.Constructors.AccountPrivacyRulesNs {
 namespace SharpGram.Tl.Constructors.AccountDaysTTLNs {
     public class AccountDaysTTL : AccountDaysTTLBase, ITlSerializable, ITlDeserializable<AccountDaysTTL> {
         public static readonly byte[] Identifier = [223,175,208,184,];
-        public required int Days {get;set;}
+        public int Days {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -12025,8 +11816,8 @@ namespace SharpGram.Tl.Constructors.AccountDaysTTLNs {
 namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
     public class DocumentAttributeImageSize : DocumentAttributeBase, ITlSerializable, ITlDeserializable<DocumentAttributeImageSize> {
         public static readonly byte[] Identifier = [92,193,55,108,];
-        public required int W {get;set;}
-        public required int H {get;set;}
+        public int W {get;set;}
+        public int H {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -12061,7 +11852,6 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
     }
     public class DocumentAttributeSticker : DocumentAttributeBase, ITlSerializable, ITlDeserializable<DocumentAttributeSticker> {
         public static readonly byte[] Identifier = [18,214,25,99,];
-        private int Flags;
         public bool Mask {get;set;}
         public required string Alt {get;set;}
         public required InputStickerSetBase Stickerset {get;set;}
@@ -12084,7 +11874,6 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
             var stickersetLocal =  InputStickerSetBase.TlDeserialize(des);
             var maskCoordsLocal = (flagsLocal & 1) is 0 ? default : MaskCoordsBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Mask = maskLocal,
             Alt = altLocal,
             Stickerset = stickersetLocal,
@@ -12094,13 +11883,12 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
     }
     public class DocumentAttributeVideo : DocumentAttributeBase, ITlSerializable, ITlDeserializable<DocumentAttributeVideo> {
         public static readonly byte[] Identifier = [194,241,143,211,];
-        private int Flags;
         public bool RoundMessage {get;set;}
         public bool SupportsStreaming {get;set;}
         public bool Nosound {get;set;}
-        public required double Duration {get;set;}
-        public required int W {get;set;}
-        public required int H {get;set;}
+        public double Duration {get;set;}
+        public int W {get;set;}
+        public int H {get;set;}
         public int? PreloadPrefixSize {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -12124,7 +11912,6 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
             var hLocal =  des.As<int>().Read();
             var preloadPrefixSizeLocal = (flagsLocal & 4) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             RoundMessage = roundMessageLocal,
             SupportsStreaming = supportsStreamingLocal,
             Nosound = nosoundLocal,
@@ -12137,9 +11924,8 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
     }
     public class DocumentAttributeAudio : DocumentAttributeBase, ITlSerializable, ITlDeserializable<DocumentAttributeAudio> {
         public static readonly byte[] Identifier = [198,249,82,152,];
-        private int Flags;
         public bool Voice {get;set;}
-        public required int Duration {get;set;}
+        public int Duration {get;set;}
         public string? Title {get;set;}
         public string? Performer {get;set;}
         public byte[]? Waveform {get;set;}
@@ -12163,7 +11949,6 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
             var performerLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var waveformLocal = (flagsLocal & 4) is 0 ? default : des.As<byte[]>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Voice = voiceLocal,
             Duration = durationLocal,
             Title = titleLocal,
@@ -12206,7 +11991,6 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
     }
     public class DocumentAttributeCustomEmoji : DocumentAttributeBase, ITlSerializable, ITlDeserializable<DocumentAttributeCustomEmoji> {
         public static readonly byte[] Identifier = [153,152,20,253,];
-        private int Flags;
         public bool Free {get;set;}
         public bool TextColor {get;set;}
         public required string Alt {get;set;}
@@ -12228,7 +12012,6 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
             var altLocal =  des.As<string>().Read();
             var stickersetLocal =  InputStickerSetBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Free = freeLocal,
             TextColor = textColorLocal,
             Alt = altLocal,
@@ -12256,7 +12039,7 @@ namespace SharpGram.Tl.Constructors.MessagesStickersNs {
     }
     public class MessagesStickers : MessagesStickersBase, ITlSerializable, ITlDeserializable<MessagesStickers> {
         public static readonly byte[] Identifier = [126,236,166,48,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<DocumentBase> Stickers {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -12322,7 +12105,7 @@ namespace SharpGram.Tl.Constructors.MessagesAllStickersNs {
     }
     public class MessagesAllStickers : MessagesAllStickersBase, ITlSerializable, ITlDeserializable<MessagesAllStickers> {
         public static readonly byte[] Identifier = [187,206,187,205,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<StickerSetBase> Sets {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -12348,8 +12131,8 @@ namespace SharpGram.Tl.Constructors.MessagesAllStickersNs {
 namespace SharpGram.Tl.Constructors.MessagesAffectedMessagesNs {
     public class MessagesAffectedMessages : MessagesAffectedMessagesBase, ITlSerializable, ITlDeserializable<MessagesAffectedMessages> {
         public static readonly byte[] Identifier = [133,145,209,132,];
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -12374,7 +12157,7 @@ namespace SharpGram.Tl.Constructors.MessagesAffectedMessagesNs {
 namespace SharpGram.Tl.Constructors.WebPageNs {
     public class WebPageEmpty : WebPageBase, ITlSerializable, ITlDeserializable<WebPageEmpty> {
         public static readonly byte[] Identifier = [136,23,26,33,];
-        public required long Id {get;set;}
+        public long Id {get;set;}
         public string? Url {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -12391,7 +12174,6 @@ namespace SharpGram.Tl.Constructors.WebPageNs {
             var idLocal =  des.As<long>().Read();
             var urlLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             Url = urlLocal,
             };
@@ -12399,9 +12181,9 @@ namespace SharpGram.Tl.Constructors.WebPageNs {
     }
     public class WebPagePending : WebPageBase, ITlSerializable, ITlDeserializable<WebPagePending> {
         public static readonly byte[] Identifier = [71,62,209,176,];
-        public required long Id {get;set;}
+        public long Id {get;set;}
         public string? Url {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -12419,7 +12201,6 @@ namespace SharpGram.Tl.Constructors.WebPageNs {
             var urlLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             var dateLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             Url = urlLocal,
             Date = dateLocal,
@@ -12429,10 +12210,10 @@ namespace SharpGram.Tl.Constructors.WebPageNs {
     public class WebPage : WebPageBase, ITlSerializable, ITlDeserializable<WebPage> {
         public static readonly byte[] Identifier = [178,69,156,232,];
         public bool HasLargeMedia {get;set;}
-        public required long Id {get;set;}
+        public long Id {get;set;}
         public required string Url {get;set;}
         public required string DisplayUrl {get;set;}
-        public required int Hash {get;set;}
+        public int Hash {get;set;}
         public string? Type {get;set;}
         public string? SiteName {get;set;}
         public string? Title {get;set;}
@@ -12495,7 +12276,6 @@ namespace SharpGram.Tl.Constructors.WebPageNs {
             var cachedPageLocal = (flagsLocal & 1024) is 0 ? default : PageBase.TlDeserialize(des) ;
             var attributesLocal = (flagsLocal & 4096) is 0 ? default : des.Read<WebPageAttributeBase>() ;
             return new() {
-            Flags = flagsLocal,
             HasLargeMedia = hasLargeMediaLocal,
             Id = idLocal,
             Url = urlLocal,
@@ -12534,7 +12314,6 @@ namespace SharpGram.Tl.Constructors.WebPageNs {
             var flagsLocal =  des.As<int>().Read();
             var cachedPageViewsLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             CachedPageViews = cachedPageViewsLocal,
             };
         }
@@ -12545,22 +12324,21 @@ namespace SharpGram.Tl.Constructors.WebPageNs {
 namespace SharpGram.Tl.Constructors.AuthorizationNs {
     public class Authorization : AuthorizationBase, ITlSerializable, ITlDeserializable<Authorization> {
         public static readonly byte[] Identifier = [29,214,1,173,];
-        private int Flags;
         public bool Current {get;set;}
         public bool OfficialApp {get;set;}
         public bool PasswordPending {get;set;}
         public bool EncryptedRequestsDisabled {get;set;}
         public bool CallRequestsDisabled {get;set;}
         public bool Unconfirmed {get;set;}
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required string DeviceModel {get;set;}
         public required string Platform {get;set;}
         public required string SystemVersion {get;set;}
-        public required int ApiId {get;set;}
+        public int ApiId {get;set;}
         public required string AppName {get;set;}
         public required string AppVersion {get;set;}
-        public required int DateCreated {get;set;}
-        public required int DateActive {get;set;}
+        public int DateCreated {get;set;}
+        public int DateActive {get;set;}
         public required string Ip {get;set;}
         public required string Country {get;set;}
         public required string Region {get;set;}
@@ -12605,7 +12383,6 @@ namespace SharpGram.Tl.Constructors.AuthorizationNs {
             var countryLocal =  des.As<string>().Read();
             var regionLocal =  des.As<string>().Read();
             return new() {
-            Flags = flagsLocal,
             Current = currentLocal,
             OfficialApp = officialAppLocal,
             PasswordPending = passwordPendingLocal,
@@ -12633,7 +12410,7 @@ namespace SharpGram.Tl.Constructors.AuthorizationNs {
 namespace SharpGram.Tl.Constructors.AccountAuthorizationsNs {
     public class AccountAuthorizations : AccountAuthorizationsBase, ITlSerializable, ITlDeserializable<AccountAuthorizations> {
         public static readonly byte[] Identifier = [160,142,255,75,];
-        public required int AuthorizationTtlDays {get;set;}
+        public int AuthorizationTtlDays {get;set;}
         public required List<AuthorizationBase> Authorizations {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -12659,7 +12436,6 @@ namespace SharpGram.Tl.Constructors.AccountAuthorizationsNs {
 namespace SharpGram.Tl.Constructors.AccountPasswordNs {
     public class AccountPassword : AccountPasswordBase, ITlSerializable, ITlDeserializable<AccountPassword> {
         public static readonly byte[] Identifier = [251,80,123,149,];
-        private int Flags;
         public bool HasRecovery {get;set;}
         public bool HasSecureValues {get;set;}
         public bool HasPassword {get;set;}
@@ -12707,7 +12483,6 @@ namespace SharpGram.Tl.Constructors.AccountPasswordNs {
             var pendingResetDateLocal = (flagsLocal & 32) is 0 ? default : des.As<int>().Read() ;
             var loginEmailPatternLocal = (flagsLocal & 64) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             HasRecovery = hasRecoveryLocal,
             HasSecureValues = hasSecureValuesLocal,
             HasPassword = hasPasswordLocal,
@@ -12730,7 +12505,6 @@ namespace SharpGram.Tl.Constructors.AccountPasswordNs {
 namespace SharpGram.Tl.Constructors.AccountPasswordSettingsNs {
     public class AccountPasswordSettings : AccountPasswordSettingsBase, ITlSerializable, ITlDeserializable<AccountPasswordSettings> {
         public static readonly byte[] Identifier = [229,51,92,154,];
-        private int Flags;
         public string? Email {get;set;}
         public SecureSecretSettingsBase? SecureSettings {get;set;}
         public new byte[] TlSerialize() {
@@ -12748,7 +12522,6 @@ namespace SharpGram.Tl.Constructors.AccountPasswordSettingsNs {
             var emailLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             var secureSettingsLocal = (flagsLocal & 2) is 0 ? default : SecureSecretSettingsBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Email = emailLocal,
             SecureSettings = secureSettingsLocal,
             };
@@ -12760,7 +12533,6 @@ namespace SharpGram.Tl.Constructors.AccountPasswordSettingsNs {
 namespace SharpGram.Tl.Constructors.AccountPasswordInputSettingsNs {
     public class AccountPasswordInputSettings : AccountPasswordInputSettingsBase, ITlSerializable, ITlDeserializable<AccountPasswordInputSettings> {
         public static readonly byte[] Identifier = [201,39,55,194,];
-        private int Flags;
         public PasswordKdfAlgoBase? NewAlgo {get;set;}
         public byte[]? NewPasswordHash {get;set;}
         public string? Hint {get;set;}
@@ -12787,7 +12559,6 @@ namespace SharpGram.Tl.Constructors.AccountPasswordInputSettingsNs {
             var emailLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var newSecureSettingsLocal = (flagsLocal & 4) is 0 ? default : SecureSecretSettingsBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             NewAlgo = newAlgoLocal,
             NewPasswordHash = newPasswordHashLocal,
             Hint = hintLocal,
@@ -12824,8 +12595,8 @@ namespace SharpGram.Tl.Constructors.AuthPasswordRecoveryNs {
 namespace SharpGram.Tl.Constructors.ReceivedNotifyMessageNs {
     public class ReceivedNotifyMessage : ReceivedNotifyMessageBase, ITlSerializable, ITlDeserializable<ReceivedNotifyMessage> {
         public static readonly byte[] Identifier = [121,183,132,163,];
-        public required int Id {get;set;}
-        public required int Flags {get;set;}
+        public int Id {get;set;}
+        public int Flags {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -12850,13 +12621,12 @@ namespace SharpGram.Tl.Constructors.ReceivedNotifyMessageNs {
 namespace SharpGram.Tl.Constructors.ExportedChatInviteNs {
     public class ChatInviteExported : ExportedChatInviteBase, ITlSerializable, ITlDeserializable<ChatInviteExported> {
         public static readonly byte[] Identifier = [25,168,180,10,];
-        private int Flags;
         public bool Revoked {get;set;}
         public bool Permanent {get;set;}
         public bool RequestNeeded {get;set;}
         public required string Link {get;set;}
-        public required long AdminId {get;set;}
-        public required int Date {get;set;}
+        public long AdminId {get;set;}
+        public int Date {get;set;}
         public int? StartDate {get;set;}
         public int? ExpireDate {get;set;}
         public int? UsageLimit {get;set;}
@@ -12895,7 +12665,6 @@ namespace SharpGram.Tl.Constructors.ExportedChatInviteNs {
             var requestedLocal = (flagsLocal & 128) is 0 ? default : des.As<int>().Read() ;
             var titleLocal = (flagsLocal & 256) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Revoked = revokedLocal,
             Permanent = permanentLocal,
             RequestNeeded = requestNeededLocal,
@@ -12949,7 +12718,6 @@ namespace SharpGram.Tl.Constructors.ChatInviteNs {
     }
     public class ChatInvite : ChatInviteBase, ITlSerializable, ITlDeserializable<ChatInvite> {
         public static readonly byte[] Identifier = [64,236,224,205,];
-        private int Flags;
         public bool Channel {get;set;}
         public bool Broadcast {get;set;}
         public bool Public {get;set;}
@@ -12961,9 +12729,9 @@ namespace SharpGram.Tl.Constructors.ChatInviteNs {
         public required string Title {get;set;}
         public string? About {get;set;}
         public required PhotoBase Photo {get;set;}
-        public required int ParticipantsCount {get;set;}
+        public int ParticipantsCount {get;set;}
         public List<UserBase>? Participants {get;set;}
-        public required int Color {get;set;}
+        public int Color {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -12995,7 +12763,6 @@ namespace SharpGram.Tl.Constructors.ChatInviteNs {
             var participantsLocal = (flagsLocal & 16) is 0 ? default : des.Read<UserBase>() ;
             var colorLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Channel = channelLocal,
             Broadcast = broadcastLocal,
             Public = publicLocal,
@@ -13016,7 +12783,7 @@ namespace SharpGram.Tl.Constructors.ChatInviteNs {
     public class ChatInvitePeek : ChatInviteBase, ITlSerializable, ITlDeserializable<ChatInvitePeek> {
         public static readonly byte[] Identifier = [176,92,105,97,];
         public required ChatBase Chat {get;set;}
-        public required int Expires {get;set;}
+        public int Expires {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -13055,8 +12822,8 @@ namespace SharpGram.Tl.Constructors.InputStickerSetNs {
     }
     public class InputStickerSetID : InputStickerSetBase, ITlSerializable, ITlDeserializable<InputStickerSetID> {
         public static readonly byte[] Identifier = [105,162,231,157,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -13215,7 +12982,6 @@ namespace SharpGram.Tl.Constructors.InputStickerSetNs {
 namespace SharpGram.Tl.Constructors.StickerSetNs {
     public class StickerSet : StickerSetBase, ITlSerializable, ITlDeserializable<StickerSet> {
         public static readonly byte[] Identifier = [220,78,209,45,];
-        private int Flags;
         public bool Archived {get;set;}
         public bool Official {get;set;}
         public bool Masks {get;set;}
@@ -13225,16 +12991,16 @@ namespace SharpGram.Tl.Constructors.StickerSetNs {
         public bool TextColor {get;set;}
         public bool ChannelEmojiStatus {get;set;}
         public int? InstalledDate {get;set;}
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public required string Title {get;set;}
         public required string ShortName {get;set;}
         public List<PhotoSizeBase>? Thumbs {get;set;}
         public int? ThumbDcId {get;set;}
         public int? ThumbVersion {get;set;}
         public long? ThumbDocumentId {get;set;}
-        public required int Count {get;set;}
-        public required int Hash {get;set;}
+        public int Count {get;set;}
+        public int Hash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -13276,7 +13042,6 @@ namespace SharpGram.Tl.Constructors.StickerSetNs {
             var countLocal =  des.As<int>().Read();
             var hashLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Archived = archivedLocal,
             Official = officialLocal,
             Masks = masksLocal,
@@ -13379,7 +13144,6 @@ namespace SharpGram.Tl.Constructors.BotCommandNs {
 namespace SharpGram.Tl.Constructors.BotInfoNs {
     public class BotInfo : BotInfoBase, ITlSerializable, ITlDeserializable<BotInfo> {
         public static readonly byte[] Identifier = [87,11,48,143,];
-        private int Flags;
         public long? UserId {get;set;}
         public string? Description {get;set;}
         public PhotoBase? DescriptionPhoto {get;set;}
@@ -13409,7 +13173,6 @@ namespace SharpGram.Tl.Constructors.BotInfoNs {
             var commandsLocal = (flagsLocal & 4) is 0 ? default : des.Read<BotCommandBase>() ;
             var menuButtonLocal = (flagsLocal & 8) is 0 ? default : BotMenuButtonBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             UserId = userIdLocal,
             Description = descriptionLocal,
             DescriptionPhoto = descriptionPhotoLocal,
@@ -13463,7 +13226,6 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
     }
     public class KeyboardButtonCallback : KeyboardButtonBase, ITlSerializable, ITlDeserializable<KeyboardButtonCallback> {
         public static readonly byte[] Identifier = [107,219,187,53,];
-        private int Flags;
         public bool RequiresPassword {get;set;}
         public required byte[] Data {get;set;}
         public new byte[] TlSerialize() {
@@ -13482,7 +13244,6 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
             var textLocal =  des.As<string>().Read();
             var dataLocal =  des.As<byte[]>().Read();
             return new() {
-            Flags = flagsLocal,
             RequiresPassword = requiresPasswordLocal,
             Text = textLocal,
             Data = dataLocal,
@@ -13525,7 +13286,6 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
     }
     public class KeyboardButtonSwitchInline : KeyboardButtonBase, ITlSerializable, ITlDeserializable<KeyboardButtonSwitchInline> {
         public static readonly byte[] Identifier = [181,251,185,147,];
-        private int Flags;
         public bool SamePeer {get;set;}
         public required string Query {get;set;}
         public List<InlineQueryPeerTypeBase>? PeerTypes {get;set;}
@@ -13547,7 +13307,6 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
             var queryLocal =  des.As<string>().Read();
             var peerTypesLocal = (flagsLocal & 2) is 0 ? default : des.Read<InlineQueryPeerTypeBase>() ;
             return new() {
-            Flags = flagsLocal,
             SamePeer = samePeerLocal,
             Text = textLocal,
             Query = queryLocal,
@@ -13591,10 +13350,9 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
     }
     public class KeyboardButtonUrlAuth : KeyboardButtonBase, ITlSerializable, ITlDeserializable<KeyboardButtonUrlAuth> {
         public static readonly byte[] Identifier = [41,141,183,16,];
-        private int Flags;
         public string? FwdText {get;set;}
         public required string Url {get;set;}
-        public required int ButtonId {get;set;}
+        public int ButtonId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -13614,7 +13372,6 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
             var urlLocal =  des.As<string>().Read();
             var buttonIdLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Text = textLocal,
             FwdText = fwdTextLocal,
             Url = urlLocal,
@@ -13624,7 +13381,6 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
     }
     public class InputKeyboardButtonUrlAuth : KeyboardButtonBase, ITlSerializable, ITlDeserializable<InputKeyboardButtonUrlAuth> {
         public static readonly byte[] Identifier = [212,127,46,208,];
-        private int Flags;
         public bool RequestWriteAccess {get;set;}
         public string? FwdText {get;set;}
         public required string Url {get;set;}
@@ -13649,7 +13405,6 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
             var urlLocal =  des.As<string>().Read();
             var botLocal =  InputUserBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             RequestWriteAccess = requestWriteAccessLocal,
             Text = textLocal,
             FwdText = fwdTextLocal,
@@ -13660,7 +13415,6 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
     }
     public class KeyboardButtonRequestPoll : KeyboardButtonBase, ITlSerializable, ITlDeserializable<KeyboardButtonRequestPoll> {
         public static readonly byte[] Identifier = [93,81,199,187,];
-        private int Flags;
         public bool Quiz {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -13676,7 +13430,6 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
             var quizLocal = (flagsLocal & 1) is 0 ? default : true ;
             var textLocal =  des.As<string>().Read();
             return new() {
-            Flags = flagsLocal,
             Quiz = quizLocal,
             Text = textLocal,
             };
@@ -13705,7 +13458,7 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
     }
     public class KeyboardButtonUserProfile : KeyboardButtonBase, ITlSerializable, ITlDeserializable<KeyboardButtonUserProfile> {
         public static readonly byte[] Identifier = [193,96,134,48,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -13768,9 +13521,9 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
     }
     public class KeyboardButtonRequestPeer : KeyboardButtonBase, ITlSerializable, ITlDeserializable<KeyboardButtonRequestPeer> {
         public static readonly byte[] Identifier = [216,191,215,83,];
-        public required int ButtonId {get;set;}
+        public int ButtonId {get;set;}
         public required RequestPeerTypeBase PeerType {get;set;}
-        public required int MaxQuantity {get;set;}
+        public int MaxQuantity {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -13823,7 +13576,6 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonRowNs {
 namespace SharpGram.Tl.Constructors.ReplyMarkupNs {
     public class ReplyKeyboardHide : ReplyMarkupBase, ITlSerializable, ITlDeserializable<ReplyKeyboardHide> {
         public static readonly byte[] Identifier = [133,91,62,160,];
-        private int Flags;
         public bool Selective {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -13837,14 +13589,12 @@ namespace SharpGram.Tl.Constructors.ReplyMarkupNs {
             var flagsLocal =  des.As<int>().Read();
             var selectiveLocal = (flagsLocal & 4) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             Selective = selectiveLocal,
             };
         }
     }
     public class ReplyKeyboardForceReply : ReplyMarkupBase, ITlSerializable, ITlDeserializable<ReplyKeyboardForceReply> {
         public static readonly byte[] Identifier = [8,11,180,134,];
-        private int Flags;
         public bool SingleUse {get;set;}
         public bool Selective {get;set;}
         public string? Placeholder {get;set;}
@@ -13863,7 +13613,6 @@ namespace SharpGram.Tl.Constructors.ReplyMarkupNs {
             var selectiveLocal = (flagsLocal & 4) is 0 ? default : true ;
             var placeholderLocal = (flagsLocal & 8) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             SingleUse = singleUseLocal,
             Selective = selectiveLocal,
             Placeholder = placeholderLocal,
@@ -13872,7 +13621,6 @@ namespace SharpGram.Tl.Constructors.ReplyMarkupNs {
     }
     public class ReplyKeyboardMarkup : ReplyMarkupBase, ITlSerializable, ITlDeserializable<ReplyKeyboardMarkup> {
         public static readonly byte[] Identifier = [209,153,221,133,];
-        private int Flags;
         public bool Resize {get;set;}
         public bool SingleUse {get;set;}
         public bool Selective {get;set;}
@@ -13898,7 +13646,6 @@ namespace SharpGram.Tl.Constructors.ReplyMarkupNs {
             var rowsLocal =  des.Read<KeyboardButtonRowBase>();
             var placeholderLocal = (flagsLocal & 8) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Resize = resizeLocal,
             SingleUse = singleUseLocal,
             Selective = selectiveLocal,
@@ -14160,7 +13907,7 @@ namespace SharpGram.Tl.Constructors.MessageEntityNs {
     }
     public class MessageEntityMentionName : MessageEntityBase, ITlSerializable, ITlDeserializable<MessageEntityMentionName> {
         public static readonly byte[] Identifier = [64,17,123,220,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -14328,7 +14075,7 @@ namespace SharpGram.Tl.Constructors.MessageEntityNs {
     }
     public class MessageEntityCustomEmoji : MessageEntityBase, ITlSerializable, ITlDeserializable<MessageEntityCustomEmoji> {
         public static readonly byte[] Identifier = [248,5,207,200,];
-        public required long DocumentId {get;set;}
+        public long DocumentId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -14390,8 +14137,8 @@ namespace SharpGram.Tl.Constructors.InputChannelNs {
     }
     public class InputChannel : InputChannelBase, ITlSerializable, ITlDeserializable<InputChannel> {
         public static readonly byte[] Identifier = [40,236,90,243,];
-        public required long ChannelId {get;set;}
-        public required long AccessHash {get;set;}
+        public long ChannelId {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -14413,8 +14160,8 @@ namespace SharpGram.Tl.Constructors.InputChannelNs {
     public class InputChannelFromMessage : InputChannelBase, ITlSerializable, ITlDeserializable<InputChannelFromMessage> {
         public static readonly byte[] Identifier = [157,79,147,91,];
         public required InputPeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
-        public required long ChannelId {get;set;}
+        public int MsgId {get;set;}
+        public long ChannelId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -14472,8 +14219,8 @@ namespace SharpGram.Tl.Constructors.ContactsResolvedPeerNs {
 namespace SharpGram.Tl.Constructors.MessageRangeNs {
     public class MessageRange : MessageRangeBase, ITlSerializable, ITlDeserializable<MessageRange> {
         public static readonly byte[] Identifier = [83,2,227,10,];
-        public required int MinId {get;set;}
-        public required int MaxId {get;set;}
+        public int MinId {get;set;}
+        public int MaxId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -14498,7 +14245,7 @@ namespace SharpGram.Tl.Constructors.MessageRangeNs {
 namespace SharpGram.Tl.Constructors.UpdatesChannelDifferenceNs {
     public class UpdatesChannelDifferenceEmpty : UpdatesChannelDifferenceBase, ITlSerializable, ITlDeserializable<UpdatesChannelDifferenceEmpty> {
         public static readonly byte[] Identifier = [251,175,17,62,];
-        public required int Pts {get;set;}
+        public int Pts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -14515,7 +14262,6 @@ namespace SharpGram.Tl.Constructors.UpdatesChannelDifferenceNs {
             var ptsLocal =  des.As<int>().Read();
             var timeoutLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Final = finalLocal,
             Pts = ptsLocal,
             Timeout = timeoutLocal,
@@ -14550,7 +14296,6 @@ namespace SharpGram.Tl.Constructors.UpdatesChannelDifferenceNs {
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Final = finalLocal,
             Timeout = timeoutLocal,
             Dialog = dialogLocal,
@@ -14562,7 +14307,7 @@ namespace SharpGram.Tl.Constructors.UpdatesChannelDifferenceNs {
     }
     public class UpdatesChannelDifference : UpdatesChannelDifferenceBase, ITlSerializable, ITlDeserializable<UpdatesChannelDifference> {
         public static readonly byte[] Identifier = [78,103,100,32,];
-        public required int Pts {get;set;}
+        public int Pts {get;set;}
         public required List<MessageBase> NewMessages {get;set;}
         public required List<UpdateBase> OtherUpdates {get;set;}
         public required List<ChatBase> Chats {get;set;}
@@ -14591,7 +14336,6 @@ namespace SharpGram.Tl.Constructors.UpdatesChannelDifferenceNs {
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Final = finalLocal,
             Pts = ptsLocal,
             Timeout = timeoutLocal,
@@ -14622,7 +14366,6 @@ namespace SharpGram.Tl.Constructors.ChannelMessagesFilterNs {
     }
     public class ChannelMessagesFilter : ChannelMessagesFilterBase, ITlSerializable, ITlDeserializable<ChannelMessagesFilter> {
         public static readonly byte[] Identifier = [87,217,119,205,];
-        private int Flags;
         public bool ExcludeNewMessages {get;set;}
         public required List<MessageRangeBase> Ranges {get;set;}
         public new byte[] TlSerialize() {
@@ -14639,7 +14382,6 @@ namespace SharpGram.Tl.Constructors.ChannelMessagesFilterNs {
             var excludeNewMessagesLocal = (flagsLocal & 2) is 0 ? default : true ;
             var rangesLocal =  des.Read<MessageRangeBase>();
             return new() {
-            Flags = flagsLocal,
             ExcludeNewMessages = excludeNewMessagesLocal,
             Ranges = rangesLocal,
             };
@@ -14651,8 +14393,8 @@ namespace SharpGram.Tl.Constructors.ChannelMessagesFilterNs {
 namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
     public class ChannelParticipant : ChannelParticipantBase, ITlSerializable, ITlDeserializable<ChannelParticipant> {
         public static readonly byte[] Identifier = [192,7,12,192,];
-        public required long UserId {get;set;}
-        public required int Date {get;set;}
+        public long UserId {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -14673,11 +14415,10 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
     }
     public class ChannelParticipantSelf : ChannelParticipantBase, ITlSerializable, ITlDeserializable<ChannelParticipantSelf> {
         public static readonly byte[] Identifier = [167,191,168,53,];
-        private int Flags;
         public bool ViaRequest {get;set;}
-        public required long UserId {get;set;}
-        public required long InviterId {get;set;}
-        public required int Date {get;set;}
+        public long UserId {get;set;}
+        public long InviterId {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -14696,7 +14437,6 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
             var inviterIdLocal =  des.As<long>().Read();
             var dateLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             ViaRequest = viaRequestLocal,
             UserId = userIdLocal,
             InviterId = inviterIdLocal,
@@ -14706,8 +14446,7 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
     }
     public class ChannelParticipantCreator : ChannelParticipantBase, ITlSerializable, ITlDeserializable<ChannelParticipantCreator> {
         public static readonly byte[] Identifier = [211,1,230,47,];
-        private int Flags;
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public required ChatAdminRightsBase AdminRights {get;set;}
         public string? Rank {get;set;}
         public new byte[] TlSerialize() {
@@ -14727,7 +14466,6 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
             var adminRightsLocal =  ChatAdminRightsBase.TlDeserialize(des);
             var rankLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             UserId = userIdLocal,
             AdminRights = adminRightsLocal,
             Rank = rankLocal,
@@ -14736,13 +14474,12 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
     }
     public class ChannelParticipantAdmin : ChannelParticipantBase, ITlSerializable, ITlDeserializable<ChannelParticipantAdmin> {
         public static readonly byte[] Identifier = [83,187,195,52,];
-        private int Flags;
         public bool CanEdit {get;set;}
         public bool Self {get;set;}
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public long? InviterId {get;set;}
-        public required long PromotedBy {get;set;}
-        public required int Date {get;set;}
+        public long PromotedBy {get;set;}
+        public int Date {get;set;}
         public required ChatAdminRightsBase AdminRights {get;set;}
         public string? Rank {get;set;}
         public new byte[] TlSerialize() {
@@ -14770,7 +14507,6 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
             var adminRightsLocal =  ChatAdminRightsBase.TlDeserialize(des);
             var rankLocal = (flagsLocal & 4) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             CanEdit = canEditLocal,
             Self = selfLocal,
             UserId = userIdLocal,
@@ -14784,11 +14520,10 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
     }
     public class ChannelParticipantBanned : ChannelParticipantBase, ITlSerializable, ITlDeserializable<ChannelParticipantBanned> {
         public static readonly byte[] Identifier = [78,1,248,109,];
-        private int Flags;
         public bool Left {get;set;}
         public required PeerBase Peer {get;set;}
-        public required long KickedBy {get;set;}
-        public required int Date {get;set;}
+        public long KickedBy {get;set;}
+        public int Date {get;set;}
         public required ChatBannedRightsBase BannedRights {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -14810,7 +14545,6 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
             var dateLocal =  des.As<int>().Read();
             var bannedRightsLocal =  ChatBannedRightsBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Left = leftLocal,
             Peer = peerLocal,
             KickedBy = kickedByLocal,
@@ -14957,7 +14691,6 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantsFilterNs {
     }
     public class ChannelParticipantsMentions : ChannelParticipantsFilterBase, ITlSerializable, ITlDeserializable<ChannelParticipantsMentions> {
         public static readonly byte[] Identifier = [235,92,75,224,];
-        private int Flags;
         public string? Q {get;set;}
         public int? TopMsgId {get;set;}
         public new byte[] TlSerialize() {
@@ -14975,7 +14708,6 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantsFilterNs {
             var qLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             var topMsgIdLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Q = qLocal,
             TopMsgId = topMsgIdLocal,
             };
@@ -14987,7 +14719,7 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantsFilterNs {
 namespace SharpGram.Tl.Constructors.ChannelsChannelParticipantsNs {
     public class ChannelsChannelParticipants : ChannelsChannelParticipantsBase, ITlSerializable, ITlDeserializable<ChannelsChannelParticipants> {
         public static readonly byte[] Identifier = [175,254,176,154,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<ChannelParticipantBase> Participants {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
@@ -15065,7 +14797,6 @@ namespace SharpGram.Tl.Constructors.ChannelsChannelParticipantNs {
 namespace SharpGram.Tl.Constructors.HelpTermsOfServiceNs {
     public class HelpTermsOfService : HelpTermsOfServiceBase, ITlSerializable, ITlDeserializable<HelpTermsOfService> {
         public static readonly byte[] Identifier = [16,3,10,120,];
-        private int Flags;
         public bool Popup {get;set;}
         public required DataJSONBase Id {get;set;}
         public required string Text {get;set;}
@@ -15091,7 +14822,6 @@ namespace SharpGram.Tl.Constructors.HelpTermsOfServiceNs {
             var entitiesLocal =  des.Read<MessageEntityBase>();
             var minAgeConfirmLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Popup = popupLocal,
             Id = idLocal,
             Text = textLocal,
@@ -15120,7 +14850,7 @@ namespace SharpGram.Tl.Constructors.MessagesSavedGifsNs {
     }
     public class MessagesSavedGifs : MessagesSavedGifsBase, ITlSerializable, ITlDeserializable<MessagesSavedGifs> {
         public static readonly byte[] Identifier = [13,42,160,132,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<DocumentBase> Gifs {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -15167,7 +14897,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
             var entitiesLocal = (flagsLocal & 2) is 0 ? default : des.Read<MessageEntityBase>() ;
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             InvertMedia = invertMediaLocal,
             Message = messageLocal,
             Entities = entitiesLocal,
@@ -15200,7 +14929,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
             var entitiesLocal = (flagsLocal & 2) is 0 ? default : des.Read<MessageEntityBase>() ;
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             NoWebpage = noWebpageLocal,
             InvertMedia = invertMediaLocal,
             Message = messageLocal,
@@ -15236,7 +14964,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
             var proximityNotificationRadiusLocal = (flagsLocal & 8) is 0 ? default : des.As<int>().Read() ;
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             GeoPoint = geoPointLocal,
             Heading = headingLocal,
             Period = periodLocal,
@@ -15278,7 +15005,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
             var venueTypeLocal =  des.As<string>().Read();
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             GeoPoint = geoPointLocal,
             Title = titleLocal,
             Address = addressLocal,
@@ -15316,7 +15042,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
             var vcardLocal =  des.As<string>().Read();
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             PhoneNumber = phoneNumberLocal,
             FirstName = firstNameLocal,
             LastName = lastNameLocal,
@@ -15340,7 +15065,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
             var flagsLocal =  des.As<int>().Read();
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             ReplyMarkup = replyMarkupLocal,
             };
         }
@@ -15381,7 +15105,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
             var providerDataLocal =  DataJSONBase.TlDeserialize(des);
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Title = titleLocal,
             Description = descriptionLocal,
             Photo = photoLocal,
@@ -15425,7 +15148,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
             var urlLocal =  des.As<string>().Read();
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             InvertMedia = invertMediaLocal,
             ForceLargeMedia = forceLargeMediaLocal,
             ForceSmallMedia = forceSmallMediaLocal,
@@ -15443,7 +15165,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
 namespace SharpGram.Tl.Constructors.InputBotInlineResultNs {
     public class InputBotInlineResult : InputBotInlineResultBase, ITlSerializable, ITlDeserializable<InputBotInlineResult> {
         public static readonly byte[] Identifier = [25,147,191,136,];
-        private int Flags;
         public required string Type {get;set;}
         public string? Title {get;set;}
         public string? Description {get;set;}
@@ -15477,7 +15198,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineResultNs {
             var contentLocal = (flagsLocal & 32) is 0 ? default : InputWebDocumentBase.TlDeserialize(des) ;
             var sendMessageLocal =  InputBotInlineMessageBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             Type = typeLocal,
             Title = titleLocal,
@@ -15519,7 +15239,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineResultNs {
     }
     public class InputBotInlineResultDocument : InputBotInlineResultBase, ITlSerializable, ITlDeserializable<InputBotInlineResultDocument> {
         public static readonly byte[] Identifier = [196,253,248,255,];
-        private int Flags;
         public required string Type {get;set;}
         public string? Title {get;set;}
         public string? Description {get;set;}
@@ -15547,7 +15266,6 @@ namespace SharpGram.Tl.Constructors.InputBotInlineResultNs {
             var documentLocal =  InputDocumentBase.TlDeserialize(des);
             var sendMessageLocal =  InputBotInlineMessageBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             Type = typeLocal,
             Title = titleLocal,
@@ -15608,7 +15326,6 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
             var entitiesLocal = (flagsLocal & 2) is 0 ? default : des.Read<MessageEntityBase>() ;
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             InvertMedia = invertMediaLocal,
             Message = messageLocal,
             Entities = entitiesLocal,
@@ -15641,7 +15358,6 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
             var entitiesLocal = (flagsLocal & 2) is 0 ? default : des.Read<MessageEntityBase>() ;
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             NoWebpage = noWebpageLocal,
             InvertMedia = invertMediaLocal,
             Message = messageLocal,
@@ -15677,7 +15393,6 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
             var proximityNotificationRadiusLocal = (flagsLocal & 8) is 0 ? default : des.As<int>().Read() ;
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Geo = geoLocal,
             Heading = headingLocal,
             Period = periodLocal,
@@ -15719,7 +15434,6 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
             var venueTypeLocal =  des.As<string>().Read();
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Geo = geoLocal,
             Title = titleLocal,
             Address = addressLocal,
@@ -15757,7 +15471,6 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
             var vcardLocal =  des.As<string>().Read();
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             PhoneNumber = phoneNumberLocal,
             FirstName = firstNameLocal,
             LastName = lastNameLocal,
@@ -15774,7 +15487,7 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
         public required string Description {get;set;}
         public WebDocumentBase? Photo {get;set;}
         public required string Currency {get;set;}
-        public required long TotalAmount {get;set;}
+        public long TotalAmount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -15800,7 +15513,6 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
             var totalAmountLocal =  des.As<long>().Read();
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             ShippingAddressRequested = shippingAddressRequestedLocal,
             Test = testLocal,
             Title = titleLocal,
@@ -15846,7 +15558,6 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
             var urlLocal =  des.As<string>().Read();
             var replyMarkupLocal = (flagsLocal & 4) is 0 ? default : ReplyMarkupBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             InvertMedia = invertMediaLocal,
             ForceLargeMedia = forceLargeMediaLocal,
             ForceSmallMedia = forceSmallMediaLocal,
@@ -15895,7 +15606,6 @@ namespace SharpGram.Tl.Constructors.BotInlineResultNs {
             var contentLocal = (flagsLocal & 32) is 0 ? default : WebDocumentBase.TlDeserialize(des) ;
             var sendMessageLocal =  BotInlineMessageBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             Type = typeLocal,
             Title = titleLocal,
@@ -15936,7 +15646,6 @@ namespace SharpGram.Tl.Constructors.BotInlineResultNs {
             var descriptionLocal = (flagsLocal & 8) is 0 ? default : des.As<string>().Read() ;
             var sendMessageLocal =  BotInlineMessageBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             Type = typeLocal,
             Photo = photoLocal,
@@ -15953,14 +15662,13 @@ namespace SharpGram.Tl.Constructors.BotInlineResultNs {
 namespace SharpGram.Tl.Constructors.MessagesBotResultsNs {
     public class MessagesBotResults : MessagesBotResultsBase, ITlSerializable, ITlDeserializable<MessagesBotResults> {
         public static readonly byte[] Identifier = [246,242,33,224,];
-        private int Flags;
         public bool Gallery {get;set;}
-        public required long QueryId {get;set;}
+        public long QueryId {get;set;}
         public string? NextOffset {get;set;}
         public InlineBotSwitchPMBase? SwitchPm {get;set;}
         public InlineBotWebViewBase? SwitchWebview {get;set;}
         public required List<BotInlineResultBase> Results {get;set;}
-        public required int CacheTime {get;set;}
+        public int CacheTime {get;set;}
         public required List<UserBase> Users {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -15988,7 +15696,6 @@ namespace SharpGram.Tl.Constructors.MessagesBotResultsNs {
             var cacheTimeLocal =  des.As<int>().Read();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Gallery = galleryLocal,
             QueryId = queryIdLocal,
             NextOffset = nextOffsetLocal,
@@ -16032,12 +15739,11 @@ namespace SharpGram.Tl.Constructors.ExportedMessageLinkNs {
 namespace SharpGram.Tl.Constructors.MessageFwdHeaderNs {
     public class MessageFwdHeader : MessageFwdHeaderBase, ITlSerializable, ITlDeserializable<MessageFwdHeader> {
         public static readonly byte[] Identifier = [187,244,77,78,];
-        private int Flags;
         public bool Imported {get;set;}
         public bool SavedOut {get;set;}
         public PeerBase? FromId {get;set;}
         public string? FromName {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public int? ChannelPost {get;set;}
         public string? PostAuthor {get;set;}
         public PeerBase? SavedFromPeer {get;set;}
@@ -16081,7 +15787,6 @@ namespace SharpGram.Tl.Constructors.MessageFwdHeaderNs {
             var savedDateLocal = (flagsLocal & 1024) is 0 ? default : des.As<int>().Read() ;
             var psaTypeLocal = (flagsLocal & 64) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Imported = importedLocal,
             SavedOut = savedOutLocal,
             FromId = fromIdLocal,
@@ -16178,7 +15883,7 @@ namespace SharpGram.Tl.Constructors.AuthCodeTypeNs {
 namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
     public class AuthSentCodeTypeApp : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeApp> {
         public static readonly byte[] Identifier = [134,89,187,61,];
-        public required int Length {get;set;}
+        public int Length {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16196,7 +15901,7 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
     }
     public class AuthSentCodeTypeSms : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeSms> {
         public static readonly byte[] Identifier = [162,187,0,192,];
-        public required int Length {get;set;}
+        public int Length {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16214,7 +15919,7 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
     }
     public class AuthSentCodeTypeCall : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeCall> {
         public static readonly byte[] Identifier = [167,229,83,83,];
-        public required int Length {get;set;}
+        public int Length {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16251,7 +15956,7 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
     public class AuthSentCodeTypeMissedCall : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeMissedCall> {
         public static readonly byte[] Identifier = [132,100,0,130,];
         public required string Prefix {get;set;}
-        public required int Length {get;set;}
+        public int Length {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16272,11 +15977,10 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
     }
     public class AuthSentCodeTypeEmailCode : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeEmailCode> {
         public static readonly byte[] Identifier = [155,245,80,244,];
-        private int Flags;
         public bool AppleSigninAllowed {get;set;}
         public bool GoogleSigninAllowed {get;set;}
         public required string EmailPattern {get;set;}
-        public required int Length {get;set;}
+        public int Length {get;set;}
         public int? ResetAvailablePeriod {get;set;}
         public int? ResetPendingDate {get;set;}
         public new byte[] TlSerialize() {
@@ -16300,7 +16004,6 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
             var resetAvailablePeriodLocal = (flagsLocal & 8) is 0 ? default : des.As<int>().Read() ;
             var resetPendingDateLocal = (flagsLocal & 16) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             AppleSigninAllowed = appleSigninAllowedLocal,
             GoogleSigninAllowed = googleSigninAllowedLocal,
             EmailPattern = emailPatternLocal,
@@ -16312,7 +16015,6 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
     }
     public class AuthSentCodeTypeSetUpEmailRequired : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeSetUpEmailRequired> {
         public static readonly byte[] Identifier = [234,29,73,165,];
-        private int Flags;
         public bool AppleSigninAllowed {get;set;}
         public bool GoogleSigninAllowed {get;set;}
         public new byte[] TlSerialize() {
@@ -16328,7 +16030,6 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
             var appleSigninAllowedLocal = (flagsLocal & 1) is 0 ? default : true ;
             var googleSigninAllowedLocal = (flagsLocal & 2) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             AppleSigninAllowed = appleSigninAllowedLocal,
             GoogleSigninAllowed = googleSigninAllowedLocal,
             };
@@ -16337,7 +16038,7 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
     public class AuthSentCodeTypeFragmentSms : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeFragmentSms> {
         public static readonly byte[] Identifier = [57,92,86,217,];
         public required string Url {get;set;}
-        public required int Length {get;set;}
+        public int Length {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16358,11 +16059,10 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
     }
     public class AuthSentCodeTypeFirebaseSms : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeFirebaseSms> {
         public static readonly byte[] Identifier = [50,20,123,229,];
-        private int Flags;
         public byte[]? Nonce {get;set;}
         public string? Receipt {get;set;}
         public int? PushTimeout {get;set;}
-        public required int Length {get;set;}
+        public int Length {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16382,7 +16082,6 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
             var pushTimeoutLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             var lengthLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Nonce = nonceLocal,
             Receipt = receiptLocal,
             PushTimeout = pushTimeoutLocal,
@@ -16396,13 +16095,12 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
 namespace SharpGram.Tl.Constructors.MessagesBotCallbackAnswerNs {
     public class MessagesBotCallbackAnswer : MessagesBotCallbackAnswerBase, ITlSerializable, ITlDeserializable<MessagesBotCallbackAnswer> {
         public static readonly byte[] Identifier = [164,94,88,54,];
-        private int Flags;
         public bool Alert {get;set;}
         public bool HasUrl {get;set;}
         public bool NativeUi {get;set;}
         public string? Message {get;set;}
         public string? Url {get;set;}
-        public required int CacheTime {get;set;}
+        public int CacheTime {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16423,7 +16121,6 @@ namespace SharpGram.Tl.Constructors.MessagesBotCallbackAnswerNs {
             var urlLocal = (flagsLocal & 4) is 0 ? default : des.As<string>().Read() ;
             var cacheTimeLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Alert = alertLocal,
             HasUrl = hasUrlLocal,
             NativeUi = nativeUiLocal,
@@ -16439,7 +16136,6 @@ namespace SharpGram.Tl.Constructors.MessagesBotCallbackAnswerNs {
 namespace SharpGram.Tl.Constructors.MessagesMessageEditDataNs {
     public class MessagesMessageEditData : MessagesMessageEditDataBase, ITlSerializable, ITlDeserializable<MessagesMessageEditData> {
         public static readonly byte[] Identifier = [230,221,181,38,];
-        private int Flags;
         public bool Caption {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -16453,7 +16149,6 @@ namespace SharpGram.Tl.Constructors.MessagesMessageEditDataNs {
             var flagsLocal =  des.As<int>().Read();
             var captionLocal = (flagsLocal & 1) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             Caption = captionLocal,
             };
         }
@@ -16464,7 +16159,7 @@ namespace SharpGram.Tl.Constructors.MessagesMessageEditDataNs {
 namespace SharpGram.Tl.Constructors.InputBotInlineMessageIDNs {
     public class InputBotInlineMessageID : InputBotInlineMessageIDBase, ITlSerializable, ITlDeserializable<InputBotInlineMessageID> {
         public static readonly byte[] Identifier = [137,61,12,137,];
-        public required long Id {get;set;}
+        public long Id {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16488,8 +16183,8 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageIDNs {
     }
     public class InputBotInlineMessageID64 : InputBotInlineMessageIDBase, ITlSerializable, ITlDeserializable<InputBotInlineMessageID64> {
         public static readonly byte[] Identifier = [215,21,217,182,];
-        public required long OwnerId {get;set;}
-        public required int Id {get;set;}
+        public long OwnerId {get;set;}
+        public int Id {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16585,7 +16280,7 @@ namespace SharpGram.Tl.Constructors.TopPeerNs {
     public class TopPeer : TopPeerBase, ITlSerializable, ITlDeserializable<TopPeer> {
         public static readonly byte[] Identifier = [91,192,205,237,];
         public required PeerBase Peer {get;set;}
-        public required double Rating {get;set;}
+        public double Rating {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16727,7 +16422,7 @@ namespace SharpGram.Tl.Constructors.TopPeerCategoryPeersNs {
     public class TopPeerCategoryPeers : TopPeerCategoryPeersBase, ITlSerializable, ITlDeserializable<TopPeerCategoryPeers> {
         public static readonly byte[] Identifier = [145,66,131,251,];
         public required TopPeerCategoryBase Category {get;set;}
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<TopPeerBase> Peers {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -16828,7 +16523,6 @@ namespace SharpGram.Tl.Constructors.DraftMessageNs {
             var flagsLocal =  des.As<int>().Read();
             var dateLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Date = dateLocal,
             };
         }
@@ -16841,7 +16535,7 @@ namespace SharpGram.Tl.Constructors.DraftMessageNs {
         public required string Message {get;set;}
         public List<MessageEntityBase>? Entities {get;set;}
         public InputMediaBase? Media {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -16865,7 +16559,6 @@ namespace SharpGram.Tl.Constructors.DraftMessageNs {
             var mediaLocal = (flagsLocal & 32) is 0 ? default : InputMediaBase.TlDeserialize(des) ;
             var dateLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             NoWebpage = noWebpageLocal,
             InvertMedia = invertMediaLocal,
             ReplyTo = replyToLocal,
@@ -16899,9 +16592,8 @@ namespace SharpGram.Tl.Constructors.MessagesFeaturedStickersNs {
     }
     public class MessagesFeaturedStickers : MessagesFeaturedStickersBase, ITlSerializable, ITlDeserializable<MessagesFeaturedStickers> {
         public static readonly byte[] Identifier = [6,41,56,190,];
-        private int Flags;
         public bool Premium {get;set;}
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<StickerSetCoveredBase> Sets {get;set;}
         public required List<long> Unread {get;set;}
         public new byte[] TlSerialize() {
@@ -16924,7 +16616,6 @@ namespace SharpGram.Tl.Constructors.MessagesFeaturedStickersNs {
             var setsLocal =  des.Read<StickerSetCoveredBase>();
             var unreadLocal =  des.ReadNumbers<long>();
             return new() {
-            Flags = flagsLocal,
             Premium = premiumLocal,
             Hash = hashLocal,
             Count = countLocal,
@@ -16953,7 +16644,7 @@ namespace SharpGram.Tl.Constructors.MessagesRecentStickersNs {
     }
     public class MessagesRecentStickers : MessagesRecentStickersBase, ITlSerializable, ITlDeserializable<MessagesRecentStickers> {
         public static readonly byte[] Identifier = [86,124,211,136,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<StickerPackBase> Packs {get;set;}
         public required List<DocumentBase> Stickers {get;set;}
         public required List<int> Dates {get;set;}
@@ -16987,7 +16678,7 @@ namespace SharpGram.Tl.Constructors.MessagesRecentStickersNs {
 namespace SharpGram.Tl.Constructors.MessagesArchivedStickersNs {
     public class MessagesArchivedStickers : MessagesArchivedStickersBase, ITlSerializable, ITlDeserializable<MessagesArchivedStickers> {
         public static readonly byte[] Identifier = [200,169,203,79,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<StickerSetCoveredBase> Sets {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -17141,10 +16832,10 @@ namespace SharpGram.Tl.Constructors.StickerSetCoveredNs {
 namespace SharpGram.Tl.Constructors.MaskCoordsNs {
     public class MaskCoords : MaskCoordsBase, ITlSerializable, ITlDeserializable<MaskCoords> {
         public static readonly byte[] Identifier = [178,219,214,174,];
-        public required int N {get;set;}
-        public required double X {get;set;}
-        public required double Y {get;set;}
-        public required double Zoom {get;set;}
+        public int N {get;set;}
+        public double X {get;set;}
+        public double Y {get;set;}
+        public double Zoom {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -17215,9 +16906,8 @@ namespace SharpGram.Tl.Constructors.InputStickeredMediaNs {
 namespace SharpGram.Tl.Constructors.GameNs {
     public class Game : GameBase, ITlSerializable, ITlDeserializable<Game> {
         public static readonly byte[] Identifier = [59,101,249,189,];
-        private int Flags;
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public required string ShortName {get;set;}
         public required string Title {get;set;}
         public required string Description {get;set;}
@@ -17248,7 +16938,6 @@ namespace SharpGram.Tl.Constructors.GameNs {
             var photoLocal =  PhotoBase.TlDeserialize(des);
             var documentLocal = (flagsLocal & 1) is 0 ? default : DocumentBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             AccessHash = accessHashLocal,
             ShortName = shortNameLocal,
@@ -17265,8 +16954,8 @@ namespace SharpGram.Tl.Constructors.GameNs {
 namespace SharpGram.Tl.Constructors.InputGameNs {
     public class InputGameID : InputGameBase, ITlSerializable, ITlDeserializable<InputGameID> {
         public static readonly byte[] Identifier = [119,62,44,3,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -17313,9 +17002,9 @@ namespace SharpGram.Tl.Constructors.InputGameNs {
 namespace SharpGram.Tl.Constructors.HighScoreNs {
     public class HighScore : HighScoreBase, ITlSerializable, ITlDeserializable<HighScore> {
         public static readonly byte[] Identifier = [235,121,163,115,];
-        public required int Pos {get;set;}
-        public required long UserId {get;set;}
-        public required int Score {get;set;}
+        public int Pos {get;set;}
+        public long UserId {get;set;}
+        public int Score {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -17493,7 +17182,7 @@ namespace SharpGram.Tl.Constructors.RichTextNs {
         public static readonly byte[] Identifier = [193,132,40,60,];
         public required RichTextBase Text {get;set;}
         public required string Url {get;set;}
-        public required long WebpageId {get;set;}
+        public long WebpageId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -17633,9 +17322,9 @@ namespace SharpGram.Tl.Constructors.RichTextNs {
     }
     public class TextImage : RichTextBase, ITlSerializable, ITlDeserializable<TextImage> {
         public static readonly byte[] Identifier = [79,207,28,8,];
-        public required long DocumentId {get;set;}
-        public required int W {get;set;}
-        public required int H {get;set;}
+        public long DocumentId {get;set;}
+        public int W {get;set;}
+        public int H {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -17736,7 +17425,7 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
     public class PageBlockAuthorDate : PageBlockBase, ITlSerializable, ITlDeserializable<PageBlockAuthorDate> {
         public static readonly byte[] Identifier = [224,229,175,186,];
         public required RichTextBase Author {get;set;}
-        public required int PublishedDate {get;set;}
+        public int PublishedDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -17945,8 +17634,7 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
     }
     public class PageBlockPhoto : PageBlockBase, ITlSerializable, ITlDeserializable<PageBlockPhoto> {
         public static readonly byte[] Identifier = [96,197,89,23,];
-        private int Flags;
-        public required long PhotoId {get;set;}
+        public long PhotoId {get;set;}
         public required PageCaptionBase Caption {get;set;}
         public string? Url {get;set;}
         public long? WebpageId {get;set;}
@@ -17969,7 +17657,6 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
             var urlLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             var webpageIdLocal = (flagsLocal & 1) is 0 ? default : des.As<long>().Read() ;
             return new() {
-            Flags = flagsLocal,
             PhotoId = photoIdLocal,
             Caption = captionLocal,
             Url = urlLocal,
@@ -17979,10 +17666,9 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
     }
     public class PageBlockVideo : PageBlockBase, ITlSerializable, ITlDeserializable<PageBlockVideo> {
         public static readonly byte[] Identifier = [182,231,143,124,];
-        private int Flags;
         public bool Autoplay {get;set;}
         public bool Loop {get;set;}
-        public required long VideoId {get;set;}
+        public long VideoId {get;set;}
         public required PageCaptionBase Caption {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -18001,7 +17687,6 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
             var videoIdLocal =  des.As<long>().Read();
             var captionLocal =  PageCaptionBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Autoplay = autoplayLocal,
             Loop = loopLocal,
             VideoId = videoIdLocal,
@@ -18029,7 +17714,6 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
     }
     public class PageBlockEmbed : PageBlockBase, ITlSerializable, ITlDeserializable<PageBlockEmbed> {
         public static readonly byte[] Identifier = [197,141,113,168,];
-        private int Flags;
         public bool FullWidth {get;set;}
         public bool AllowScrolling {get;set;}
         public string? Url {get;set;}
@@ -18063,7 +17747,6 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
             var hLocal = (flagsLocal & 32) is 0 ? default : des.As<int>().Read() ;
             var captionLocal =  PageCaptionBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             FullWidth = fullWidthLocal,
             AllowScrolling = allowScrollingLocal,
             Url = urlLocal,
@@ -18078,10 +17761,10 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
     public class PageBlockEmbedPost : PageBlockBase, ITlSerializable, ITlDeserializable<PageBlockEmbedPost> {
         public static readonly byte[] Identifier = [11,168,89,242,];
         public required string Url {get;set;}
-        public required long WebpageId {get;set;}
-        public required long AuthorPhotoId {get;set;}
+        public long WebpageId {get;set;}
+        public long AuthorPhotoId {get;set;}
         public required string Author {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public required List<PageBlockBase> Blocks {get;set;}
         public required PageCaptionBase Caption {get;set;}
         public new byte[] TlSerialize() {
@@ -18181,7 +17864,7 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
     }
     public class PageBlockAudio : PageBlockBase, ITlSerializable, ITlDeserializable<PageBlockAudio> {
         public static readonly byte[] Identifier = [234,97,67,128,];
-        public required long AudioId {get;set;}
+        public long AudioId {get;set;}
         public required PageCaptionBase Caption {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -18221,7 +17904,6 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
     }
     public class PageBlockTable : PageBlockBase, ITlSerializable, ITlDeserializable<PageBlockTable> {
         public static readonly byte[] Identifier = [130,234,77,191,];
-        private int Flags;
         public bool Bordered {get;set;}
         public bool Striped {get;set;}
         public required RichTextBase Title {get;set;}
@@ -18243,7 +17925,6 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
             var titleLocal =  RichTextBase.TlDeserialize(des);
             var rowsLocal =  des.Read<PageTableRowBase>();
             return new() {
-            Flags = flagsLocal,
             Bordered = borderedLocal,
             Striped = stripedLocal,
             Title = titleLocal,
@@ -18271,7 +17952,6 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
     }
     public class PageBlockDetails : PageBlockBase, ITlSerializable, ITlDeserializable<PageBlockDetails> {
         public static readonly byte[] Identifier = [237,139,118,118,];
-        private int Flags;
         public bool Open {get;set;}
         public required List<PageBlockBase> Blocks {get;set;}
         public required RichTextBase Title {get;set;}
@@ -18291,7 +17971,6 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
             var blocksLocal =  des.Read<PageBlockBase>();
             var titleLocal =  RichTextBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Open = openLocal,
             Blocks = blocksLocal,
             Title = titleLocal,
@@ -18323,9 +18002,9 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
     public class PageBlockMap : PageBlockBase, ITlSerializable, ITlDeserializable<PageBlockMap> {
         public static readonly byte[] Identifier = [246,62,79,164,];
         public required GeoPointBase Geo {get;set;}
-        public required int Zoom {get;set;}
-        public required int W {get;set;}
-        public required int H {get;set;}
+        public int Zoom {get;set;}
+        public int W {get;set;}
+        public int H {get;set;}
         public required PageCaptionBase Caption {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -18443,7 +18122,7 @@ namespace SharpGram.Tl.Constructors.LabeledPriceNs {
     public class LabeledPrice : LabeledPriceBase, ITlSerializable, ITlDeserializable<LabeledPrice> {
         public static readonly byte[] Identifier = [248,107,41,203,];
         public required string Label {get;set;}
-        public required long Amount {get;set;}
+        public long Amount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -18468,7 +18147,6 @@ namespace SharpGram.Tl.Constructors.LabeledPriceNs {
 namespace SharpGram.Tl.Constructors.InvoiceNs {
     public class Invoice : InvoiceBase, ITlSerializable, ITlDeserializable<Invoice> {
         public static readonly byte[] Identifier = [21,90,185,93,];
-        private int Flags;
         public bool Test {get;set;}
         public bool NameRequested {get;set;}
         public bool PhoneRequested {get;set;}
@@ -18513,7 +18191,6 @@ namespace SharpGram.Tl.Constructors.InvoiceNs {
             var suggestedTipAmountsLocal = (flagsLocal & 256) is 0 ? default : des.ReadNumbers<long>() ;
             var termsUrlLocal = (flagsLocal & 1024) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Test = testLocal,
             NameRequested = nameRequestedLocal,
             PhoneRequested = phoneRequestedLocal,
@@ -18605,7 +18282,6 @@ namespace SharpGram.Tl.Constructors.PostAddressNs {
 namespace SharpGram.Tl.Constructors.PaymentRequestedInfoNs {
     public class PaymentRequestedInfo : PaymentRequestedInfoBase, ITlSerializable, ITlDeserializable<PaymentRequestedInfo> {
         public static readonly byte[] Identifier = [148,63,156,144,];
-        private int Flags;
         public string? Name {get;set;}
         public string? Phone {get;set;}
         public string? Email {get;set;}
@@ -18629,7 +18305,6 @@ namespace SharpGram.Tl.Constructors.PaymentRequestedInfoNs {
             var emailLocal = (flagsLocal & 4) is 0 ? default : des.As<string>().Read() ;
             var shippingAddressLocal = (flagsLocal & 8) is 0 ? default : PostAddressBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Name = nameLocal,
             Phone = phoneLocal,
             Email = emailLocal,
@@ -18669,7 +18344,7 @@ namespace SharpGram.Tl.Constructors.PaymentSavedCredentialsNs {
 namespace SharpGram.Tl.Constructors.WebDocumentNs {
     public class WebDocument : WebDocumentBase, ITlSerializable, ITlDeserializable<WebDocument> {
         public static readonly byte[] Identifier = [209,14,87,28,];
-        public required long AccessHash {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -18730,7 +18405,7 @@ namespace SharpGram.Tl.Constructors.InputWebDocumentNs {
     public class InputWebDocument : InputWebDocumentBase, ITlSerializable, ITlDeserializable<InputWebDocument> {
         public static readonly byte[] Identifier = [77,67,237,155,];
         public required string Url {get;set;}
-        public required int Size {get;set;}
+        public int Size {get;set;}
         public required string MimeType {get;set;}
         public required List<DocumentAttributeBase> Attributes {get;set;}
         public new byte[] TlSerialize() {
@@ -18764,7 +18439,7 @@ namespace SharpGram.Tl.Constructors.InputWebFileLocationNs {
     public class InputWebFileLocation : InputWebFileLocationBase, ITlSerializable, ITlDeserializable<InputWebFileLocation> {
         public static readonly byte[] Identifier = [134,214,57,194,];
         public required string Url {get;set;}
-        public required long AccessHash {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -18786,11 +18461,11 @@ namespace SharpGram.Tl.Constructors.InputWebFileLocationNs {
     public class InputWebFileGeoPointLocation : InputWebFileLocationBase, ITlSerializable, ITlDeserializable<InputWebFileGeoPointLocation> {
         public static readonly byte[] Identifier = [201,33,34,159,];
         public required InputGeoPointBase GeoPoint {get;set;}
-        public required long AccessHash {get;set;}
-        public required int W {get;set;}
-        public required int H {get;set;}
-        public required int Zoom {get;set;}
-        public required int Scale {get;set;}
+        public long AccessHash {get;set;}
+        public int W {get;set;}
+        public int H {get;set;}
+        public int Zoom {get;set;}
+        public int Scale {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -18823,7 +18498,6 @@ namespace SharpGram.Tl.Constructors.InputWebFileLocationNs {
     }
     public class InputWebFileAudioAlbumThumbLocation : InputWebFileLocationBase, ITlSerializable, ITlDeserializable<InputWebFileAudioAlbumThumbLocation> {
         public static readonly byte[] Identifier = [36,233,111,244,];
-        private int Flags;
         public bool Small {get;set;}
         public InputDocumentBase? Document {get;set;}
         public string? Title {get;set;}
@@ -18846,7 +18520,6 @@ namespace SharpGram.Tl.Constructors.InputWebFileLocationNs {
             var titleLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var performerLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Small = smallLocal,
             Document = documentLocal,
             Title = titleLocal,
@@ -18860,10 +18533,10 @@ namespace SharpGram.Tl.Constructors.InputWebFileLocationNs {
 namespace SharpGram.Tl.Constructors.UploadWebFileNs {
     public class UploadWebFile : UploadWebFileBase, ITlSerializable, ITlDeserializable<UploadWebFile> {
         public static readonly byte[] Identifier = [188,83,231,33,];
-        public required int Size {get;set;}
+        public int Size {get;set;}
         public required string MimeType {get;set;}
         public required StorageFileTypeBase FileType {get;set;}
-        public required int Mtime {get;set;}
+        public int Mtime {get;set;}
         public required byte[] Bytes {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -18898,16 +18571,15 @@ namespace SharpGram.Tl.Constructors.UploadWebFileNs {
 namespace SharpGram.Tl.Constructors.PaymentsPaymentFormNs {
     public class PaymentsPaymentForm : PaymentsPaymentFormBase, ITlSerializable, ITlDeserializable<PaymentsPaymentForm> {
         public static readonly byte[] Identifier = [81,135,5,160,];
-        private int Flags;
         public bool CanSaveCredentials {get;set;}
         public bool PasswordMissing {get;set;}
-        public required long FormId {get;set;}
-        public required long BotId {get;set;}
+        public long FormId {get;set;}
+        public long BotId {get;set;}
         public required string Title {get;set;}
         public required string Description {get;set;}
         public WebDocumentBase? Photo {get;set;}
         public required InvoiceBase Invoice {get;set;}
-        public required long ProviderId {get;set;}
+        public long ProviderId {get;set;}
         public required string Url {get;set;}
         public string? NativeProvider {get;set;}
         public DataJSONBase? NativeParams {get;set;}
@@ -18956,7 +18628,6 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentFormNs {
             var savedCredentialsLocal = (flagsLocal & 2) is 0 ? default : des.Read<PaymentSavedCredentialsBase>() ;
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             CanSaveCredentials = canSaveCredentialsLocal,
             PasswordMissing = passwordMissingLocal,
             FormId = formIdLocal,
@@ -18982,7 +18653,6 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentFormNs {
 namespace SharpGram.Tl.Constructors.PaymentsValidatedRequestedInfoNs {
     public class PaymentsValidatedRequestedInfo : PaymentsValidatedRequestedInfoBase, ITlSerializable, ITlDeserializable<PaymentsValidatedRequestedInfo> {
         public static readonly byte[] Identifier = [131,24,69,209,];
-        private int Flags;
         public string? Id {get;set;}
         public List<ShippingOptionBase>? ShippingOptions {get;set;}
         public new byte[] TlSerialize() {
@@ -19000,7 +18670,6 @@ namespace SharpGram.Tl.Constructors.PaymentsValidatedRequestedInfoNs {
             var idLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             var shippingOptionsLocal = (flagsLocal & 2) is 0 ? default : des.Read<ShippingOptionBase>() ;
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             ShippingOptions = shippingOptionsLocal,
             };
@@ -19052,10 +18721,9 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentResultNs {
 namespace SharpGram.Tl.Constructors.PaymentsPaymentReceiptNs {
     public class PaymentsPaymentReceipt : PaymentsPaymentReceiptBase, ITlSerializable, ITlDeserializable<PaymentsPaymentReceipt> {
         public static readonly byte[] Identifier = [3,254,196,112,];
-        private int Flags;
-        public required int Date {get;set;}
-        public required long BotId {get;set;}
-        public required long ProviderId {get;set;}
+        public int Date {get;set;}
+        public long BotId {get;set;}
+        public long ProviderId {get;set;}
         public required string Title {get;set;}
         public required string Description {get;set;}
         public WebDocumentBase? Photo {get;set;}
@@ -19064,7 +18732,7 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentReceiptNs {
         public ShippingOptionBase? Shipping {get;set;}
         public long? TipAmount {get;set;}
         public required string Currency {get;set;}
-        public required long TotalAmount {get;set;}
+        public long TotalAmount {get;set;}
         public required string CredentialsTitle {get;set;}
         public required List<UserBase> Users {get;set;}
         public new byte[] TlSerialize() {
@@ -19106,7 +18774,6 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentReceiptNs {
             var credentialsTitleLocal =  des.As<string>().Read();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Date = dateLocal,
             BotId = botIdLocal,
             ProviderId = providerIdLocal,
@@ -19130,7 +18797,6 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentReceiptNs {
 namespace SharpGram.Tl.Constructors.PaymentsSavedInfoNs {
     public class PaymentsSavedInfo : PaymentsSavedInfoBase, ITlSerializable, ITlDeserializable<PaymentsSavedInfo> {
         public static readonly byte[] Identifier = [60,228,143,251,];
-        private int Flags;
         public bool HasSavedCredentials {get;set;}
         public PaymentRequestedInfoBase? SavedInfo {get;set;}
         public new byte[] TlSerialize() {
@@ -19147,7 +18813,6 @@ namespace SharpGram.Tl.Constructors.PaymentsSavedInfoNs {
             var hasSavedCredentialsLocal = (flagsLocal & 2) is 0 ? default : true ;
             var savedInfoLocal = (flagsLocal & 1) is 0 ? default : PaymentRequestedInfoBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             HasSavedCredentials = hasSavedCredentialsLocal,
             SavedInfo = savedInfoLocal,
             };
@@ -19181,7 +18846,6 @@ namespace SharpGram.Tl.Constructors.InputPaymentCredentialsNs {
     }
     public class InputPaymentCredentials : InputPaymentCredentialsBase, ITlSerializable, ITlDeserializable<InputPaymentCredentials> {
         public static readonly byte[] Identifier = [40,215,23,52,];
-        private int Flags;
         public bool Save {get;set;}
         public required DataJSONBase Data {get;set;}
         public new byte[] TlSerialize() {
@@ -19198,7 +18862,6 @@ namespace SharpGram.Tl.Constructors.InputPaymentCredentialsNs {
             var saveLocal = (flagsLocal & 1) is 0 ? default : true ;
             var dataLocal =  DataJSONBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Save = saveLocal,
             Data = dataLocal,
             };
@@ -19247,7 +18910,7 @@ namespace SharpGram.Tl.Constructors.AccountTmpPasswordNs {
     public class AccountTmpPassword : AccountTmpPasswordBase, ITlSerializable, ITlDeserializable<AccountTmpPassword> {
         public static readonly byte[] Identifier = [52,253,100,219,];
         public required byte[] TmpPassword {get;set;}
-        public required int ValidUntil {get;set;}
+        public int ValidUntil {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -19302,7 +18965,6 @@ namespace SharpGram.Tl.Constructors.ShippingOptionNs {
 namespace SharpGram.Tl.Constructors.InputStickerSetItemNs {
     public class InputStickerSetItem : InputStickerSetItemBase, ITlSerializable, ITlDeserializable<InputStickerSetItem> {
         public static readonly byte[] Identifier = [156,158,218,50,];
-        private int Flags;
         public required InputDocumentBase Document {get;set;}
         public required string Emoji {get;set;}
         public MaskCoordsBase? MaskCoords {get;set;}
@@ -19326,7 +18988,6 @@ namespace SharpGram.Tl.Constructors.InputStickerSetItemNs {
             var maskCoordsLocal = (flagsLocal & 1) is 0 ? default : MaskCoordsBase.TlDeserialize(des) ;
             var keywordsLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Document = documentLocal,
             Emoji = emojiLocal,
             MaskCoords = maskCoordsLocal,
@@ -19340,8 +19001,8 @@ namespace SharpGram.Tl.Constructors.InputStickerSetItemNs {
 namespace SharpGram.Tl.Constructors.InputPhoneCallNs {
     public class InputPhoneCall : InputPhoneCallBase, ITlSerializable, ITlDeserializable<InputPhoneCall> {
         public static readonly byte[] Identifier = [237,253,54,30,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -19383,12 +19044,11 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
     }
     public class PhoneCallWaiting : PhoneCallBase, ITlSerializable, ITlDeserializable<PhoneCallWaiting> {
         public static readonly byte[] Identifier = [23,111,34,197,];
-        private int Flags;
         public bool Video {get;set;}
-        public required long AccessHash {get;set;}
-        public required int Date {get;set;}
-        public required long AdminId {get;set;}
-        public required long ParticipantId {get;set;}
+        public long AccessHash {get;set;}
+        public int Date {get;set;}
+        public long AdminId {get;set;}
+        public long ParticipantId {get;set;}
         public required PhoneCallProtocolBase Protocol {get;set;}
         public int? ReceiveDate {get;set;}
         public new byte[] TlSerialize() {
@@ -19417,7 +19077,6 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
             var protocolLocal =  PhoneCallProtocolBase.TlDeserialize(des);
             var receiveDateLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Video = videoLocal,
             Id = idLocal,
             AccessHash = accessHashLocal,
@@ -19431,12 +19090,11 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
     }
     public class PhoneCallRequested : PhoneCallBase, ITlSerializable, ITlDeserializable<PhoneCallRequested> {
         public static readonly byte[] Identifier = [12,237,176,20,];
-        private int Flags;
         public bool Video {get;set;}
-        public required long AccessHash {get;set;}
-        public required int Date {get;set;}
-        public required long AdminId {get;set;}
-        public required long ParticipantId {get;set;}
+        public long AccessHash {get;set;}
+        public int Date {get;set;}
+        public long AdminId {get;set;}
+        public long ParticipantId {get;set;}
         public required byte[] GAHash {get;set;}
         public required PhoneCallProtocolBase Protocol {get;set;}
         public new byte[] TlSerialize() {
@@ -19465,7 +19123,6 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
             var gAHashLocal =  des.As<byte[]>().Read();
             var protocolLocal =  PhoneCallProtocolBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Video = videoLocal,
             Id = idLocal,
             AccessHash = accessHashLocal,
@@ -19479,12 +19136,11 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
     }
     public class PhoneCallAccepted : PhoneCallBase, ITlSerializable, ITlDeserializable<PhoneCallAccepted> {
         public static readonly byte[] Identifier = [17,195,96,54,];
-        private int Flags;
         public bool Video {get;set;}
-        public required long AccessHash {get;set;}
-        public required int Date {get;set;}
-        public required long AdminId {get;set;}
-        public required long ParticipantId {get;set;}
+        public long AccessHash {get;set;}
+        public int Date {get;set;}
+        public long AdminId {get;set;}
+        public long ParticipantId {get;set;}
         public required byte[] GB {get;set;}
         public required PhoneCallProtocolBase Protocol {get;set;}
         public new byte[] TlSerialize() {
@@ -19513,7 +19169,6 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
             var gBLocal =  des.As<byte[]>().Read();
             var protocolLocal =  PhoneCallProtocolBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Video = videoLocal,
             Id = idLocal,
             AccessHash = accessHashLocal,
@@ -19527,18 +19182,17 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
     }
     public class PhoneCall : PhoneCallBase, ITlSerializable, ITlDeserializable<PhoneCall> {
         public static readonly byte[] Identifier = [103,124,127,150,];
-        private int Flags;
         public bool P2pAllowed {get;set;}
         public bool Video {get;set;}
-        public required long AccessHash {get;set;}
-        public required int Date {get;set;}
-        public required long AdminId {get;set;}
-        public required long ParticipantId {get;set;}
+        public long AccessHash {get;set;}
+        public int Date {get;set;}
+        public long AdminId {get;set;}
+        public long ParticipantId {get;set;}
         public required byte[] GAOrB {get;set;}
-        public required long KeyFingerprint {get;set;}
+        public long KeyFingerprint {get;set;}
         public required PhoneCallProtocolBase Protocol {get;set;}
         public required List<PhoneConnectionBase> Connections {get;set;}
-        public required int StartDate {get;set;}
+        public int StartDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -19572,7 +19226,6 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
             var connectionsLocal =  des.Read<PhoneConnectionBase>();
             var startDateLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             P2pAllowed = p2pAllowedLocal,
             Video = videoLocal,
             Id = idLocal,
@@ -19590,7 +19243,6 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
     }
     public class PhoneCallDiscarded : PhoneCallBase, ITlSerializable, ITlDeserializable<PhoneCallDiscarded> {
         public static readonly byte[] Identifier = [225,77,202,80,];
-        private int Flags;
         public bool NeedRating {get;set;}
         public bool NeedDebug {get;set;}
         public bool Video {get;set;}
@@ -19616,7 +19268,6 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
             var reasonLocal = (flagsLocal & 1) is 0 ? default : PhoneCallDiscardReasonBase.TlDeserialize(des) ;
             var durationLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             NeedRating = needRatingLocal,
             NeedDebug = needDebugLocal,
             Video = videoLocal,
@@ -19656,7 +19307,6 @@ namespace SharpGram.Tl.Constructors.PhoneConnectionNs {
             var portLocal =  des.As<int>().Read();
             var peerTagLocal =  des.As<byte[]>().Read();
             return new() {
-            Flags = flagsLocal,
             Tcp = tcpLocal,
             Id = idLocal,
             Ip = ipLocal,
@@ -19697,7 +19347,6 @@ namespace SharpGram.Tl.Constructors.PhoneConnectionNs {
             var usernameLocal =  des.As<string>().Read();
             var passwordLocal =  des.As<string>().Read();
             return new() {
-            Flags = flagsLocal,
             Turn = turnLocal,
             Stun = stunLocal,
             Id = idLocal,
@@ -19715,11 +19364,10 @@ namespace SharpGram.Tl.Constructors.PhoneConnectionNs {
 namespace SharpGram.Tl.Constructors.PhoneCallProtocolNs {
     public class PhoneCallProtocol : PhoneCallProtocolBase, ITlSerializable, ITlDeserializable<PhoneCallProtocol> {
         public static readonly byte[] Identifier = [200,143,135,252,];
-        private int Flags;
         public bool UdpP2p {get;set;}
         public bool UdpReflector {get;set;}
-        public required int MinLayer {get;set;}
-        public required int MaxLayer {get;set;}
+        public int MinLayer {get;set;}
+        public int MaxLayer {get;set;}
         public required List<string> LibraryVersions {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -19740,7 +19388,6 @@ namespace SharpGram.Tl.Constructors.PhoneCallProtocolNs {
             var maxLayerLocal =  des.As<int>().Read();
             var libraryVersionsLocal =  des.ReadStrings();
             return new() {
-            Flags = flagsLocal,
             UdpP2p = udpP2pLocal,
             UdpReflector = udpReflectorLocal,
             MinLayer = minLayerLocal,
@@ -19821,7 +19468,7 @@ namespace SharpGram.Tl.Constructors.UploadCdnFileNs {
 namespace SharpGram.Tl.Constructors.CdnPublicKeyNs {
     public class CdnPublicKey : CdnPublicKeyBase, ITlSerializable, ITlDeserializable<CdnPublicKey> {
         public static readonly byte[] Identifier = [186,234,130,201,];
-        public required int DcId {get;set;}
+        public int DcId {get;set;}
         public required string PublicKey {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -19890,7 +19537,6 @@ namespace SharpGram.Tl.Constructors.LangPackStringNs {
     }
     public class LangPackStringPluralized : LangPackStringBase, ITlSerializable, ITlDeserializable<LangPackStringPluralized> {
         public static readonly byte[] Identifier = [159,172,71,108,];
-        private int Flags;
         public string? ZeroValue {get;set;}
         public string? OneValue {get;set;}
         public string? TwoValue {get;set;}
@@ -19922,7 +19568,6 @@ namespace SharpGram.Tl.Constructors.LangPackStringNs {
             var manyValueLocal = (flagsLocal & 16) is 0 ? default : des.As<string>().Read() ;
             var otherValueLocal =  des.As<string>().Read();
             return new() {
-            Flags = flagsLocal,
             Key = keyLocal,
             ZeroValue = zeroValueLocal,
             OneValue = oneValueLocal,
@@ -19957,8 +19602,8 @@ namespace SharpGram.Tl.Constructors.LangPackDifferenceNs {
     public class LangPackDifference : LangPackDifferenceBase, ITlSerializable, ITlDeserializable<LangPackDifference> {
         public static readonly byte[] Identifier = [246,193,133,243,];
         public required string LangCode {get;set;}
-        public required int FromVersion {get;set;}
-        public required int Version {get;set;}
+        public int FromVersion {get;set;}
+        public int Version {get;set;}
         public required List<LangPackStringBase> Strings {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -19990,7 +19635,6 @@ namespace SharpGram.Tl.Constructors.LangPackDifferenceNs {
 namespace SharpGram.Tl.Constructors.LangPackLanguageNs {
     public class LangPackLanguage : LangPackLanguageBase, ITlSerializable, ITlDeserializable<LangPackLanguage> {
         public static readonly byte[] Identifier = [227,92,202,238,];
-        private int Flags;
         public bool Official {get;set;}
         public bool Rtl {get;set;}
         public bool Beta {get;set;}
@@ -19999,8 +19643,8 @@ namespace SharpGram.Tl.Constructors.LangPackLanguageNs {
         public required string LangCode {get;set;}
         public string? BaseLangCode {get;set;}
         public required string PluralCode {get;set;}
-        public required int StringsCount {get;set;}
-        public required int TranslatedCount {get;set;}
+        public int StringsCount {get;set;}
+        public int TranslatedCount {get;set;}
         public required string TranslationsUrl {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -20032,7 +19676,6 @@ namespace SharpGram.Tl.Constructors.LangPackLanguageNs {
             var translatedCountLocal =  des.As<int>().Read();
             var translationsUrlLocal =  des.As<string>().Read();
             return new() {
-            Flags = flagsLocal,
             Official = officialLocal,
             Rtl = rtlLocal,
             Beta = betaLocal,
@@ -20402,8 +20045,8 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
     }
     public class ChannelAdminLogEventActionChangeLinkedChat : ChannelAdminLogEventActionBase, ITlSerializable, ITlDeserializable<ChannelAdminLogEventActionChangeLinkedChat> {
         public static readonly byte[] Identifier = [200,122,12,5,];
-        public required long PrevValue {get;set;}
-        public required long NewValue {get;set;}
+        public long PrevValue {get;set;}
+        public long NewValue {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -20446,8 +20089,8 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
     }
     public class ChannelAdminLogEventActionToggleSlowMode : ChannelAdminLogEventActionBase, ITlSerializable, ITlDeserializable<ChannelAdminLogEventActionToggleSlowMode> {
         public static readonly byte[] Identifier = [121,151,144,83,];
-        public required int PrevValue {get;set;}
-        public required int NewValue {get;set;}
+        public int PrevValue {get;set;}
+        public int NewValue {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -20557,7 +20200,6 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
     }
     public class ChannelAdminLogEventActionParticipantJoinByInvite : ChannelAdminLogEventActionBase, ITlSerializable, ITlDeserializable<ChannelAdminLogEventActionParticipantJoinByInvite> {
         public static readonly byte[] Identifier = [88,193,159,254,];
-        private int Flags;
         public bool ViaChatlist {get;set;}
         public required ExportedChatInviteBase Invite {get;set;}
         public new byte[] TlSerialize() {
@@ -20574,7 +20216,6 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
             var viaChatlistLocal = (flagsLocal & 1) is 0 ? default : true ;
             var inviteLocal =  ExportedChatInviteBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             ViaChatlist = viaChatlistLocal,
             Invite = inviteLocal,
             };
@@ -20658,8 +20299,8 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
     }
     public class ChannelAdminLogEventActionChangeHistoryTTL : ChannelAdminLogEventActionBase, ITlSerializable, ITlDeserializable<ChannelAdminLogEventActionChangeHistoryTTL> {
         public static readonly byte[] Identifier = [56,26,148,110,];
-        public required int PrevValue {get;set;}
-        public required int NewValue {get;set;}
+        public int PrevValue {get;set;}
+        public int NewValue {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -20681,7 +20322,7 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
     public class ChannelAdminLogEventActionParticipantJoinByRequest : ChannelAdminLogEventActionBase, ITlSerializable, ITlDeserializable<ChannelAdminLogEventActionParticipantJoinByRequest> {
         public static readonly byte[] Identifier = [74,20,182,175,];
         public required ExportedChatInviteBase Invite {get;set;}
-        public required long ApprovedBy {get;set;}
+        public long ApprovedBy {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -20856,7 +20497,6 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
     }
     public class ChannelAdminLogEventActionPinTopic : ChannelAdminLogEventActionBase, ITlSerializable, ITlDeserializable<ChannelAdminLogEventActionPinTopic> {
         public static readonly byte[] Identifier = [59,53,141,93,];
-        private int Flags;
         public ForumTopicBase? PrevTopic {get;set;}
         public ForumTopicBase? NewTopic {get;set;}
         public new byte[] TlSerialize() {
@@ -20874,7 +20514,6 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
             var prevTopicLocal = (flagsLocal & 1) is 0 ? default : ForumTopicBase.TlDeserialize(des) ;
             var newTopicLocal = (flagsLocal & 2) is 0 ? default : ForumTopicBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             PrevTopic = prevTopicLocal,
             NewTopic = newTopicLocal,
             };
@@ -20991,9 +20630,9 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
 namespace SharpGram.Tl.Constructors.ChannelAdminLogEventNs {
     public class ChannelAdminLogEvent : ChannelAdminLogEventBase, ITlSerializable, ITlDeserializable<ChannelAdminLogEvent> {
         public static readonly byte[] Identifier = [205,104,173,31,];
-        public required long Id {get;set;}
-        public required int Date {get;set;}
-        public required long UserId {get;set;}
+        public long Id {get;set;}
+        public int Date {get;set;}
+        public long UserId {get;set;}
         public required ChannelAdminLogEventActionBase Action {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -21055,7 +20694,6 @@ namespace SharpGram.Tl.Constructors.ChannelsAdminLogResultsNs {
 namespace SharpGram.Tl.Constructors.ChannelAdminLogEventsFilterNs {
     public class ChannelAdminLogEventsFilter : ChannelAdminLogEventsFilterBase, ITlSerializable, ITlDeserializable<ChannelAdminLogEventsFilter> {
         public static readonly byte[] Identifier = [228,122,16,234,];
-        private int Flags;
         public bool Join {get;set;}
         public bool Leave {get;set;}
         public bool Invite {get;set;}
@@ -21103,7 +20741,6 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventsFilterNs {
             var sendLocal = (flagsLocal & 65536) is 0 ? default : true ;
             var forumsLocal = (flagsLocal & 131072) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             Join = joinLocal,
             Leave = leaveLocal,
             Invite = inviteLocal,
@@ -21131,8 +20768,8 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventsFilterNs {
 namespace SharpGram.Tl.Constructors.PopularContactNs {
     public class PopularContact : PopularContactBase, ITlSerializable, ITlDeserializable<PopularContact> {
         public static readonly byte[] Identifier = [117,65,225,92,];
-        public required long ClientId {get;set;}
-        public required int Importers {get;set;}
+        public long ClientId {get;set;}
+        public int Importers {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -21171,7 +20808,7 @@ namespace SharpGram.Tl.Constructors.MessagesFavedStickersNs {
     }
     public class MessagesFavedStickers : MessagesFavedStickersBase, ITlSerializable, ITlDeserializable<MessagesFavedStickers> {
         public static readonly byte[] Identifier = [151,16,181,44,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<StickerPackBase> Packs {get;set;}
         public required List<DocumentBase> Stickers {get;set;}
         public new byte[] TlSerialize() {
@@ -21218,7 +20855,7 @@ namespace SharpGram.Tl.Constructors.RecentMeUrlNs {
     }
     public class RecentMeUrlUser : RecentMeUrlBase, ITlSerializable, ITlDeserializable<RecentMeUrlUser> {
         public static readonly byte[] Identifier = [226,9,44,185,];
-        public required long UserId {get;set;}
+        public long UserId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -21239,7 +20876,7 @@ namespace SharpGram.Tl.Constructors.RecentMeUrlNs {
     }
     public class RecentMeUrlChat : RecentMeUrlBase, ITlSerializable, ITlDeserializable<RecentMeUrlChat> {
         public static readonly byte[] Identifier = [210,113,218,178,];
-        public required long ChatId {get;set;}
+        public long ChatId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -21336,9 +20973,8 @@ namespace SharpGram.Tl.Constructors.HelpRecentMeUrlsNs {
 namespace SharpGram.Tl.Constructors.InputSingleMediaNs {
     public class InputSingleMedia : InputSingleMediaBase, ITlSerializable, ITlDeserializable<InputSingleMedia> {
         public static readonly byte[] Identifier = [31,233,198,28,];
-        private int Flags;
         public required InputMediaBase Media {get;set;}
-        public required long RandomId {get;set;}
+        public long RandomId {get;set;}
         public required string Message {get;set;}
         public List<MessageEntityBase>? Entities {get;set;}
         public new byte[] TlSerialize() {
@@ -21360,7 +20996,6 @@ namespace SharpGram.Tl.Constructors.InputSingleMediaNs {
             var messageLocal =  des.As<string>().Read();
             var entitiesLocal = (flagsLocal & 1) is 0 ? default : des.Read<MessageEntityBase>() ;
             return new() {
-            Flags = flagsLocal,
             Media = mediaLocal,
             RandomId = randomIdLocal,
             Message = messageLocal,
@@ -21374,13 +21009,13 @@ namespace SharpGram.Tl.Constructors.InputSingleMediaNs {
 namespace SharpGram.Tl.Constructors.WebAuthorizationNs {
     public class WebAuthorization : WebAuthorizationBase, ITlSerializable, ITlDeserializable<WebAuthorization> {
         public static readonly byte[] Identifier = [82,244,248,166,];
-        public required long Hash {get;set;}
-        public required long BotId {get;set;}
+        public long Hash {get;set;}
+        public long BotId {get;set;}
         public required string Domain {get;set;}
         public required string Browser {get;set;}
         public required string Platform {get;set;}
-        public required int DateCreated {get;set;}
-        public required int DateActive {get;set;}
+        public int DateCreated {get;set;}
+        public int DateActive {get;set;}
         public required string Ip {get;set;}
         public required string Region {get;set;}
         public new byte[] TlSerialize() {
@@ -21454,7 +21089,7 @@ namespace SharpGram.Tl.Constructors.AccountWebAuthorizationsNs {
 namespace SharpGram.Tl.Constructors.InputMessageNs {
     public class InputMessageID : InputMessageBase, ITlSerializable, ITlDeserializable<InputMessageID> {
         public static readonly byte[] Identifier = [34,163,118,166,];
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -21472,7 +21107,7 @@ namespace SharpGram.Tl.Constructors.InputMessageNs {
     }
     public class InputMessageReplyTo : InputMessageBase, ITlSerializable, ITlDeserializable<InputMessageReplyTo> {
         public static readonly byte[] Identifier = [149,131,216,186,];
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -21504,8 +21139,8 @@ namespace SharpGram.Tl.Constructors.InputMessageNs {
     }
     public class InputMessageCallbackQuery : InputMessageBase, ITlSerializable, ITlDeserializable<InputMessageCallbackQuery> {
         public static readonly byte[] Identifier = [126,26,250,172,];
-        public required int Id {get;set;}
-        public required long QueryId {get;set;}
+        public int Id {get;set;}
+        public long QueryId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -21548,7 +21183,7 @@ namespace SharpGram.Tl.Constructors.InputDialogPeerNs {
     }
     public class InputDialogPeerFolder : InputDialogPeerBase, ITlSerializable, ITlDeserializable<InputDialogPeerFolder> {
         public static readonly byte[] Identifier = [39,5,96,100,];
-        public required int FolderId {get;set;}
+        public int FolderId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -21588,7 +21223,7 @@ namespace SharpGram.Tl.Constructors.DialogPeerNs {
     }
     public class DialogPeerFolder : DialogPeerBase, ITlSerializable, ITlDeserializable<DialogPeerFolder> {
         public static readonly byte[] Identifier = [226,25,69,81,];
-        public required int FolderId {get;set;}
+        public int FolderId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -21624,7 +21259,7 @@ namespace SharpGram.Tl.Constructors.MessagesFoundStickerSetsNs {
     }
     public class MessagesFoundStickerSets : MessagesFoundStickerSetsBase, ITlSerializable, ITlDeserializable<MessagesFoundStickerSets> {
         public static readonly byte[] Identifier = [210,157,240,138,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<StickerSetCoveredBase> Sets {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -21650,8 +21285,8 @@ namespace SharpGram.Tl.Constructors.MessagesFoundStickerSetsNs {
 namespace SharpGram.Tl.Constructors.FileHashNs {
     public class FileHash : FileHashBase, ITlSerializable, ITlDeserializable<FileHash> {
         public static readonly byte[] Identifier = [92,3,155,243,];
-        public required long Offset {get;set;}
-        public required int Limit {get;set;}
+        public long Offset {get;set;}
+        public int Limit {get;set;}
         public required byte[] Hash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -21681,7 +21316,7 @@ namespace SharpGram.Tl.Constructors.InputClientProxyNs {
     public class InputClientProxy : InputClientProxyBase, ITlSerializable, ITlDeserializable<InputClientProxy> {
         public static readonly byte[] Identifier = [63,139,88,117,];
         public required string Address {get;set;}
-        public required int Port {get;set;}
+        public int Port {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -21748,7 +21383,7 @@ namespace SharpGram.Tl.Constructors.HelpTermsOfServiceUpdateNs {
 namespace SharpGram.Tl.Constructors.InputSecureFileNs {
     public class InputSecureFileUploaded : InputSecureFileBase, ITlSerializable, ITlDeserializable<InputSecureFileUploaded> {
         public static readonly byte[] Identifier = [240,176,52,51,];
-        public required int Parts {get;set;}
+        public int Parts {get;set;}
         public required string Md5Checksum {get;set;}
         public required byte[] FileHash {get;set;}
         public required byte[] Secret {get;set;}
@@ -21781,7 +21416,7 @@ namespace SharpGram.Tl.Constructors.InputSecureFileNs {
     }
     public class InputSecureFile : InputSecureFileBase, ITlSerializable, ITlDeserializable<InputSecureFile> {
         public static readonly byte[] Identifier = [190,229,103,83,];
-        public required long AccessHash {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -21820,11 +21455,11 @@ namespace SharpGram.Tl.Constructors.SecureFileNs {
     }
     public class SecureFile : SecureFileBase, ITlSerializable, ITlDeserializable<SecureFile> {
         public static readonly byte[] Identifier = [126,194,9,125,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
-        public required long Size {get;set;}
-        public required int DcId {get;set;}
-        public required int Date {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
+        public long Size {get;set;}
+        public int DcId {get;set;}
+        public int Date {get;set;}
         public required byte[] FileHash {get;set;}
         public required byte[] Secret {get;set;}
         public new byte[] TlSerialize() {
@@ -22122,7 +21757,6 @@ namespace SharpGram.Tl.Constructors.SecureValueTypeNs {
 namespace SharpGram.Tl.Constructors.SecureValueNs {
     public class SecureValue : SecureValueBase, ITlSerializable, ITlDeserializable<SecureValue> {
         public static readonly byte[] Identifier = [202,160,127,24,];
-        private int Flags;
         public required SecureValueTypeBase Type {get;set;}
         public SecureDataBase? Data {get;set;}
         public SecureFileBase? FrontSide {get;set;}
@@ -22161,7 +21795,6 @@ namespace SharpGram.Tl.Constructors.SecureValueNs {
             var plainDataLocal = (flagsLocal & 32) is 0 ? default : SecurePlainDataBase.TlDeserialize(des) ;
             var hashLocal =  des.As<byte[]>().Read();
             return new() {
-            Flags = flagsLocal,
             Type = typeLocal,
             Data = dataLocal,
             FrontSide = frontSideLocal,
@@ -22180,7 +21813,6 @@ namespace SharpGram.Tl.Constructors.SecureValueNs {
 namespace SharpGram.Tl.Constructors.InputSecureValueNs {
     public class InputSecureValue : InputSecureValueBase, ITlSerializable, ITlDeserializable<InputSecureValue> {
         public static readonly byte[] Identifier = [167,208,33,219,];
-        private int Flags;
         public required SecureValueTypeBase Type {get;set;}
         public SecureDataBase? Data {get;set;}
         public InputSecureFileBase? FrontSide {get;set;}
@@ -22216,7 +21848,6 @@ namespace SharpGram.Tl.Constructors.InputSecureValueNs {
             var filesLocal = (flagsLocal & 16) is 0 ? default : des.Read<InputSecureFileBase>() ;
             var plainDataLocal = (flagsLocal & 32) is 0 ? default : SecurePlainDataBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Type = typeLocal,
             Data = dataLocal,
             FrontSide = frontSideLocal,
@@ -22514,7 +22145,6 @@ namespace SharpGram.Tl.Constructors.SecureCredentialsEncryptedNs {
 namespace SharpGram.Tl.Constructors.AccountAuthorizationFormNs {
     public class AccountAuthorizationForm : AccountAuthorizationFormBase, ITlSerializable, ITlDeserializable<AccountAuthorizationForm> {
         public static readonly byte[] Identifier = [216,28,46,173,];
-        private int Flags;
         public required List<SecureRequiredTypeBase> RequiredTypes {get;set;}
         public required List<SecureValueBase> Values {get;set;}
         public required List<SecureValueErrorBase> Errors {get;set;}
@@ -22541,7 +22171,6 @@ namespace SharpGram.Tl.Constructors.AccountAuthorizationFormNs {
             var usersLocal =  des.Read<UserBase>();
             var privacyPolicyUrlLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             RequiredTypes = requiredTypesLocal,
             Values = valuesLocal,
             Errors = errorsLocal,
@@ -22557,7 +22186,7 @@ namespace SharpGram.Tl.Constructors.AccountSentEmailCodeNs {
     public class AccountSentEmailCode : AccountSentEmailCodeBase, ITlSerializable, ITlDeserializable<AccountSentEmailCode> {
         public static readonly byte[] Identifier = [79,133,31,129,];
         public required string EmailPattern {get;set;}
-        public required int Length {get;set;}
+        public int Length {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -22596,7 +22225,6 @@ namespace SharpGram.Tl.Constructors.HelpDeepLinkInfoNs {
     }
     public class HelpDeepLinkInfo : HelpDeepLinkInfoBase, ITlSerializable, ITlDeserializable<HelpDeepLinkInfo> {
         public static readonly byte[] Identifier = [50,232,78,106,];
-        private int Flags;
         public bool UpdateApp {get;set;}
         public required string Message {get;set;}
         public List<MessageEntityBase>? Entities {get;set;}
@@ -22616,7 +22244,6 @@ namespace SharpGram.Tl.Constructors.HelpDeepLinkInfoNs {
             var messageLocal =  des.As<string>().Read();
             var entitiesLocal = (flagsLocal & 2) is 0 ? default : des.Read<MessageEntityBase>() ;
             return new() {
-            Flags = flagsLocal,
             UpdateApp = updateAppLocal,
             Message = messageLocal,
             Entities = entitiesLocal,
@@ -22632,7 +22259,7 @@ namespace SharpGram.Tl.Constructors.SavedContactNs {
         public required string Phone {get;set;}
         public required string FirstName {get;set;}
         public required string LastName {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -22663,7 +22290,7 @@ namespace SharpGram.Tl.Constructors.SavedContactNs {
 namespace SharpGram.Tl.Constructors.AccountTakeoutNs {
     public class AccountTakeout : AccountTakeoutBase, ITlSerializable, ITlDeserializable<AccountTakeout> {
         public static readonly byte[] Identifier = [1,69,186,77,];
-        public required long Id {get;set;}
+        public long Id {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -22701,7 +22328,7 @@ namespace SharpGram.Tl.Constructors.PasswordKdfAlgoNs {
         public static readonly byte[] Identifier = [74,45,145,58,];
         public required byte[] Salt1 {get;set;}
         public required byte[] Salt2 {get;set;}
-        public required int G {get;set;}
+        public int G {get;set;}
         public required byte[] P {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -22789,7 +22416,7 @@ namespace SharpGram.Tl.Constructors.SecureSecretSettingsNs {
         public static readonly byte[] Identifier = [172,188,39,21,];
         public required SecurePasswordKdfAlgoBase SecureAlgo {get;set;}
         public required byte[] SecureSecret {get;set;}
-        public required long SecureSecretId {get;set;}
+        public long SecureSecretId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -22831,7 +22458,7 @@ namespace SharpGram.Tl.Constructors.InputCheckPasswordSRPNs {
     }
     public class InputCheckPasswordSRP : InputCheckPasswordSRPBase, ITlSerializable, ITlDeserializable<InputCheckPasswordSRP> {
         public static readonly byte[] Identifier = [130,240,127,210,];
-        public required long SrpId {get;set;}
+        public long SrpId {get;set;}
         public required byte[] A {get;set;}
         public required byte[] M1 {get;set;}
         public new byte[] TlSerialize() {
@@ -22861,7 +22488,6 @@ namespace SharpGram.Tl.Constructors.InputCheckPasswordSRPNs {
 namespace SharpGram.Tl.Constructors.SecureRequiredTypeNs {
     public class SecureRequiredType : SecureRequiredTypeBase, ITlSerializable, ITlDeserializable<SecureRequiredType> {
         public static readonly byte[] Identifier = [218,153,157,130,];
-        private int Flags;
         public bool NativeNames {get;set;}
         public bool SelfieRequired {get;set;}
         public bool TranslationRequired {get;set;}
@@ -22882,7 +22508,6 @@ namespace SharpGram.Tl.Constructors.SecureRequiredTypeNs {
             var translationRequiredLocal = (flagsLocal & 4) is 0 ? default : true ;
             var typeLocal =  SecureValueTypeBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             NativeNames = nativeNamesLocal,
             SelfieRequired = selfieRequiredLocal,
             TranslationRequired = translationRequiredLocal,
@@ -22928,7 +22553,7 @@ namespace SharpGram.Tl.Constructors.HelpPassportConfigNs {
     }
     public class HelpPassportConfig : HelpPassportConfigBase, ITlSerializable, ITlDeserializable<HelpPassportConfig> {
         public static readonly byte[] Identifier = [175,214,152,160,];
-        public required int Hash {get;set;}
+        public int Hash {get;set;}
         public required DataJSONBase CountriesLangs {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -22954,9 +22579,9 @@ namespace SharpGram.Tl.Constructors.HelpPassportConfigNs {
 namespace SharpGram.Tl.Constructors.InputAppEventNs {
     public class InputAppEvent : InputAppEventBase, ITlSerializable, ITlDeserializable<InputAppEvent> {
         public static readonly byte[] Identifier = [69,18,27,29,];
-        public required double Time {get;set;}
+        public double Time {get;set;}
         public required string Type {get;set;}
-        public required long Peer {get;set;}
+        public long Peer {get;set;}
         public required JSONValueBase Data {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -23045,7 +22670,7 @@ namespace SharpGram.Tl.Constructors.JSONValueNs {
     }
     public class JsonNumber : JSONValueBase, ITlSerializable, ITlDeserializable<JsonNumber> {
         public static readonly byte[] Identifier = [164,223,224,43,];
-        public required double Value {get;set;}
+        public double Value {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -23121,7 +22746,6 @@ namespace SharpGram.Tl.Constructors.JSONValueNs {
 namespace SharpGram.Tl.Constructors.PageTableCellNs {
     public class PageTableCell : PageTableCellBase, ITlSerializable, ITlDeserializable<PageTableCell> {
         public static readonly byte[] Identifier = [106,107,86,52,];
-        private int Flags;
         public bool Header {get;set;}
         public bool AlignCenter {get;set;}
         public bool AlignRight {get;set;}
@@ -23152,7 +22776,6 @@ namespace SharpGram.Tl.Constructors.PageTableCellNs {
             var colspanLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             var rowspanLocal = (flagsLocal & 4) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Header = headerLocal,
             AlignCenter = alignCenterLocal,
             AlignRight = alignRightLocal,
@@ -23304,9 +22927,8 @@ namespace SharpGram.Tl.Constructors.PageListOrderedItemNs {
 namespace SharpGram.Tl.Constructors.PageRelatedArticleNs {
     public class PageRelatedArticle : PageRelatedArticleBase, ITlSerializable, ITlDeserializable<PageRelatedArticle> {
         public static readonly byte[] Identifier = [8,220,144,179,];
-        private int Flags;
         public required string Url {get;set;}
-        public required long WebpageId {get;set;}
+        public long WebpageId {get;set;}
         public string? Title {get;set;}
         public string? Description {get;set;}
         public long? PhotoId {get;set;}
@@ -23337,7 +22959,6 @@ namespace SharpGram.Tl.Constructors.PageRelatedArticleNs {
             var authorLocal = (flagsLocal & 8) is 0 ? default : des.As<string>().Read() ;
             var publishedDateLocal = (flagsLocal & 16) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Url = urlLocal,
             WebpageId = webpageIdLocal,
             Title = titleLocal,
@@ -23354,7 +22975,6 @@ namespace SharpGram.Tl.Constructors.PageRelatedArticleNs {
 namespace SharpGram.Tl.Constructors.PageNs {
     public class Page : PageBase, ITlSerializable, ITlDeserializable<Page> {
         public static readonly byte[] Identifier = [13,127,101,152,];
-        private int Flags;
         public bool Part {get;set;}
         public bool Rtl {get;set;}
         public bool V2 {get;set;}
@@ -23387,7 +23007,6 @@ namespace SharpGram.Tl.Constructors.PageNs {
             var documentsLocal =  des.Read<DocumentBase>();
             var viewsLocal = (flagsLocal & 8) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Part = partLocal,
             Rtl = rtlLocal,
             V2 = v2Local,
@@ -23444,7 +23063,7 @@ namespace SharpGram.Tl.Constructors.HelpUserInfoNs {
         public required string Message {get;set;}
         public required List<MessageEntityBase> Entities {get;set;}
         public required string Author {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -23501,8 +23120,7 @@ namespace SharpGram.Tl.Constructors.PollAnswerNs {
 namespace SharpGram.Tl.Constructors.PollNs {
     public class Poll : PollBase, ITlSerializable, ITlDeserializable<Poll> {
         public static readonly byte[] Identifier = [97,129,225,134,];
-        public required long Id {get;set;}
-        private int Flags;
+        public long Id {get;set;}
         public bool Closed {get;set;}
         public bool PublicVoters {get;set;}
         public bool MultipleChoice {get;set;}
@@ -23537,7 +23155,6 @@ namespace SharpGram.Tl.Constructors.PollNs {
             var closeDateLocal = (flagsLocal & 32) is 0 ? default : des.As<int>().Read() ;
             return new() {
             Id = idLocal,
-            Flags = flagsLocal,
             Closed = closedLocal,
             PublicVoters = publicVotersLocal,
             MultipleChoice = multipleChoiceLocal,
@@ -23555,11 +23172,10 @@ namespace SharpGram.Tl.Constructors.PollNs {
 namespace SharpGram.Tl.Constructors.PollAnswerVotersNs {
     public class PollAnswerVoters : PollAnswerVotersBase, ITlSerializable, ITlDeserializable<PollAnswerVoters> {
         public static readonly byte[] Identifier = [210,218,109,59,];
-        private int Flags;
         public bool Chosen {get;set;}
         public bool Correct {get;set;}
         public required byte[] Option {get;set;}
-        public required int Voters {get;set;}
+        public int Voters {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -23577,7 +23193,6 @@ namespace SharpGram.Tl.Constructors.PollAnswerVotersNs {
             var optionLocal =  des.As<byte[]>().Read();
             var votersLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Chosen = chosenLocal,
             Correct = correctLocal,
             Option = optionLocal,
@@ -23591,7 +23206,6 @@ namespace SharpGram.Tl.Constructors.PollAnswerVotersNs {
 namespace SharpGram.Tl.Constructors.PollResultsNs {
     public class PollResults : PollResultsBase, ITlSerializable, ITlDeserializable<PollResults> {
         public static readonly byte[] Identifier = [32,36,223,122,];
-        private int Flags;
         public bool Min {get;set;}
         public List<PollAnswerVotersBase>? Results {get;set;}
         public int? TotalVoters {get;set;}
@@ -23620,7 +23234,6 @@ namespace SharpGram.Tl.Constructors.PollResultsNs {
             var solutionLocal = (flagsLocal & 16) is 0 ? default : des.As<string>().Read() ;
             var solutionEntitiesLocal = (flagsLocal & 16) is 0 ? default : des.Read<MessageEntityBase>() ;
             return new() {
-            Flags = flagsLocal,
             Min = minLocal,
             Results = resultsLocal,
             TotalVoters = totalVotersLocal,
@@ -23636,7 +23249,7 @@ namespace SharpGram.Tl.Constructors.PollResultsNs {
 namespace SharpGram.Tl.Constructors.ChatOnlinesNs {
     public class ChatOnlines : ChatOnlinesBase, ITlSerializable, ITlDeserializable<ChatOnlines> {
         public static readonly byte[] Identifier = [80,226,65,240,];
-        public required int Onlines {get;set;}
+        public int Onlines {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -23680,7 +23293,6 @@ namespace SharpGram.Tl.Constructors.StatsURLNs {
 namespace SharpGram.Tl.Constructors.ChatAdminRightsNs {
     public class ChatAdminRights : ChatAdminRightsBase, ITlSerializable, ITlDeserializable<ChatAdminRights> {
         public static readonly byte[] Identifier = [213,36,178,95,];
-        private int Flags;
         public bool ChangeInfo {get;set;}
         public bool PostMessages {get;set;}
         public bool EditMessages {get;set;}
@@ -23722,7 +23334,6 @@ namespace SharpGram.Tl.Constructors.ChatAdminRightsNs {
             var editStoriesLocal = (flagsLocal & 32768) is 0 ? default : true ;
             var deleteStoriesLocal = (flagsLocal & 65536) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             ChangeInfo = changeInfoLocal,
             PostMessages = postMessagesLocal,
             EditMessages = editMessagesLocal,
@@ -23747,7 +23358,6 @@ namespace SharpGram.Tl.Constructors.ChatAdminRightsNs {
 namespace SharpGram.Tl.Constructors.ChatBannedRightsNs {
     public class ChatBannedRights : ChatBannedRightsBase, ITlSerializable, ITlDeserializable<ChatBannedRights> {
         public static readonly byte[] Identifier = [24,4,18,159,];
-        private int Flags;
         public bool ViewMessages {get;set;}
         public bool SendMessages {get;set;}
         public bool SendMedia {get;set;}
@@ -23768,7 +23378,7 @@ namespace SharpGram.Tl.Constructors.ChatBannedRightsNs {
         public bool SendVoices {get;set;}
         public bool SendDocs {get;set;}
         public bool SendPlain {get;set;}
-        public required int UntilDate {get;set;}
+        public int UntilDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -23802,7 +23412,6 @@ namespace SharpGram.Tl.Constructors.ChatBannedRightsNs {
             var sendPlainLocal = (flagsLocal & 33554432) is 0 ? default : true ;
             var untilDateLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             ViewMessages = viewMessagesLocal,
             SendMessages = sendMessagesLocal,
             SendMedia = sendMediaLocal,
@@ -23833,8 +23442,8 @@ namespace SharpGram.Tl.Constructors.ChatBannedRightsNs {
 namespace SharpGram.Tl.Constructors.InputWallPaperNs {
     public class InputWallPaper : InputWallPaperBase, ITlSerializable, ITlDeserializable<InputWallPaper> {
         public static readonly byte[] Identifier = [121,185,48,230,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -23873,7 +23482,7 @@ namespace SharpGram.Tl.Constructors.InputWallPaperNs {
     }
     public class InputWallPaperNoFile : InputWallPaperBase, ITlSerializable, ITlDeserializable<InputWallPaperNoFile> {
         public static readonly byte[] Identifier = [46,70,122,150,];
-        public required long Id {get;set;}
+        public long Id {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -23909,7 +23518,7 @@ namespace SharpGram.Tl.Constructors.AccountWallPapersNs {
     }
     public class AccountWallPapers : AccountWallPapersBase, ITlSerializable, ITlDeserializable<AccountWallPapers> {
         public static readonly byte[] Identifier = [140,133,195,205,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<WallPaperBase> Wallpapers {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -23935,7 +23544,6 @@ namespace SharpGram.Tl.Constructors.AccountWallPapersNs {
 namespace SharpGram.Tl.Constructors.CodeSettingsNs {
     public class CodeSettings : CodeSettingsBase, ITlSerializable, ITlDeserializable<CodeSettings> {
         public static readonly byte[] Identifier = [120,61,37,173,];
-        private int Flags;
         public bool AllowFlashcall {get;set;}
         public bool CurrentNumber {get;set;}
         public bool AllowAppHash {get;set;}
@@ -23965,7 +23573,6 @@ namespace SharpGram.Tl.Constructors.CodeSettingsNs {
             var tokenLocal = (flagsLocal & 256) is 0 ? default : des.As<string>().Read() ;
             var appSandboxLocal = (flagsLocal & 256) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             AllowFlashcall = allowFlashcallLocal,
             CurrentNumber = currentNumberLocal,
             AllowAppHash = allowAppHashLocal,
@@ -23983,7 +23590,6 @@ namespace SharpGram.Tl.Constructors.CodeSettingsNs {
 namespace SharpGram.Tl.Constructors.WallPaperSettingsNs {
     public class WallPaperSettings : WallPaperSettingsBase, ITlSerializable, ITlDeserializable<WallPaperSettings> {
         public static readonly byte[] Identifier = [208,252,46,55,];
-        private int Flags;
         public bool Blur {get;set;}
         public bool Motion {get;set;}
         public int? BackgroundColor {get;set;}
@@ -24020,7 +23626,6 @@ namespace SharpGram.Tl.Constructors.WallPaperSettingsNs {
             var rotationLocal = (flagsLocal & 16) is 0 ? default : des.As<int>().Read() ;
             var emoticonLocal = (flagsLocal & 128) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Blur = blurLocal,
             Motion = motionLocal,
             BackgroundColor = backgroundColorLocal,
@@ -24039,18 +23644,17 @@ namespace SharpGram.Tl.Constructors.WallPaperSettingsNs {
 namespace SharpGram.Tl.Constructors.AutoDownloadSettingsNs {
     public class AutoDownloadSettings : AutoDownloadSettingsBase, ITlSerializable, ITlDeserializable<AutoDownloadSettings> {
         public static readonly byte[] Identifier = [40,118,165,186,];
-        private int Flags;
         public bool Disabled {get;set;}
         public bool VideoPreloadLarge {get;set;}
         public bool AudioPreloadNext {get;set;}
         public bool PhonecallsLessData {get;set;}
         public bool StoriesPreload {get;set;}
-        public required int PhotoSizeMax {get;set;}
-        public required long VideoSizeMax {get;set;}
-        public required long FileSizeMax {get;set;}
-        public required int VideoUploadMaxbitrate {get;set;}
-        public required int SmallQueueActiveOperationsMax {get;set;}
-        public required int LargeQueueActiveOperationsMax {get;set;}
+        public int PhotoSizeMax {get;set;}
+        public long VideoSizeMax {get;set;}
+        public long FileSizeMax {get;set;}
+        public int VideoUploadMaxbitrate {get;set;}
+        public int SmallQueueActiveOperationsMax {get;set;}
+        public int LargeQueueActiveOperationsMax {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -24079,7 +23683,6 @@ namespace SharpGram.Tl.Constructors.AutoDownloadSettingsNs {
             var smallQueueActiveOperationsMaxLocal =  des.As<int>().Read();
             var largeQueueActiveOperationsMaxLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Disabled = disabledLocal,
             VideoPreloadLarge = videoPreloadLargeLocal,
             AudioPreloadNext = audioPreloadNextLocal,
@@ -24175,8 +23778,8 @@ namespace SharpGram.Tl.Constructors.EmojiKeywordsDifferenceNs {
     public class EmojiKeywordsDifference : EmojiKeywordsDifferenceBase, ITlSerializable, ITlDeserializable<EmojiKeywordsDifference> {
         public static readonly byte[] Identifier = [189,97,199,92,];
         public required string LangCode {get;set;}
-        public required int FromVersion {get;set;}
-        public required int Version {get;set;}
+        public int FromVersion {get;set;}
+        public int Version {get;set;}
         public required List<EmojiKeywordBase> Keywords {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -24252,11 +23855,10 @@ namespace SharpGram.Tl.Constructors.EmojiLanguageNs {
 namespace SharpGram.Tl.Constructors.FolderNs {
     public class Folder : FolderBase, ITlSerializable, ITlDeserializable<Folder> {
         public static readonly byte[] Identifier = [101,78,84,255,];
-        private int Flags;
         public bool AutofillNewBroadcasts {get;set;}
         public bool AutofillPublicGroups {get;set;}
         public bool AutofillNewCorrespondents {get;set;}
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public required string Title {get;set;}
         public ChatPhotoBase? Photo {get;set;}
         public new byte[] TlSerialize() {
@@ -24279,7 +23881,6 @@ namespace SharpGram.Tl.Constructors.FolderNs {
             var titleLocal =  des.As<string>().Read();
             var photoLocal = (flagsLocal & 8) is 0 ? default : ChatPhotoBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             AutofillNewBroadcasts = autofillNewBroadcastsLocal,
             AutofillPublicGroups = autofillPublicGroupsLocal,
             AutofillNewCorrespondents = autofillNewCorrespondentsLocal,
@@ -24296,7 +23897,7 @@ namespace SharpGram.Tl.Constructors.InputFolderPeerNs {
     public class InputFolderPeer : InputFolderPeerBase, ITlSerializable, ITlDeserializable<InputFolderPeer> {
         public static readonly byte[] Identifier = [150,194,210,251,];
         public required InputPeerBase Peer {get;set;}
-        public required int FolderId {get;set;}
+        public int FolderId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -24322,7 +23923,7 @@ namespace SharpGram.Tl.Constructors.FolderPeerNs {
     public class FolderPeer : FolderPeerBase, ITlSerializable, ITlDeserializable<FolderPeer> {
         public static readonly byte[] Identifier = [104,166,186,233,];
         public required PeerBase Peer {get;set;}
-        public required int FolderId {get;set;}
+        public int FolderId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -24347,10 +23948,9 @@ namespace SharpGram.Tl.Constructors.FolderPeerNs {
 namespace SharpGram.Tl.Constructors.MessagesSearchCounterNs {
     public class MessagesSearchCounter : MessagesSearchCounterBase, ITlSerializable, ITlDeserializable<MessagesSearchCounter> {
         public static readonly byte[] Identifier = [255,235,68,232,];
-        private int Flags;
         public bool Inexact {get;set;}
         public required MessagesFilterBase Filter {get;set;}
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -24367,7 +23967,6 @@ namespace SharpGram.Tl.Constructors.MessagesSearchCounterNs {
             var filterLocal =  MessagesFilterBase.TlDeserialize(des);
             var countLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Inexact = inexactLocal,
             Filter = filterLocal,
             Count = countLocal,
@@ -24380,7 +23979,6 @@ namespace SharpGram.Tl.Constructors.MessagesSearchCounterNs {
 namespace SharpGram.Tl.Constructors.UrlAuthResultNs {
     public class UrlAuthResultRequest : UrlAuthResultBase, ITlSerializable, ITlDeserializable<UrlAuthResultRequest> {
         public static readonly byte[] Identifier = [14,58,211,146,];
-        private int Flags;
         public bool RequestWriteAccess {get;set;}
         public required UserBase Bot {get;set;}
         public required string Domain {get;set;}
@@ -24400,7 +23998,6 @@ namespace SharpGram.Tl.Constructors.UrlAuthResultNs {
             var botLocal =  UserBase.TlDeserialize(des);
             var domainLocal =  des.As<string>().Read();
             return new() {
-            Flags = flagsLocal,
             RequestWriteAccess = requestWriteAccessLocal,
             Bot = botLocal,
             Domain = domainLocal,
@@ -24486,7 +24083,7 @@ namespace SharpGram.Tl.Constructors.PeerLocatedNs {
     public class PeerLocated : PeerLocatedBase, ITlSerializable, ITlDeserializable<PeerLocated> {
         public static readonly byte[] Identifier = [93,27,70,202,];
         public required PeerBase Peer {get;set;}
-        public required int Distance {get;set;}
+        public int Distance {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -24561,8 +24158,8 @@ namespace SharpGram.Tl.Constructors.RestrictionReasonNs {
 namespace SharpGram.Tl.Constructors.InputThemeNs {
     public class InputTheme : InputThemeBase, ITlSerializable, ITlDeserializable<InputTheme> {
         public static readonly byte[] Identifier = [233,147,86,60,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -24605,12 +24202,11 @@ namespace SharpGram.Tl.Constructors.InputThemeNs {
 namespace SharpGram.Tl.Constructors.ThemeNs {
     public class Theme : ThemeBase, ITlSerializable, ITlDeserializable<Theme> {
         public static readonly byte[] Identifier = [214,103,14,160,];
-        private int Flags;
         public bool Creator {get;set;}
         public bool Default {get;set;}
         public bool ForChat {get;set;}
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public required string Slug {get;set;}
         public required string Title {get;set;}
         public DocumentBase? Document {get;set;}
@@ -24647,7 +24243,6 @@ namespace SharpGram.Tl.Constructors.ThemeNs {
             var emoticonLocal = (flagsLocal & 64) is 0 ? default : des.As<string>().Read() ;
             var installsCountLocal = (flagsLocal & 16) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Creator = creatorLocal,
             Default = defaultLocal,
             ForChat = forChatLocal,
@@ -24682,7 +24277,7 @@ namespace SharpGram.Tl.Constructors.AccountThemesNs {
     }
     public class AccountThemes : AccountThemesBase, ITlSerializable, ITlDeserializable<AccountThemes> {
         public static readonly byte[] Identifier = [109,140,61,154,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<ThemeBase> Themes {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -24708,7 +24303,7 @@ namespace SharpGram.Tl.Constructors.AccountThemesNs {
 namespace SharpGram.Tl.Constructors.AuthLoginTokenNs {
     public class AuthLoginToken : AuthLoginTokenBase, ITlSerializable, ITlDeserializable<AuthLoginToken> {
         public static readonly byte[] Identifier = [128,25,159,98,];
-        public required int Expires {get;set;}
+        public int Expires {get;set;}
         public required byte[] Token {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -24730,7 +24325,7 @@ namespace SharpGram.Tl.Constructors.AuthLoginTokenNs {
     }
     public class AuthLoginTokenMigrateTo : AuthLoginTokenBase, ITlSerializable, ITlDeserializable<AuthLoginTokenMigrateTo> {
         public static readonly byte[] Identifier = [22,153,142,6,];
-        public required int DcId {get;set;}
+        public int DcId {get;set;}
         public required byte[] Token {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -24774,7 +24369,6 @@ namespace SharpGram.Tl.Constructors.AuthLoginTokenNs {
 namespace SharpGram.Tl.Constructors.AccountContentSettingsNs {
     public class AccountContentSettings : AccountContentSettingsBase, ITlSerializable, ITlDeserializable<AccountContentSettings> {
         public static readonly byte[] Identifier = [33,130,226,87,];
-        private int Flags;
         public bool SensitiveEnabled {get;set;}
         public bool SensitiveCanChange {get;set;}
         public new byte[] TlSerialize() {
@@ -24790,7 +24384,6 @@ namespace SharpGram.Tl.Constructors.AccountContentSettingsNs {
             var sensitiveEnabledLocal = (flagsLocal & 1) is 0 ? default : true ;
             var sensitiveCanChangeLocal = (flagsLocal & 2) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             SensitiveEnabled = sensitiveEnabledLocal,
             SensitiveCanChange = sensitiveCanChangeLocal,
             };
@@ -24906,10 +24499,9 @@ namespace SharpGram.Tl.Constructors.BaseThemeNs {
 namespace SharpGram.Tl.Constructors.InputThemeSettingsNs {
     public class InputThemeSettings : InputThemeSettingsBase, ITlSerializable, ITlDeserializable<InputThemeSettings> {
         public static readonly byte[] Identifier = [79,80,222,143,];
-        private int Flags;
         public bool MessageColorsAnimated {get;set;}
         public required BaseThemeBase BaseTheme {get;set;}
-        public required int AccentColor {get;set;}
+        public int AccentColor {get;set;}
         public int? OutboxAccentColor {get;set;}
         public List<int>? MessageColors {get;set;}
         public InputWallPaperBase? Wallpaper {get;set;}
@@ -24938,7 +24530,6 @@ namespace SharpGram.Tl.Constructors.InputThemeSettingsNs {
             var wallpaperLocal = (flagsLocal & 2) is 0 ? default : InputWallPaperBase.TlDeserialize(des) ;
             var wallpaperSettingsLocal = (flagsLocal & 2) is 0 ? default : WallPaperSettingsBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             MessageColorsAnimated = messageColorsAnimatedLocal,
             BaseTheme = baseThemeLocal,
             AccentColor = accentColorLocal,
@@ -24955,10 +24546,9 @@ namespace SharpGram.Tl.Constructors.InputThemeSettingsNs {
 namespace SharpGram.Tl.Constructors.ThemeSettingsNs {
     public class ThemeSettings : ThemeSettingsBase, ITlSerializable, ITlDeserializable<ThemeSettings> {
         public static readonly byte[] Identifier = [212,182,88,250,];
-        private int Flags;
         public bool MessageColorsAnimated {get;set;}
         public required BaseThemeBase BaseTheme {get;set;}
-        public required int AccentColor {get;set;}
+        public int AccentColor {get;set;}
         public int? OutboxAccentColor {get;set;}
         public List<int>? MessageColors {get;set;}
         public WallPaperBase? Wallpaper {get;set;}
@@ -24984,7 +24574,6 @@ namespace SharpGram.Tl.Constructors.ThemeSettingsNs {
             var messageColorsLocal = (flagsLocal & 1) is 0 ? default : des.ReadNumbers<int>() ;
             var wallpaperLocal = (flagsLocal & 2) is 0 ? default : WallPaperBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             MessageColorsAnimated = messageColorsAnimatedLocal,
             BaseTheme = baseThemeLocal,
             AccentColor = accentColorLocal,
@@ -25017,7 +24606,6 @@ namespace SharpGram.Tl.Constructors.WebPageAttributeNs {
             var documentsLocal = (flagsLocal & 1) is 0 ? default : des.Read<DocumentBase>() ;
             var settingsLocal = (flagsLocal & 2) is 0 ? default : ThemeSettingsBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Documents = documentsLocal,
             Settings = settingsLocal,
             };
@@ -25026,7 +24614,7 @@ namespace SharpGram.Tl.Constructors.WebPageAttributeNs {
     public class WebPageAttributeStory : WebPageAttributeBase, ITlSerializable, ITlDeserializable<WebPageAttributeStory> {
         public static readonly byte[] Identifier = [231,195,148,46,];
         public required PeerBase Peer {get;set;}
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public StoryItemBase? Story {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -25045,7 +24633,6 @@ namespace SharpGram.Tl.Constructors.WebPageAttributeNs {
             var idLocal =  des.As<int>().Read();
             var storyLocal = (flagsLocal & 1) is 0 ? default : StoryItemBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Peer = peerLocal,
             Id = idLocal,
             Story = storyLocal,
@@ -25058,8 +24645,7 @@ namespace SharpGram.Tl.Constructors.WebPageAttributeNs {
 namespace SharpGram.Tl.Constructors.MessagesVotesListNs {
     public class MessagesVotesList : MessagesVotesListBase, ITlSerializable, ITlDeserializable<MessagesVotesList> {
         public static readonly byte[] Identifier = [78,72,153,72,];
-        private int Flags;
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<MessagePeerVoteBase> Votes {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
@@ -25085,7 +24671,6 @@ namespace SharpGram.Tl.Constructors.MessagesVotesListNs {
             var usersLocal =  des.Read<UserBase>();
             var nextOffsetLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Count = countLocal,
             Votes = votesLocal,
             Chats = chatsLocal,
@@ -25152,7 +24737,6 @@ namespace SharpGram.Tl.Constructors.PaymentsBankCardDataNs {
 namespace SharpGram.Tl.Constructors.DialogFilterNs {
     public class DialogFilter : DialogFilterBase, ITlSerializable, ITlDeserializable<DialogFilter> {
         public static readonly byte[] Identifier = [232,247,56,116,];
-        private int Flags;
         public bool Contacts {get;set;}
         public bool NonContacts {get;set;}
         public bool Groups {get;set;}
@@ -25161,7 +24745,7 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
         public bool ExcludeMuted {get;set;}
         public bool ExcludeRead {get;set;}
         public bool ExcludeArchived {get;set;}
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public required string Title {get;set;}
         public string? Emoticon {get;set;}
         public required List<InputPeerBase> PinnedPeers {get;set;}
@@ -25198,7 +24782,6 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
             var includePeersLocal =  des.Read<InputPeerBase>();
             var excludePeersLocal =  des.Read<InputPeerBase>();
             return new() {
-            Flags = flagsLocal,
             Contacts = contactsLocal,
             NonContacts = nonContactsLocal,
             Groups = groupsLocal,
@@ -25232,9 +24815,8 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
     }
     public class DialogFilterChatlist : DialogFilterBase, ITlSerializable, ITlDeserializable<DialogFilterChatlist> {
         public static readonly byte[] Identifier = [168,4,74,214,];
-        private int Flags;
         public bool HasMyInvites {get;set;}
-        public required int Id {get;set;}
+        public int Id {get;set;}
         public required string Title {get;set;}
         public string? Emoticon {get;set;}
         public required List<InputPeerBase> PinnedPeers {get;set;}
@@ -25261,7 +24843,6 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
             var pinnedPeersLocal =  des.Read<InputPeerBase>();
             var includePeersLocal =  des.Read<InputPeerBase>();
             return new() {
-            Flags = flagsLocal,
             HasMyInvites = hasMyInvitesLocal,
             Id = idLocal,
             Title = titleLocal,
@@ -25303,8 +24884,8 @@ namespace SharpGram.Tl.Constructors.DialogFilterSuggestedNs {
 namespace SharpGram.Tl.Constructors.StatsDateRangeDaysNs {
     public class StatsDateRangeDays : StatsDateRangeDaysBase, ITlSerializable, ITlDeserializable<StatsDateRangeDays> {
         public static readonly byte[] Identifier = [175,237,55,182,];
-        public required int MinDate {get;set;}
-        public required int MaxDate {get;set;}
+        public int MinDate {get;set;}
+        public int MaxDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -25329,8 +24910,8 @@ namespace SharpGram.Tl.Constructors.StatsDateRangeDaysNs {
 namespace SharpGram.Tl.Constructors.StatsAbsValueAndPrevNs {
     public class StatsAbsValueAndPrev : StatsAbsValueAndPrevBase, ITlSerializable, ITlDeserializable<StatsAbsValueAndPrev> {
         public static readonly byte[] Identifier = [222,172,67,203,];
-        public required double Current {get;set;}
-        public required double Previous {get;set;}
+        public double Current {get;set;}
+        public double Previous {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -25355,8 +24936,8 @@ namespace SharpGram.Tl.Constructors.StatsAbsValueAndPrevNs {
 namespace SharpGram.Tl.Constructors.StatsPercentValueNs {
     public class StatsPercentValue : StatsPercentValueBase, ITlSerializable, ITlDeserializable<StatsPercentValue> {
         public static readonly byte[] Identifier = [224,47,206,203,];
-        public required double Part {get;set;}
-        public required double Total {get;set;}
+        public double Part {get;set;}
+        public double Total {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -25417,7 +24998,6 @@ namespace SharpGram.Tl.Constructors.StatsGraphNs {
     }
     public class StatsGraph : StatsGraphBase, ITlSerializable, ITlDeserializable<StatsGraph> {
         public static readonly byte[] Identifier = [182,100,164,142,];
-        private int Flags;
         public required DataJSONBase Json {get;set;}
         public string? ZoomToken {get;set;}
         public new byte[] TlSerialize() {
@@ -25435,7 +25015,6 @@ namespace SharpGram.Tl.Constructors.StatsGraphNs {
             var jsonLocal =  DataJSONBase.TlDeserialize(des);
             var zoomTokenLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Json = jsonLocal,
             ZoomToken = zoomTokenLocal,
             };
@@ -25570,7 +25149,6 @@ namespace SharpGram.Tl.Constructors.HelpPromoDataNs {
     }
     public class HelpPromoData : HelpPromoDataBase, ITlSerializable, ITlDeserializable<HelpPromoData> {
         public static readonly byte[] Identifier = [63,121,57,140,];
-        private int Flags;
         public bool Proxy {get;set;}
         public required PeerBase Peer {get;set;}
         public required List<ChatBase> Chats {get;set;}
@@ -25601,7 +25179,6 @@ namespace SharpGram.Tl.Constructors.HelpPromoDataNs {
             var psaTypeLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var psaMessageLocal = (flagsLocal & 4) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Proxy = proxyLocal,
             Expires = expiresLocal,
             Peer = peerLocal,
@@ -25618,11 +25195,10 @@ namespace SharpGram.Tl.Constructors.HelpPromoDataNs {
 namespace SharpGram.Tl.Constructors.VideoSizeNs {
     public class VideoSize : VideoSizeBase, ITlSerializable, ITlDeserializable<VideoSize> {
         public static readonly byte[] Identifier = [148,176,51,222,];
-        private int Flags;
         public required string Type {get;set;}
-        public required int W {get;set;}
-        public required int H {get;set;}
-        public required int Size {get;set;}
+        public int W {get;set;}
+        public int H {get;set;}
+        public int Size {get;set;}
         public double? VideoStartTs {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -25645,7 +25221,6 @@ namespace SharpGram.Tl.Constructors.VideoSizeNs {
             var sizeLocal =  des.As<int>().Read();
             var videoStartTsLocal = (flagsLocal & 1) is 0 ? default : des.As<double>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Type = typeLocal,
             W = wLocal,
             H = hLocal,
@@ -25656,7 +25231,7 @@ namespace SharpGram.Tl.Constructors.VideoSizeNs {
     }
     public class VideoSizeEmojiMarkup : VideoSizeBase, ITlSerializable, ITlDeserializable<VideoSizeEmojiMarkup> {
         public static readonly byte[] Identifier = [60,65,92,248,];
-        public required long EmojiId {get;set;}
+        public long EmojiId {get;set;}
         public required List<int> BackgroundColors {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -25679,7 +25254,7 @@ namespace SharpGram.Tl.Constructors.VideoSizeNs {
     public class VideoSizeStickerMarkup : VideoSizeBase, ITlSerializable, ITlDeserializable<VideoSizeStickerMarkup> {
         public static readonly byte[] Identifier = [254,130,160,13,];
         public required InputStickerSetBase Stickerset {get;set;}
-        public required long StickerId {get;set;}
+        public long StickerId {get;set;}
         public required List<int> BackgroundColors {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -25708,9 +25283,9 @@ namespace SharpGram.Tl.Constructors.VideoSizeNs {
 namespace SharpGram.Tl.Constructors.StatsGroupTopPosterNs {
     public class StatsGroupTopPoster : StatsGroupTopPosterBase, ITlSerializable, ITlDeserializable<StatsGroupTopPoster> {
         public static readonly byte[] Identifier = [155,175,4,157,];
-        public required long UserId {get;set;}
-        public required int Messages {get;set;}
-        public required int AvgChars {get;set;}
+        public long UserId {get;set;}
+        public int Messages {get;set;}
+        public int AvgChars {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -25738,10 +25313,10 @@ namespace SharpGram.Tl.Constructors.StatsGroupTopPosterNs {
 namespace SharpGram.Tl.Constructors.StatsGroupTopAdminNs {
     public class StatsGroupTopAdmin : StatsGroupTopAdminBase, ITlSerializable, ITlDeserializable<StatsGroupTopAdmin> {
         public static readonly byte[] Identifier = [135,76,88,215,];
-        public required long UserId {get;set;}
-        public required int Deleted {get;set;}
-        public required int Kicked {get;set;}
-        public required int Banned {get;set;}
+        public long UserId {get;set;}
+        public int Deleted {get;set;}
+        public int Kicked {get;set;}
+        public int Banned {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -25772,8 +25347,8 @@ namespace SharpGram.Tl.Constructors.StatsGroupTopAdminNs {
 namespace SharpGram.Tl.Constructors.StatsGroupTopInviterNs {
     public class StatsGroupTopInviter : StatsGroupTopInviterBase, ITlSerializable, ITlDeserializable<StatsGroupTopInviter> {
         public static readonly byte[] Identifier = [157,119,95,83,];
-        public required long UserId {get;set;}
-        public required int Invitations {get;set;}
+        public long UserId {get;set;}
+        public int Invitations {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -25884,7 +25459,6 @@ namespace SharpGram.Tl.Constructors.StatsMegagroupStatsNs {
 namespace SharpGram.Tl.Constructors.GlobalPrivacySettingsNs {
     public class GlobalPrivacySettings : GlobalPrivacySettingsBase, ITlSerializable, ITlDeserializable<GlobalPrivacySettings> {
         public static readonly byte[] Identifier = [203,76,76,115,];
-        private int Flags;
         public bool ArchiveAndMuteNewNoncontactPeers {get;set;}
         public bool KeepArchivedUnmuted {get;set;}
         public bool KeepArchivedFolders {get;set;}
@@ -25902,7 +25476,6 @@ namespace SharpGram.Tl.Constructors.GlobalPrivacySettingsNs {
             var keepArchivedUnmutedLocal = (flagsLocal & 2) is 0 ? default : true ;
             var keepArchivedFoldersLocal = (flagsLocal & 4) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             ArchiveAndMuteNewNoncontactPeers = archiveAndMuteNewNoncontactPeersLocal,
             KeepArchivedUnmuted = keepArchivedUnmutedLocal,
             KeepArchivedFolders = keepArchivedFoldersLocal,
@@ -25915,7 +25488,6 @@ namespace SharpGram.Tl.Constructors.GlobalPrivacySettingsNs {
 namespace SharpGram.Tl.Constructors.HelpCountryCodeNs {
     public class HelpCountryCode : HelpCountryCodeBase, ITlSerializable, ITlDeserializable<HelpCountryCode> {
         public static readonly byte[] Identifier = [239,197,3,66,];
-        private int Flags;
         public required string CountryCode {get;set;}
         public List<string>? Prefixes {get;set;}
         public List<string>? Patterns {get;set;}
@@ -25936,7 +25508,6 @@ namespace SharpGram.Tl.Constructors.HelpCountryCodeNs {
             var prefixesLocal = (flagsLocal & 1) is 0 ? default : des.ReadStrings() ;
             var patternsLocal = (flagsLocal & 2) is 0 ? default : des.ReadStrings() ;
             return new() {
-            Flags = flagsLocal,
             CountryCode = countryCodeLocal,
             Prefixes = prefixesLocal,
             Patterns = patternsLocal,
@@ -25949,7 +25520,6 @@ namespace SharpGram.Tl.Constructors.HelpCountryCodeNs {
 namespace SharpGram.Tl.Constructors.HelpCountryNs {
     public class HelpCountry : HelpCountryBase, ITlSerializable, ITlDeserializable<HelpCountry> {
         public static readonly byte[] Identifier = [35,142,135,195,];
-        private int Flags;
         public bool Hidden {get;set;}
         public required string Iso2 {get;set;}
         public required string DefaultName {get;set;}
@@ -25975,7 +25545,6 @@ namespace SharpGram.Tl.Constructors.HelpCountryNs {
             var nameLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var countryCodesLocal =  des.Read<HelpCountryCode>();
             return new() {
-            Flags = flagsLocal,
             Hidden = hiddenLocal,
             Iso2 = iso2Local,
             DefaultName = defaultNameLocal,
@@ -26005,7 +25574,7 @@ namespace SharpGram.Tl.Constructors.HelpCountriesListNs {
     public class HelpCountriesList : HelpCountriesListBase, ITlSerializable, ITlDeserializable<HelpCountriesList> {
         public static readonly byte[] Identifier = [158,117,208,135,];
         public required List<HelpCountry> Countries {get;set;}
-        public required int Hash {get;set;}
+        public int Hash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -26030,7 +25599,6 @@ namespace SharpGram.Tl.Constructors.HelpCountriesListNs {
 namespace SharpGram.Tl.Constructors.MessageViewsNs {
     public class MessageViews : MessageViewsBase, ITlSerializable, ITlDeserializable<MessageViews> {
         public static readonly byte[] Identifier = [61,133,91,69,];
-        private int Flags;
         public int? Views {get;set;}
         public int? Forwards {get;set;}
         public MessageRepliesBase? Replies {get;set;}
@@ -26051,7 +25619,6 @@ namespace SharpGram.Tl.Constructors.MessageViewsNs {
             var forwardsLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             var repliesLocal = (flagsLocal & 4) is 0 ? default : MessageRepliesBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Views = viewsLocal,
             Forwards = forwardsLocal,
             Replies = repliesLocal,
@@ -26094,12 +25661,11 @@ namespace SharpGram.Tl.Constructors.MessagesMessageViewsNs {
 namespace SharpGram.Tl.Constructors.MessagesDiscussionMessageNs {
     public class MessagesDiscussionMessage : MessagesDiscussionMessageBase, ITlSerializable, ITlDeserializable<MessagesDiscussionMessage> {
         public static readonly byte[] Identifier = [130,23,52,166,];
-        private int Flags;
         public required List<MessageBase> Messages {get;set;}
         public int? MaxId {get;set;}
         public int? ReadInboxMaxId {get;set;}
         public int? ReadOutboxMaxId {get;set;}
-        public required int UnreadCount {get;set;}
+        public int UnreadCount {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
         public new byte[] TlSerialize() {
@@ -26127,7 +25693,6 @@ namespace SharpGram.Tl.Constructors.MessagesDiscussionMessageNs {
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Messages = messagesLocal,
             MaxId = maxIdLocal,
             ReadInboxMaxId = readInboxMaxIdLocal,
@@ -26144,7 +25709,6 @@ namespace SharpGram.Tl.Constructors.MessagesDiscussionMessageNs {
 namespace SharpGram.Tl.Constructors.MessageReplyHeaderNs {
     public class MessageReplyHeader : MessageReplyHeaderBase, ITlSerializable, ITlDeserializable<MessageReplyHeader> {
         public static readonly byte[] Identifier = [219,9,188,175,];
-        private int Flags;
         public bool ReplyToScheduled {get;set;}
         public bool ForumTopic {get;set;}
         public bool Quote {get;set;}
@@ -26186,7 +25750,6 @@ namespace SharpGram.Tl.Constructors.MessageReplyHeaderNs {
             var quoteEntitiesLocal = (flagsLocal & 128) is 0 ? default : des.Read<MessageEntityBase>() ;
             var quoteOffsetLocal = (flagsLocal & 1024) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             ReplyToScheduled = replyToScheduledLocal,
             ForumTopic = forumTopicLocal,
             Quote = quoteLocal,
@@ -26203,8 +25766,8 @@ namespace SharpGram.Tl.Constructors.MessageReplyHeaderNs {
     }
     public class MessageReplyStoryHeader : MessageReplyHeaderBase, ITlSerializable, ITlDeserializable<MessageReplyStoryHeader> {
         public static readonly byte[] Identifier = [193,191,152,156,];
-        public required long UserId {get;set;}
-        public required int StoryId {get;set;}
+        public long UserId {get;set;}
+        public int StoryId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -26229,10 +25792,9 @@ namespace SharpGram.Tl.Constructors.MessageReplyHeaderNs {
 namespace SharpGram.Tl.Constructors.MessageRepliesNs {
     public class MessageReplies : MessageRepliesBase, ITlSerializable, ITlDeserializable<MessageReplies> {
         public static readonly byte[] Identifier = [194,15,214,131,];
-        private int Flags;
         public bool Comments {get;set;}
-        public required int Replies {get;set;}
-        public required int RepliesPts {get;set;}
+        public int Replies {get;set;}
+        public int RepliesPts {get;set;}
         public List<PeerBase>? RecentRepliers {get;set;}
         public long? ChannelId {get;set;}
         public int? MaxId {get;set;}
@@ -26261,7 +25823,6 @@ namespace SharpGram.Tl.Constructors.MessageRepliesNs {
             var maxIdLocal = (flagsLocal & 4) is 0 ? default : des.As<int>().Read() ;
             var readMaxIdLocal = (flagsLocal & 8) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Comments = commentsLocal,
             Replies = repliesLocal,
             RepliesPts = repliesPtsLocal,
@@ -26279,7 +25840,7 @@ namespace SharpGram.Tl.Constructors.PeerBlockedNs {
     public class PeerBlocked : PeerBlockedBase, ITlSerializable, ITlDeserializable<PeerBlocked> {
         public static readonly byte[] Identifier = [20,128,253,232,];
         public required PeerBase PeerId {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -26330,7 +25891,7 @@ namespace SharpGram.Tl.Constructors.StatsMessageStatsNs {
 namespace SharpGram.Tl.Constructors.GroupCallNs {
     public class GroupCallDiscarded : GroupCallBase, ITlSerializable, ITlDeserializable<GroupCallDiscarded> {
         public static readonly byte[] Identifier = [180,188,128,119,];
-        public required int Duration {get;set;}
+        public int Duration {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -26354,7 +25915,6 @@ namespace SharpGram.Tl.Constructors.GroupCallNs {
     }
     public class GroupCall : GroupCallBase, ITlSerializable, ITlDeserializable<GroupCall> {
         public static readonly byte[] Identifier = [12,101,151,213,];
-        private int Flags;
         public bool JoinMuted {get;set;}
         public bool CanChangeJoinMuted {get;set;}
         public bool JoinDateAsc {get;set;}
@@ -26363,14 +25923,14 @@ namespace SharpGram.Tl.Constructors.GroupCallNs {
         public bool RecordVideoActive {get;set;}
         public bool RtmpStream {get;set;}
         public bool ListenersHidden {get;set;}
-        public required int ParticipantsCount {get;set;}
+        public int ParticipantsCount {get;set;}
         public string? Title {get;set;}
         public int? StreamDcId {get;set;}
         public int? RecordStartDate {get;set;}
         public int? ScheduleDate {get;set;}
         public int? UnmutedVideoCount {get;set;}
-        public required int UnmutedVideoLimit {get;set;}
-        public required int Version {get;set;}
+        public int UnmutedVideoLimit {get;set;}
+        public int Version {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -26410,7 +25970,6 @@ namespace SharpGram.Tl.Constructors.GroupCallNs {
             var unmutedVideoLimitLocal =  des.As<int>().Read();
             var versionLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             JoinMuted = joinMutedLocal,
             CanChangeJoinMuted = canChangeJoinMutedLocal,
             JoinDateAsc = joinDateAscLocal,
@@ -26438,8 +25997,8 @@ namespace SharpGram.Tl.Constructors.GroupCallNs {
 namespace SharpGram.Tl.Constructors.InputGroupCallNs {
     public class InputGroupCall : InputGroupCallBase, ITlSerializable, ITlDeserializable<InputGroupCall> {
         public static readonly byte[] Identifier = [15,132,170,216,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -26464,7 +26023,6 @@ namespace SharpGram.Tl.Constructors.InputGroupCallNs {
 namespace SharpGram.Tl.Constructors.GroupCallParticipantNs {
     public class GroupCallParticipant : GroupCallParticipantBase, ITlSerializable, ITlDeserializable<GroupCallParticipant> {
         public static readonly byte[] Identifier = [254,54,166,235,];
-        private int Flags;
         public bool Muted {get;set;}
         public bool Left {get;set;}
         public bool CanSelfUnmute {get;set;}
@@ -26476,9 +26034,9 @@ namespace SharpGram.Tl.Constructors.GroupCallParticipantNs {
         public bool Self {get;set;}
         public bool VideoJoined {get;set;}
         public required PeerBase Peer {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public int? ActiveDate {get;set;}
-        public required int Source {get;set;}
+        public int Source {get;set;}
         public int? Volume {get;set;}
         public string? About {get;set;}
         public long? RaiseHandRating {get;set;}
@@ -26523,7 +26081,6 @@ namespace SharpGram.Tl.Constructors.GroupCallParticipantNs {
             var videoLocal = (flagsLocal & 64) is 0 ? default : GroupCallParticipantVideoBase.TlDeserialize(des) ;
             var presentationLocal = (flagsLocal & 16384) is 0 ? default : GroupCallParticipantVideoBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Muted = mutedLocal,
             Left = leftLocal,
             CanSelfUnmute = canSelfUnmuteLocal,
@@ -26590,12 +26147,12 @@ namespace SharpGram.Tl.Constructors.PhoneGroupCallNs {
 namespace SharpGram.Tl.Constructors.PhoneGroupParticipantsNs {
     public class PhoneGroupParticipants : PhoneGroupParticipantsBase, ITlSerializable, ITlDeserializable<PhoneGroupParticipants> {
         public static readonly byte[] Identifier = [182,81,119,244,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<GroupCallParticipantBase> Participants {get;set;}
         public required string NextOffset {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
-        public required int Version {get;set;}
+        public int Version {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -26720,7 +26277,7 @@ namespace SharpGram.Tl.Constructors.InlineQueryPeerTypeNs {
 namespace SharpGram.Tl.Constructors.MessagesHistoryImportNs {
     public class MessagesHistoryImport : MessagesHistoryImportBase, ITlSerializable, ITlDeserializable<MessagesHistoryImport> {
         public static readonly byte[] Identifier = [11,175,98,22,];
-        public required long Id {get;set;}
+        public long Id {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -26742,7 +26299,6 @@ namespace SharpGram.Tl.Constructors.MessagesHistoryImportNs {
 namespace SharpGram.Tl.Constructors.MessagesHistoryImportParsedNs {
     public class MessagesHistoryImportParsed : MessagesHistoryImportParsedBase, ITlSerializable, ITlDeserializable<MessagesHistoryImportParsed> {
         public static readonly byte[] Identifier = [185,183,15,94,];
-        private int Flags;
         public bool Pm {get;set;}
         public bool Group {get;set;}
         public string? Title {get;set;}
@@ -26761,7 +26317,6 @@ namespace SharpGram.Tl.Constructors.MessagesHistoryImportParsedNs {
             var groupLocal = (flagsLocal & 2) is 0 ? default : true ;
             var titleLocal = (flagsLocal & 4) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Pm = pmLocal,
             Group = groupLocal,
             Title = titleLocal,
@@ -26774,9 +26329,9 @@ namespace SharpGram.Tl.Constructors.MessagesHistoryImportParsedNs {
 namespace SharpGram.Tl.Constructors.MessagesAffectedFoundMessagesNs {
     public class MessagesAffectedFoundMessages : MessagesAffectedFoundMessagesBase, ITlSerializable, ITlDeserializable<MessagesAffectedFoundMessages> {
         public static readonly byte[] Identifier = [108,62,141,239,];
-        public required int Pts {get;set;}
-        public required int PtsCount {get;set;}
-        public required int Offset {get;set;}
+        public int Pts {get;set;}
+        public int PtsCount {get;set;}
+        public int Offset {get;set;}
         public required List<int> Messages {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -26808,11 +26363,10 @@ namespace SharpGram.Tl.Constructors.MessagesAffectedFoundMessagesNs {
 namespace SharpGram.Tl.Constructors.ChatInviteImporterNs {
     public class ChatInviteImporter : ChatInviteImporterBase, ITlSerializable, ITlDeserializable<ChatInviteImporter> {
         public static readonly byte[] Identifier = [217,223,90,140,];
-        private int Flags;
         public bool Requested {get;set;}
         public bool ViaChatlist {get;set;}
-        public required long UserId {get;set;}
-        public required int Date {get;set;}
+        public long UserId {get;set;}
+        public int Date {get;set;}
         public string? About {get;set;}
         public long? ApprovedBy {get;set;}
         public new byte[] TlSerialize() {
@@ -26836,7 +26390,6 @@ namespace SharpGram.Tl.Constructors.ChatInviteImporterNs {
             var aboutLocal = (flagsLocal & 4) is 0 ? default : des.As<string>().Read() ;
             var approvedByLocal = (flagsLocal & 2) is 0 ? default : des.As<long>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Requested = requestedLocal,
             ViaChatlist = viaChatlistLocal,
             UserId = userIdLocal,
@@ -26852,7 +26405,7 @@ namespace SharpGram.Tl.Constructors.ChatInviteImporterNs {
 namespace SharpGram.Tl.Constructors.MessagesExportedChatInvitesNs {
     public class MessagesExportedChatInvites : MessagesExportedChatInvitesBase, ITlSerializable, ITlDeserializable<MessagesExportedChatInvites> {
         public static readonly byte[] Identifier = [204,45,198,189,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<ExportedChatInviteBase> Invites {get;set;}
         public required List<UserBase> Users {get;set;}
         public new byte[] TlSerialize() {
@@ -26930,7 +26483,7 @@ namespace SharpGram.Tl.Constructors.MessagesExportedChatInviteNs {
 namespace SharpGram.Tl.Constructors.MessagesChatInviteImportersNs {
     public class MessagesChatInviteImporters : MessagesChatInviteImportersBase, ITlSerializable, ITlDeserializable<MessagesChatInviteImporters> {
         public static readonly byte[] Identifier = [10,176,182,129,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<ChatInviteImporterBase> Importers {get;set;}
         public required List<UserBase> Users {get;set;}
         public new byte[] TlSerialize() {
@@ -26960,9 +26513,9 @@ namespace SharpGram.Tl.Constructors.MessagesChatInviteImportersNs {
 namespace SharpGram.Tl.Constructors.ChatAdminWithInvitesNs {
     public class ChatAdminWithInvites : ChatAdminWithInvitesBase, ITlSerializable, ITlDeserializable<ChatAdminWithInvites> {
         public static readonly byte[] Identifier = [35,239,236,242,];
-        public required long AdminId {get;set;}
-        public required int InvitesCount {get;set;}
-        public required int RevokedInvitesCount {get;set;}
+        public long AdminId {get;set;}
+        public int InvitesCount {get;set;}
+        public int RevokedInvitesCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -27116,7 +26669,6 @@ namespace SharpGram.Tl.Constructors.GroupCallParticipantVideoSourceGroupNs {
 namespace SharpGram.Tl.Constructors.GroupCallParticipantVideoNs {
     public class GroupCallParticipantVideo : GroupCallParticipantVideoBase, ITlSerializable, ITlDeserializable<GroupCallParticipantVideo> {
         public static readonly byte[] Identifier = [200,58,117,103,];
-        private int Flags;
         public bool Paused {get;set;}
         public required string Endpoint {get;set;}
         public required List<GroupCallParticipantVideoSourceGroupBase> SourceGroups {get;set;}
@@ -27139,7 +26691,6 @@ namespace SharpGram.Tl.Constructors.GroupCallParticipantVideoNs {
             var sourceGroupsLocal =  des.Read<GroupCallParticipantVideoSourceGroupBase>();
             var audioSourceLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Paused = pausedLocal,
             Endpoint = endpointLocal,
             SourceGroups = sourceGroupsLocal,
@@ -27293,7 +26844,7 @@ namespace SharpGram.Tl.Constructors.BotCommandScopeNs {
 namespace SharpGram.Tl.Constructors.AccountResetPasswordResultNs {
     public class AccountResetPasswordFailedWait : AccountResetPasswordResultBase, ITlSerializable, ITlDeserializable<AccountResetPasswordFailedWait> {
         public static readonly byte[] Identifier = [97,152,119,227,];
-        public required int RetryDate {get;set;}
+        public int RetryDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -27311,7 +26862,7 @@ namespace SharpGram.Tl.Constructors.AccountResetPasswordResultNs {
     }
     public class AccountResetPasswordRequestedWait : AccountResetPasswordResultBase, ITlSerializable, ITlDeserializable<AccountResetPasswordRequestedWait> {
         public static readonly byte[] Identifier = [125,252,239,233,];
-        public required int UntilDate {get;set;}
+        public int UntilDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -27347,7 +26898,6 @@ namespace SharpGram.Tl.Constructors.AccountResetPasswordResultNs {
 namespace SharpGram.Tl.Constructors.SponsoredMessageNs {
     public class SponsoredMessage : SponsoredMessageBase, ITlSerializable, ITlDeserializable<SponsoredMessage> {
         public static readonly byte[] Identifier = [247,131,83,237,];
-        private int Flags;
         public bool Recommended {get;set;}
         public bool ShowPeerPhoto {get;set;}
         public required byte[] RandomId {get;set;}
@@ -27402,7 +26952,6 @@ namespace SharpGram.Tl.Constructors.SponsoredMessageNs {
             var sponsorInfoLocal = (flagsLocal & 128) is 0 ? default : des.As<string>().Read() ;
             var additionalInfoLocal = (flagsLocal & 256) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Recommended = recommendedLocal,
             ShowPeerPhoto = showPeerPhotoLocal,
             RandomId = randomIdLocal,
@@ -27427,7 +26976,6 @@ namespace SharpGram.Tl.Constructors.SponsoredMessageNs {
 namespace SharpGram.Tl.Constructors.MessagesSponsoredMessagesNs {
     public class MessagesSponsoredMessages : MessagesSponsoredMessagesBase, ITlSerializable, ITlDeserializable<MessagesSponsoredMessages> {
         public static readonly byte[] Identifier = [135,29,238,201,];
-        private int Flags;
         public int? PostsBetween {get;set;}
         public required List<SponsoredMessageBase> Messages {get;set;}
         public required List<ChatBase> Chats {get;set;}
@@ -27451,7 +26999,6 @@ namespace SharpGram.Tl.Constructors.MessagesSponsoredMessagesNs {
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             PostsBetween = postsBetweenLocal,
             Messages = messagesLocal,
             Chats = chatsLocal,
@@ -27479,10 +27026,10 @@ namespace SharpGram.Tl.Constructors.MessagesSponsoredMessagesNs {
 namespace SharpGram.Tl.Constructors.SearchResultsCalendarPeriodNs {
     public class SearchResultsCalendarPeriod : SearchResultsCalendarPeriodBase, ITlSerializable, ITlDeserializable<SearchResultsCalendarPeriod> {
         public static readonly byte[] Identifier = [159,83,176,201,];
-        public required int Date {get;set;}
-        public required int MinMsgId {get;set;}
-        public required int MaxMsgId {get;set;}
-        public required int Count {get;set;}
+        public int Date {get;set;}
+        public int MinMsgId {get;set;}
+        public int MaxMsgId {get;set;}
+        public int Count {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -27513,11 +27060,10 @@ namespace SharpGram.Tl.Constructors.SearchResultsCalendarPeriodNs {
 namespace SharpGram.Tl.Constructors.MessagesSearchResultsCalendarNs {
     public class MessagesSearchResultsCalendar : MessagesSearchResultsCalendarBase, ITlSerializable, ITlDeserializable<MessagesSearchResultsCalendar> {
         public static readonly byte[] Identifier = [60,226,126,20,];
-        private int Flags;
         public bool Inexact {get;set;}
-        public required int Count {get;set;}
-        public required int MinDate {get;set;}
-        public required int MinMsgId {get;set;}
+        public int Count {get;set;}
+        public int MinDate {get;set;}
+        public int MinMsgId {get;set;}
         public int? OffsetIdOffset {get;set;}
         public required List<SearchResultsCalendarPeriodBase> Periods {get;set;}
         public required List<MessageBase> Messages {get;set;}
@@ -27551,7 +27097,6 @@ namespace SharpGram.Tl.Constructors.MessagesSearchResultsCalendarNs {
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Inexact = inexactLocal,
             Count = countLocal,
             MinDate = minDateLocal,
@@ -27570,9 +27115,9 @@ namespace SharpGram.Tl.Constructors.MessagesSearchResultsCalendarNs {
 namespace SharpGram.Tl.Constructors.SearchResultsPositionNs {
     public class SearchResultPosition : SearchResultsPositionBase, ITlSerializable, ITlDeserializable<SearchResultPosition> {
         public static readonly byte[] Identifier = [103,139,100,127,];
-        public required int MsgId {get;set;}
-        public required int Date {get;set;}
-        public required int Offset {get;set;}
+        public int MsgId {get;set;}
+        public int Date {get;set;}
+        public int Offset {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -27600,7 +27145,7 @@ namespace SharpGram.Tl.Constructors.SearchResultsPositionNs {
 namespace SharpGram.Tl.Constructors.MessagesSearchResultsPositionsNs {
     public class MessagesSearchResultsPositions : MessagesSearchResultsPositionsBase, ITlSerializable, ITlDeserializable<MessagesSearchResultsPositions> {
         public static readonly byte[] Identifier = [175,43,178,83,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<SearchResultsPositionBase> Positions {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -27716,7 +27261,6 @@ namespace SharpGram.Tl.Constructors.MessagesPeerSettingsNs {
 namespace SharpGram.Tl.Constructors.AuthLoggedOutNs {
     public class AuthLoggedOut : AuthLoggedOutBase, ITlSerializable, ITlDeserializable<AuthLoggedOut> {
         public static readonly byte[] Identifier = [95,131,162,195,];
-        private int Flags;
         public byte[]? FutureAuthToken {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -27731,7 +27275,6 @@ namespace SharpGram.Tl.Constructors.AuthLoggedOutNs {
             var flagsLocal =  des.As<int>().Read();
             var futureAuthTokenLocal = (flagsLocal & 1) is 0 ? default : des.As<byte[]>().Read() ;
             return new() {
-            Flags = flagsLocal,
             FutureAuthToken = futureAuthTokenLocal,
             };
         }
@@ -27742,10 +27285,9 @@ namespace SharpGram.Tl.Constructors.AuthLoggedOutNs {
 namespace SharpGram.Tl.Constructors.ReactionCountNs {
     public class ReactionCount : ReactionCountBase, ITlSerializable, ITlDeserializable<ReactionCount> {
         public static readonly byte[] Identifier = [128,203,209,163,];
-        private int Flags;
         public int? ChosenOrder {get;set;}
         public required ReactionBase Reaction {get;set;}
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -27763,7 +27305,6 @@ namespace SharpGram.Tl.Constructors.ReactionCountNs {
             var reactionLocal =  ReactionBase.TlDeserialize(des);
             var countLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             ChosenOrder = chosenOrderLocal,
             Reaction = reactionLocal,
             Count = countLocal,
@@ -27776,7 +27317,6 @@ namespace SharpGram.Tl.Constructors.ReactionCountNs {
 namespace SharpGram.Tl.Constructors.MessageReactionsNs {
     public class MessageReactions : MessageReactionsBase, ITlSerializable, ITlDeserializable<MessageReactions> {
         public static readonly byte[] Identifier = [121,148,43,79,];
-        private int Flags;
         public bool Min {get;set;}
         public bool CanSeeList {get;set;}
         public required List<ReactionCountBase> Results {get;set;}
@@ -27798,7 +27338,6 @@ namespace SharpGram.Tl.Constructors.MessageReactionsNs {
             var resultsLocal =  des.Read<ReactionCountBase>();
             var recentReactionsLocal = (flagsLocal & 2) is 0 ? default : des.Read<MessagePeerReactionBase>() ;
             return new() {
-            Flags = flagsLocal,
             Min = minLocal,
             CanSeeList = canSeeListLocal,
             Results = resultsLocal,
@@ -27812,8 +27351,7 @@ namespace SharpGram.Tl.Constructors.MessageReactionsNs {
 namespace SharpGram.Tl.Constructors.MessagesMessageReactionsListNs {
     public class MessagesMessageReactionsList : MessagesMessageReactionsListBase, ITlSerializable, ITlDeserializable<MessagesMessageReactionsList> {
         public static readonly byte[] Identifier = [45,73,189,49,];
-        private int Flags;
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<MessagePeerReactionBase> Reactions {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
@@ -27839,7 +27377,6 @@ namespace SharpGram.Tl.Constructors.MessagesMessageReactionsListNs {
             var usersLocal =  des.Read<UserBase>();
             var nextOffsetLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Count = countLocal,
             Reactions = reactionsLocal,
             Chats = chatsLocal,
@@ -27854,7 +27391,6 @@ namespace SharpGram.Tl.Constructors.MessagesMessageReactionsListNs {
 namespace SharpGram.Tl.Constructors.AvailableReactionNs {
     public class AvailableReaction : AvailableReactionBase, ITlSerializable, ITlDeserializable<AvailableReaction> {
         public static readonly byte[] Identifier = [1,236,119,192,];
-        private int Flags;
         public bool Inactive {get;set;}
         public bool Premium {get;set;}
         public required string Reaction {get;set;}
@@ -27897,7 +27433,6 @@ namespace SharpGram.Tl.Constructors.AvailableReactionNs {
             var aroundAnimationLocal = (flagsLocal & 2) is 0 ? default : DocumentBase.TlDeserialize(des) ;
             var centerIconLocal = (flagsLocal & 2) is 0 ? default : DocumentBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Inactive = inactiveLocal,
             Premium = premiumLocal,
             Reaction = reactionLocal,
@@ -27932,7 +27467,7 @@ namespace SharpGram.Tl.Constructors.MessagesAvailableReactionsNs {
     }
     public class MessagesAvailableReactions : MessagesAvailableReactionsBase, ITlSerializable, ITlDeserializable<MessagesAvailableReactions> {
         public static readonly byte[] Identifier = [173,58,142,118,];
-        public required int Hash {get;set;}
+        public int Hash {get;set;}
         public required List<AvailableReactionBase> Reactions {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -27958,12 +27493,11 @@ namespace SharpGram.Tl.Constructors.MessagesAvailableReactionsNs {
 namespace SharpGram.Tl.Constructors.MessagePeerReactionNs {
     public class MessagePeerReaction : MessagePeerReactionBase, ITlSerializable, ITlDeserializable<MessagePeerReaction> {
         public static readonly byte[] Identifier = [60,182,121,140,];
-        private int Flags;
         public bool Big {get;set;}
         public bool Unread {get;set;}
         public bool My {get;set;}
         public required PeerBase PeerId {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public required ReactionBase Reaction {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -27985,7 +27519,6 @@ namespace SharpGram.Tl.Constructors.MessagePeerReactionNs {
             var dateLocal =  des.As<int>().Read();
             var reactionLocal =  ReactionBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Big = bigLocal,
             Unread = unreadLocal,
             My = myLocal,
@@ -28001,9 +27534,9 @@ namespace SharpGram.Tl.Constructors.MessagePeerReactionNs {
 namespace SharpGram.Tl.Constructors.GroupCallStreamChannelNs {
     public class GroupCallStreamChannel : GroupCallStreamChannelBase, ITlSerializable, ITlDeserializable<GroupCallStreamChannel> {
         public static readonly byte[] Identifier = [175,72,235,128,];
-        public required int Channel {get;set;}
-        public required int Scale {get;set;}
-        public required long LastTimestampMs {get;set;}
+        public int Channel {get;set;}
+        public int Scale {get;set;}
+        public long LastTimestampMs {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -28080,7 +27613,7 @@ namespace SharpGram.Tl.Constructors.AttachMenuBotIconColorNs {
     public class AttachMenuBotIconColor : AttachMenuBotIconColorBase, ITlSerializable, ITlDeserializable<AttachMenuBotIconColor> {
         public static readonly byte[] Identifier = [240,243,118,69,];
         public required string Name {get;set;}
-        public required int Color {get;set;}
+        public int Color {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -28105,7 +27638,6 @@ namespace SharpGram.Tl.Constructors.AttachMenuBotIconColorNs {
 namespace SharpGram.Tl.Constructors.AttachMenuBotIconNs {
     public class AttachMenuBotIcon : AttachMenuBotIconBase, ITlSerializable, ITlDeserializable<AttachMenuBotIcon> {
         public static readonly byte[] Identifier = [107,56,167,178,];
-        private int Flags;
         public required string Name {get;set;}
         public required DocumentBase Icon {get;set;}
         public List<AttachMenuBotIconColorBase>? Colors {get;set;}
@@ -28126,7 +27658,6 @@ namespace SharpGram.Tl.Constructors.AttachMenuBotIconNs {
             var iconLocal =  DocumentBase.TlDeserialize(des);
             var colorsLocal = (flagsLocal & 1) is 0 ? default : des.Read<AttachMenuBotIconColorBase>() ;
             return new() {
-            Flags = flagsLocal,
             Name = nameLocal,
             Icon = iconLocal,
             Colors = colorsLocal,
@@ -28139,14 +27670,13 @@ namespace SharpGram.Tl.Constructors.AttachMenuBotIconNs {
 namespace SharpGram.Tl.Constructors.AttachMenuBotNs {
     public class AttachMenuBot : AttachMenuBotBase, ITlSerializable, ITlDeserializable<AttachMenuBot> {
         public static readonly byte[] Identifier = [254,141,13,217,];
-        private int Flags;
         public bool Inactive {get;set;}
         public bool HasSettings {get;set;}
         public bool RequestWriteAccess {get;set;}
         public bool ShowInAttachMenu {get;set;}
         public bool ShowInSideMenu {get;set;}
         public bool SideMenuDisclaimerNeeded {get;set;}
-        public required long BotId {get;set;}
+        public long BotId {get;set;}
         public required string ShortName {get;set;}
         public List<AttachMenuPeerTypeBase>? PeerTypes {get;set;}
         public required List<AttachMenuBotIconBase> Icons {get;set;}
@@ -28175,7 +27705,6 @@ namespace SharpGram.Tl.Constructors.AttachMenuBotNs {
             var peerTypesLocal = (flagsLocal & 8) is 0 ? default : des.Read<AttachMenuPeerTypeBase>() ;
             var iconsLocal =  des.Read<AttachMenuBotIconBase>();
             return new() {
-            Flags = flagsLocal,
             Inactive = inactiveLocal,
             HasSettings = hasSettingsLocal,
             RequestWriteAccess = requestWriteAccessLocal,
@@ -28209,7 +27738,7 @@ namespace SharpGram.Tl.Constructors.AttachMenuBotsNs {
     }
     public class AttachMenuBots : AttachMenuBotsBase, ITlSerializable, ITlDeserializable<AttachMenuBots> {
         public static readonly byte[] Identifier = [192,1,67,60,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<AttachMenuBotBase> Bots {get;set;}
         public required List<UserBase> Users {get;set;}
         public new byte[] TlSerialize() {
@@ -28265,7 +27794,7 @@ namespace SharpGram.Tl.Constructors.AttachMenuBotsBotNs {
 namespace SharpGram.Tl.Constructors.WebViewResultNs {
     public class WebViewResultUrl : WebViewResultBase, ITlSerializable, ITlDeserializable<WebViewResultUrl> {
         public static readonly byte[] Identifier = [124,85,20,12,];
-        public required long QueryId {get;set;}
+        public long QueryId {get;set;}
         public required string Url {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -28313,7 +27842,6 @@ namespace SharpGram.Tl.Constructors.SimpleWebViewResultNs {
 namespace SharpGram.Tl.Constructors.WebViewMessageSentNs {
     public class WebViewMessageSent : WebViewMessageSentBase, ITlSerializable, ITlDeserializable<WebViewMessageSent> {
         public static readonly byte[] Identifier = [28,81,148,12,];
-        private int Flags;
         public InputBotInlineMessageIDBase? MsgId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -28328,7 +27856,6 @@ namespace SharpGram.Tl.Constructors.WebViewMessageSentNs {
             var flagsLocal =  des.As<int>().Read();
             var msgIdLocal = (flagsLocal & 1) is 0 ? default : InputBotInlineMessageIDBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             MsgId = msgIdLocal,
             };
         }
@@ -28407,7 +27934,7 @@ namespace SharpGram.Tl.Constructors.AccountSavedRingtonesNs {
     }
     public class AccountSavedRingtones : AccountSavedRingtonesBase, ITlSerializable, ITlDeserializable<AccountSavedRingtones> {
         public static readonly byte[] Identifier = [197,44,233,193,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<DocumentBase> Ringtones {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -28483,7 +28010,7 @@ namespace SharpGram.Tl.Constructors.NotificationSoundNs {
     }
     public class NotificationSoundRingtone : NotificationSoundBase, ITlSerializable, ITlDeserializable<NotificationSoundRingtone> {
         public static readonly byte[] Identifier = [73,128,108,255,];
-        public required long Id {get;set;}
+        public long Id {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -28616,7 +28143,7 @@ namespace SharpGram.Tl.Constructors.InputInvoiceNs {
     public class InputInvoiceMessage : InputInvoiceBase, ITlSerializable, ITlDeserializable<InputInvoiceMessage> {
         public static readonly byte[] Identifier = [89,104,181,197,];
         public required InputPeerBase Peer {get;set;}
-        public required int MsgId {get;set;}
+        public int MsgId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -28703,9 +28230,8 @@ namespace SharpGram.Tl.Constructors.PaymentsExportedInvoiceNs {
 namespace SharpGram.Tl.Constructors.MessagesTranscribedAudioNs {
     public class MessagesTranscribedAudio : MessagesTranscribedAudioBase, ITlSerializable, ITlDeserializable<MessagesTranscribedAudio> {
         public static readonly byte[] Identifier = [87,217,185,207,];
-        private int Flags;
         public bool Pending {get;set;}
-        public required long TranscriptionId {get;set;}
+        public long TranscriptionId {get;set;}
         public required string Text {get;set;}
         public int? TrialRemainsNum {get;set;}
         public int? TrialRemainsUntilDate {get;set;}
@@ -28729,7 +28255,6 @@ namespace SharpGram.Tl.Constructors.MessagesTranscribedAudioNs {
             var trialRemainsNumLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             var trialRemainsUntilDateLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Pending = pendingLocal,
             TranscriptionId = transcriptionIdLocal,
             Text = textLocal,
@@ -28786,7 +28311,6 @@ namespace SharpGram.Tl.Constructors.HelpPremiumPromoNs {
 namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
     public class InputStorePaymentPremiumSubscription : InputStorePaymentPurposeBase, ITlSerializable, ITlDeserializable<InputStorePaymentPremiumSubscription> {
         public static readonly byte[] Identifier = [102,30,117,166,];
-        private int Flags;
         public bool Restore {get;set;}
         public bool Upgrade {get;set;}
         public new byte[] TlSerialize() {
@@ -28802,7 +28326,6 @@ namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
             var restoreLocal = (flagsLocal & 1) is 0 ? default : true ;
             var upgradeLocal = (flagsLocal & 2) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             Restore = restoreLocal,
             Upgrade = upgradeLocal,
             };
@@ -28812,7 +28335,7 @@ namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
         public static readonly byte[] Identifier = [232,127,111,97,];
         public required InputUserBase UserId {get;set;}
         public required string Currency {get;set;}
-        public required long Amount {get;set;}
+        public long Amount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -28836,11 +28359,10 @@ namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
     }
     public class InputStorePaymentPremiumGiftCode : InputStorePaymentPurposeBase, ITlSerializable, ITlDeserializable<InputStorePaymentPremiumGiftCode> {
         public static readonly byte[] Identifier = [63,95,128,163,];
-        private int Flags;
         public required List<InputUserBase> Users {get;set;}
         public InputPeerBase? BoostPeer {get;set;}
         public required string Currency {get;set;}
-        public required long Amount {get;set;}
+        public long Amount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -28860,7 +28382,6 @@ namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
             var currencyLocal =  des.As<string>().Read();
             var amountLocal =  des.As<long>().Read();
             return new() {
-            Flags = flagsLocal,
             Users = usersLocal,
             BoostPeer = boostPeerLocal,
             Currency = currencyLocal,
@@ -28870,17 +28391,16 @@ namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
     }
     public class InputStorePaymentPremiumGiveaway : InputStorePaymentPurposeBase, ITlSerializable, ITlDeserializable<InputStorePaymentPremiumGiveaway> {
         public static readonly byte[] Identifier = [202,68,5,22,];
-        private int Flags;
         public bool OnlyNewSubscribers {get;set;}
         public bool WinnersAreVisible {get;set;}
         public required InputPeerBase BoostPeer {get;set;}
         public List<InputPeerBase>? AdditionalPeers {get;set;}
         public List<string>? CountriesIso2 {get;set;}
         public string? PrizeDescription {get;set;}
-        public required long RandomId {get;set;}
-        public required int UntilDate {get;set;}
+        public long RandomId {get;set;}
+        public int UntilDate {get;set;}
         public required string Currency {get;set;}
-        public required long Amount {get;set;}
+        public long Amount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -28910,7 +28430,6 @@ namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
             var currencyLocal =  des.As<string>().Read();
             var amountLocal =  des.As<long>().Read();
             return new() {
-            Flags = flagsLocal,
             OnlyNewSubscribers = onlyNewSubscribersLocal,
             WinnersAreVisible = winnersAreVisibleLocal,
             BoostPeer = boostPeerLocal,
@@ -28930,10 +28449,9 @@ namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
 namespace SharpGram.Tl.Constructors.PremiumGiftOptionNs {
     public class PremiumGiftOption : PremiumGiftOptionBase, ITlSerializable, ITlDeserializable<PremiumGiftOption> {
         public static readonly byte[] Identifier = [25,67,195,116,];
-        private int Flags;
-        public required int Months {get;set;}
+        public int Months {get;set;}
         public required string Currency {get;set;}
-        public required long Amount {get;set;}
+        public long Amount {get;set;}
         public required string BotUrl {get;set;}
         public string? StoreProduct {get;set;}
         public new byte[] TlSerialize() {
@@ -28957,7 +28475,6 @@ namespace SharpGram.Tl.Constructors.PremiumGiftOptionNs {
             var botUrlLocal =  des.As<string>().Read();
             var storeProductLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Months = monthsLocal,
             Currency = currencyLocal,
             Amount = amountLocal,
@@ -29012,7 +28529,7 @@ namespace SharpGram.Tl.Constructors.EmojiStatusNs {
     }
     public class EmojiStatus : EmojiStatusBase, ITlSerializable, ITlDeserializable<EmojiStatus> {
         public static readonly byte[] Identifier = [157,97,155,146,];
-        public required long DocumentId {get;set;}
+        public long DocumentId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -29030,8 +28547,8 @@ namespace SharpGram.Tl.Constructors.EmojiStatusNs {
     }
     public class EmojiStatusUntil : EmojiStatusBase, ITlSerializable, ITlDeserializable<EmojiStatusUntil> {
         public static readonly byte[] Identifier = [199,168,48,250,];
-        public required long DocumentId {get;set;}
-        public required int Until {get;set;}
+        public long DocumentId {get;set;}
+        public int Until {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -29070,7 +28587,7 @@ namespace SharpGram.Tl.Constructors.AccountEmojiStatusesNs {
     }
     public class AccountEmojiStatuses : AccountEmojiStatusesBase, ITlSerializable, ITlDeserializable<AccountEmojiStatuses> {
         public static readonly byte[] Identifier = [209,103,196,144,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<EmojiStatusBase> Statuses {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -29128,7 +28645,7 @@ namespace SharpGram.Tl.Constructors.ReactionNs {
     }
     public class ReactionCustomEmoji : ReactionBase, ITlSerializable, ITlDeserializable<ReactionCustomEmoji> {
         public static readonly byte[] Identifier = [115,252,53,137,];
-        public required long DocumentId {get;set;}
+        public long DocumentId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -29164,7 +28681,6 @@ namespace SharpGram.Tl.Constructors.ChatReactionsNs {
     }
     public class ChatReactionsAll : ChatReactionsBase, ITlSerializable, ITlDeserializable<ChatReactionsAll> {
         public static readonly byte[] Identifier = [202,139,146,82,];
-        private int Flags;
         public bool AllowCustom {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -29178,7 +28694,6 @@ namespace SharpGram.Tl.Constructors.ChatReactionsNs {
             var flagsLocal =  des.As<int>().Read();
             var allowCustomLocal = (flagsLocal & 1) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             AllowCustom = allowCustomLocal,
             };
         }
@@ -29221,7 +28736,7 @@ namespace SharpGram.Tl.Constructors.MessagesReactionsNs {
     }
     public class MessagesReactions : MessagesReactionsBase, ITlSerializable, ITlDeserializable<MessagesReactions> {
         public static readonly byte[] Identifier = [22,247,253,234,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<ReactionBase> Reactions {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -29401,13 +28916,12 @@ namespace SharpGram.Tl.Constructors.AccountEmailVerifiedNs {
 namespace SharpGram.Tl.Constructors.PremiumSubscriptionOptionNs {
     public class PremiumSubscriptionOption : PremiumSubscriptionOptionBase, ITlSerializable, ITlDeserializable<PremiumSubscriptionOption> {
         public static readonly byte[] Identifier = [242,29,45,95,];
-        private int Flags;
         public bool Current {get;set;}
         public bool CanPurchaseUpgrade {get;set;}
         public string? Transaction {get;set;}
-        public required int Months {get;set;}
+        public int Months {get;set;}
         public required string Currency {get;set;}
-        public required long Amount {get;set;}
+        public long Amount {get;set;}
         public required string BotUrl {get;set;}
         public string? StoreProduct {get;set;}
         public new byte[] TlSerialize() {
@@ -29435,7 +28949,6 @@ namespace SharpGram.Tl.Constructors.PremiumSubscriptionOptionNs {
             var botUrlLocal =  des.As<string>().Read();
             var storeProductLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Current = currentLocal,
             CanPurchaseUpgrade = canPurchaseUpgradeLocal,
             Transaction = transactionLocal,
@@ -29453,7 +28966,6 @@ namespace SharpGram.Tl.Constructors.PremiumSubscriptionOptionNs {
 namespace SharpGram.Tl.Constructors.SendAsPeerNs {
     public class SendAsPeer : SendAsPeerBase, ITlSerializable, ITlDeserializable<SendAsPeer> {
         public static readonly byte[] Identifier = [52,112,28,184,];
-        private int Flags;
         public bool PremiumRequired {get;set;}
         public required PeerBase Peer {get;set;}
         public new byte[] TlSerialize() {
@@ -29470,7 +28982,6 @@ namespace SharpGram.Tl.Constructors.SendAsPeerNs {
             var premiumRequiredLocal = (flagsLocal & 1) is 0 ? default : true ;
             var peerLocal =  PeerBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             PremiumRequired = premiumRequiredLocal,
             Peer = peerLocal,
             };
@@ -29482,7 +28993,6 @@ namespace SharpGram.Tl.Constructors.SendAsPeerNs {
 namespace SharpGram.Tl.Constructors.MessageExtendedMediaNs {
     public class MessageExtendedMediaPreview : MessageExtendedMediaBase, ITlSerializable, ITlDeserializable<MessageExtendedMediaPreview> {
         public static readonly byte[] Identifier = [200,140,98,173,];
-        private int Flags;
         public int? W {get;set;}
         public int? H {get;set;}
         public PhotoSizeBase? Thumb {get;set;}
@@ -29506,7 +29016,6 @@ namespace SharpGram.Tl.Constructors.MessageExtendedMediaNs {
             var thumbLocal = (flagsLocal & 2) is 0 ? default : PhotoSizeBase.TlDeserialize(des) ;
             var videoDurationLocal = (flagsLocal & 4) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             W = wLocal,
             H = hLocal,
             Thumb = thumbLocal,
@@ -29538,7 +29047,7 @@ namespace SharpGram.Tl.Constructors.MessageExtendedMediaNs {
 namespace SharpGram.Tl.Constructors.StickerKeywordNs {
     public class StickerKeyword : StickerKeywordBase, ITlSerializable, ITlDeserializable<StickerKeyword> {
         public static readonly byte[] Identifier = [156,178,254,252,];
-        public required long DocumentId {get;set;}
+        public long DocumentId {get;set;}
         public required List<string> Keyword {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -29564,7 +29073,6 @@ namespace SharpGram.Tl.Constructors.StickerKeywordNs {
 namespace SharpGram.Tl.Constructors.UsernameNs {
     public class Username : UsernameBase, ITlSerializable, ITlDeserializable<Username> {
         public static readonly byte[] Identifier = [71,54,7,180,];
-        private int Flags;
         public bool Editable {get;set;}
         public bool Active {get;set;}
         public required string UsernameInner {get;set;}
@@ -29583,7 +29091,6 @@ namespace SharpGram.Tl.Constructors.UsernameNs {
             var activeLocal = (flagsLocal & 2) is 0 ? default : true ;
             var usernameInnerLocal =  des.As<string>().Read();
             return new() {
-            Flags = flagsLocal,
             Editable = editableLocal,
             Active = activeLocal,
             UsernameInner = usernameInnerLocal,
@@ -29613,22 +29120,21 @@ namespace SharpGram.Tl.Constructors.ForumTopicNs {
     }
     public class ForumTopic : ForumTopicBase, ITlSerializable, ITlDeserializable<ForumTopic> {
         public static readonly byte[] Identifier = [169,29,112,113,];
-        private int Flags;
         public bool My {get;set;}
         public bool Closed {get;set;}
         public bool Pinned {get;set;}
         public bool Short {get;set;}
         public bool Hidden {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public required string Title {get;set;}
-        public required int IconColor {get;set;}
+        public int IconColor {get;set;}
         public long? IconEmojiId {get;set;}
-        public required int TopMessage {get;set;}
-        public required int ReadInboxMaxId {get;set;}
-        public required int ReadOutboxMaxId {get;set;}
-        public required int UnreadCount {get;set;}
-        public required int UnreadMentionsCount {get;set;}
-        public required int UnreadReactionsCount {get;set;}
+        public int TopMessage {get;set;}
+        public int ReadInboxMaxId {get;set;}
+        public int ReadOutboxMaxId {get;set;}
+        public int UnreadCount {get;set;}
+        public int UnreadMentionsCount {get;set;}
+        public int UnreadReactionsCount {get;set;}
         public required PeerBase FromId {get;set;}
         public required PeerNotifySettingsBase NotifySettings {get;set;}
         public DraftMessageBase? Draft {get;set;}
@@ -29676,7 +29182,6 @@ namespace SharpGram.Tl.Constructors.ForumTopicNs {
             var notifySettingsLocal =  PeerNotifySettingsBase.TlDeserialize(des);
             var draftLocal = (flagsLocal & 16) is 0 ? default : DraftMessageBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             My = myLocal,
             Closed = closedLocal,
             Pinned = pinnedLocal,
@@ -29705,14 +29210,13 @@ namespace SharpGram.Tl.Constructors.ForumTopicNs {
 namespace SharpGram.Tl.Constructors.MessagesForumTopicsNs {
     public class MessagesForumTopics : MessagesForumTopicsBase, ITlSerializable, ITlDeserializable<MessagesForumTopics> {
         public static readonly byte[] Identifier = [211,23,118,54,];
-        private int Flags;
         public bool OrderByCreateDate {get;set;}
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<ForumTopicBase> Topics {get;set;}
         public required List<MessageBase> Messages {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
-        public required int Pts {get;set;}
+        public int Pts {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -29737,7 +29241,6 @@ namespace SharpGram.Tl.Constructors.MessagesForumTopicsNs {
             var usersLocal =  des.Read<UserBase>();
             var ptsLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             OrderByCreateDate = orderByCreateDateLocal,
             Count = countLocal,
             Topics = topicsLocal,
@@ -29754,7 +29257,7 @@ namespace SharpGram.Tl.Constructors.MessagesForumTopicsNs {
 namespace SharpGram.Tl.Constructors.DefaultHistoryTTLNs {
     public class DefaultHistoryTTL : DefaultHistoryTTLBase, ITlSerializable, ITlDeserializable<DefaultHistoryTTL> {
         public static readonly byte[] Identifier = [32,107,180,67,];
-        public required int Period {get;set;}
+        public int Period {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -29777,7 +29280,7 @@ namespace SharpGram.Tl.Constructors.ExportedContactTokenNs {
     public class ExportedContactToken : ExportedContactTokenBase, ITlSerializable, ITlDeserializable<ExportedContactToken> {
         public static readonly byte[] Identifier = [155,16,191,65,];
         public required string Url {get;set;}
-        public required int Expires {get;set;}
+        public int Expires {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -29817,7 +29320,6 @@ namespace SharpGram.Tl.Constructors.RequestPeerTypeNs {
             var botLocal = (flagsLocal & 1) is 0 ? default : true ;
             var premiumLocal = (flagsLocal & 2) is 0 ? default : true ;
             return new() {
-            Flags = flagsLocal,
             Bot = botLocal,
             Premium = premiumLocal,
             };
@@ -29850,7 +29352,6 @@ namespace SharpGram.Tl.Constructors.RequestPeerTypeNs {
             var userAdminRightsLocal = (flagsLocal & 2) is 0 ? default : ChatAdminRightsBase.TlDeserialize(des) ;
             var botAdminRightsLocal = (flagsLocal & 4) is 0 ? default : ChatAdminRightsBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Creator = creatorLocal,
             BotParticipant = botParticipantLocal,
             HasUsername = hasUsernameLocal,
@@ -29883,7 +29384,6 @@ namespace SharpGram.Tl.Constructors.RequestPeerTypeNs {
             var userAdminRightsLocal = (flagsLocal & 2) is 0 ? default : ChatAdminRightsBase.TlDeserialize(des) ;
             var botAdminRightsLocal = (flagsLocal & 4) is 0 ? default : ChatAdminRightsBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Creator = creatorLocal,
             HasUsername = hasUsernameLocal,
             UserAdminRights = userAdminRightsLocal,
@@ -29911,7 +29411,7 @@ namespace SharpGram.Tl.Constructors.EmojiListNs {
     }
     public class EmojiList : EmojiListBase, ITlSerializable, ITlDeserializable<EmojiList> {
         public static readonly byte[] Identifier = [209,17,30,122,];
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public required List<long> DocumentId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -29938,7 +29438,7 @@ namespace SharpGram.Tl.Constructors.EmojiGroupNs {
     public class EmojiGroup : EmojiGroupBase, ITlSerializable, ITlDeserializable<EmojiGroup> {
         public static readonly byte[] Identifier = [169,189,154,122,];
         public required string Title {get;set;}
-        public required long IconEmojiId {get;set;}
+        public long IconEmojiId {get;set;}
         public required List<string> Emoticons {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -29981,7 +29481,7 @@ namespace SharpGram.Tl.Constructors.MessagesEmojiGroupsNs {
     }
     public class MessagesEmojiGroups : MessagesEmojiGroupsBase, ITlSerializable, ITlDeserializable<MessagesEmojiGroups> {
         public static readonly byte[] Identifier = [75,185,31,136,];
-        public required int Hash {get;set;}
+        public int Hash {get;set;}
         public required List<EmojiGroupBase> Groups {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -30055,7 +29555,6 @@ namespace SharpGram.Tl.Constructors.MessagesTranslatedTextNs {
 namespace SharpGram.Tl.Constructors.AutoSaveSettingsNs {
     public class AutoSaveSettings : AutoSaveSettingsBase, ITlSerializable, ITlDeserializable<AutoSaveSettings> {
         public static readonly byte[] Identifier = [206,52,72,200,];
-        private int Flags;
         public bool Photos {get;set;}
         public bool Videos {get;set;}
         public long? VideoMaxSize {get;set;}
@@ -30074,7 +29573,6 @@ namespace SharpGram.Tl.Constructors.AutoSaveSettingsNs {
             var videosLocal = (flagsLocal & 2) is 0 ? default : true ;
             var videoMaxSizeLocal = (flagsLocal & 4) is 0 ? default : des.As<long>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Photos = photosLocal,
             Videos = videosLocal,
             VideoMaxSize = videoMaxSizeLocal,
@@ -30169,7 +29667,7 @@ namespace SharpGram.Tl.Constructors.HelpAppConfigNs {
     }
     public class HelpAppConfig : HelpAppConfigBase, ITlSerializable, ITlDeserializable<HelpAppConfig> {
         public static readonly byte[] Identifier = [46,120,24,221,];
-        public required int Hash {get;set;}
+        public int Hash {get;set;}
         public required JSONValueBase Config {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -30195,8 +29693,8 @@ namespace SharpGram.Tl.Constructors.HelpAppConfigNs {
 namespace SharpGram.Tl.Constructors.InputBotAppNs {
     public class InputBotAppID : InputBotAppBase, ITlSerializable, ITlDeserializable<InputBotAppID> {
         public static readonly byte[] Identifier = [122,189,32,169,];
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -30257,15 +29755,14 @@ namespace SharpGram.Tl.Constructors.BotAppNs {
     }
     public class BotApp : BotAppBase, ITlSerializable, ITlDeserializable<BotApp> {
         public static readonly byte[] Identifier = [214,209,252,149,];
-        private int Flags;
-        public required long Id {get;set;}
-        public required long AccessHash {get;set;}
+        public long Id {get;set;}
+        public long AccessHash {get;set;}
         public required string ShortName {get;set;}
         public required string Title {get;set;}
         public required string Description {get;set;}
         public required PhotoBase Photo {get;set;}
         public DocumentBase? Document {get;set;}
-        public required long Hash {get;set;}
+        public long Hash {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -30293,7 +29790,6 @@ namespace SharpGram.Tl.Constructors.BotAppNs {
             var documentLocal = (flagsLocal & 1) is 0 ? default : DocumentBase.TlDeserialize(des) ;
             var hashLocal =  des.As<long>().Read();
             return new() {
-            Flags = flagsLocal,
             Id = idLocal,
             AccessHash = accessHashLocal,
             ShortName = shortNameLocal,
@@ -30311,7 +29807,6 @@ namespace SharpGram.Tl.Constructors.BotAppNs {
 namespace SharpGram.Tl.Constructors.MessagesBotAppNs {
     public class MessagesBotApp : MessagesBotAppBase, ITlSerializable, ITlDeserializable<MessagesBotApp> {
         public static readonly byte[] Identifier = [245,173,80,235,];
-        private int Flags;
         public bool Inactive {get;set;}
         public bool RequestWriteAccess {get;set;}
         public bool HasSettings {get;set;}
@@ -30332,7 +29827,6 @@ namespace SharpGram.Tl.Constructors.MessagesBotAppNs {
             var hasSettingsLocal = (flagsLocal & 4) is 0 ? default : true ;
             var appLocal =  BotAppBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Inactive = inactiveLocal,
             RequestWriteAccess = requestWriteAccessLocal,
             HasSettings = hasSettingsLocal,
@@ -30394,8 +29888,8 @@ namespace SharpGram.Tl.Constructors.InlineBotWebViewNs {
 namespace SharpGram.Tl.Constructors.ReadParticipantDateNs {
     public class ReadParticipantDate : ReadParticipantDateBase, ITlSerializable, ITlDeserializable<ReadParticipantDate> {
         public static readonly byte[] Identifier = [114,241,79,74,];
-        public required long UserId {get;set;}
-        public required int Date {get;set;}
+        public long UserId {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -30420,7 +29914,7 @@ namespace SharpGram.Tl.Constructors.ReadParticipantDateNs {
 namespace SharpGram.Tl.Constructors.InputChatlistNs {
     public class InputChatlistDialogFilter : InputChatlistBase, ITlSerializable, ITlDeserializable<InputChatlistDialogFilter> {
         public static readonly byte[] Identifier = [51,218,224,243,];
-        public required int FilterId {get;set;}
+        public int FilterId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -30442,7 +29936,6 @@ namespace SharpGram.Tl.Constructors.InputChatlistNs {
 namespace SharpGram.Tl.Constructors.ExportedChatlistInviteNs {
     public class ExportedChatlistInvite : ExportedChatlistInviteBase, ITlSerializable, ITlDeserializable<ExportedChatlistInvite> {
         public static readonly byte[] Identifier = [172,129,81,12,];
-        private int Flags;
         public required string Title {get;set;}
         public required string Url {get;set;}
         public required List<PeerBase> Peers {get;set;}
@@ -30463,7 +29956,6 @@ namespace SharpGram.Tl.Constructors.ExportedChatlistInviteNs {
             var urlLocal =  des.As<string>().Read();
             var peersLocal =  des.Read<PeerBase>();
             return new() {
-            Flags = flagsLocal,
             Title = titleLocal,
             Url = urlLocal,
             Peers = peersLocal,
@@ -30532,7 +30024,7 @@ namespace SharpGram.Tl.Constructors.ChatlistsExportedInvitesNs {
 namespace SharpGram.Tl.Constructors.ChatlistsChatlistInviteNs {
     public class ChatlistsChatlistInviteAlready : ChatlistsChatlistInviteBase, ITlSerializable, ITlDeserializable<ChatlistsChatlistInviteAlready> {
         public static readonly byte[] Identifier = [89,246,135,250,];
-        public required int FilterId {get;set;}
+        public int FilterId {get;set;}
         public required List<PeerBase> MissingPeers {get;set;}
         public required List<PeerBase> AlreadyPeers {get;set;}
         public new byte[] TlSerialize() {
@@ -30564,7 +30056,6 @@ namespace SharpGram.Tl.Constructors.ChatlistsChatlistInviteNs {
     }
     public class ChatlistsChatlistInvite : ChatlistsChatlistInviteBase, ITlSerializable, ITlDeserializable<ChatlistsChatlistInvite> {
         public static readonly byte[] Identifier = [157,131,205,29,];
-        private int Flags;
         public required string Title {get;set;}
         public string? Emoticon {get;set;}
         public required List<PeerBase> Peers {get;set;}
@@ -30589,7 +30080,6 @@ namespace SharpGram.Tl.Constructors.ChatlistsChatlistInviteNs {
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Title = titleLocal,
             Emoticon = emoticonLocal,
             Peers = peersLocal,
@@ -30736,7 +30226,6 @@ namespace SharpGram.Tl.Constructors.MessagePeerVoteNs {
 namespace SharpGram.Tl.Constructors.SponsoredWebPageNs {
     public class SponsoredWebPage : SponsoredWebPageBase, ITlSerializable, ITlDeserializable<SponsoredWebPage> {
         public static readonly byte[] Identifier = [99,236,184,61,];
-        private int Flags;
         public required string Url {get;set;}
         public required string SiteName {get;set;}
         public PhotoBase? Photo {get;set;}
@@ -30757,7 +30246,6 @@ namespace SharpGram.Tl.Constructors.SponsoredWebPageNs {
             var siteNameLocal =  des.As<string>().Read();
             var photoLocal = (flagsLocal & 1) is 0 ? default : PhotoBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Url = urlLocal,
             SiteName = siteNameLocal,
             Photo = photoLocal,
@@ -30770,9 +30258,8 @@ namespace SharpGram.Tl.Constructors.SponsoredWebPageNs {
 namespace SharpGram.Tl.Constructors.StoryViewsNs {
     public class StoryViews : StoryViewsBase, ITlSerializable, ITlDeserializable<StoryViews> {
         public static readonly byte[] Identifier = [214,92,89,141,];
-        private int Flags;
         public bool HasViewers {get;set;}
-        public required int ViewsCount {get;set;}
+        public int ViewsCount {get;set;}
         public int? ForwardsCount {get;set;}
         public List<ReactionCountBase>? Reactions {get;set;}
         public int? ReactionsCount {get;set;}
@@ -30799,7 +30286,6 @@ namespace SharpGram.Tl.Constructors.StoryViewsNs {
             var reactionsCountLocal = (flagsLocal & 16) is 0 ? default : des.As<int>().Read() ;
             var recentViewersLocal = (flagsLocal & 1) is 0 ? default : des.ReadNumbers<long>() ;
             return new() {
-            Flags = flagsLocal,
             HasViewers = hasViewersLocal,
             ViewsCount = viewsCountLocal,
             ForwardsCount = forwardsCountLocal,
@@ -30832,10 +30318,9 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
     }
     public class StoryItemSkipped : StoryItemBase, ITlSerializable, ITlDeserializable<StoryItemSkipped> {
         public static readonly byte[] Identifier = [19,201,173,255,];
-        private int Flags;
         public bool CloseFriends {get;set;}
-        public required int Date {get;set;}
-        public required int ExpireDate {get;set;}
+        public int Date {get;set;}
+        public int ExpireDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -30854,7 +30339,6 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
             var dateLocal =  des.As<int>().Read();
             var expireDateLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             CloseFriends = closeFriendsLocal,
             Id = idLocal,
             Date = dateLocal,
@@ -30864,7 +30348,6 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
     }
     public class StoryItem : StoryItemBase, ITlSerializable, ITlDeserializable<StoryItem> {
         public static readonly byte[] Identifier = [161,101,99,175,];
-        private int Flags;
         public bool Pinned {get;set;}
         public bool Public {get;set;}
         public bool CloseFriends {get;set;}
@@ -30874,9 +30357,9 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
         public bool Contacts {get;set;}
         public bool SelectedContacts {get;set;}
         public bool Out {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public StoryFwdHeaderBase? FwdFrom {get;set;}
-        public required int ExpireDate {get;set;}
+        public int ExpireDate {get;set;}
         public string? Caption {get;set;}
         public List<MessageEntityBase>? Entities {get;set;}
         public required MessageMediaBase Media {get;set;}
@@ -30926,7 +30409,6 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
             var viewsLocal = (flagsLocal & 8) is 0 ? default : StoryViewsBase.TlDeserialize(des) ;
             var sentReactionLocal = (flagsLocal & 32768) is 0 ? default : ReactionBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Pinned = pinnedLocal,
             Public = publicLocal,
             CloseFriends = closeFriendsLocal,
@@ -30971,7 +30453,6 @@ namespace SharpGram.Tl.Constructors.StoriesAllStoriesNs {
             var stateLocal =  des.As<string>().Read();
             var stealthModeLocal =  StoriesStealthModeBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             State = stateLocal,
             StealthMode = stealthModeLocal,
             };
@@ -30980,7 +30461,7 @@ namespace SharpGram.Tl.Constructors.StoriesAllStoriesNs {
     public class StoriesAllStories : StoriesAllStoriesBase, ITlSerializable, ITlDeserializable<StoriesAllStories> {
         public static readonly byte[] Identifier = [129,94,252,110,];
         public bool HasMore {get;set;}
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<PeerStoriesBase> PeerStories {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
@@ -31008,7 +30489,6 @@ namespace SharpGram.Tl.Constructors.StoriesAllStoriesNs {
             var usersLocal =  des.Read<UserBase>();
             var stealthModeLocal =  StoriesStealthModeBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             HasMore = hasMoreLocal,
             Count = countLocal,
             State = stateLocal,
@@ -31025,7 +30505,7 @@ namespace SharpGram.Tl.Constructors.StoriesAllStoriesNs {
 namespace SharpGram.Tl.Constructors.StoriesStoriesNs {
     public class StoriesStories : StoriesStoriesBase, ITlSerializable, ITlDeserializable<StoriesStories> {
         public static readonly byte[] Identifier = [200,195,216,93,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<StoryItemBase> Stories {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
@@ -31059,8 +30539,8 @@ namespace SharpGram.Tl.Constructors.StoriesStoriesNs {
 namespace SharpGram.Tl.Constructors.StoryViewNs {
     public class StoryView : StoryViewBase, ITlSerializable, ITlDeserializable<StoryView> {
         public static readonly byte[] Identifier = [197,234,189,176,];
-        public required long UserId {get;set;}
-        public required int Date {get;set;}
+        public long UserId {get;set;}
+        public int Date {get;set;}
         public ReactionBase? Reaction {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -31081,7 +30561,6 @@ namespace SharpGram.Tl.Constructors.StoryViewNs {
             var dateLocal =  des.As<int>().Read();
             var reactionLocal = (flagsLocal & 4) is 0 ? default : ReactionBase.TlDeserialize(des) ;
             return new() {
-            Flags = flagsLocal,
             Blocked = blockedLocal,
             BlockedMyStoriesFrom = blockedMyStoriesFromLocal,
             UserId = userIdLocal,
@@ -31108,7 +30587,6 @@ namespace SharpGram.Tl.Constructors.StoryViewNs {
             var blockedMyStoriesFromLocal = (flagsLocal & 2) is 0 ? default : true ;
             var messageLocal =  MessageBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Blocked = blockedLocal,
             BlockedMyStoriesFrom = blockedMyStoriesFromLocal,
             Message = messageLocal,
@@ -31136,7 +30614,6 @@ namespace SharpGram.Tl.Constructors.StoryViewNs {
             var peerIdLocal =  PeerBase.TlDeserialize(des);
             var storyLocal =  StoryItemBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Blocked = blockedLocal,
             BlockedMyStoriesFrom = blockedMyStoriesFromLocal,
             PeerId = peerIdLocal,
@@ -31150,11 +30627,10 @@ namespace SharpGram.Tl.Constructors.StoryViewNs {
 namespace SharpGram.Tl.Constructors.StoriesStoryViewsListNs {
     public class StoriesStoryViewsList : StoriesStoryViewsListBase, ITlSerializable, ITlDeserializable<StoriesStoryViewsList> {
         public static readonly byte[] Identifier = [197,143,215,89,];
-        private int Flags;
-        public required int Count {get;set;}
-        public required int ViewsCount {get;set;}
-        public required int ForwardsCount {get;set;}
-        public required int ReactionsCount {get;set;}
+        public int Count {get;set;}
+        public int ViewsCount {get;set;}
+        public int ForwardsCount {get;set;}
+        public int ReactionsCount {get;set;}
         public required List<StoryViewBase> Views {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
@@ -31186,7 +30662,6 @@ namespace SharpGram.Tl.Constructors.StoriesStoryViewsListNs {
             var usersLocal =  des.Read<UserBase>();
             var nextOffsetLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Count = countLocal,
             ViewsCount = viewsCountLocal,
             ForwardsCount = forwardsCountLocal,
@@ -31230,8 +30705,7 @@ namespace SharpGram.Tl.Constructors.StoriesStoryViewsNs {
 namespace SharpGram.Tl.Constructors.InputReplyToNs {
     public class InputReplyToMessage : InputReplyToBase, ITlSerializable, ITlDeserializable<InputReplyToMessage> {
         public static readonly byte[] Identifier = [213,246,192,34,];
-        private int Flags;
-        public required int ReplyToMsgId {get;set;}
+        public int ReplyToMsgId {get;set;}
         public int? TopMsgId {get;set;}
         public InputPeerBase? ReplyToPeerId {get;set;}
         public string? QuoteText {get;set;}
@@ -31260,7 +30734,6 @@ namespace SharpGram.Tl.Constructors.InputReplyToNs {
             var quoteEntitiesLocal = (flagsLocal & 8) is 0 ? default : des.Read<MessageEntityBase>() ;
             var quoteOffsetLocal = (flagsLocal & 16) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             ReplyToMsgId = replyToMsgIdLocal,
             TopMsgId = topMsgIdLocal,
             ReplyToPeerId = replyToPeerIdLocal,
@@ -31273,7 +30746,7 @@ namespace SharpGram.Tl.Constructors.InputReplyToNs {
     public class InputReplyToStory : InputReplyToBase, ITlSerializable, ITlDeserializable<InputReplyToStory> {
         public static readonly byte[] Identifier = [131,242,176,21,];
         public required InputUserBase UserId {get;set;}
-        public required int StoryId {get;set;}
+        public int StoryId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -31320,7 +30793,6 @@ namespace SharpGram.Tl.Constructors.ExportedStoryLinkNs {
 namespace SharpGram.Tl.Constructors.StoriesStealthModeNs {
     public class StoriesStealthMode : StoriesStealthModeBase, ITlSerializable, ITlDeserializable<StoriesStealthMode> {
         public static readonly byte[] Identifier = [253,39,46,113,];
-        private int Flags;
         public int? ActiveUntilDate {get;set;}
         public int? CooldownUntilDate {get;set;}
         public new byte[] TlSerialize() {
@@ -31338,7 +30810,6 @@ namespace SharpGram.Tl.Constructors.StoriesStealthModeNs {
             var activeUntilDateLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             var cooldownUntilDateLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             ActiveUntilDate = activeUntilDateLocal,
             CooldownUntilDate = cooldownUntilDateLocal,
             };
@@ -31350,11 +30821,11 @@ namespace SharpGram.Tl.Constructors.StoriesStealthModeNs {
 namespace SharpGram.Tl.Constructors.MediaAreaCoordinatesNs {
     public class MediaAreaCoordinates : MediaAreaCoordinatesBase, ITlSerializable, ITlDeserializable<MediaAreaCoordinates> {
         public static readonly byte[] Identifier = [78,234,209,3,];
-        public required double X {get;set;}
-        public required double Y {get;set;}
-        public required double W {get;set;}
-        public required double H {get;set;}
-        public required double Rotation {get;set;}
+        public double X {get;set;}
+        public double Y {get;set;}
+        public double W {get;set;}
+        public double H {get;set;}
+        public double Rotation {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -31429,7 +30900,7 @@ namespace SharpGram.Tl.Constructors.MediaAreaNs {
     }
     public class InputMediaAreaVenue : MediaAreaBase, ITlSerializable, ITlDeserializable<InputMediaAreaVenue> {
         public static readonly byte[] Identifier = [127,33,130,178,];
-        public required long QueryId {get;set;}
+        public long QueryId {get;set;}
         public required string ResultId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -31475,7 +30946,6 @@ namespace SharpGram.Tl.Constructors.MediaAreaNs {
     }
     public class MediaAreaSuggestedReaction : MediaAreaBase, ITlSerializable, ITlDeserializable<MediaAreaSuggestedReaction> {
         public static readonly byte[] Identifier = [113,88,69,20,];
-        private int Flags;
         public bool Dark {get;set;}
         public bool Flipped {get;set;}
         public required ReactionBase Reaction {get;set;}
@@ -31496,7 +30966,6 @@ namespace SharpGram.Tl.Constructors.MediaAreaNs {
             var coordinatesLocal =  MediaAreaCoordinatesBase.TlDeserialize(des);
             var reactionLocal =  ReactionBase.TlDeserialize(des);
             return new() {
-            Flags = flagsLocal,
             Dark = darkLocal,
             Flipped = flippedLocal,
             Coordinates = coordinatesLocal,
@@ -31506,8 +30975,8 @@ namespace SharpGram.Tl.Constructors.MediaAreaNs {
     }
     public class MediaAreaChannelPost : MediaAreaBase, ITlSerializable, ITlDeserializable<MediaAreaChannelPost> {
         public static readonly byte[] Identifier = [175,22,4,119,];
-        public required long ChannelId {get;set;}
-        public required int MsgId {get;set;}
+        public long ChannelId {get;set;}
+        public int MsgId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -31532,7 +31001,7 @@ namespace SharpGram.Tl.Constructors.MediaAreaNs {
     public class InputMediaAreaChannelPost : MediaAreaBase, ITlSerializable, ITlDeserializable<InputMediaAreaChannelPost> {
         public static readonly byte[] Identifier = [191,242,113,34,];
         public required InputChannelBase Channel {get;set;}
-        public required int MsgId {get;set;}
+        public int MsgId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -31560,7 +31029,6 @@ namespace SharpGram.Tl.Constructors.MediaAreaNs {
 namespace SharpGram.Tl.Constructors.PeerStoriesNs {
     public class PeerStories : PeerStoriesBase, ITlSerializable, ITlDeserializable<PeerStories> {
         public static readonly byte[] Identifier = [153,233,53,154,];
-        private int Flags;
         public required PeerBase Peer {get;set;}
         public int? MaxReadId {get;set;}
         public required List<StoryItemBase> Stories {get;set;}
@@ -31581,7 +31049,6 @@ namespace SharpGram.Tl.Constructors.PeerStoriesNs {
             var maxReadIdLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             var storiesLocal =  des.Read<StoryItemBase>();
             return new() {
-            Flags = flagsLocal,
             Peer = peerLocal,
             MaxReadId = maxReadIdLocal,
             Stories = storiesLocal,
@@ -31654,13 +31121,12 @@ namespace SharpGram.Tl.Constructors.MessagesWebPageNs {
 namespace SharpGram.Tl.Constructors.PremiumGiftCodeOptionNs {
     public class PremiumGiftCodeOption : PremiumGiftCodeOptionBase, ITlSerializable, ITlDeserializable<PremiumGiftCodeOption> {
         public static readonly byte[] Identifier = [43,150,126,37,];
-        private int Flags;
-        public required int Users {get;set;}
-        public required int Months {get;set;}
+        public int Users {get;set;}
+        public int Months {get;set;}
         public string? StoreProduct {get;set;}
         public int? StoreQuantity {get;set;}
         public required string Currency {get;set;}
-        public required long Amount {get;set;}
+        public long Amount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -31684,7 +31150,6 @@ namespace SharpGram.Tl.Constructors.PremiumGiftCodeOptionNs {
             var currencyLocal =  des.As<string>().Read();
             var amountLocal =  des.As<long>().Read();
             return new() {
-            Flags = flagsLocal,
             Users = usersLocal,
             Months = monthsLocal,
             StoreProduct = storeProductLocal,
@@ -31700,13 +31165,12 @@ namespace SharpGram.Tl.Constructors.PremiumGiftCodeOptionNs {
 namespace SharpGram.Tl.Constructors.PaymentsCheckedGiftCodeNs {
     public class PaymentsCheckedGiftCode : PaymentsCheckedGiftCodeBase, ITlSerializable, ITlDeserializable<PaymentsCheckedGiftCode> {
         public static readonly byte[] Identifier = [150,16,74,40,];
-        private int Flags;
         public bool ViaGiveaway {get;set;}
         public PeerBase? FromId {get;set;}
         public int? GiveawayMsgId {get;set;}
         public long? ToId {get;set;}
-        public required int Date {get;set;}
-        public required int Months {get;set;}
+        public int Date {get;set;}
+        public int Months {get;set;}
         public int? UsedDate {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
@@ -31738,7 +31202,6 @@ namespace SharpGram.Tl.Constructors.PaymentsCheckedGiftCodeNs {
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             ViaGiveaway = viaGiveawayLocal,
             FromId = fromIdLocal,
             GiveawayMsgId = giveawayMsgIdLocal,
@@ -31783,7 +31246,6 @@ namespace SharpGram.Tl.Constructors.PaymentsGiveawayInfoNs {
             var adminDisallowedChatIdLocal = (flagsLocal & 4) is 0 ? default : des.As<long>().Read() ;
             var disallowedCountryLocal = (flagsLocal & 16) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Participating = participatingLocal,
             PreparingResults = preparingResultsLocal,
             StartDate = startDateLocal,
@@ -31798,9 +31260,9 @@ namespace SharpGram.Tl.Constructors.PaymentsGiveawayInfoNs {
         public bool Winner {get;set;}
         public bool Refunded {get;set;}
         public string? GiftCodeSlug {get;set;}
-        public required int FinishDate {get;set;}
-        public required int WinnersCount {get;set;}
-        public required int ActivatedCount {get;set;}
+        public int FinishDate {get;set;}
+        public int WinnersCount {get;set;}
+        public int ActivatedCount {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -31824,7 +31286,6 @@ namespace SharpGram.Tl.Constructors.PaymentsGiveawayInfoNs {
             var winnersCountLocal =  des.As<int>().Read();
             var activatedCountLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Winner = winnerLocal,
             Refunded = refundedLocal,
             StartDate = startDateLocal,
@@ -31841,10 +31302,10 @@ namespace SharpGram.Tl.Constructors.PaymentsGiveawayInfoNs {
 namespace SharpGram.Tl.Constructors.PrepaidGiveawayNs {
     public class PrepaidGiveaway : PrepaidGiveawayBase, ITlSerializable, ITlDeserializable<PrepaidGiveaway> {
         public static readonly byte[] Identifier = [84,157,83,178,];
-        public required long Id {get;set;}
-        public required int Months {get;set;}
-        public required int Quantity {get;set;}
-        public required int Date {get;set;}
+        public long Id {get;set;}
+        public int Months {get;set;}
+        public int Quantity {get;set;}
+        public int Date {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -31875,15 +31336,14 @@ namespace SharpGram.Tl.Constructors.PrepaidGiveawayNs {
 namespace SharpGram.Tl.Constructors.BoostNs {
     public class Boost : BoostBase, ITlSerializable, ITlDeserializable<Boost> {
         public static readonly byte[] Identifier = [113,140,28,42,];
-        private int Flags;
         public bool Gift {get;set;}
         public bool Giveaway {get;set;}
         public bool Unclaimed {get;set;}
         public required string Id {get;set;}
         public long? UserId {get;set;}
         public int? GiveawayMsgId {get;set;}
-        public required int Date {get;set;}
-        public required int Expires {get;set;}
+        public int Date {get;set;}
+        public int Expires {get;set;}
         public string? UsedGiftSlug {get;set;}
         public int? Multiplier {get;set;}
         public new byte[] TlSerialize() {
@@ -31914,7 +31374,6 @@ namespace SharpGram.Tl.Constructors.BoostNs {
             var usedGiftSlugLocal = (flagsLocal & 16) is 0 ? default : des.As<string>().Read() ;
             var multiplierLocal = (flagsLocal & 32) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Gift = giftLocal,
             Giveaway = giveawayLocal,
             Unclaimed = unclaimedLocal,
@@ -31934,8 +31393,7 @@ namespace SharpGram.Tl.Constructors.BoostNs {
 namespace SharpGram.Tl.Constructors.PremiumBoostsListNs {
     public class PremiumBoostsList : PremiumBoostsListBase, ITlSerializable, ITlDeserializable<PremiumBoostsList> {
         public static readonly byte[] Identifier = [60,97,248,134,];
-        private int Flags;
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<BoostBase> Boosts {get;set;}
         public string? NextOffset {get;set;}
         public required List<UserBase> Users {get;set;}
@@ -31958,7 +31416,6 @@ namespace SharpGram.Tl.Constructors.PremiumBoostsListNs {
             var nextOffsetLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Count = countLocal,
             Boosts = boostsLocal,
             NextOffset = nextOffsetLocal,
@@ -31972,11 +31429,10 @@ namespace SharpGram.Tl.Constructors.PremiumBoostsListNs {
 namespace SharpGram.Tl.Constructors.MyBoostNs {
     public class MyBoost : MyBoostBase, ITlSerializable, ITlDeserializable<MyBoost> {
         public static readonly byte[] Identifier = [92,65,72,196,];
-        private int Flags;
-        public required int Slot {get;set;}
+        public int Slot {get;set;}
         public PeerBase? Peer {get;set;}
-        public required int Date {get;set;}
-        public required int Expires {get;set;}
+        public int Date {get;set;}
+        public int Expires {get;set;}
         public int? CooldownUntilDate {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -31999,7 +31455,6 @@ namespace SharpGram.Tl.Constructors.MyBoostNs {
             var expiresLocal =  des.As<int>().Read();
             var cooldownUntilDateLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Slot = slotLocal,
             Peer = peerLocal,
             Date = dateLocal,
@@ -32044,11 +31499,10 @@ namespace SharpGram.Tl.Constructors.PremiumMyBoostsNs {
 namespace SharpGram.Tl.Constructors.PremiumBoostsStatusNs {
     public class PremiumBoostsStatus : PremiumBoostsStatusBase, ITlSerializable, ITlDeserializable<PremiumBoostsStatus> {
         public static readonly byte[] Identifier = [122,66,89,73,];
-        private int Flags;
         public bool MyBoost {get;set;}
-        public required int Level {get;set;}
-        public required int CurrentLevelBoosts {get;set;}
-        public required int Boosts {get;set;}
+        public int Level {get;set;}
+        public int CurrentLevelBoosts {get;set;}
+        public int Boosts {get;set;}
         public int? GiftBoosts {get;set;}
         public int? NextLevelBoosts {get;set;}
         public StatsPercentValueBase? PremiumAudience {get;set;}
@@ -32085,7 +31539,6 @@ namespace SharpGram.Tl.Constructors.PremiumBoostsStatusNs {
             var prepaidGiveawaysLocal = (flagsLocal & 8) is 0 ? default : des.Read<PrepaidGiveawayBase>() ;
             var myBoostSlotsLocal = (flagsLocal & 4) is 0 ? default : des.ReadNumbers<int>() ;
             return new() {
-            Flags = flagsLocal,
             MyBoost = myBoostLocal,
             Level = levelLocal,
             CurrentLevelBoosts = currentLevelBoostsLocal,
@@ -32105,7 +31558,6 @@ namespace SharpGram.Tl.Constructors.PremiumBoostsStatusNs {
 namespace SharpGram.Tl.Constructors.StoryFwdHeaderNs {
     public class StoryFwdHeader : StoryFwdHeaderBase, ITlSerializable, ITlDeserializable<StoryFwdHeader> {
         public static readonly byte[] Identifier = [80,225,38,184,];
-        private int Flags;
         public bool Modified {get;set;}
         public PeerBase? From {get;set;}
         public string? FromName {get;set;}
@@ -32128,7 +31580,6 @@ namespace SharpGram.Tl.Constructors.StoryFwdHeaderNs {
             var fromNameLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var storyIdLocal = (flagsLocal & 4) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Modified = modifiedLocal,
             From = fromLocal,
             FromName = fromNameLocal,
@@ -32142,7 +31593,7 @@ namespace SharpGram.Tl.Constructors.StoryFwdHeaderNs {
 namespace SharpGram.Tl.Constructors.PostInteractionCountersNs {
     public class PostInteractionCountersMessage : PostInteractionCountersBase, ITlSerializable, ITlDeserializable<PostInteractionCountersMessage> {
         public static readonly byte[] Identifier = [127,142,5,231,];
-        public required int MsgId {get;set;}
+        public int MsgId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -32169,7 +31620,7 @@ namespace SharpGram.Tl.Constructors.PostInteractionCountersNs {
     }
     public class PostInteractionCountersStory : PostInteractionCountersBase, ITlSerializable, ITlDeserializable<PostInteractionCountersStory> {
         public static readonly byte[] Identifier = [39,14,72,138,];
-        public required int StoryId {get;set;}
+        public int StoryId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -32270,8 +31721,7 @@ namespace SharpGram.Tl.Constructors.PublicForwardNs {
 namespace SharpGram.Tl.Constructors.StatsPublicForwardsNs {
     public class StatsPublicForwards : StatsPublicForwardsBase, ITlSerializable, ITlDeserializable<StatsPublicForwards> {
         public static readonly byte[] Identifier = [32,126,3,147,];
-        private int Flags;
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<PublicForwardBase> Forwards {get;set;}
         public string? NextOffset {get;set;}
         public required List<ChatBase> Chats {get;set;}
@@ -32297,7 +31747,6 @@ namespace SharpGram.Tl.Constructors.StatsPublicForwardsNs {
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
-            Flags = flagsLocal,
             Count = countLocal,
             Forwards = forwardsLocal,
             NextOffset = nextOffsetLocal,
@@ -32312,7 +31761,6 @@ namespace SharpGram.Tl.Constructors.StatsPublicForwardsNs {
 namespace SharpGram.Tl.Constructors.PeerColorNs {
     public class PeerColor : PeerColorBase, ITlSerializable, ITlDeserializable<PeerColor> {
         public static readonly byte[] Identifier = [207,90,75,181,];
-        private int Flags;
         public int? Color {get;set;}
         public long? BackgroundEmojiId {get;set;}
         public new byte[] TlSerialize() {
@@ -32330,7 +31778,6 @@ namespace SharpGram.Tl.Constructors.PeerColorNs {
             var colorLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             var backgroundEmojiIdLocal = (flagsLocal & 2) is 0 ? default : des.As<long>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Color = colorLocal,
             BackgroundEmojiId = backgroundEmojiIdLocal,
             };
@@ -32390,9 +31837,8 @@ namespace SharpGram.Tl.Constructors.HelpPeerColorSetNs {
 namespace SharpGram.Tl.Constructors.HelpPeerColorOptionNs {
     public class HelpPeerColorOption : HelpPeerColorOptionBase, ITlSerializable, ITlDeserializable<HelpPeerColorOption> {
         public static readonly byte[] Identifier = [171,48,132,239,];
-        private int Flags;
         public bool Hidden {get;set;}
-        public required int ColorId {get;set;}
+        public int ColorId {get;set;}
         public HelpPeerColorSetBase? Colors {get;set;}
         public HelpPeerColorSetBase? DarkColors {get;set;}
         public int? ChannelMinLevel {get;set;}
@@ -32416,7 +31862,6 @@ namespace SharpGram.Tl.Constructors.HelpPeerColorOptionNs {
             var darkColorsLocal = (flagsLocal & 4) is 0 ? default : HelpPeerColorSetBase.TlDeserialize(des) ;
             var channelMinLevelLocal = (flagsLocal & 8) is 0 ? default : des.As<int>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Hidden = hiddenLocal,
             ColorId = colorIdLocal,
             Colors = colorsLocal,
@@ -32445,7 +31890,7 @@ namespace SharpGram.Tl.Constructors.HelpPeerColorsNs {
     }
     public class HelpPeerColors : HelpPeerColorsBase, ITlSerializable, ITlDeserializable<HelpPeerColors> {
         public static readonly byte[] Identifier = [8,237,248,0,];
-        public required int Hash {get;set;}
+        public int Hash {get;set;}
         public required List<HelpPeerColorOption> Colors {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -32472,7 +31917,7 @@ namespace SharpGram.Tl.Constructors.StoryReactionNs {
     public class StoryReaction : StoryReactionBase, ITlSerializable, ITlDeserializable<StoryReaction> {
         public static readonly byte[] Identifier = [213,214,144,96,];
         public required PeerBase PeerId {get;set;}
-        public required int Date {get;set;}
+        public int Date {get;set;}
         public required ReactionBase Reaction {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -32541,8 +31986,7 @@ namespace SharpGram.Tl.Constructors.StoryReactionNs {
 namespace SharpGram.Tl.Constructors.StoriesStoryReactionsListNs {
     public class StoriesStoryReactionsList : StoriesStoryReactionsListBase, ITlSerializable, ITlDeserializable<StoriesStoryReactionsList> {
         public static readonly byte[] Identifier = [156,120,95,170,];
-        private int Flags;
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<StoryReactionBase> Reactions {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
@@ -32568,7 +32012,6 @@ namespace SharpGram.Tl.Constructors.StoriesStoryReactionsListNs {
             var usersLocal =  des.Read<UserBase>();
             var nextOffsetLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
             return new() {
-            Flags = flagsLocal,
             Count = countLocal,
             Reactions = reactionsLocal,
             Chats = chatsLocal,
@@ -32583,10 +32026,9 @@ namespace SharpGram.Tl.Constructors.StoriesStoryReactionsListNs {
 namespace SharpGram.Tl.Constructors.SavedDialogNs {
     public class SavedDialog : SavedDialogBase, ITlSerializable, ITlDeserializable<SavedDialog> {
         public static readonly byte[] Identifier = [108,203,135,189,];
-        private int Flags;
         public bool Pinned {get;set;}
         public required PeerBase Peer {get;set;}
-        public required int TopMessage {get;set;}
+        public int TopMessage {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -32603,7 +32045,6 @@ namespace SharpGram.Tl.Constructors.SavedDialogNs {
             var peerLocal =  PeerBase.TlDeserialize(des);
             var topMessageLocal =  des.As<int>().Read();
             return new() {
-            Flags = flagsLocal,
             Pinned = pinnedLocal,
             Peer = peerLocal,
             TopMessage = topMessageLocal,
@@ -32646,7 +32087,7 @@ namespace SharpGram.Tl.Constructors.MessagesSavedDialogsNs {
     }
     public class MessagesSavedDialogsSlice : MessagesSavedDialogsBase, ITlSerializable, ITlDeserializable<MessagesSavedDialogsSlice> {
         public static readonly byte[] Identifier = [217,157,186,68,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public required List<SavedDialogBase> Dialogs {get;set;}
         public required List<MessageBase> Messages {get;set;}
         public required List<ChatBase> Chats {get;set;}
@@ -32680,7 +32121,7 @@ namespace SharpGram.Tl.Constructors.MessagesSavedDialogsNs {
     }
     public class MessagesSavedDialogsNotModified : MessagesSavedDialogsBase, ITlSerializable, ITlDeserializable<MessagesSavedDialogsNotModified> {
         public static readonly byte[] Identifier = [232,111,31,192,];
-        public required int Count {get;set;}
+        public int Count {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);

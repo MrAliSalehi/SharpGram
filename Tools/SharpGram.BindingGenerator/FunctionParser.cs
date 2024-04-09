@@ -25,7 +25,7 @@ public static class FunctionParser
                     var isList = returnType.StartsWith("List");
                     var isBase = returnType.Contains("Base");
                     if (isList)
-                        returnType = returnType.Replace("List","TlList");
+                        returnType = returnType.Replace("List", "TlList");
                     if (!returnType.IsBuiltinType() && !isList && !isBase)
                     {
                         var ns = groups.FindNamespace(returnType);
@@ -55,13 +55,10 @@ public static class FunctionParser
             b.Append($"        public sealed class {method.Name} : TlFunction<{returnType}> {{\n    ");
             TypeParser.GenerateId(b, method.Id, false);
 
-            foreach (var param in method.Params)
+            foreach (var param in method.Params.Where(param => !param.IsFlag))
             {
-                //if (param.Type is "X") continue; //todo handle generics
-                if (param.IsFlag)
-                    b.AppendLine($"            private {param.Type} {param.Name};");
-                else
-                    b.AppendLine($"            public{((param.IsNullable || param.Type == "bool") ? "":" required")} {param.Type} {param.Name} {{get;set;}}");
+                var cantBeNull = param.Type.IsBuiltinType() && param.Type is not ("string" or "byte[]");
+                b.AppendLine($"            public{(param.IsNullable || cantBeNull ? "" : " required")} {param.Type} {param.Name} {{get;set;}}");
             }
 
 
@@ -73,8 +70,29 @@ public static class FunctionParser
 
             foreach (var param in method.Params)
             {
+                if (param.IsFlag)
+                {
+                    var pm = method.Params.Where(p => p is { IsFlag: false, IsNullable: true }).ToList();
+                    if (pm.Count == 0)
+                    {
+                        b.AppendLine($"{space}    bytes.AddRange(0.TlSerialize());");
+                    }else
+                    {
+                        b.Append($"{space}    bytes.AddRange((0 |");
+                        foreach (var (param2, i) in pm.Select((v, i) => (v, i)))
+                        {
+                            b.Append($" ({param2.Name}{(param2.IsNullable ? " is not null" : "")} ? {param2.FlagOffset} : 0) ");
+                            if (i +1 < pm.Count)
+                                b.Append('|');
+                        }
+                        b.AppendLine(").TlSerialize());");
+                    }
+
+                    continue;
+                }
+                if (param.Type is "bool") continue; // they are set through flags
                 if (param.IsNullable)
-                    b.AppendLine($"{space}    bytes.AddRange({param.Name} is null ? [0x0] : {param.Name}.TlSerialize());");
+                    b.AppendLine($"{space}    if({param.Name} is not null) bytes.AddRange({param.Name}.TlSerialize());");
                 else
                     b.AppendLine($"{space}    bytes.AddRange({param.Name}.TlSerialize());");
             }

@@ -17,7 +17,7 @@ public sealed class TelegramSession
     public string ApiHash { get; set; } = "";
     public int ApiId { get; set; }
     public string Phone { get; set; } = "-";
-    public Config Config { get; internal set; } = new();
+    public Config Config { get; internal set; } = new() { DcOptions = [], DcTxtDomainName = "",MeUrlPrefix = ""};
     public ClientOptions ClientOptions { get; set; } = new();
 
     private static readonly JsonTypeInfo<TelegramSession> DefOption = SessionSerializerContext.Default.TelegramSession;

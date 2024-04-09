@@ -5,7 +5,6 @@ namespace SharpGram.Tl.Functions {
 namespace Account {
         public sealed class AccountInitTakeoutSession : TlFunction<AccountTakeoutBase> {
             public static readonly byte[] Identifier = [176,234,243,142,];
-            private int Flags;
             public bool Contacts {get;set;}
             public bool MessageUsers {get;set;}
             public bool MessageChats {get;set;}
@@ -16,22 +15,15 @@ namespace Account {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Contacts.TlSerialize());
-                bytes.AddRange(MessageUsers.TlSerialize());
-                bytes.AddRange(MessageChats.TlSerialize());
-                bytes.AddRange(MessageMegagroups.TlSerialize());
-                bytes.AddRange(MessageChannels.TlSerialize());
-                bytes.AddRange(Files.TlSerialize());
-                bytes.AddRange(FileMaxSize is null ? [0x0] : FileMaxSize.TlSerialize());
+                bytes.AddRange((0 | (FileMaxSize is not null ? 32 : 0) ).TlSerialize());
+                if(FileMaxSize is not null) bytes.AddRange(FileMaxSize.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AccountRegisterDevice : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [122,1,134,236,];
-            private int Flags;
             public bool NoMuted {get;set;}
-            public required int TokenType {get;set;}
+            public int TokenType {get;set;}
             public required string Token {get;set;}
             public bool AppSandbox {get;set;}
             public required byte[] Secret {get;set;}
@@ -39,11 +31,9 @@ namespace Account {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(NoMuted.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(TokenType.TlSerialize());
                 bytes.AddRange(Token.TlSerialize());
-                bytes.AddRange(AppSandbox.TlSerialize());
                 bytes.AddRange(Secret.TlSerialize());
                 bytes.AddRange(OtherUids.TlSerialize());
                 return bytes.ToArray();
@@ -51,7 +41,6 @@ namespace Account {
         }
         public sealed class AccountUpdateTheme : TlFunction<ThemeBase> {
             public static readonly byte[] Identifier = [204,12,244,43,];
-            private int Flags;
             public required string Format {get;set;}
             public required InputThemeBase Theme {get;set;}
             public string? Slug {get;set;}
@@ -61,19 +50,18 @@ namespace Account {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Slug is not null ? 1 : 0) | (Title is not null ? 2 : 0) | (Document is not null ? 4 : 0) | (Settings is not null ? 8 : 0) ).TlSerialize());
                 bytes.AddRange(Format.TlSerialize());
                 bytes.AddRange(Theme.TlSerialize());
-                bytes.AddRange(Slug is null ? [0x0] : Slug.TlSerialize());
-                bytes.AddRange(Title is null ? [0x0] : Title.TlSerialize());
-                bytes.AddRange(Document is null ? [0x0] : Document.TlSerialize());
-                bytes.AddRange(Settings is null ? [0x0] : Settings.TlSerialize());
+                if(Slug is not null) bytes.AddRange(Slug.TlSerialize());
+                if(Title is not null) bytes.AddRange(Title.TlSerialize());
+                if(Document is not null) bytes.AddRange(Document.TlSerialize());
+                if(Settings is not null) bytes.AddRange(Settings.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AccountSaveAutoSaveSettings : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [97,131,155,214,];
-            private int Flags;
             public bool Users {get;set;}
             public bool Chats {get;set;}
             public bool Broadcasts {get;set;}
@@ -82,18 +70,15 @@ namespace Account {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Users.TlSerialize());
-                bytes.AddRange(Chats.TlSerialize());
-                bytes.AddRange(Broadcasts.TlSerialize());
-                bytes.AddRange(Peer is null ? [0x0] : Peer.TlSerialize());
+                bytes.AddRange((0 | (Peer is not null ? 8 : 0) ).TlSerialize());
+                if(Peer is not null) bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Settings.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AccountAcceptAuthorization : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [115,76,237,243,];
-            public required long BotId {get;set;}
+            public long BotId {get;set;}
             public required string Scope {get;set;}
             public required string PublicKey {get;set;}
             public required List<SecureValueHashBase> ValueHashes {get;set;}
@@ -111,7 +96,6 @@ namespace Account {
         }
         public sealed class AccountUploadWallPaper : TlFunction<WallPaperBase> {
             public static readonly byte[] Identifier = [3,143,154,227,];
-            private int Flags;
             public bool ForChat {get;set;}
             public required InputFileBase File {get;set;}
             public required string MimeType {get;set;}
@@ -119,8 +103,7 @@ namespace Account {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ForChat.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(File.TlSerialize());
                 bytes.AddRange(MimeType.TlSerialize());
                 bytes.AddRange(Settings.TlSerialize());
@@ -129,7 +112,6 @@ namespace Account {
         }
         public sealed class AccountUploadTheme : TlFunction<DocumentBase> {
             public static readonly byte[] Identifier = [51,179,61,28,];
-            private int Flags;
             public required InputFileBase File {get;set;}
             public InputFileBase? Thumb {get;set;}
             public required string FileName {get;set;}
@@ -137,9 +119,9 @@ namespace Account {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Thumb is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(File.TlSerialize());
-                bytes.AddRange(Thumb is null ? [0x0] : Thumb.TlSerialize());
+                if(Thumb is not null) bytes.AddRange(Thumb.TlSerialize());
                 bytes.AddRange(FileName.TlSerialize());
                 bytes.AddRange(MimeType.TlSerialize());
                 return bytes.ToArray();
@@ -147,7 +129,6 @@ namespace Account {
         }
         public sealed class AccountCreateTheme : TlFunction<ThemeBase> {
             public static readonly byte[] Identifier = [0,68,46,101,];
-            private int Flags;
             public required string Slug {get;set;}
             public required string Title {get;set;}
             public InputDocumentBase? Document {get;set;}
@@ -155,17 +136,16 @@ namespace Account {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Document is not null ? 4 : 0) | (Settings is not null ? 8 : 0) ).TlSerialize());
                 bytes.AddRange(Slug.TlSerialize());
                 bytes.AddRange(Title.TlSerialize());
-                bytes.AddRange(Document is null ? [0x0] : Document.TlSerialize());
-                bytes.AddRange(Settings is null ? [0x0] : Settings.TlSerialize());
+                if(Document is not null) bytes.AddRange(Document.TlSerialize());
+                if(Settings is not null) bytes.AddRange(Settings.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AccountInstallTheme : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [59,187,39,199,];
-            private int Flags;
             public bool Dark {get;set;}
             public InputThemeBase? Theme {get;set;}
             public string? Format {get;set;}
@@ -173,76 +153,64 @@ namespace Account {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Dark.TlSerialize());
-                bytes.AddRange(Theme is null ? [0x0] : Theme.TlSerialize());
-                bytes.AddRange(Format is null ? [0x0] : Format.TlSerialize());
-                bytes.AddRange(BaseTheme is null ? [0x0] : BaseTheme.TlSerialize());
+                bytes.AddRange((0 | (Theme is not null ? 2 : 0) | (Format is not null ? 4 : 0) | (BaseTheme is not null ? 8 : 0) ).TlSerialize());
+                if(Theme is not null) bytes.AddRange(Theme.TlSerialize());
+                if(Format is not null) bytes.AddRange(Format.TlSerialize());
+                if(BaseTheme is not null) bytes.AddRange(BaseTheme.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AccountChangeAuthorizationSettings : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [98,132,244,64,];
-            private int Flags;
             public bool Confirmed {get;set;}
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public bool EncryptedRequestsDisabled {get;set;}
             public bool CallRequestsDisabled {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Confirmed.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Hash.TlSerialize());
-                bytes.AddRange(EncryptedRequestsDisabled.TlSerialize());
-                bytes.AddRange(CallRequestsDisabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AccountUpdateProfile : TlFunction<UserBase> {
             public static readonly byte[] Identifier = [117,87,81,120,];
-            private int Flags;
             public string? FirstName {get;set;}
             public string? LastName {get;set;}
             public string? About {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(FirstName is null ? [0x0] : FirstName.TlSerialize());
-                bytes.AddRange(LastName is null ? [0x0] : LastName.TlSerialize());
-                bytes.AddRange(About is null ? [0x0] : About.TlSerialize());
+                bytes.AddRange((0 | (FirstName is not null ? 1 : 0) | (LastName is not null ? 2 : 0) | (About is not null ? 4 : 0) ).TlSerialize());
+                if(FirstName is not null) bytes.AddRange(FirstName.TlSerialize());
+                if(LastName is not null) bytes.AddRange(LastName.TlSerialize());
+                if(About is not null) bytes.AddRange(About.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AccountGetNotifyExceptions : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [121,116,87,83,];
-            private int Flags;
             public bool CompareSound {get;set;}
             public bool CompareStories {get;set;}
             public InputNotifyPeerBase? Peer {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(CompareSound.TlSerialize());
-                bytes.AddRange(CompareStories.TlSerialize());
-                bytes.AddRange(Peer is null ? [0x0] : Peer.TlSerialize());
+                bytes.AddRange((0 | (Peer is not null ? 1 : 0) ).TlSerialize());
+                if(Peer is not null) bytes.AddRange(Peer.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AccountSaveAutoDownloadSettings : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [51,98,243,118,];
-            private int Flags;
             public bool Low {get;set;}
             public bool High {get;set;}
             public required AutoDownloadSettingsBase Settings {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Low.TlSerialize());
-                bytes.AddRange(High.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Settings.TlSerialize());
                 return bytes.ToArray();
             }
@@ -265,23 +233,21 @@ namespace Account {
         }
         public sealed class AccountUpdateColor : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [93,161,239,124,];
-            private int Flags;
             public bool ForProfile {get;set;}
             public int? Color {get;set;}
             public long? BackgroundEmojiId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ForProfile.TlSerialize());
-                bytes.AddRange(Color is null ? [0x0] : Color.TlSerialize());
-                bytes.AddRange(BackgroundEmojiId is null ? [0x0] : BackgroundEmojiId.TlSerialize());
+                bytes.AddRange((0 | (Color is not null ? 4 : 0) | (BackgroundEmojiId is not null ? 1 : 0) ).TlSerialize());
+                if(Color is not null) bytes.AddRange(Color.TlSerialize());
+                if(BackgroundEmojiId is not null) bytes.AddRange(BackgroundEmojiId.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AccountUnregisterDevice : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [6,50,13,106,];
-            public required int TokenType {get;set;}
+            public int TokenType {get;set;}
             public required string Token {get;set;}
             public required List<long> OtherUids {get;set;}
             public override byte[] TlSerialize() {
@@ -309,15 +275,14 @@ namespace Account {
         }
         public sealed class AccountDeleteAccount : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [116,207,192,162,];
-            private int Flags;
             public required string Reason {get;set;}
             public InputCheckPasswordSRPBase? Password {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Password is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Reason.TlSerialize());
-                bytes.AddRange(Password is null ? [0x0] : Password.TlSerialize());
+                if(Password is not null) bytes.AddRange(Password.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -337,7 +302,7 @@ namespace Account {
         }
         public sealed class AccountGetAuthorizationForm : TlFunction<AccountAuthorizationFormBase> {
             public static readonly byte[] Identifier = [122,89,41,169,];
-            public required long BotId {get;set;}
+            public long BotId {get;set;}
             public required string Scope {get;set;}
             public required string PublicKey {get;set;}
             public override byte[] TlSerialize() {
@@ -372,7 +337,6 @@ namespace Account {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Wallpaper.TlSerialize());
-                bytes.AddRange(Unsave.TlSerialize());
                 bytes.AddRange(Settings.TlSerialize());
                 return bytes.ToArray();
             }
@@ -466,7 +430,7 @@ namespace Account {
         public sealed class AccountGetTmpPassword : TlFunction<AccountTmpPasswordBase> {
             public static readonly byte[] Identifier = [81,11,158,68,];
             public required InputCheckPasswordSRPBase Password {get;set;}
-            public required int Period {get;set;}
+            public int Period {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -478,7 +442,7 @@ namespace Account {
         public sealed class AccountSaveSecureValue : TlFunction<SecureValueBase> {
             public static readonly byte[] Identifier = [29,227,159,137,];
             public required InputSecureValueBase Value {get;set;}
-            public required long SecureSecretId {get;set;}
+            public long SecureSecretId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -525,13 +489,11 @@ namespace Account {
         }
         public sealed class AccountFinishTakeoutSession : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [238,82,38,29,];
-            private int Flags;
             public bool Success {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Success.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -555,7 +517,6 @@ namespace Account {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Theme.TlSerialize());
-                bytes.AddRange(Unsave.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -574,7 +535,7 @@ namespace Account {
         public sealed class AccountGetThemes : TlFunction<AccountThemesBase> {
             public static readonly byte[] Identifier = [88,228,6,114,];
             public required string Format {get;set;}
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -585,13 +546,11 @@ namespace Account {
         }
         public sealed class AccountSetContentSettings : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [107,177,116,181,];
-            private int Flags;
             public bool SensitiveEnabled {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(SensitiveEnabled.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -603,7 +562,6 @@ namespace Account {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Unsave.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -615,7 +573,6 @@ namespace Account {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Username.TlSerialize());
-                bytes.AddRange(Active.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -635,13 +592,12 @@ namespace Account {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Offline.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AccountGetWallPapers : TlFunction<AccountWallPapersBase> {
             public static readonly byte[] Identifier = [54,125,150,7,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -691,7 +647,7 @@ namespace Account {
         }
         public sealed class AccountUpdateDeviceLocked : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [50,53,223,56,];
-            public required int Period {get;set;}
+            public int Period {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -701,7 +657,7 @@ namespace Account {
         }
         public sealed class AccountResetAuthorization : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [188,243,119,223,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -721,7 +677,7 @@ namespace Account {
         }
         public sealed class AccountResetWebAuthorization : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [239,185,1,45,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -765,7 +721,6 @@ namespace Account {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Silent.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -801,7 +756,7 @@ namespace Account {
         }
         public sealed class AccountGetChatThemes : TlFunction<AccountThemesBase> {
             public static readonly byte[] Identifier = [137,222,56,214,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -811,7 +766,7 @@ namespace Account {
         }
         public sealed class AccountSetAuthorizationTTL : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [160,154,137,191,];
-            public required int AuthorizationTtlDays {get;set;}
+            public int AuthorizationTtlDays {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -821,7 +776,7 @@ namespace Account {
         }
         public sealed class AccountGetSavedRingtones : TlFunction<AccountSavedRingtonesBase> {
             public static readonly byte[] Identifier = [136,34,144,225,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -841,7 +796,7 @@ namespace Account {
         }
         public sealed class AccountGetDefaultEmojiStatuses : TlFunction<AccountEmojiStatusesBase> {
             public static readonly byte[] Identifier = [134,51,117,214,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -851,7 +806,7 @@ namespace Account {
         }
         public sealed class AccountGetRecentEmojiStatuses : TlFunction<AccountEmojiStatusesBase> {
             public static readonly byte[] Identifier = [5,129,87,15,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -871,7 +826,7 @@ namespace Account {
         }
         public sealed class AccountGetDefaultProfilePhotoEmojis : TlFunction<EmojiListBase> {
             public static readonly byte[] Identifier = [40,3,117,226,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -881,7 +836,7 @@ namespace Account {
         }
         public sealed class AccountGetDefaultGroupPhotoEmojis : TlFunction<EmojiListBase> {
             public static readonly byte[] Identifier = [174,96,88,145,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -901,7 +856,7 @@ namespace Account {
         }
         public sealed class AccountGetDefaultBackgroundEmojis : TlFunction<EmojiListBase> {
             public static readonly byte[] Identifier = [206,185,10,166,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -911,7 +866,7 @@ namespace Account {
         }
         public sealed class AccountGetChannelDefaultEmojiStatuses : TlFunction<AccountEmojiStatusesBase> {
             public static readonly byte[] Identifier = [213,167,39,119,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -921,7 +876,7 @@ namespace Account {
         }
         public sealed class AccountGetChannelRestrictedStatusEmojis : TlFunction<EmojiListBase> {
             public static readonly byte[] Identifier = [213,224,169,53,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -1085,7 +1040,6 @@ namespace Account {
 namespace Auth {
         public sealed class AuthSignIn : TlFunction<AuthAuthorizationBase> {
             public static readonly byte[] Identifier = [81,169,82,141,];
-            private int Flags;
             public required string PhoneNumber {get;set;}
             public required string PhoneCodeHash {get;set;}
             public string? PhoneCode {get;set;}
@@ -1093,17 +1047,16 @@ namespace Auth {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (PhoneCode is not null ? 1 : 0) | (EmailVerification is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(PhoneNumber.TlSerialize());
                 bytes.AddRange(PhoneCodeHash.TlSerialize());
-                bytes.AddRange(PhoneCode is null ? [0x0] : PhoneCode.TlSerialize());
-                bytes.AddRange(EmailVerification is null ? [0x0] : EmailVerification.TlSerialize());
+                if(PhoneCode is not null) bytes.AddRange(PhoneCode.TlSerialize());
+                if(EmailVerification is not null) bytes.AddRange(EmailVerification.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AuthRequestFirebaseSms : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [80,75,70,137,];
-            private int Flags;
             public required string PhoneNumber {get;set;}
             public required string PhoneCodeHash {get;set;}
             public string? SafetyNetToken {get;set;}
@@ -1111,18 +1064,18 @@ namespace Auth {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (SafetyNetToken is not null ? 1 : 0) | (IosPushSecret is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(PhoneNumber.TlSerialize());
                 bytes.AddRange(PhoneCodeHash.TlSerialize());
-                bytes.AddRange(SafetyNetToken is null ? [0x0] : SafetyNetToken.TlSerialize());
-                bytes.AddRange(IosPushSecret is null ? [0x0] : IosPushSecret.TlSerialize());
+                if(SafetyNetToken is not null) bytes.AddRange(SafetyNetToken.TlSerialize());
+                if(IosPushSecret is not null) bytes.AddRange(IosPushSecret.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AuthSendCode : TlFunction<AuthSentCodeBase> {
             public static readonly byte[] Identifier = [79,36,119,166,];
             public required string PhoneNumber {get;set;}
-            public required int ApiId {get;set;}
+            public int ApiId {get;set;}
             public required string ApiHash {get;set;}
             public required CodeSettingsBase Settings {get;set;}
             public override byte[] TlSerialize() {
@@ -1153,9 +1106,9 @@ namespace Auth {
         }
         public sealed class AuthBindTempAuthKey : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [5,42,212,205,];
-            public required long PermAuthKeyId {get;set;}
-            public required long Nonce {get;set;}
-            public required int ExpiresAt {get;set;}
+            public long PermAuthKeyId {get;set;}
+            public long Nonce {get;set;}
+            public int ExpiresAt {get;set;}
             public required byte[] EncryptedMessage {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -1169,8 +1122,8 @@ namespace Auth {
         }
         public sealed class AuthImportBotAuthorization : TlFunction<AuthAuthorizationBase> {
             public static readonly byte[] Identifier = [44,255,163,103,];
-            public required int Flags {get;set;}
-            public required int ApiId {get;set;}
+            public int Flags {get;set;}
+            public int ApiId {get;set;}
             public required string ApiHash {get;set;}
             public required string BotAuthToken {get;set;}
             public override byte[] TlSerialize() {
@@ -1185,21 +1138,20 @@ namespace Auth {
         }
         public sealed class AuthRecoverPassword : TlFunction<AuthAuthorizationBase> {
             public static readonly byte[] Identifier = [112,108,9,55,];
-            private int Flags;
             public required string Code {get;set;}
             public AccountPasswordInputSettingsBase? NewSettings {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (NewSettings is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Code.TlSerialize());
-                bytes.AddRange(NewSettings is null ? [0x0] : NewSettings.TlSerialize());
+                if(NewSettings is not null) bytes.AddRange(NewSettings.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class AuthExportLoginToken : TlFunction<AuthLoginTokenBase> {
             public static readonly byte[] Identifier = [254,133,224,183,];
-            public required int ApiId {get;set;}
+            public int ApiId {get;set;}
             public required string ApiHash {get;set;}
             public required List<long> ExceptIds {get;set;}
             public override byte[] TlSerialize() {
@@ -1213,7 +1165,7 @@ namespace Auth {
         }
         public sealed class AuthImportWebTokenAuthorization : TlFunction<AuthAuthorizationBase> {
             public static readonly byte[] Identifier = [169,115,184,45,];
-            public required int ApiId {get;set;}
+            public int ApiId {get;set;}
             public required string ApiHash {get;set;}
             public required string WebAuthToken {get;set;}
             public override byte[] TlSerialize() {
@@ -1227,7 +1179,7 @@ namespace Auth {
         }
         public sealed class AuthImportAuthorization : TlFunction<AuthAuthorizationBase> {
             public static readonly byte[] Identifier = [173,125,122,165,];
-            public required long Id {get;set;}
+            public long Id {get;set;}
             public required byte[] Bytes {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -1275,7 +1227,7 @@ namespace Auth {
         }
         public sealed class AuthExportAuthorization : TlFunction<AuthExportedAuthorizationBase> {
             public static readonly byte[] Identifier = [205,255,191,229,];
-            public required int DcId {get;set;}
+            public int DcId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -1361,7 +1313,6 @@ namespace Auth {
 namespace Bots {
         public sealed class BotsSetBotInfo : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [35,49,207,16,];
-            private int Flags;
             public InputUserBase? Bot {get;set;}
             public required string LangCode {get;set;}
             public string? Name {get;set;}
@@ -1370,12 +1321,12 @@ namespace Bots {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Bot is null ? [0x0] : Bot.TlSerialize());
+                bytes.AddRange((0 | (Bot is not null ? 4 : 0) | (Name is not null ? 8 : 0) | (About is not null ? 1 : 0) | (Description is not null ? 2 : 0) ).TlSerialize());
+                if(Bot is not null) bytes.AddRange(Bot.TlSerialize());
                 bytes.AddRange(LangCode.TlSerialize());
-                bytes.AddRange(Name is null ? [0x0] : Name.TlSerialize());
-                bytes.AddRange(About is null ? [0x0] : About.TlSerialize());
-                bytes.AddRange(Description is null ? [0x0] : Description.TlSerialize());
+                if(Name is not null) bytes.AddRange(Name.TlSerialize());
+                if(About is not null) bytes.AddRange(About.TlSerialize());
+                if(Description is not null) bytes.AddRange(Description.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -1395,14 +1346,13 @@ namespace Bots {
         }
         public sealed class BotsGetBotInfo : TlFunction<BotsBotInfoBase> {
             public static readonly byte[] Identifier = [253,20,217,220,];
-            private int Flags;
             public InputUserBase? Bot {get;set;}
             public required string LangCode {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Bot is null ? [0x0] : Bot.TlSerialize());
+                bytes.AddRange((0 | (Bot is not null ? 1 : 0) ).TlSerialize());
+                if(Bot is not null) bytes.AddRange(Bot.TlSerialize());
                 bytes.AddRange(LangCode.TlSerialize());
                 return bytes.ToArray();
             }
@@ -1417,7 +1367,6 @@ namespace Bots {
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Bot.TlSerialize());
                 bytes.AddRange(Username.TlSerialize());
-                bytes.AddRange(Active.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -1449,7 +1398,7 @@ namespace Bots {
         }
         public sealed class BotsAnswerWebhookJSONQuery : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [77,63,33,230,];
-            public required long QueryId {get;set;}
+            public long QueryId {get;set;}
             public required DataJSONBase Data {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -1561,7 +1510,6 @@ namespace Bots {
 namespace Channels {
         public sealed class ChannelsCreateChannel : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [7,103,0,145,];
-            private int Flags;
             public bool Broadcast {get;set;}
             public bool Megagroup {get;set;}
             public bool ForImport {get;set;}
@@ -1574,37 +1522,32 @@ namespace Channels {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Broadcast.TlSerialize());
-                bytes.AddRange(Megagroup.TlSerialize());
-                bytes.AddRange(ForImport.TlSerialize());
-                bytes.AddRange(Forum.TlSerialize());
+                bytes.AddRange((0 | (GeoPoint is not null ? 4 : 0) | (Address is not null ? 4 : 0) | (TtlPeriod is not null ? 16 : 0) ).TlSerialize());
                 bytes.AddRange(Title.TlSerialize());
                 bytes.AddRange(About.TlSerialize());
-                bytes.AddRange(GeoPoint is null ? [0x0] : GeoPoint.TlSerialize());
-                bytes.AddRange(Address is null ? [0x0] : Address.TlSerialize());
-                bytes.AddRange(TtlPeriod is null ? [0x0] : TtlPeriod.TlSerialize());
+                if(GeoPoint is not null) bytes.AddRange(GeoPoint.TlSerialize());
+                if(Address is not null) bytes.AddRange(Address.TlSerialize());
+                if(TtlPeriod is not null) bytes.AddRange(TtlPeriod.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class ChannelsGetAdminLog : TlFunction<ChannelsAdminLogResultsBase> {
             public static readonly byte[] Identifier = [128,244,221,51,];
-            private int Flags;
             public required InputChannelBase Channel {get;set;}
             public required string Q {get;set;}
             public ChannelAdminLogEventsFilterBase? EventsFilter {get;set;}
             public List<InputUserBase>? Admins {get;set;}
-            public required long MaxId {get;set;}
-            public required long MinId {get;set;}
-            public required int Limit {get;set;}
+            public long MaxId {get;set;}
+            public long MinId {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (EventsFilter is not null ? 1 : 0) | (Admins is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
                 bytes.AddRange(Q.TlSerialize());
-                bytes.AddRange(EventsFilter is null ? [0x0] : EventsFilter.TlSerialize());
-                bytes.AddRange(Admins is null ? [0x0] : Admins.TlSerialize());
+                if(EventsFilter is not null) bytes.AddRange(EventsFilter.TlSerialize());
+                if(Admins is not null) bytes.AddRange(Admins.TlSerialize());
                 bytes.AddRange(MaxId.TlSerialize());
                 bytes.AddRange(MinId.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
@@ -1613,41 +1556,39 @@ namespace Channels {
         }
         public sealed class ChannelsCreateForumTopic : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [36,2,12,244,];
-            private int Flags;
             public required InputChannelBase Channel {get;set;}
             public required string Title {get;set;}
             public int? IconColor {get;set;}
             public long? IconEmojiId {get;set;}
-            public required long RandomId {get;set;}
+            public long RandomId {get;set;}
             public InputPeerBase? SendAs {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (IconColor is not null ? 1 : 0) | (IconEmojiId is not null ? 8 : 0) | (SendAs is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
                 bytes.AddRange(Title.TlSerialize());
-                bytes.AddRange(IconColor is null ? [0x0] : IconColor.TlSerialize());
-                bytes.AddRange(IconEmojiId is null ? [0x0] : IconEmojiId.TlSerialize());
+                if(IconColor is not null) bytes.AddRange(IconColor.TlSerialize());
+                if(IconEmojiId is not null) bytes.AddRange(IconEmojiId.TlSerialize());
                 bytes.AddRange(RandomId.TlSerialize());
-                bytes.AddRange(SendAs is null ? [0x0] : SendAs.TlSerialize());
+                if(SendAs is not null) bytes.AddRange(SendAs.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class ChannelsGetForumTopics : TlFunction<MessagesForumTopicsBase> {
             public static readonly byte[] Identifier = [209,96,229,13,];
-            private int Flags;
             public required InputChannelBase Channel {get;set;}
             public string? Q {get;set;}
-            public required int OffsetDate {get;set;}
-            public required int OffsetId {get;set;}
-            public required int OffsetTopic {get;set;}
-            public required int Limit {get;set;}
+            public int OffsetDate {get;set;}
+            public int OffsetId {get;set;}
+            public int OffsetTopic {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Q is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
-                bytes.AddRange(Q is null ? [0x0] : Q.TlSerialize());
+                if(Q is not null) bytes.AddRange(Q.TlSerialize());
                 bytes.AddRange(OffsetDate.TlSerialize());
                 bytes.AddRange(OffsetId.TlSerialize());
                 bytes.AddRange(OffsetTopic.TlSerialize());
@@ -1657,9 +1598,8 @@ namespace Channels {
         }
         public sealed class ChannelsEditForumTopic : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [133,161,223,244,];
-            private int Flags;
             public required InputChannelBase Channel {get;set;}
-            public required int TopicId {get;set;}
+            public int TopicId {get;set;}
             public string? Title {get;set;}
             public long? IconEmojiId {get;set;}
             public bool Closed {get;set;}
@@ -1667,13 +1607,11 @@ namespace Channels {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Title is not null ? 1 : 0) | (IconEmojiId is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
                 bytes.AddRange(TopicId.TlSerialize());
-                bytes.AddRange(Title is null ? [0x0] : Title.TlSerialize());
-                bytes.AddRange(IconEmojiId is null ? [0x0] : IconEmojiId.TlSerialize());
-                bytes.AddRange(Closed.TlSerialize());
-                bytes.AddRange(Hidden.TlSerialize());
+                if(Title is not null) bytes.AddRange(Title.TlSerialize());
+                if(IconEmojiId is not null) bytes.AddRange(IconEmojiId.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -1681,9 +1619,9 @@ namespace Channels {
             public static readonly byte[] Identifier = [208,217,206,119,];
             public required InputChannelBase Channel {get;set;}
             public required ChannelParticipantsFilterBase Filter {get;set;}
-            public required int Offset {get;set;}
-            public required int Limit {get;set;}
-            public required long Hash {get;set;}
+            public int Offset {get;set;}
+            public int Limit {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -1697,17 +1635,14 @@ namespace Channels {
         }
         public sealed class ChannelsExportMessageLink : TlFunction<ExportedMessageLinkBase> {
             public static readonly byte[] Identifier = [235,173,63,230,];
-            private int Flags;
             public bool Grouped {get;set;}
             public bool Thread {get;set;}
             public required InputChannelBase Channel {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Grouped.TlSerialize());
-                bytes.AddRange(Thread.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 return bytes.ToArray();
@@ -1715,7 +1650,6 @@ namespace Channels {
         }
         public sealed class ChannelsUpdateColor : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [113,54,170,216,];
-            private int Flags;
             public bool ForProfile {get;set;}
             public required InputChannelBase Channel {get;set;}
             public int? Color {get;set;}
@@ -1723,11 +1657,10 @@ namespace Channels {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ForProfile.TlSerialize());
+                bytes.AddRange((0 | (Color is not null ? 4 : 0) | (BackgroundEmojiId is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
-                bytes.AddRange(Color is null ? [0x0] : Color.TlSerialize());
-                bytes.AddRange(BackgroundEmojiId is null ? [0x0] : BackgroundEmojiId.TlSerialize());
+                if(Color is not null) bytes.AddRange(Color.TlSerialize());
+                if(BackgroundEmojiId is not null) bytes.AddRange(BackgroundEmojiId.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -1749,15 +1682,13 @@ namespace Channels {
         }
         public sealed class ChannelsDeleteHistory : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [71,150,170,155,];
-            private int Flags;
             public bool ForEveryone {get;set;}
             public required InputChannelBase Channel {get;set;}
-            public required int MaxId {get;set;}
+            public int MaxId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ForEveryone.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
                 bytes.AddRange(MaxId.TlSerialize());
                 return bytes.ToArray();
@@ -1765,15 +1696,13 @@ namespace Channels {
         }
         public sealed class ChannelsReorderPinnedForumTopics : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [143,161,80,41,];
-            private int Flags;
             public bool Force {get;set;}
             public required InputChannelBase Channel {get;set;}
             public required List<int> Order {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Force.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
                 bytes.AddRange(Order.TlSerialize());
                 return bytes.ToArray();
@@ -1795,15 +1724,12 @@ namespace Channels {
         }
         public sealed class ChannelsGetAdminedPublicChannels : TlFunction<MessagesChatsBase> {
             public static readonly byte[] Identifier = [175,54,176,248,];
-            private int Flags;
             public bool ByLocation {get;set;}
             public bool CheckLimit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ByLocation.TlSerialize());
-                bytes.AddRange(CheckLimit.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -1859,28 +1785,26 @@ namespace Channels {
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Channel.TlSerialize());
                 bytes.AddRange(Username.TlSerialize());
-                bytes.AddRange(Active.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class ChannelsUpdatePinnedForumTopic : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [38,144,45,108,];
             public required InputChannelBase Channel {get;set;}
-            public required int TopicId {get;set;}
+            public int TopicId {get;set;}
             public bool Pinned {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Channel.TlSerialize());
                 bytes.AddRange(TopicId.TlSerialize());
-                bytes.AddRange(Pinned.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class ChannelsReadHistory : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [55,73,16,204,];
             public required InputChannelBase Channel {get;set;}
-            public required int MaxId {get;set;}
+            public int MaxId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -1993,7 +1917,6 @@ namespace Channels {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Channel.TlSerialize());
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -2029,7 +1952,6 @@ namespace Channels {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Channel.TlSerialize());
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -2048,7 +1970,7 @@ namespace Channels {
         public sealed class ChannelsToggleSlowMode : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [240,158,212,237,];
             public required InputChannelBase Channel {get;set;}
-            public required int Seconds {get;set;}
+            public int Seconds {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2089,7 +2011,6 @@ namespace Channels {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Channel.TlSerialize());
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -2101,7 +2022,6 @@ namespace Channels {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Channel.TlSerialize());
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -2125,7 +2045,6 @@ namespace Channels {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Channel.TlSerialize());
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -2144,7 +2063,7 @@ namespace Channels {
         public sealed class ChannelsDeleteTopicHistory : TlFunction<MessagesAffectedHistoryBase> {
             public static readonly byte[] Identifier = [45,95,67,52,];
             public required InputChannelBase Channel {get;set;}
-            public required int TopMsgId {get;set;}
+            public int TopMsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2161,14 +2080,13 @@ namespace Channels {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Channel.TlSerialize());
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class ChannelsReportAntiSpamFalsePositive : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [147,166,80,168,];
             public required InputChannelBase Channel {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2185,7 +2103,6 @@ namespace Channels {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Channel.TlSerialize());
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -2209,7 +2126,6 @@ namespace Channels {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Channel.TlSerialize());
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -2277,7 +2193,7 @@ namespace Channels {
         }
         public sealed class ChannelsGetLeftChannels : TlFunction<MessagesChatsBase> {
             public static readonly byte[] Identifier = [192,236,65,131,];
-            public required int Offset {get;set;}
+            public int Offset {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2355,7 +2271,6 @@ namespace Channels {
 namespace Chatlists {
         public sealed class ChatlistsEditExportedInvite : TlFunction<ExportedChatlistInviteBase> {
             public static readonly byte[] Identifier = [61,182,61,101,];
-            private int Flags;
             public required InputChatlistBase Chatlist {get;set;}
             public required string Slug {get;set;}
             public string? Title {get;set;}
@@ -2363,11 +2278,11 @@ namespace Chatlists {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Title is not null ? 2 : 0) | (Peers is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Chatlist.TlSerialize());
                 bytes.AddRange(Slug.TlSerialize());
-                bytes.AddRange(Title is null ? [0x0] : Title.TlSerialize());
-                bytes.AddRange(Peers is null ? [0x0] : Peers.TlSerialize());
+                if(Title is not null) bytes.AddRange(Title.TlSerialize());
+                if(Peers is not null) bytes.AddRange(Peers.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -2487,7 +2402,6 @@ namespace Chatlists {
 namespace Contacts {
         public sealed class ContactsGetTopPeers : TlFunction<ContactsTopPeersBase> {
             public static readonly byte[] Identifier = [182,120,52,151,];
-            private int Flags;
             public bool Correspondents {get;set;}
             public bool BotsPm {get;set;}
             public bool BotsInline {get;set;}
@@ -2496,21 +2410,13 @@ namespace Contacts {
             public bool ForwardChats {get;set;}
             public bool Groups {get;set;}
             public bool Channels {get;set;}
-            public required int Offset {get;set;}
-            public required int Limit {get;set;}
-            public required long Hash {get;set;}
+            public int Offset {get;set;}
+            public int Limit {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Correspondents.TlSerialize());
-                bytes.AddRange(BotsPm.TlSerialize());
-                bytes.AddRange(BotsInline.TlSerialize());
-                bytes.AddRange(PhoneCalls.TlSerialize());
-                bytes.AddRange(ForwardUsers.TlSerialize());
-                bytes.AddRange(ForwardChats.TlSerialize());
-                bytes.AddRange(Groups.TlSerialize());
-                bytes.AddRange(Channels.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Offset.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
                 bytes.AddRange(Hash.TlSerialize());
@@ -2519,7 +2425,6 @@ namespace Contacts {
         }
         public sealed class ContactsAddContact : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [208,99,244,232,];
-            private int Flags;
             public bool AddPhonePrivacyException {get;set;}
             public required InputUserBase Id {get;set;}
             public required string FirstName {get;set;}
@@ -2528,8 +2433,7 @@ namespace Contacts {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(AddPhonePrivacyException.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 bytes.AddRange(FirstName.TlSerialize());
                 bytes.AddRange(LastName.TlSerialize());
@@ -2539,33 +2443,27 @@ namespace Contacts {
         }
         public sealed class ContactsBlockFromReplies : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [44,150,168,41,];
-            private int Flags;
             public bool DeleteMessage {get;set;}
             public bool DeleteHistory {get;set;}
             public bool ReportSpam {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(DeleteMessage.TlSerialize());
-                bytes.AddRange(DeleteHistory.TlSerialize());
-                bytes.AddRange(ReportSpam.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(MsgId.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class ContactsGetBlocked : TlFunction<ContactsBlockedBase> {
             public static readonly byte[] Identifier = [128,143,134,154,];
-            private int Flags;
             public bool MyStoriesFrom {get;set;}
-            public required int Offset {get;set;}
-            public required int Limit {get;set;}
+            public int Offset {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(MyStoriesFrom.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Offset.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
                 return bytes.ToArray();
@@ -2573,31 +2471,27 @@ namespace Contacts {
         }
         public sealed class ContactsGetLocated : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [68,188,72,211,];
-            private int Flags;
             public bool Background {get;set;}
             public required InputGeoPointBase GeoPoint {get;set;}
             public int? SelfExpires {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Background.TlSerialize());
+                bytes.AddRange((0 | (SelfExpires is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(GeoPoint.TlSerialize());
-                bytes.AddRange(SelfExpires is null ? [0x0] : SelfExpires.TlSerialize());
+                if(SelfExpires is not null) bytes.AddRange(SelfExpires.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class ContactsSetBlocked : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [118,92,198,148,];
-            private int Flags;
             public bool MyStoriesFrom {get;set;}
             public required List<InputPeerBase> Id {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(MyStoriesFrom.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
                 return bytes.ToArray();
@@ -2605,28 +2499,24 @@ namespace Contacts {
         }
         public sealed class ContactsBlock : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [52,135,46,46,];
-            private int Flags;
             public bool MyStoriesFrom {get;set;}
             public required InputPeerBase Id {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(MyStoriesFrom.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class ContactsUnblock : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [40,211,80,181,];
-            private int Flags;
             public bool MyStoriesFrom {get;set;}
             public required InputPeerBase Id {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(MyStoriesFrom.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 return bytes.ToArray();
             }
@@ -2634,7 +2524,7 @@ namespace Contacts {
         public sealed class ContactsSearch : TlFunction<ContactsFoundBase> {
             public static readonly byte[] Identifier = [216,18,248,17,];
             public required string Q {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2657,7 +2547,7 @@ namespace Contacts {
         }
         public sealed class ContactsGetContactIDs : TlFunction<TlList<TlInt>> {
             public static readonly byte[] Identifier = [157,102,220,122,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2667,7 +2557,7 @@ namespace Contacts {
         }
         public sealed class ContactsGetContacts : TlFunction<ContactsContactsBase> {
             public static readonly byte[] Identifier = [18,158,214,93,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2721,7 +2611,6 @@ namespace Contacts {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -2827,7 +2716,7 @@ namespace Help {
         }
         public sealed class HelpSetBotUpdatesStatus : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [205,207,34,236,];
-            public required int PendingUpdatesCount {get;set;}
+            public int PendingUpdatesCount {get;set;}
             public required string Message {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -2852,7 +2741,7 @@ namespace Help {
         public sealed class HelpGetCountriesList : TlFunction<HelpCountriesListBase> {
             public static readonly byte[] Identifier = [168,135,87,115,];
             public required string LangCode {get;set;}
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2903,7 +2792,7 @@ namespace Help {
         }
         public sealed class HelpGetAppConfig : TlFunction<HelpAppConfigBase> {
             public static readonly byte[] Identifier = [84,248,227,97,];
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2923,7 +2812,7 @@ namespace Help {
         }
         public sealed class HelpGetPassportConfig : TlFunction<HelpPassportConfigBase> {
             public static readonly byte[] Identifier = [8,173,97,198,];
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2953,7 +2842,7 @@ namespace Help {
         }
         public sealed class HelpGetPeerColors : TlFunction<HelpPeerColorsBase> {
             public static readonly byte[] Identifier = [47,244,128,218,];
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -2963,7 +2852,7 @@ namespace Help {
         }
         public sealed class HelpGetPeerProfileColors : TlFunction<HelpPeerColorsBase> {
             public static readonly byte[] Identifier = [253,169,207,171,];
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -3063,7 +2952,7 @@ namespace Langpack {
             public static readonly byte[] Identifier = [165,74,152,205,];
             public required string LangPack {get;set;}
             public required string LangCode {get;set;}
-            public required int FromVersion {get;set;}
+            public int FromVersion {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -3111,7 +3000,6 @@ namespace Langpack {
 namespace Messages {
         public sealed class MessagesSendMessage : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [111,9,13,40,];
-            private int Flags;
             public bool NoWebpage {get;set;}
             public bool Silent {get;set;}
             public bool Background {get;set;}
@@ -3122,7 +3010,7 @@ namespace Messages {
             public required InputPeerBase Peer {get;set;}
             public InputReplyToBase? ReplyTo {get;set;}
             public required string Message {get;set;}
-            public required long RandomId {get;set;}
+            public long RandomId {get;set;}
             public ReplyMarkupBase? ReplyMarkup {get;set;}
             public List<MessageEntityBase>? Entities {get;set;}
             public int? ScheduleDate {get;set;}
@@ -3130,28 +3018,20 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(NoWebpage.TlSerialize());
-                bytes.AddRange(Silent.TlSerialize());
-                bytes.AddRange(Background.TlSerialize());
-                bytes.AddRange(ClearDraft.TlSerialize());
-                bytes.AddRange(Noforwards.TlSerialize());
-                bytes.AddRange(UpdateStickersetsOrder.TlSerialize());
-                bytes.AddRange(InvertMedia.TlSerialize());
+                bytes.AddRange((0 | (ReplyTo is not null ? 1 : 0) | (ReplyMarkup is not null ? 4 : 0) | (Entities is not null ? 8 : 0) | (ScheduleDate is not null ? 1024 : 0) | (SendAs is not null ? 8192 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(ReplyTo is null ? [0x0] : ReplyTo.TlSerialize());
+                if(ReplyTo is not null) bytes.AddRange(ReplyTo.TlSerialize());
                 bytes.AddRange(Message.TlSerialize());
                 bytes.AddRange(RandomId.TlSerialize());
-                bytes.AddRange(ReplyMarkup is null ? [0x0] : ReplyMarkup.TlSerialize());
-                bytes.AddRange(Entities is null ? [0x0] : Entities.TlSerialize());
-                bytes.AddRange(ScheduleDate is null ? [0x0] : ScheduleDate.TlSerialize());
-                bytes.AddRange(SendAs is null ? [0x0] : SendAs.TlSerialize());
+                if(ReplyMarkup is not null) bytes.AddRange(ReplyMarkup.TlSerialize());
+                if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
+                if(ScheduleDate is not null) bytes.AddRange(ScheduleDate.TlSerialize());
+                if(SendAs is not null) bytes.AddRange(SendAs.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSendMedia : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [61,194,204,114,];
-            private int Flags;
             public bool Silent {get;set;}
             public bool Background {get;set;}
             public bool ClearDraft {get;set;}
@@ -3162,7 +3042,7 @@ namespace Messages {
             public InputReplyToBase? ReplyTo {get;set;}
             public required InputMediaBase Media {get;set;}
             public required string Message {get;set;}
-            public required long RandomId {get;set;}
+            public long RandomId {get;set;}
             public ReplyMarkupBase? ReplyMarkup {get;set;}
             public List<MessageEntityBase>? Entities {get;set;}
             public int? ScheduleDate {get;set;}
@@ -3170,51 +3050,44 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Silent.TlSerialize());
-                bytes.AddRange(Background.TlSerialize());
-                bytes.AddRange(ClearDraft.TlSerialize());
-                bytes.AddRange(Noforwards.TlSerialize());
-                bytes.AddRange(UpdateStickersetsOrder.TlSerialize());
-                bytes.AddRange(InvertMedia.TlSerialize());
+                bytes.AddRange((0 | (ReplyTo is not null ? 1 : 0) | (ReplyMarkup is not null ? 4 : 0) | (Entities is not null ? 8 : 0) | (ScheduleDate is not null ? 1024 : 0) | (SendAs is not null ? 8192 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(ReplyTo is null ? [0x0] : ReplyTo.TlSerialize());
+                if(ReplyTo is not null) bytes.AddRange(ReplyTo.TlSerialize());
                 bytes.AddRange(Media.TlSerialize());
                 bytes.AddRange(Message.TlSerialize());
                 bytes.AddRange(RandomId.TlSerialize());
-                bytes.AddRange(ReplyMarkup is null ? [0x0] : ReplyMarkup.TlSerialize());
-                bytes.AddRange(Entities is null ? [0x0] : Entities.TlSerialize());
-                bytes.AddRange(ScheduleDate is null ? [0x0] : ScheduleDate.TlSerialize());
-                bytes.AddRange(SendAs is null ? [0x0] : SendAs.TlSerialize());
+                if(ReplyMarkup is not null) bytes.AddRange(ReplyMarkup.TlSerialize());
+                if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
+                if(ScheduleDate is not null) bytes.AddRange(ScheduleDate.TlSerialize());
+                if(SendAs is not null) bytes.AddRange(SendAs.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSearch : TlFunction<MessagesMessagesBase> {
             public static readonly byte[] Identifier = [41,233,180,167,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
             public required string Q {get;set;}
             public InputPeerBase? FromId {get;set;}
             public InputPeerBase? SavedPeerId {get;set;}
             public int? TopMsgId {get;set;}
             public required MessagesFilterBase Filter {get;set;}
-            public required int MinDate {get;set;}
-            public required int MaxDate {get;set;}
-            public required int OffsetId {get;set;}
-            public required int AddOffset {get;set;}
-            public required int Limit {get;set;}
-            public required int MaxId {get;set;}
-            public required int MinId {get;set;}
-            public required long Hash {get;set;}
+            public int MinDate {get;set;}
+            public int MaxDate {get;set;}
+            public int OffsetId {get;set;}
+            public int AddOffset {get;set;}
+            public int Limit {get;set;}
+            public int MaxId {get;set;}
+            public int MinId {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (FromId is not null ? 1 : 0) | (SavedPeerId is not null ? 4 : 0) | (TopMsgId is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Q.TlSerialize());
-                bytes.AddRange(FromId is null ? [0x0] : FromId.TlSerialize());
-                bytes.AddRange(SavedPeerId is null ? [0x0] : SavedPeerId.TlSerialize());
-                bytes.AddRange(TopMsgId is null ? [0x0] : TopMsgId.TlSerialize());
+                if(FromId is not null) bytes.AddRange(FromId.TlSerialize());
+                if(SavedPeerId is not null) bytes.AddRange(SavedPeerId.TlSerialize());
+                if(TopMsgId is not null) bytes.AddRange(TopMsgId.TlSerialize());
                 bytes.AddRange(Filter.TlSerialize());
                 bytes.AddRange(MinDate.TlSerialize());
                 bytes.AddRange(MaxDate.TlSerialize());
@@ -3229,7 +3102,6 @@ namespace Messages {
         }
         public sealed class MessagesForwardMessages : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [196,187,97,198,];
-            private int Flags;
             public bool Silent {get;set;}
             public bool Background {get;set;}
             public bool WithMyScore {get;set;}
@@ -3246,58 +3118,46 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Silent.TlSerialize());
-                bytes.AddRange(Background.TlSerialize());
-                bytes.AddRange(WithMyScore.TlSerialize());
-                bytes.AddRange(DropAuthor.TlSerialize());
-                bytes.AddRange(DropMediaCaptions.TlSerialize());
-                bytes.AddRange(Noforwards.TlSerialize());
+                bytes.AddRange((0 | (TopMsgId is not null ? 512 : 0) | (ScheduleDate is not null ? 1024 : 0) | (SendAs is not null ? 8192 : 0) ).TlSerialize());
                 bytes.AddRange(FromPeer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 bytes.AddRange(RandomId.TlSerialize());
                 bytes.AddRange(ToPeer.TlSerialize());
-                bytes.AddRange(TopMsgId is null ? [0x0] : TopMsgId.TlSerialize());
-                bytes.AddRange(ScheduleDate is null ? [0x0] : ScheduleDate.TlSerialize());
-                bytes.AddRange(SendAs is null ? [0x0] : SendAs.TlSerialize());
+                if(TopMsgId is not null) bytes.AddRange(TopMsgId.TlSerialize());
+                if(ScheduleDate is not null) bytes.AddRange(ScheduleDate.TlSerialize());
+                if(SendAs is not null) bytes.AddRange(SendAs.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSendInlineBotResult : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [186,104,188,247,];
-            private int Flags;
             public bool Silent {get;set;}
             public bool Background {get;set;}
             public bool ClearDraft {get;set;}
             public bool HideVia {get;set;}
             public required InputPeerBase Peer {get;set;}
             public InputReplyToBase? ReplyTo {get;set;}
-            public required long RandomId {get;set;}
-            public required long QueryId {get;set;}
+            public long RandomId {get;set;}
+            public long QueryId {get;set;}
             public required string Id {get;set;}
             public int? ScheduleDate {get;set;}
             public InputPeerBase? SendAs {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Silent.TlSerialize());
-                bytes.AddRange(Background.TlSerialize());
-                bytes.AddRange(ClearDraft.TlSerialize());
-                bytes.AddRange(HideVia.TlSerialize());
+                bytes.AddRange((0 | (ReplyTo is not null ? 1 : 0) | (ScheduleDate is not null ? 1024 : 0) | (SendAs is not null ? 8192 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(ReplyTo is null ? [0x0] : ReplyTo.TlSerialize());
+                if(ReplyTo is not null) bytes.AddRange(ReplyTo.TlSerialize());
                 bytes.AddRange(RandomId.TlSerialize());
                 bytes.AddRange(QueryId.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(ScheduleDate is null ? [0x0] : ScheduleDate.TlSerialize());
-                bytes.AddRange(SendAs is null ? [0x0] : SendAs.TlSerialize());
+                if(ScheduleDate is not null) bytes.AddRange(ScheduleDate.TlSerialize());
+                if(SendAs is not null) bytes.AddRange(SendAs.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSendMultiMedia : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [135,137,110,69,];
-            private int Flags;
             public bool Silent {get;set;}
             public bool Background {get;set;}
             public bool ClearDraft {get;set;}
@@ -3312,24 +3172,17 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Silent.TlSerialize());
-                bytes.AddRange(Background.TlSerialize());
-                bytes.AddRange(ClearDraft.TlSerialize());
-                bytes.AddRange(Noforwards.TlSerialize());
-                bytes.AddRange(UpdateStickersetsOrder.TlSerialize());
-                bytes.AddRange(InvertMedia.TlSerialize());
+                bytes.AddRange((0 | (ReplyTo is not null ? 1 : 0) | (ScheduleDate is not null ? 1024 : 0) | (SendAs is not null ? 8192 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(ReplyTo is null ? [0x0] : ReplyTo.TlSerialize());
+                if(ReplyTo is not null) bytes.AddRange(ReplyTo.TlSerialize());
                 bytes.AddRange(MultiMedia.TlSerialize());
-                bytes.AddRange(ScheduleDate is null ? [0x0] : ScheduleDate.TlSerialize());
-                bytes.AddRange(SendAs is null ? [0x0] : SendAs.TlSerialize());
+                if(ScheduleDate is not null) bytes.AddRange(ScheduleDate.TlSerialize());
+                if(SendAs is not null) bytes.AddRange(SendAs.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesRequestWebView : TlFunction<WebViewResultBase> {
             public static readonly byte[] Identifier = [193,194,157,38,];
-            private int Flags;
             public bool FromBotMenu {get;set;}
             public bool Silent {get;set;}
             public required InputPeerBase Peer {get;set;}
@@ -3343,37 +3196,34 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(FromBotMenu.TlSerialize());
-                bytes.AddRange(Silent.TlSerialize());
+                bytes.AddRange((0 | (Url is not null ? 2 : 0) | (StartParam is not null ? 8 : 0) | (ThemeParams is not null ? 4 : 0) | (ReplyTo is not null ? 1 : 0) | (SendAs is not null ? 8192 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Bot.TlSerialize());
-                bytes.AddRange(Url is null ? [0x0] : Url.TlSerialize());
-                bytes.AddRange(StartParam is null ? [0x0] : StartParam.TlSerialize());
-                bytes.AddRange(ThemeParams is null ? [0x0] : ThemeParams.TlSerialize());
+                if(Url is not null) bytes.AddRange(Url.TlSerialize());
+                if(StartParam is not null) bytes.AddRange(StartParam.TlSerialize());
+                if(ThemeParams is not null) bytes.AddRange(ThemeParams.TlSerialize());
                 bytes.AddRange(Platform.TlSerialize());
-                bytes.AddRange(ReplyTo is null ? [0x0] : ReplyTo.TlSerialize());
-                bytes.AddRange(SendAs is null ? [0x0] : SendAs.TlSerialize());
+                if(ReplyTo is not null) bytes.AddRange(ReplyTo.TlSerialize());
+                if(SendAs is not null) bytes.AddRange(SendAs.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSearchGlobal : TlFunction<MessagesMessagesBase> {
             public static readonly byte[] Identifier = [154,88,198,75,];
-            private int Flags;
             public int? FolderId {get;set;}
             public required string Q {get;set;}
             public required MessagesFilterBase Filter {get;set;}
-            public required int MinDate {get;set;}
-            public required int MaxDate {get;set;}
-            public required int OffsetRate {get;set;}
+            public int MinDate {get;set;}
+            public int MaxDate {get;set;}
+            public int OffsetRate {get;set;}
             public required InputPeerBase OffsetPeer {get;set;}
-            public required int OffsetId {get;set;}
-            public required int Limit {get;set;}
+            public int OffsetId {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(FolderId is null ? [0x0] : FolderId.TlSerialize());
+                bytes.AddRange((0 | (FolderId is not null ? 1 : 0) ).TlSerialize());
+                if(FolderId is not null) bytes.AddRange(FolderId.TlSerialize());
                 bytes.AddRange(Q.TlSerialize());
                 bytes.AddRange(Filter.TlSerialize());
                 bytes.AddRange(MinDate.TlSerialize());
@@ -3387,11 +3237,10 @@ namespace Messages {
         }
         public sealed class MessagesEditMessage : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [120,23,247,72,];
-            private int Flags;
             public bool NoWebpage {get;set;}
             public bool InvertMedia {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public string? Message {get;set;}
             public InputMediaBase? Media {get;set;}
             public ReplyMarkupBase? ReplyMarkup {get;set;}
@@ -3400,56 +3249,51 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(NoWebpage.TlSerialize());
-                bytes.AddRange(InvertMedia.TlSerialize());
+                bytes.AddRange((0 | (Message is not null ? 2048 : 0) | (Media is not null ? 16384 : 0) | (ReplyMarkup is not null ? 4 : 0) | (Entities is not null ? 8 : 0) | (ScheduleDate is not null ? 32768 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Message is null ? [0x0] : Message.TlSerialize());
-                bytes.AddRange(Media is null ? [0x0] : Media.TlSerialize());
-                bytes.AddRange(ReplyMarkup is null ? [0x0] : ReplyMarkup.TlSerialize());
-                bytes.AddRange(Entities is null ? [0x0] : Entities.TlSerialize());
-                bytes.AddRange(ScheduleDate is null ? [0x0] : ScheduleDate.TlSerialize());
+                if(Message is not null) bytes.AddRange(Message.TlSerialize());
+                if(Media is not null) bytes.AddRange(Media.TlSerialize());
+                if(ReplyMarkup is not null) bytes.AddRange(ReplyMarkup.TlSerialize());
+                if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
+                if(ScheduleDate is not null) bytes.AddRange(ScheduleDate.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSetInlineBotResults : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [25,164,18,187,];
-            private int Flags;
             public bool Gallery {get;set;}
             public bool Private {get;set;}
-            public required long QueryId {get;set;}
+            public long QueryId {get;set;}
             public required List<InputBotInlineResultBase> Results {get;set;}
-            public required int CacheTime {get;set;}
+            public int CacheTime {get;set;}
             public string? NextOffset {get;set;}
             public InlineBotSwitchPMBase? SwitchPm {get;set;}
             public InlineBotWebViewBase? SwitchWebview {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Gallery.TlSerialize());
-                bytes.AddRange(Private.TlSerialize());
+                bytes.AddRange((0 | (NextOffset is not null ? 4 : 0) | (SwitchPm is not null ? 8 : 0) | (SwitchWebview is not null ? 16 : 0) ).TlSerialize());
                 bytes.AddRange(QueryId.TlSerialize());
                 bytes.AddRange(Results.TlSerialize());
                 bytes.AddRange(CacheTime.TlSerialize());
-                bytes.AddRange(NextOffset is null ? [0x0] : NextOffset.TlSerialize());
-                bytes.AddRange(SwitchPm is null ? [0x0] : SwitchPm.TlSerialize());
-                bytes.AddRange(SwitchWebview is null ? [0x0] : SwitchWebview.TlSerialize());
+                if(NextOffset is not null) bytes.AddRange(NextOffset.TlSerialize());
+                if(SwitchPm is not null) bytes.AddRange(SwitchPm.TlSerialize());
+                if(SwitchWebview is not null) bytes.AddRange(SwitchWebview.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetReplies : TlFunction<MessagesMessagesBase> {
             public static readonly byte[] Identifier = [12,211,221,34,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
-            public required int OffsetId {get;set;}
-            public required int OffsetDate {get;set;}
-            public required int AddOffset {get;set;}
-            public required int Limit {get;set;}
-            public required int MaxId {get;set;}
-            public required int MinId {get;set;}
-            public required long Hash {get;set;}
+            public int MsgId {get;set;}
+            public int OffsetId {get;set;}
+            public int OffsetDate {get;set;}
+            public int AddOffset {get;set;}
+            public int Limit {get;set;}
+            public int MaxId {get;set;}
+            public int MinId {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -3467,20 +3311,18 @@ namespace Messages {
         }
         public sealed class MessagesGetDialogs : TlFunction<MessagesDialogsBase> {
             public static readonly byte[] Identifier = [79,203,244,160,];
-            private int Flags;
             public bool ExcludePinned {get;set;}
             public int? FolderId {get;set;}
-            public required int OffsetDate {get;set;}
-            public required int OffsetId {get;set;}
+            public int OffsetDate {get;set;}
+            public int OffsetId {get;set;}
             public required InputPeerBase OffsetPeer {get;set;}
-            public required int Limit {get;set;}
-            public required long Hash {get;set;}
+            public int Limit {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ExcludePinned.TlSerialize());
-                bytes.AddRange(FolderId is null ? [0x0] : FolderId.TlSerialize());
+                bytes.AddRange((0 | (FolderId is not null ? 2 : 0) ).TlSerialize());
+                if(FolderId is not null) bytes.AddRange(FolderId.TlSerialize());
                 bytes.AddRange(OffsetDate.TlSerialize());
                 bytes.AddRange(OffsetId.TlSerialize());
                 bytes.AddRange(OffsetPeer.TlSerialize());
@@ -3492,13 +3334,13 @@ namespace Messages {
         public sealed class MessagesGetHistory : TlFunction<MessagesMessagesBase> {
             public static readonly byte[] Identifier = [197,230,35,68,];
             public required InputPeerBase Peer {get;set;}
-            public required int OffsetId {get;set;}
-            public required int OffsetDate {get;set;}
-            public required int AddOffset {get;set;}
-            public required int Limit {get;set;}
-            public required int MaxId {get;set;}
-            public required int MinId {get;set;}
-            public required long Hash {get;set;}
+            public int OffsetId {get;set;}
+            public int OffsetDate {get;set;}
+            public int AddOffset {get;set;}
+            public int Limit {get;set;}
+            public int MaxId {get;set;}
+            public int MinId {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -3515,7 +3357,6 @@ namespace Messages {
         }
         public sealed class MessagesEditInlineBotMessage : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [186,125,85,131,];
-            private int Flags;
             public bool NoWebpage {get;set;}
             public bool InvertMedia {get;set;}
             public required InputBotInlineMessageIDBase Id {get;set;}
@@ -3526,20 +3367,17 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(NoWebpage.TlSerialize());
-                bytes.AddRange(InvertMedia.TlSerialize());
+                bytes.AddRange((0 | (Message is not null ? 2048 : 0) | (Media is not null ? 16384 : 0) | (ReplyMarkup is not null ? 4 : 0) | (Entities is not null ? 8 : 0) ).TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Message is null ? [0x0] : Message.TlSerialize());
-                bytes.AddRange(Media is null ? [0x0] : Media.TlSerialize());
-                bytes.AddRange(ReplyMarkup is null ? [0x0] : ReplyMarkup.TlSerialize());
-                bytes.AddRange(Entities is null ? [0x0] : Entities.TlSerialize());
+                if(Message is not null) bytes.AddRange(Message.TlSerialize());
+                if(Media is not null) bytes.AddRange(Media.TlSerialize());
+                if(ReplyMarkup is not null) bytes.AddRange(ReplyMarkup.TlSerialize());
+                if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSaveDraft : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [6,184,243,127,];
-            private int Flags;
             public bool NoWebpage {get;set;}
             public bool InvertMedia {get;set;}
             public InputReplyToBase? ReplyTo {get;set;}
@@ -3550,33 +3388,30 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(NoWebpage.TlSerialize());
-                bytes.AddRange(InvertMedia.TlSerialize());
-                bytes.AddRange(ReplyTo is null ? [0x0] : ReplyTo.TlSerialize());
+                bytes.AddRange((0 | (ReplyTo is not null ? 16 : 0) | (Entities is not null ? 8 : 0) | (Media is not null ? 32 : 0) ).TlSerialize());
+                if(ReplyTo is not null) bytes.AddRange(ReplyTo.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Message.TlSerialize());
-                bytes.AddRange(Entities is null ? [0x0] : Entities.TlSerialize());
-                bytes.AddRange(Media is null ? [0x0] : Media.TlSerialize());
+                if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
+                if(Media is not null) bytes.AddRange(Media.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetUnreadMentions : TlFunction<MessagesMessagesBase> {
             public static readonly byte[] Identifier = [144,231,7,241,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
             public int? TopMsgId {get;set;}
-            public required int OffsetId {get;set;}
-            public required int AddOffset {get;set;}
-            public required int Limit {get;set;}
-            public required int MaxId {get;set;}
-            public required int MinId {get;set;}
+            public int OffsetId {get;set;}
+            public int AddOffset {get;set;}
+            public int Limit {get;set;}
+            public int MaxId {get;set;}
+            public int MinId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (TopMsgId is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(TopMsgId is null ? [0x0] : TopMsgId.TlSerialize());
+                if(TopMsgId is not null) bytes.AddRange(TopMsgId.TlSerialize());
                 bytes.AddRange(OffsetId.TlSerialize());
                 bytes.AddRange(AddOffset.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
@@ -3587,7 +3422,6 @@ namespace Messages {
         }
         public sealed class MessagesEditExportedChatInvite : TlFunction<MessagesExportedChatInviteBase> {
             public static readonly byte[] Identifier = [117,47,202,189,];
-            private int Flags;
             public bool Revoked {get;set;}
             public required InputPeerBase Peer {get;set;}
             public required string Link {get;set;}
@@ -3598,35 +3432,31 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Revoked.TlSerialize());
+                bytes.AddRange((0 | (ExpireDate is not null ? 1 : 0) | (UsageLimit is not null ? 2 : 0) | (Title is not null ? 16 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Link.TlSerialize());
-                bytes.AddRange(ExpireDate is null ? [0x0] : ExpireDate.TlSerialize());
-                bytes.AddRange(UsageLimit is null ? [0x0] : UsageLimit.TlSerialize());
-                bytes.AddRange(RequestNeeded.TlSerialize());
-                bytes.AddRange(Title is null ? [0x0] : Title.TlSerialize());
+                if(ExpireDate is not null) bytes.AddRange(ExpireDate.TlSerialize());
+                if(UsageLimit is not null) bytes.AddRange(UsageLimit.TlSerialize());
+                if(Title is not null) bytes.AddRange(Title.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetChatInviteImporters : TlFunction<MessagesChatInviteImportersBase> {
             public static readonly byte[] Identifier = [78,221,4,223,];
-            private int Flags;
             public bool Requested {get;set;}
             public required InputPeerBase Peer {get;set;}
             public string? Link {get;set;}
             public string? Q {get;set;}
-            public required int OffsetDate {get;set;}
+            public int OffsetDate {get;set;}
             public required InputUserBase OffsetUser {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Requested.TlSerialize());
+                bytes.AddRange((0 | (Link is not null ? 2 : 0) | (Q is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(Link is null ? [0x0] : Link.TlSerialize());
-                bytes.AddRange(Q is null ? [0x0] : Q.TlSerialize());
+                if(Link is not null) bytes.AddRange(Link.TlSerialize());
+                if(Q is not null) bytes.AddRange(Q.TlSerialize());
                 bytes.AddRange(OffsetDate.TlSerialize());
                 bytes.AddRange(OffsetUser.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
@@ -3635,20 +3465,19 @@ namespace Messages {
         }
         public sealed class MessagesGetUnreadReactions : TlFunction<MessagesMessagesBase> {
             public static readonly byte[] Identifier = [91,73,35,50,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
             public int? TopMsgId {get;set;}
-            public required int OffsetId {get;set;}
-            public required int AddOffset {get;set;}
-            public required int Limit {get;set;}
-            public required int MaxId {get;set;}
-            public required int MinId {get;set;}
+            public int OffsetId {get;set;}
+            public int AddOffset {get;set;}
+            public int Limit {get;set;}
+            public int MaxId {get;set;}
+            public int MinId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (TopMsgId is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(TopMsgId is null ? [0x0] : TopMsgId.TlSerialize());
+                if(TopMsgId is not null) bytes.AddRange(TopMsgId.TlSerialize());
                 bytes.AddRange(OffsetId.TlSerialize());
                 bytes.AddRange(AddOffset.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
@@ -3659,7 +3488,6 @@ namespace Messages {
         }
         public sealed class MessagesRequestSimpleWebView : TlFunction<SimpleWebViewResultBase> {
             public static readonly byte[] Identifier = [10,80,70,26,];
-            private int Flags;
             public bool FromSwitchWebview {get;set;}
             public bool FromSideMenu {get;set;}
             public required InputUserBase Bot {get;set;}
@@ -3670,13 +3498,11 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(FromSwitchWebview.TlSerialize());
-                bytes.AddRange(FromSideMenu.TlSerialize());
+                bytes.AddRange((0 | (Url is not null ? 8 : 0) | (StartParam is not null ? 16 : 0) | (ThemeParams is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Bot.TlSerialize());
-                bytes.AddRange(Url is null ? [0x0] : Url.TlSerialize());
-                bytes.AddRange(StartParam is null ? [0x0] : StartParam.TlSerialize());
-                bytes.AddRange(ThemeParams is null ? [0x0] : ThemeParams.TlSerialize());
+                if(Url is not null) bytes.AddRange(Url.TlSerialize());
+                if(StartParam is not null) bytes.AddRange(StartParam.TlSerialize());
+                if(ThemeParams is not null) bytes.AddRange(ThemeParams.TlSerialize());
                 bytes.AddRange(Platform.TlSerialize());
                 return bytes.ToArray();
             }
@@ -3684,13 +3510,13 @@ namespace Messages {
         public sealed class MessagesGetSavedHistory : TlFunction<MessagesMessagesBase> {
             public static readonly byte[] Identifier = [77,65,154,61,];
             public required InputPeerBase Peer {get;set;}
-            public required int OffsetId {get;set;}
-            public required int OffsetDate {get;set;}
-            public required int AddOffset {get;set;}
-            public required int Limit {get;set;}
-            public required int MaxId {get;set;}
-            public required int MinId {get;set;}
-            public required long Hash {get;set;}
+            public int OffsetId {get;set;}
+            public int OffsetDate {get;set;}
+            public int AddOffset {get;set;}
+            public int Limit {get;set;}
+            public int MaxId {get;set;}
+            public int MinId {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -3707,29 +3533,25 @@ namespace Messages {
         }
         public sealed class MessagesDeleteHistory : TlFunction<MessagesAffectedHistoryBase> {
             public static readonly byte[] Identifier = [42,146,143,176,];
-            private int Flags;
             public bool JustClear {get;set;}
             public bool Revoke {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required int MaxId {get;set;}
+            public int MaxId {get;set;}
             public int? MinDate {get;set;}
             public int? MaxDate {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(JustClear.TlSerialize());
-                bytes.AddRange(Revoke.TlSerialize());
+                bytes.AddRange((0 | (MinDate is not null ? 4 : 0) | (MaxDate is not null ? 8 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(MaxId.TlSerialize());
-                bytes.AddRange(MinDate is null ? [0x0] : MinDate.TlSerialize());
-                bytes.AddRange(MaxDate is null ? [0x0] : MaxDate.TlSerialize());
+                if(MinDate is not null) bytes.AddRange(MinDate.TlSerialize());
+                if(MaxDate is not null) bytes.AddRange(MaxDate.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesExportChatInvite : TlFunction<ExportedChatInviteBase> {
             public static readonly byte[] Identifier = [213,229,44,160,];
-            private int Flags;
             public bool LegacyRevokePermanent {get;set;}
             public bool RequestNeeded {get;set;}
             public required InputPeerBase Peer {get;set;}
@@ -3739,31 +3561,26 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(LegacyRevokePermanent.TlSerialize());
-                bytes.AddRange(RequestNeeded.TlSerialize());
+                bytes.AddRange((0 | (ExpireDate is not null ? 1 : 0) | (UsageLimit is not null ? 2 : 0) | (Title is not null ? 16 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(ExpireDate is null ? [0x0] : ExpireDate.TlSerialize());
-                bytes.AddRange(UsageLimit is null ? [0x0] : UsageLimit.TlSerialize());
-                bytes.AddRange(Title is null ? [0x0] : Title.TlSerialize());
+                if(ExpireDate is not null) bytes.AddRange(ExpireDate.TlSerialize());
+                if(UsageLimit is not null) bytes.AddRange(UsageLimit.TlSerialize());
+                if(Title is not null) bytes.AddRange(Title.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSetGameScore : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [192,236,248,142,];
-            private int Flags;
             public bool EditMessage {get;set;}
             public bool Force {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public required InputUserBase UserId {get;set;}
-            public required int Score {get;set;}
+            public int Score {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(EditMessage.TlSerialize());
-                bytes.AddRange(Force.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 bytes.AddRange(UserId.TlSerialize());
@@ -3773,51 +3590,46 @@ namespace Messages {
         }
         public sealed class MessagesGetExportedChatInvites : TlFunction<MessagesExportedChatInvitesBase> {
             public static readonly byte[] Identifier = [246,163,181,162,];
-            private int Flags;
             public bool Revoked {get;set;}
             public required InputPeerBase Peer {get;set;}
             public required InputUserBase AdminId {get;set;}
             public int? OffsetDate {get;set;}
             public string? OffsetLink {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Revoked.TlSerialize());
+                bytes.AddRange((0 | (OffsetDate is not null ? 4 : 0) | (OffsetLink is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(AdminId.TlSerialize());
-                bytes.AddRange(OffsetDate is null ? [0x0] : OffsetDate.TlSerialize());
-                bytes.AddRange(OffsetLink is null ? [0x0] : OffsetLink.TlSerialize());
+                if(OffsetDate is not null) bytes.AddRange(OffsetDate.TlSerialize());
+                if(OffsetLink is not null) bytes.AddRange(OffsetLink.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesProlongWebView : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [131,26,216,176,];
-            private int Flags;
             public bool Silent {get;set;}
             public required InputPeerBase Peer {get;set;}
             public required InputUserBase Bot {get;set;}
-            public required long QueryId {get;set;}
+            public long QueryId {get;set;}
             public InputReplyToBase? ReplyTo {get;set;}
             public InputPeerBase? SendAs {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Silent.TlSerialize());
+                bytes.AddRange((0 | (ReplyTo is not null ? 1 : 0) | (SendAs is not null ? 8192 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Bot.TlSerialize());
                 bytes.AddRange(QueryId.TlSerialize());
-                bytes.AddRange(ReplyTo is null ? [0x0] : ReplyTo.TlSerialize());
-                bytes.AddRange(SendAs is null ? [0x0] : SendAs.TlSerialize());
+                if(ReplyTo is not null) bytes.AddRange(ReplyTo.TlSerialize());
+                if(SendAs is not null) bytes.AddRange(SendAs.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesRequestAppWebView : TlFunction<AppWebViewResultBase> {
             public static readonly byte[] Identifier = [60,59,90,140,];
-            private int Flags;
             public bool WriteAllowed {get;set;}
             public required InputPeerBase Peer {get;set;}
             public required InputBotAppBase App {get;set;}
@@ -3827,19 +3639,17 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(WriteAllowed.TlSerialize());
+                bytes.AddRange((0 | (StartParam is not null ? 2 : 0) | (ThemeParams is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(App.TlSerialize());
-                bytes.AddRange(StartParam is null ? [0x0] : StartParam.TlSerialize());
-                bytes.AddRange(ThemeParams is null ? [0x0] : ThemeParams.TlSerialize());
+                if(StartParam is not null) bytes.AddRange(StartParam.TlSerialize());
+                if(ThemeParams is not null) bytes.AddRange(ThemeParams.TlSerialize());
                 bytes.AddRange(Platform.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSetChatWallPaper : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [225,202,250,143,];
-            private int Flags;
             public bool ForBoth {get;set;}
             public bool Revert {get;set;}
             public required InputPeerBase Peer {get;set;}
@@ -3849,30 +3659,26 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ForBoth.TlSerialize());
-                bytes.AddRange(Revert.TlSerialize());
+                bytes.AddRange((0 | (Wallpaper is not null ? 1 : 0) | (Settings is not null ? 4 : 0) | (Id is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(Wallpaper is null ? [0x0] : Wallpaper.TlSerialize());
-                bytes.AddRange(Settings is null ? [0x0] : Settings.TlSerialize());
-                bytes.AddRange(Id is null ? [0x0] : Id.TlSerialize());
+                if(Wallpaper is not null) bytes.AddRange(Wallpaper.TlSerialize());
+                if(Settings is not null) bytes.AddRange(Settings.TlSerialize());
+                if(Id is not null) bytes.AddRange(Id.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetSavedDialogs : TlFunction<MessagesSavedDialogsBase> {
             public static readonly byte[] Identifier = [26,210,129,83,];
-            private int Flags;
             public bool ExcludePinned {get;set;}
-            public required int OffsetDate {get;set;}
-            public required int OffsetId {get;set;}
+            public int OffsetDate {get;set;}
+            public int OffsetId {get;set;}
             public required InputPeerBase OffsetPeer {get;set;}
-            public required int Limit {get;set;}
-            public required long Hash {get;set;}
+            public int Limit {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ExcludePinned.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(OffsetDate.TlSerialize());
                 bytes.AddRange(OffsetId.TlSerialize());
                 bytes.AddRange(OffsetPeer.TlSerialize());
@@ -3883,17 +3689,15 @@ namespace Messages {
         }
         public sealed class MessagesSendEncryptedFile : TlFunction<MessagesSentEncryptedMessageBase> {
             public static readonly byte[] Identifier = [29,72,89,85,];
-            private int Flags;
             public bool Silent {get;set;}
             public required InputEncryptedChatBase Peer {get;set;}
-            public required long RandomId {get;set;}
+            public long RandomId {get;set;}
             public required byte[] Data {get;set;}
             public required InputEncryptedFileBase File {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Silent.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(RandomId.TlSerialize());
                 bytes.AddRange(Data.TlSerialize());
@@ -3903,7 +3707,6 @@ namespace Messages {
         }
         public sealed class MessagesGetInlineBotResults : TlFunction<MessagesBotResultsBase> {
             public static readonly byte[] Identifier = [157,153,78,81,];
-            private int Flags;
             public required InputUserBase Bot {get;set;}
             public required InputPeerBase Peer {get;set;}
             public InputGeoPointBase? GeoPoint {get;set;}
@@ -3912,10 +3715,10 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (GeoPoint is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Bot.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(GeoPoint is null ? [0x0] : GeoPoint.TlSerialize());
+                if(GeoPoint is not null) bytes.AddRange(GeoPoint.TlSerialize());
                 bytes.AddRange(Query.TlSerialize());
                 bytes.AddRange(Offset.TlSerialize());
                 return bytes.ToArray();
@@ -3923,58 +3726,51 @@ namespace Messages {
         }
         public sealed class MessagesGetBotCallbackAnswer : TlFunction<MessagesBotCallbackAnswerBase> {
             public static readonly byte[] Identifier = [7,202,66,147,];
-            private int Flags;
             public bool Game {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public byte[]? Data {get;set;}
             public InputCheckPasswordSRPBase? Password {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Game.TlSerialize());
+                bytes.AddRange((0 | (Data is not null ? 1 : 0) | (Password is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(MsgId.TlSerialize());
-                bytes.AddRange(Data is null ? [0x0] : Data.TlSerialize());
-                bytes.AddRange(Password is null ? [0x0] : Password.TlSerialize());
+                if(Data is not null) bytes.AddRange(Data.TlSerialize());
+                if(Password is not null) bytes.AddRange(Password.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSetBotCallbackAnswer : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [10,19,143,213,];
-            private int Flags;
             public bool Alert {get;set;}
-            public required long QueryId {get;set;}
+            public long QueryId {get;set;}
             public string? Message {get;set;}
             public string? Url {get;set;}
-            public required int CacheTime {get;set;}
+            public int CacheTime {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Alert.TlSerialize());
+                bytes.AddRange((0 | (Message is not null ? 1 : 0) | (Url is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(QueryId.TlSerialize());
-                bytes.AddRange(Message is null ? [0x0] : Message.TlSerialize());
-                bytes.AddRange(Url is null ? [0x0] : Url.TlSerialize());
+                if(Message is not null) bytes.AddRange(Message.TlSerialize());
+                if(Url is not null) bytes.AddRange(Url.TlSerialize());
                 bytes.AddRange(CacheTime.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSetInlineGameScore : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [100,159,173,21,];
-            private int Flags;
             public bool EditMessage {get;set;}
             public bool Force {get;set;}
             public required InputBotInlineMessageIDBase Id {get;set;}
             public required InputUserBase UserId {get;set;}
-            public required int Score {get;set;}
+            public int Score {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(EditMessage.TlSerialize());
-                bytes.AddRange(Force.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 bytes.AddRange(UserId.TlSerialize());
                 bytes.AddRange(Score.TlSerialize());
@@ -3983,19 +3779,15 @@ namespace Messages {
         }
         public sealed class MessagesUpdatePinnedMessage : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [236,247,170,210,];
-            private int Flags;
             public bool Silent {get;set;}
             public bool Unpin {get;set;}
             public bool PmOneside {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Silent.TlSerialize());
-                bytes.AddRange(Unpin.TlSerialize());
-                bytes.AddRange(PmOneside.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 return bytes.ToArray();
@@ -4003,7 +3795,6 @@ namespace Messages {
         }
         public sealed class MessagesAcceptUrlAuth : TlFunction<UrlAuthResultBase> {
             public static readonly byte[] Identifier = [37,113,44,177,];
-            private int Flags;
             public bool WriteAllowed {get;set;}
             public InputPeerBase? Peer {get;set;}
             public int? MsgId {get;set;}
@@ -4012,49 +3803,46 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(WriteAllowed.TlSerialize());
-                bytes.AddRange(Peer is null ? [0x0] : Peer.TlSerialize());
-                bytes.AddRange(MsgId is null ? [0x0] : MsgId.TlSerialize());
-                bytes.AddRange(ButtonId is null ? [0x0] : ButtonId.TlSerialize());
-                bytes.AddRange(Url is null ? [0x0] : Url.TlSerialize());
+                bytes.AddRange((0 | (Peer is not null ? 2 : 0) | (MsgId is not null ? 2 : 0) | (ButtonId is not null ? 2 : 0) | (Url is not null ? 4 : 0) ).TlSerialize());
+                if(Peer is not null) bytes.AddRange(Peer.TlSerialize());
+                if(MsgId is not null) bytes.AddRange(MsgId.TlSerialize());
+                if(ButtonId is not null) bytes.AddRange(ButtonId.TlSerialize());
+                if(Url is not null) bytes.AddRange(Url.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetPollVotes : TlFunction<MessagesVotesListBase> {
             public static readonly byte[] Identifier = [14,56,110,184,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public byte[]? Option {get;set;}
             public string? Offset {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Option is not null ? 1 : 0) | (Offset is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Option is null ? [0x0] : Option.TlSerialize());
-                bytes.AddRange(Offset is null ? [0x0] : Offset.TlSerialize());
+                if(Option is not null) bytes.AddRange(Option.TlSerialize());
+                if(Offset is not null) bytes.AddRange(Offset.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetSearchResultsCalendar : TlFunction<MessagesSearchResultsCalendarBase> {
             public static readonly byte[] Identifier = [189,246,163,106,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
             public InputPeerBase? SavedPeerId {get;set;}
             public required MessagesFilterBase Filter {get;set;}
-            public required int OffsetId {get;set;}
-            public required int OffsetDate {get;set;}
+            public int OffsetId {get;set;}
+            public int OffsetDate {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (SavedPeerId is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(SavedPeerId is null ? [0x0] : SavedPeerId.TlSerialize());
+                if(SavedPeerId is not null) bytes.AddRange(SavedPeerId.TlSerialize());
                 bytes.AddRange(Filter.TlSerialize());
                 bytes.AddRange(OffsetId.TlSerialize());
                 bytes.AddRange(OffsetDate.TlSerialize());
@@ -4063,18 +3851,17 @@ namespace Messages {
         }
         public sealed class MessagesGetSearchResultsPositions : TlFunction<MessagesSearchResultsPositionsBase> {
             public static readonly byte[] Identifier = [16,47,127,156,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
             public InputPeerBase? SavedPeerId {get;set;}
             public required MessagesFilterBase Filter {get;set;}
-            public required int OffsetId {get;set;}
-            public required int Limit {get;set;}
+            public int OffsetId {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (SavedPeerId is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(SavedPeerId is null ? [0x0] : SavedPeerId.TlSerialize());
+                if(SavedPeerId is not null) bytes.AddRange(SavedPeerId.TlSerialize());
                 bytes.AddRange(Filter.TlSerialize());
                 bytes.AddRange(OffsetId.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
@@ -4083,56 +3870,50 @@ namespace Messages {
         }
         public sealed class MessagesSendReaction : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [212,120,13,211,];
-            private int Flags;
             public bool Big {get;set;}
             public bool AddToRecent {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public List<ReactionBase>? Reaction {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Big.TlSerialize());
-                bytes.AddRange(AddToRecent.TlSerialize());
+                bytes.AddRange((0 | (Reaction is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(MsgId.TlSerialize());
-                bytes.AddRange(Reaction is null ? [0x0] : Reaction.TlSerialize());
+                if(Reaction is not null) bytes.AddRange(Reaction.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetMessageReactionsList : TlFunction<MessagesMessageReactionsListBase> {
             public static readonly byte[] Identifier = [72,63,27,70,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public ReactionBase? Reaction {get;set;}
             public string? Offset {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Reaction is not null ? 1 : 0) | (Offset is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Reaction is null ? [0x0] : Reaction.TlSerialize());
-                bytes.AddRange(Offset is null ? [0x0] : Offset.TlSerialize());
+                if(Reaction is not null) bytes.AddRange(Reaction.TlSerialize());
+                if(Offset is not null) bytes.AddRange(Offset.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSendEncrypted : TlFunction<MessagesSentEncryptedMessageBase> {
             public static readonly byte[] Identifier = [21,122,250,68,];
-            private int Flags;
             public bool Silent {get;set;}
             public required InputEncryptedChatBase Peer {get;set;}
-            public required long RandomId {get;set;}
+            public long RandomId {get;set;}
             public required byte[] Data {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Silent.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(RandomId.TlSerialize());
                 bytes.AddRange(Data.TlSerialize());
@@ -4141,17 +3922,14 @@ namespace Messages {
         }
         public sealed class MessagesGetArchivedStickers : TlFunction<MessagesArchivedStickersBase> {
             public static readonly byte[] Identifier = [146,118,241,87,];
-            private int Flags;
             public bool Masks {get;set;}
             public bool Emojis {get;set;}
-            public required long OffsetId {get;set;}
-            public required int Limit {get;set;}
+            public long OffsetId {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Masks.TlSerialize());
-                bytes.AddRange(Emojis.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(OffsetId.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
                 return bytes.ToArray();
@@ -4159,7 +3937,6 @@ namespace Messages {
         }
         public sealed class MessagesGetSearchCounters : TlFunction<TlList<Tel.MessagesSearchCounterNs.MessagesSearchCounter>> {
             public static readonly byte[] Identifier = [0,243,188,27,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
             public InputPeerBase? SavedPeerId {get;set;}
             public int? TopMsgId {get;set;}
@@ -4167,17 +3944,16 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (SavedPeerId is not null ? 4 : 0) | (TopMsgId is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(SavedPeerId is null ? [0x0] : SavedPeerId.TlSerialize());
-                bytes.AddRange(TopMsgId is null ? [0x0] : TopMsgId.TlSerialize());
+                if(SavedPeerId is not null) bytes.AddRange(SavedPeerId.TlSerialize());
+                if(TopMsgId is not null) bytes.AddRange(TopMsgId.TlSerialize());
                 bytes.AddRange(Filters.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesRequestUrlAuth : TlFunction<UrlAuthResultBase> {
             public static readonly byte[] Identifier = [70,180,143,25,];
-            private int Flags;
             public InputPeerBase? Peer {get;set;}
             public int? MsgId {get;set;}
             public int? ButtonId {get;set;}
@@ -4185,17 +3961,16 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Peer is null ? [0x0] : Peer.TlSerialize());
-                bytes.AddRange(MsgId is null ? [0x0] : MsgId.TlSerialize());
-                bytes.AddRange(ButtonId is null ? [0x0] : ButtonId.TlSerialize());
-                bytes.AddRange(Url is null ? [0x0] : Url.TlSerialize());
+                bytes.AddRange((0 | (Peer is not null ? 2 : 0) | (MsgId is not null ? 2 : 0) | (ButtonId is not null ? 2 : 0) | (Url is not null ? 4 : 0) ).TlSerialize());
+                if(Peer is not null) bytes.AddRange(Peer.TlSerialize());
+                if(MsgId is not null) bytes.AddRange(MsgId.TlSerialize());
+                if(ButtonId is not null) bytes.AddRange(ButtonId.TlSerialize());
+                if(Url is not null) bytes.AddRange(Url.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesToggleStickerSets : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [234,47,5,181,];
-            private int Flags;
             public bool Uninstall {get;set;}
             public bool Archive {get;set;}
             public bool Unarchive {get;set;}
@@ -4203,17 +3978,13 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Uninstall.TlSerialize());
-                bytes.AddRange(Archive.TlSerialize());
-                bytes.AddRange(Unarchive.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Stickersets.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesTranslateText : TlFunction<MessagesTranslatedTextBase> {
             public static readonly byte[] Identifier = [48,48,24,99,];
-            private int Flags;
             public InputPeerBase? Peer {get;set;}
             public List<int>? Id {get;set;}
             public List<TextWithEntitiesBase>? Text {get;set;}
@@ -4221,44 +3992,42 @@ namespace Messages {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Peer is null ? [0x0] : Peer.TlSerialize());
-                bytes.AddRange(Id is null ? [0x0] : Id.TlSerialize());
-                bytes.AddRange(Text is null ? [0x0] : Text.TlSerialize());
+                bytes.AddRange((0 | (Peer is not null ? 1 : 0) | (Id is not null ? 1 : 0) | (Text is not null ? 2 : 0) ).TlSerialize());
+                if(Peer is not null) bytes.AddRange(Peer.TlSerialize());
+                if(Id is not null) bytes.AddRange(Id.TlSerialize());
+                if(Text is not null) bytes.AddRange(Text.TlSerialize());
                 bytes.AddRange(ToLang.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesDeleteSavedHistory : TlFunction<MessagesAffectedHistoryBase> {
             public static readonly byte[] Identifier = [43,16,152,110,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
-            public required int MaxId {get;set;}
+            public int MaxId {get;set;}
             public int? MinDate {get;set;}
             public int? MaxDate {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (MinDate is not null ? 4 : 0) | (MaxDate is not null ? 8 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(MaxId.TlSerialize());
-                bytes.AddRange(MinDate is null ? [0x0] : MinDate.TlSerialize());
-                bytes.AddRange(MaxDate is null ? [0x0] : MaxDate.TlSerialize());
+                if(MinDate is not null) bytes.AddRange(MinDate.TlSerialize());
+                if(MaxDate is not null) bytes.AddRange(MaxDate.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSetTyping : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [226,62,148,88,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
             public int? TopMsgId {get;set;}
             public required SendMessageActionBase Action {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (TopMsgId is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(TopMsgId is null ? [0x0] : TopMsgId.TlSerialize());
+                if(TopMsgId is not null) bytes.AddRange(TopMsgId.TlSerialize());
                 bytes.AddRange(Action.TlSerialize());
                 return bytes.ToArray();
             }
@@ -4281,15 +4050,13 @@ namespace Messages {
         }
         public sealed class MessagesDeleteChatUser : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [171,92,24,162,];
-            private int Flags;
             public bool RevokeHistory {get;set;}
-            public required long ChatId {get;set;}
+            public long ChatId {get;set;}
             public required InputUserBase UserId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(RevokeHistory.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(ChatId.TlSerialize());
                 bytes.AddRange(UserId.TlSerialize());
                 return bytes.ToArray();
@@ -4297,17 +4064,16 @@ namespace Messages {
         }
         public sealed class MessagesCreateChat : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [24,168,52,0,];
-            private int Flags;
             public required List<InputUserBase> Users {get;set;}
             public required string Title {get;set;}
             public int? TtlPeriod {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (TtlPeriod is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Users.TlSerialize());
                 bytes.AddRange(Title.TlSerialize());
-                bytes.AddRange(TtlPeriod is null ? [0x0] : TtlPeriod.TlSerialize());
+                if(TtlPeriod is not null) bytes.AddRange(TtlPeriod.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -4315,7 +4081,7 @@ namespace Messages {
             public static readonly byte[] Identifier = [120,115,223,230,];
             public required InputUserBase Bot {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required long RandomId {get;set;}
+            public long RandomId {get;set;}
             public required string StartParam {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -4329,47 +4095,39 @@ namespace Messages {
         }
         public sealed class MessagesReorderStickerSets : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [57,119,51,120,];
-            private int Flags;
             public bool Masks {get;set;}
             public bool Emojis {get;set;}
             public required List<long> Order {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Masks.TlSerialize());
-                bytes.AddRange(Emojis.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Order.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSaveRecentSticker : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [248,24,39,57,];
-            private int Flags;
             public bool Attached {get;set;}
             public required InputDocumentBase Id {get;set;}
             public bool Unsave {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Attached.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Unsave.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesReorderPinnedDialogs : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [55,223,26,59,];
-            private int Flags;
             public bool Force {get;set;}
-            public required int FolderId {get;set;}
+            public int FolderId {get;set;}
             public required List<InputDialogPeerBase> Order {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Force.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(FolderId.TlSerialize());
                 bytes.AddRange(Order.TlSerialize());
                 return bytes.ToArray();
@@ -4377,47 +4135,42 @@ namespace Messages {
         }
         public sealed class MessagesSetBotShippingResults : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [250,114,246,229,];
-            private int Flags;
-            public required long QueryId {get;set;}
+            public long QueryId {get;set;}
             public string? Error {get;set;}
             public List<ShippingOptionBase>? ShippingOptions {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Error is not null ? 1 : 0) | (ShippingOptions is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(QueryId.TlSerialize());
-                bytes.AddRange(Error is null ? [0x0] : Error.TlSerialize());
-                bytes.AddRange(ShippingOptions is null ? [0x0] : ShippingOptions.TlSerialize());
+                if(Error is not null) bytes.AddRange(Error.TlSerialize());
+                if(ShippingOptions is not null) bytes.AddRange(ShippingOptions.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSetBotPrecheckoutResults : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [149,221,194,9,];
-            private int Flags;
             public bool Success {get;set;}
-            public required long QueryId {get;set;}
+            public long QueryId {get;set;}
             public string? Error {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Success.TlSerialize());
+                bytes.AddRange((0 | (Error is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(QueryId.TlSerialize());
-                bytes.AddRange(Error is null ? [0x0] : Error.TlSerialize());
+                if(Error is not null) bytes.AddRange(Error.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSearchStickerSets : TlFunction<MessagesFoundStickerSetsBase> {
             public static readonly byte[] Identifier = [138,91,112,53,];
-            private int Flags;
             public bool ExcludeFeatured {get;set;}
             public required string Q {get;set;}
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ExcludeFeatured.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Q.TlSerialize());
                 bytes.AddRange(Hash.TlSerialize());
                 return bytes.ToArray();
@@ -4426,7 +4179,7 @@ namespace Messages {
         public sealed class MessagesUploadImportedMedia : TlFunction<MessageMediaBase> {
             public static readonly byte[] Identifier = [146,32,134,42,];
             public required InputPeerBase Peer {get;set;}
-            public required long ImportId {get;set;}
+            public long ImportId {get;set;}
             public required string FileName {get;set;}
             public required InputMediaBase Media {get;set;}
             public override byte[] TlSerialize() {
@@ -4441,15 +4194,13 @@ namespace Messages {
         }
         public sealed class MessagesHideChatJoinRequest : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [21,232,231,127,];
-            private int Flags;
             public bool Approved {get;set;}
             public required InputPeerBase Peer {get;set;}
             public required InputUserBase UserId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Approved.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(UserId.TlSerialize());
                 return bytes.ToArray();
@@ -4457,40 +4208,35 @@ namespace Messages {
         }
         public sealed class MessagesHideAllChatJoinRequests : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [234,244,133,224,];
-            private int Flags;
             public bool Approved {get;set;}
             public required InputPeerBase Peer {get;set;}
             public string? Link {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Approved.TlSerialize());
+                bytes.AddRange((0 | (Link is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(Link is null ? [0x0] : Link.TlSerialize());
+                if(Link is not null) bytes.AddRange(Link.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesToggleBotInAttachMenu : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [105,157,245,105,];
-            private int Flags;
             public bool WriteAllowed {get;set;}
             public required InputUserBase Bot {get;set;}
             public bool Enabled {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(WriteAllowed.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Bot.TlSerialize());
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSendWebViewData : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [200,66,2,220,];
             public required InputUserBase Bot {get;set;}
-            public required long RandomId {get;set;}
+            public long RandomId {get;set;}
             public required string ButtonText {get;set;}
             public required string Data {get;set;}
             public override byte[] TlSerialize() {
@@ -4506,8 +4252,8 @@ namespace Messages {
         public sealed class MessagesRateTranscribedAudio : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [47,7,29,127,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
-            public required long TranscriptionId {get;set;}
+            public int MsgId {get;set;}
+            public long TranscriptionId {get;set;}
             public bool Good {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -4515,15 +4261,14 @@ namespace Messages {
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(MsgId.TlSerialize());
                 bytes.AddRange(TranscriptionId.TlSerialize());
-                bytes.AddRange(Good.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesSendBotRequestedPeer : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [96,208,178,145,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
-            public required int ButtonId {get;set;}
+            public int MsgId {get;set;}
+            public int ButtonId {get;set;}
             public required List<InputPeerBase> RequestedPeers {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -4537,15 +4282,13 @@ namespace Messages {
         }
         public sealed class MessagesSearchEmojiStickerSets : TlFunction<MessagesFoundStickerSetsBase> {
             public static readonly byte[] Identifier = [76,73,180,146,];
-            private int Flags;
             public bool ExcludeFeatured {get;set;}
             public required string Q {get;set;}
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ExcludeFeatured.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Q.TlSerialize());
                 bytes.AddRange(Hash.TlSerialize());
                 return bytes.ToArray();
@@ -4553,23 +4296,21 @@ namespace Messages {
         }
         public sealed class MessagesDeleteMessages : TlFunction<MessagesAffectedMessagesBase> {
             public static readonly byte[] Identifier = [210,149,142,229,];
-            private int Flags;
             public bool Revoke {get;set;}
             public required List<int> Id {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Revoke.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesAddChatUser : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [227,83,71,242,];
-            public required long ChatId {get;set;}
+            public long ChatId {get;set;}
             public required InputUserBase UserId {get;set;}
-            public required int FwdLimit {get;set;}
+            public int FwdLimit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -4582,7 +4323,7 @@ namespace Messages {
         public sealed class MessagesRequestEncryption : TlFunction<EncryptedChatBase> {
             public static readonly byte[] Identifier = [67,175,77,246,];
             public required InputUserBase UserId {get;set;}
-            public required int RandomId {get;set;}
+            public int RandomId {get;set;}
             public required byte[] GA {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -4597,7 +4338,7 @@ namespace Messages {
             public static readonly byte[] Identifier = [21,4,188,61,];
             public required InputEncryptedChatBase Peer {get;set;}
             public required byte[] GB {get;set;}
-            public required long KeyFingerprint {get;set;}
+            public long KeyFingerprint {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -4609,14 +4350,12 @@ namespace Messages {
         }
         public sealed class MessagesDiscardEncryption : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [160,174,147,243,];
-            private int Flags;
             public bool DeleteHistory {get;set;}
-            public required int ChatId {get;set;}
+            public int ChatId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(DeleteHistory.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(ChatId.TlSerialize());
                 return bytes.ToArray();
             }
@@ -4624,7 +4363,7 @@ namespace Messages {
         public sealed class MessagesSendEncryptedService : TlFunction<MessagesSentEncryptedMessageBase> {
             public static readonly byte[] Identifier = [164,57,212,50,];
             public required InputEncryptedChatBase Peer {get;set;}
-            public required long RandomId {get;set;}
+            public long RandomId {get;set;}
             public required byte[] Data {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -4637,15 +4376,14 @@ namespace Messages {
         }
         public sealed class MessagesGetWebPagePreview : TlFunction<MessageMediaBase> {
             public static readonly byte[] Identifier = [204,176,104,139,];
-            private int Flags;
             public required string Message {get;set;}
             public List<MessageEntityBase>? Entities {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Entities is not null ? 8 : 0) ).TlSerialize());
                 bytes.AddRange(Message.TlSerialize());
-                bytes.AddRange(Entities is null ? [0x0] : Entities.TlSerialize());
+                if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -4659,13 +4397,12 @@ namespace Messages {
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Increment.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesEditChatAdmin : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [194,209,91,168,];
-            public required long ChatId {get;set;}
+            public long ChatId {get;set;}
             public required InputUserBase UserId {get;set;}
             public bool IsAdmin {get;set;}
             public override byte[] TlSerialize() {
@@ -4673,14 +4410,13 @@ namespace Messages {
                 bytes.AddRange(Identifier);
                 bytes.AddRange(ChatId.TlSerialize());
                 bytes.AddRange(UserId.TlSerialize());
-                bytes.AddRange(IsAdmin.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetDocumentByHash : TlFunction<DocumentBase> {
             public static readonly byte[] Identifier = [31,6,242,177,];
             public required byte[] Sha256 {get;set;}
-            public required long Size {get;set;}
+            public long Size {get;set;}
             public required string MimeType {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -4693,14 +4429,12 @@ namespace Messages {
         }
         public sealed class MessagesGetRecentStickers : TlFunction<MessagesRecentStickersBase> {
             public static readonly byte[] Identifier = [59,64,169,157,];
-            private int Flags;
             public bool Attached {get;set;}
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Attached.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Hash.TlSerialize());
                 return bytes.ToArray();
             }
@@ -4708,7 +4442,7 @@ namespace Messages {
         public sealed class MessagesGetGameHighScores : TlFunction<MessagesHighScoresBase> {
             public static readonly byte[] Identifier = [157,100,34,232,];
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public required InputUserBase UserId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -4722,8 +4456,8 @@ namespace Messages {
         public sealed class MessagesGetCommonChats : TlFunction<MessagesChatsBase> {
             public static readonly byte[] Identifier = [4,161,12,228,];
             public required InputUserBase UserId {get;set;}
-            public required long MaxId {get;set;}
-            public required int Limit {get;set;}
+            public long MaxId {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -4735,14 +4469,12 @@ namespace Messages {
         }
         public sealed class MessagesToggleDialogPin : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [87,226,49,167,];
-            private int Flags;
             public bool Pinned {get;set;}
             public required InputDialogPeerBase Peer {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Pinned.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 return bytes.ToArray();
             }
@@ -4751,7 +4483,7 @@ namespace Messages {
             public static readonly byte[] Identifier = [23,88,64,161,];
             public required InputPeerBase Peer {get;set;}
             public required InputReplyToBase ReplyTo {get;set;}
-            public required long RandomId {get;set;}
+            public long RandomId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -4763,23 +4495,22 @@ namespace Messages {
         }
         public sealed class MessagesReadMentions : TlFunction<MessagesAffectedHistoryBase> {
             public static readonly byte[] Identifier = [77,191,229,54,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
             public int? TopMsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (TopMsgId is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(TopMsgId is null ? [0x0] : TopMsgId.TlSerialize());
+                if(TopMsgId is not null) bytes.AddRange(TopMsgId.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetRecentLocations : TlFunction<MessagesMessagesBase> {
             public static readonly byte[] Identifier = [224,64,42,112,];
             public required InputPeerBase Peer {get;set;}
-            public required int Limit {get;set;}
-            public required long Hash {get;set;}
+            public int Limit {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -4791,14 +4522,12 @@ namespace Messages {
         }
         public sealed class MessagesMarkDialogUnread : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [143,217,134,194,];
-            private int Flags;
             public bool Unread {get;set;}
             public required InputDialogPeerBase Peer {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Unread.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 return bytes.ToArray();
             }
@@ -4806,7 +4535,7 @@ namespace Messages {
         public sealed class MessagesSendVote : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [132,97,234,16,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public required List<byte[]> Options {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -4819,23 +4548,22 @@ namespace Messages {
         }
         public sealed class MessagesUpdateDialogFilter : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [74,160,212,26,];
-            private int Flags;
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public DialogFilterBase? Filter {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Filter is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Filter is null ? [0x0] : Filter.TlSerialize());
+                if(Filter is not null) bytes.AddRange(Filter.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetOldFeaturedStickers : TlFunction<MessagesFeaturedStickersBase> {
             public static readonly byte[] Identifier = [161,148,208,126,];
-            public required int Offset {get;set;}
-            public required int Limit {get;set;}
-            public required long Hash {get;set;}
+            public int Offset {get;set;}
+            public int Limit {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -4848,8 +4576,8 @@ namespace Messages {
         public sealed class MessagesReadDiscussion : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [244,169,49,247,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
-            public required int ReadMaxId {get;set;}
+            public int MsgId {get;set;}
+            public int ReadMaxId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -4861,15 +4589,14 @@ namespace Messages {
         }
         public sealed class MessagesUnpinAllMessages : TlFunction<MessagesAffectedHistoryBase> {
             public static readonly byte[] Identifier = [168,185,34,238,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
             public int? TopMsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (TopMsgId is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(TopMsgId is null ? [0x0] : TopMsgId.TlSerialize());
+                if(TopMsgId is not null) bytes.AddRange(TopMsgId.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -4877,7 +4604,7 @@ namespace Messages {
             public static readonly byte[] Identifier = [59,12,9,52,];
             public required InputPeerBase Peer {get;set;}
             public required InputFileBase File {get;set;}
-            public required int MediaCount {get;set;}
+            public int MediaCount {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -4889,15 +4616,14 @@ namespace Messages {
         }
         public sealed class MessagesReadReactions : TlFunction<MessagesAffectedHistoryBase> {
             public static readonly byte[] Identifier = [142,127,170,84,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
             public int? TopMsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (TopMsgId is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(TopMsgId is null ? [0x0] : TopMsgId.TlSerialize());
+                if(TopMsgId is not null) bytes.AddRange(TopMsgId.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -4905,7 +4631,7 @@ namespace Messages {
             public static readonly byte[] Identifier = [160,49,126,16,];
             public required string Q {get;set;}
             public required MessagesFilterBase Filter {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -4918,7 +4644,7 @@ namespace Messages {
         public sealed class MessagesReportReaction : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [118,192,100,63,];
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public required InputPeerBase ReactionPeer {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -4931,42 +4657,36 @@ namespace Messages {
         }
         public sealed class MessagesTogglePeerTranslations : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [121,181,124,228,];
-            private int Flags;
             public bool Disabled {get;set;}
             public required InputPeerBase Peer {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Disabled.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesToggleSavedDialogPin : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [222,187,129,172,];
-            private int Flags;
             public bool Pinned {get;set;}
             public required InputDialogPeerBase Peer {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Pinned.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesReorderPinnedSavedDialogs : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [135,101,113,139,];
-            private int Flags;
             public bool Force {get;set;}
             public required List<InputDialogPeerBase> Order {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Force.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Order.TlSerialize());
                 return bytes.ToArray();
             }
@@ -4974,7 +4694,7 @@ namespace Messages {
         public sealed class MessagesReadHistory : TlFunction<MessagesAffectedMessagesBase> {
             public static readonly byte[] Identifier = [58,109,48,14,];
             public required InputPeerBase Peer {get;set;}
-            public required int MaxId {get;set;}
+            public int MaxId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -4985,7 +4705,7 @@ namespace Messages {
         }
         public sealed class MessagesEditChatTitle : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [253,63,120,115,];
-            public required long ChatId {get;set;}
+            public long ChatId {get;set;}
             public required string Title {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -4997,7 +4717,7 @@ namespace Messages {
         }
         public sealed class MessagesEditChatPhoto : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [116,214,221,53,];
-            public required long ChatId {get;set;}
+            public long ChatId {get;set;}
             public required InputChatPhotoBase Photo {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -5009,8 +4729,8 @@ namespace Messages {
         }
         public sealed class MessagesGetDhConfig : TlFunction<MessagesDhConfigBase> {
             public static readonly byte[] Identifier = [80,137,207,38,];
-            public required int Version {get;set;}
-            public required int RandomLength {get;set;}
+            public int Version {get;set;}
+            public int RandomLength {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5027,14 +4747,13 @@ namespace Messages {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(Typing.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesReadEncryptedHistory : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [10,105,75,127,];
             public required InputEncryptedChatBase Peer {get;set;}
-            public required int MaxDate {get;set;}
+            public int MaxDate {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5046,7 +4765,7 @@ namespace Messages {
         public sealed class MessagesGetStickers : TlFunction<MessagesStickersBase> {
             public static readonly byte[] Identifier = [161,211,165,213,];
             public required string Emoticon {get;set;}
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5058,7 +4777,7 @@ namespace Messages {
         public sealed class MessagesGetStickerSet : TlFunction<MessagesStickerSetBase> {
             public static readonly byte[] Identifier = [116,236,160,200,];
             public required InputStickerSetBase Stickerset {get;set;}
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5075,7 +4794,6 @@ namespace Messages {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Stickerset.TlSerialize());
-                bytes.AddRange(Archived.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -5087,14 +4805,13 @@ namespace Messages {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Unsave.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesGetMessageEditData : TlFunction<MessagesMessageEditDataBase> {
             public static readonly byte[] Identifier = [54,141,166,253,];
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5105,13 +4822,11 @@ namespace Messages {
         }
         public sealed class MessagesClearRecentStickers : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [45,96,153,137,];
-            private int Flags;
             public bool Attached {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Attached.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -5130,7 +4845,7 @@ namespace Messages {
         public sealed class MessagesGetWebPage : TlFunction<MessagesWebPageBase> {
             public static readonly byte[] Identifier = [163,146,150,141,];
             public required string Url {get;set;}
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5159,7 +4874,6 @@ namespace Messages {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Unfave.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -5178,7 +4892,7 @@ namespace Messages {
         public sealed class MessagesGetPollResults : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [59,100,187,115,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5214,7 +4928,7 @@ namespace Messages {
         public sealed class MessagesGetEmojiKeywordsDifference : TlFunction<EmojiKeywordsDifferenceBase> {
             public static readonly byte[] Identifier = [175,182,8,21,];
             public required string LangCode {get;set;}
-            public required int FromVersion {get;set;}
+            public int FromVersion {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5226,7 +4940,7 @@ namespace Messages {
         public sealed class MessagesGetScheduledHistory : TlFunction<MessagesMessagesBase> {
             public static readonly byte[] Identifier = [11,118,22,245,];
             public required InputPeerBase Peer {get;set;}
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5274,7 +4988,7 @@ namespace Messages {
         public sealed class MessagesGetDiscussionMessage : TlFunction<MessagesDiscussionMessageBase> {
             public static readonly byte[] Identifier = [253,114,105,68,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5285,20 +4999,18 @@ namespace Messages {
         }
         public sealed class MessagesDeletePhoneCallHistory : TlFunction<MessagesAffectedFoundMessagesBase> {
             public static readonly byte[] Identifier = [9,228,203,249,];
-            private int Flags;
             public bool Revoke {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Revoke.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class MessagesStartHistoryImport : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [68,243,61,180,];
             public required InputPeerBase Peer {get;set;}
-            public required long ImportId {get;set;}
+            public long ImportId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5346,7 +5058,7 @@ namespace Messages {
         public sealed class MessagesSetHistoryTTL : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [228,95,14,184,];
             public required InputPeerBase Peer {get;set;}
-            public required int Period {get;set;}
+            public int Period {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5370,7 +5082,7 @@ namespace Messages {
         public sealed class MessagesGetMessageReadParticipants : TlFunction<TlList<ReadParticipantDateBase>> {
             public static readonly byte[] Identifier = [79,196,193,49,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5387,7 +5099,6 @@ namespace Messages {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(Enabled.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -5442,7 +5153,7 @@ namespace Messages {
         public sealed class MessagesTranscribeAudio : TlFunction<MessagesTranscribedAudioBase> {
             public static readonly byte[] Identifier = [73,154,158,38,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5453,8 +5164,8 @@ namespace Messages {
         }
         public sealed class MessagesGetTopReactions : TlFunction<MessagesReactionsBase> {
             public static readonly byte[] Identifier = [186,37,129,187,];
-            public required int Limit {get;set;}
-            public required long Hash {get;set;}
+            public int Limit {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5465,8 +5176,8 @@ namespace Messages {
         }
         public sealed class MessagesGetRecentReactions : TlFunction<MessagesReactionsBase> {
             public static readonly byte[] Identifier = [178,29,70,57,];
-            public required int Limit {get;set;}
-            public required long Hash {get;set;}
+            public int Limit {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5490,7 +5201,7 @@ namespace Messages {
         public sealed class MessagesSearchCustomEmoji : TlFunction<EmojiListBase> {
             public static readonly byte[] Identifier = [215,192,17,44,];
             public required string Emoticon {get;set;}
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5502,7 +5213,7 @@ namespace Messages {
         public sealed class MessagesGetBotApp : TlFunction<MessagesBotAppBase> {
             public static readonly byte[] Identifier = [195,197,253,52,];
             public required InputBotAppBase App {get;set;}
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5523,7 +5234,7 @@ namespace Messages {
         }
         public sealed class MessagesReceivedMessages : TlFunction<TlList<ReceivedNotifyMessageBase>> {
             public static readonly byte[] Identifier = [192,84,169,5,];
-            public required int MaxId {get;set;}
+            public int MaxId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5563,7 +5274,7 @@ namespace Messages {
         }
         public sealed class MessagesGetFullChat : TlFunction<MessagesChatFullBase> {
             public static readonly byte[] Identifier = [52,11,176,174,];
-            public required long ChatId {get;set;}
+            public long ChatId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5573,7 +5284,7 @@ namespace Messages {
         }
         public sealed class MessagesReceivedQueue : TlFunction<TlList<TlLong>> {
             public static readonly byte[] Identifier = [102,187,165,85,];
-            public required int MaxQts {get;set;}
+            public int MaxQts {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5603,7 +5314,7 @@ namespace Messages {
         }
         public sealed class MessagesGetAllStickers : TlFunction<MessagesAllStickersBase> {
             public static readonly byte[] Identifier = [168,161,160,184,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5643,7 +5354,7 @@ namespace Messages {
         }
         public sealed class MessagesMigrateChat : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [25,83,135,162,];
-            public required long ChatId {get;set;}
+            public long ChatId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5653,7 +5364,7 @@ namespace Messages {
         }
         public sealed class MessagesGetSavedGifs : TlFunction<MessagesSavedGifsBase> {
             public static readonly byte[] Identifier = [53,150,240,92,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5673,7 +5384,7 @@ namespace Messages {
         }
         public sealed class MessagesGetFeaturedStickers : TlFunction<MessagesFeaturedStickersBase> {
             public static readonly byte[] Identifier = [20,11,120,100,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5693,7 +5404,7 @@ namespace Messages {
         }
         public sealed class MessagesGetMaskStickers : TlFunction<MessagesAllStickersBase> {
             public static readonly byte[] Identifier = [184,130,15,100,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5713,7 +5424,7 @@ namespace Messages {
         }
         public sealed class MessagesGetPinnedDialogs : TlFunction<MessagesPeerDialogsBase> {
             public static readonly byte[] Identifier = [242,77,185,214,];
-            public required int FolderId {get;set;}
+            public int FolderId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5723,7 +5434,7 @@ namespace Messages {
         }
         public sealed class MessagesGetFavedStickers : TlFunction<MessagesFavedStickersBase> {
             public static readonly byte[] Identifier = [169,170,241,4,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5793,7 +5504,7 @@ namespace Messages {
         }
         public sealed class MessagesDeleteChat : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [80,238,208,91,];
-            public required long ChatId {get;set;}
+            public long ChatId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5833,7 +5544,7 @@ namespace Messages {
         }
         public sealed class MessagesGetAvailableReactions : TlFunction<MessagesAvailableReactionsBase> {
             public static readonly byte[] Identifier = [172,160,222,24,];
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5853,7 +5564,7 @@ namespace Messages {
         }
         public sealed class MessagesGetAttachMenuBots : TlFunction<AttachMenuBotsBase> {
             public static readonly byte[] Identifier = [203,194,252,22,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5883,7 +5594,7 @@ namespace Messages {
         }
         public sealed class MessagesGetEmojiStickers : TlFunction<MessagesAllStickersBase> {
             public static readonly byte[] Identifier = [143,161,252,251,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5893,7 +5604,7 @@ namespace Messages {
         }
         public sealed class MessagesGetFeaturedEmojiStickers : TlFunction<MessagesFeaturedStickersBase> {
             public static readonly byte[] Identifier = [54,103,207,14,];
-            public required long Hash {get;set;}
+            public long Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5903,7 +5614,7 @@ namespace Messages {
         }
         public sealed class MessagesSetDefaultHistoryTTL : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [69,20,181,158,];
-            public required int Period {get;set;}
+            public int Period {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5913,7 +5624,7 @@ namespace Messages {
         }
         public sealed class MessagesGetEmojiGroups : TlFunction<MessagesEmojiGroupsBase> {
             public static readonly byte[] Identifier = [91,206,136,116,];
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5923,7 +5634,7 @@ namespace Messages {
         }
         public sealed class MessagesGetEmojiStatusGroups : TlFunction<MessagesEmojiGroupsBase> {
             public static readonly byte[] Identifier = [205,86,205,46,];
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -5933,7 +5644,7 @@ namespace Messages {
         }
         public sealed class MessagesGetEmojiProfilePhotoGroups : TlFunction<MessagesEmojiGroupsBase> {
             public static readonly byte[] Identifier = [243,72,165,33,];
-            public required int Hash {get;set;}
+            public int Hash {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -6017,8 +5728,7 @@ namespace Messages {
 namespace Payments {
         public sealed class PaymentsSendPaymentForm : TlFunction<PaymentsPaymentResultBase> {
             public static readonly byte[] Identifier = [47,82,3,45,];
-            private int Flags;
-            public required long FormId {get;set;}
+            public long FormId {get;set;}
             public required InputInvoiceBase Invoice {get;set;}
             public string? RequestedInfoId {get;set;}
             public string? ShippingOptionId {get;set;}
@@ -6027,27 +5737,25 @@ namespace Payments {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (RequestedInfoId is not null ? 1 : 0) | (ShippingOptionId is not null ? 2 : 0) | (TipAmount is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(FormId.TlSerialize());
                 bytes.AddRange(Invoice.TlSerialize());
-                bytes.AddRange(RequestedInfoId is null ? [0x0] : RequestedInfoId.TlSerialize());
-                bytes.AddRange(ShippingOptionId is null ? [0x0] : ShippingOptionId.TlSerialize());
+                if(RequestedInfoId is not null) bytes.AddRange(RequestedInfoId.TlSerialize());
+                if(ShippingOptionId is not null) bytes.AddRange(ShippingOptionId.TlSerialize());
                 bytes.AddRange(Credentials.TlSerialize());
-                bytes.AddRange(TipAmount is null ? [0x0] : TipAmount.TlSerialize());
+                if(TipAmount is not null) bytes.AddRange(TipAmount.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class PaymentsValidateRequestedInfo : TlFunction<PaymentsValidatedRequestedInfoBase> {
             public static readonly byte[] Identifier = [43,241,200,182,];
-            private int Flags;
             public bool Save {get;set;}
             public required InputInvoiceBase Invoice {get;set;}
             public required PaymentRequestedInfoBase Info {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Save.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Invoice.TlSerialize());
                 bytes.AddRange(Info.TlSerialize());
                 return bytes.ToArray();
@@ -6055,36 +5763,32 @@ namespace Payments {
         }
         public sealed class PaymentsGetPaymentForm : TlFunction<PaymentsPaymentFormBase> {
             public static readonly byte[] Identifier = [187,141,20,55,];
-            private int Flags;
             public required InputInvoiceBase Invoice {get;set;}
             public DataJSONBase? ThemeParams {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (ThemeParams is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Invoice.TlSerialize());
-                bytes.AddRange(ThemeParams is null ? [0x0] : ThemeParams.TlSerialize());
+                if(ThemeParams is not null) bytes.AddRange(ThemeParams.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class PaymentsClearSavedInfo : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [193,112,61,216,];
-            private int Flags;
             public bool Credentials {get;set;}
             public bool Info {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Credentials.TlSerialize());
-                bytes.AddRange(Info.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class PaymentsLaunchPrepaidGiveaway : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [32,143,245,95,];
             public required InputPeerBase Peer {get;set;}
-            public required long GiveawayId {get;set;}
+            public long GiveawayId {get;set;}
             public required InputStorePaymentPurposeBase Purpose {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -6098,7 +5802,7 @@ namespace Payments {
         public sealed class PaymentsGetPaymentReceipt : TlFunction<PaymentsPaymentReceiptBase> {
             public static readonly byte[] Identifier = [204,209,120,36,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -6133,20 +5837,19 @@ namespace Payments {
         }
         public sealed class PaymentsGetPremiumGiftCodeOptions : TlFunction<TlList<PremiumGiftCodeOptionBase>> {
             public static readonly byte[] Identifier = [84,186,87,39,];
-            private int Flags;
             public InputPeerBase? BoostPeer {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(BoostPeer is null ? [0x0] : BoostPeer.TlSerialize());
+                bytes.AddRange((0 | (BoostPeer is not null ? 1 : 0) ).TlSerialize());
+                if(BoostPeer is not null) bytes.AddRange(BoostPeer.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class PaymentsGetGiveawayInfo : TlFunction<PaymentsGiveawayInfoBase> {
             public static readonly byte[] Identifier = [37,148,35,244,];
             public required InputPeerBase Peer {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -6217,7 +5920,6 @@ namespace Payments {
 namespace Phone {
         public sealed class PhoneEditGroupCallParticipant : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [191,58,39,165,];
-            private int Flags;
             public required InputGroupCallBase Call {get;set;}
             public required InputPeerBase Participant {get;set;}
             public bool Muted {get;set;}
@@ -6229,21 +5931,15 @@ namespace Phone {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Volume is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Call.TlSerialize());
                 bytes.AddRange(Participant.TlSerialize());
-                bytes.AddRange(Muted.TlSerialize());
-                bytes.AddRange(Volume is null ? [0x0] : Volume.TlSerialize());
-                bytes.AddRange(RaiseHand.TlSerialize());
-                bytes.AddRange(VideoStopped.TlSerialize());
-                bytes.AddRange(VideoPaused.TlSerialize());
-                bytes.AddRange(PresentationPaused.TlSerialize());
+                if(Volume is not null) bytes.AddRange(Volume.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class PhoneJoinGroupCall : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [123,255,50,177,];
-            private int Flags;
             public bool Muted {get;set;}
             public bool VideoStopped {get;set;}
             public required InputGroupCallBase Call {get;set;}
@@ -6253,29 +5949,25 @@ namespace Phone {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Muted.TlSerialize());
-                bytes.AddRange(VideoStopped.TlSerialize());
+                bytes.AddRange((0 | (InviteHash is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Call.TlSerialize());
                 bytes.AddRange(JoinAs.TlSerialize());
-                bytes.AddRange(InviteHash is null ? [0x0] : InviteHash.TlSerialize());
+                if(InviteHash is not null) bytes.AddRange(InviteHash.TlSerialize());
                 bytes.AddRange(Params.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class PhoneRequestCall : TlFunction<PhonePhoneCallBase> {
             public static readonly byte[] Identifier = [237,150,255,66,];
-            private int Flags;
             public bool Video {get;set;}
             public required InputUserBase UserId {get;set;}
-            public required int RandomId {get;set;}
+            public int RandomId {get;set;}
             public required byte[] GAHash {get;set;}
             public required PhoneCallProtocolBase Protocol {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Video.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(UserId.TlSerialize());
                 bytes.AddRange(RandomId.TlSerialize());
                 bytes.AddRange(GAHash.TlSerialize());
@@ -6285,17 +5977,15 @@ namespace Phone {
         }
         public sealed class PhoneDiscardCall : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [192,193,203,178,];
-            private int Flags;
             public bool Video {get;set;}
             public required InputPhoneCallBase Peer {get;set;}
-            public required int Duration {get;set;}
+            public int Duration {get;set;}
             public required PhoneCallDiscardReasonBase Reason {get;set;}
-            public required long ConnectionId {get;set;}
+            public long ConnectionId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Video.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Duration.TlSerialize());
                 bytes.AddRange(Reason.TlSerialize());
@@ -6305,27 +5995,24 @@ namespace Phone {
         }
         public sealed class PhoneCreateGroupCall : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [216,198,205,72,];
-            private int Flags;
             public bool RtmpStream {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required int RandomId {get;set;}
+            public int RandomId {get;set;}
             public string? Title {get;set;}
             public int? ScheduleDate {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(RtmpStream.TlSerialize());
+                bytes.AddRange((0 | (Title is not null ? 1 : 0) | (ScheduleDate is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(RandomId.TlSerialize());
-                bytes.AddRange(Title is null ? [0x0] : Title.TlSerialize());
-                bytes.AddRange(ScheduleDate is null ? [0x0] : ScheduleDate.TlSerialize());
+                if(Title is not null) bytes.AddRange(Title.TlSerialize());
+                if(ScheduleDate is not null) bytes.AddRange(ScheduleDate.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class PhoneToggleGroupCallRecord : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [8,199,40,241,];
-            private int Flags;
             public bool Start {get;set;}
             public bool Video {get;set;}
             public required InputGroupCallBase Call {get;set;}
@@ -6334,27 +6021,22 @@ namespace Phone {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Start.TlSerialize());
-                bytes.AddRange(Video.TlSerialize());
+                bytes.AddRange((0 | (Title is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Call.TlSerialize());
-                bytes.AddRange(Title is null ? [0x0] : Title.TlSerialize());
-                bytes.AddRange(VideoPortrait.TlSerialize());
+                if(Title is not null) bytes.AddRange(Title.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class PhoneSetCallRating : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [39,214,234,89,];
-            private int Flags;
             public bool UserInitiative {get;set;}
             public required InputPhoneCallBase Peer {get;set;}
-            public required int Rating {get;set;}
+            public int Rating {get;set;}
             public required string Comment {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(UserInitiative.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Rating.TlSerialize());
                 bytes.AddRange(Comment.TlSerialize());
@@ -6367,7 +6049,7 @@ namespace Phone {
             public required List<InputPeerBase> Ids {get;set;}
             public required List<int> Sources {get;set;}
             public required string Offset {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -6383,7 +6065,7 @@ namespace Phone {
             public static readonly byte[] Identifier = [34,23,254,46,];
             public required InputPhoneCallBase Peer {get;set;}
             public required byte[] GA {get;set;}
-            public required long KeyFingerprint {get;set;}
+            public long KeyFingerprint {get;set;}
             public required PhoneCallProtocolBase Protocol {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -6397,17 +6079,14 @@ namespace Phone {
         }
         public sealed class PhoneToggleGroupCallSettings : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [61,180,187,116,];
-            private int Flags;
             public bool ResetInviteHash {get;set;}
             public required InputGroupCallBase Call {get;set;}
             public bool JoinMuted {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ResetInviteHash.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Call.TlSerialize());
-                bytes.AddRange(JoinMuted.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -6427,14 +6106,12 @@ namespace Phone {
         }
         public sealed class PhoneExportGroupCallInvite : TlFunction<PhoneExportedGroupCallInviteBase> {
             public static readonly byte[] Identifier = [127,100,170,230,];
-            private int Flags;
             public bool CanSelfUnmute {get;set;}
             public required InputGroupCallBase Call {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(CanSelfUnmute.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Call.TlSerialize());
                 return bytes.ToArray();
             }
@@ -6466,7 +6143,7 @@ namespace Phone {
         public sealed class PhoneLeaveGroupCall : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [249,119,3,80,];
             public required InputGroupCallBase Call {get;set;}
-            public required int Source {get;set;}
+            public int Source {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -6490,7 +6167,7 @@ namespace Phone {
         public sealed class PhoneGetGroupCall : TlFunction<PhoneGroupCallBase> {
             public static readonly byte[] Identifier = [219,69,24,4,];
             public required InputGroupCallBase Call {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -6531,7 +6208,6 @@ namespace Phone {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Call.TlSerialize());
-                bytes.AddRange(Subscribed.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -6567,7 +6243,6 @@ namespace Phone {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(Revoke.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -6655,7 +6330,6 @@ namespace Phone {
 namespace Photos {
         public sealed class PhotosUploadContactProfilePhoto : TlFunction<PhotosPhotoBase> {
             public static readonly byte[] Identifier = [113,74,76,225,];
-            private int Flags;
             public bool Suggest {get;set;}
             public bool Save {get;set;}
             public required InputUserBase UserId {get;set;}
@@ -6666,20 +6340,17 @@ namespace Photos {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Suggest.TlSerialize());
-                bytes.AddRange(Save.TlSerialize());
+                bytes.AddRange((0 | (File is not null ? 1 : 0) | (Video is not null ? 2 : 0) | (VideoStartTs is not null ? 4 : 0) | (VideoEmojiMarkup is not null ? 32 : 0) ).TlSerialize());
                 bytes.AddRange(UserId.TlSerialize());
-                bytes.AddRange(File is null ? [0x0] : File.TlSerialize());
-                bytes.AddRange(Video is null ? [0x0] : Video.TlSerialize());
-                bytes.AddRange(VideoStartTs is null ? [0x0] : VideoStartTs.TlSerialize());
-                bytes.AddRange(VideoEmojiMarkup is null ? [0x0] : VideoEmojiMarkup.TlSerialize());
+                if(File is not null) bytes.AddRange(File.TlSerialize());
+                if(Video is not null) bytes.AddRange(Video.TlSerialize());
+                if(VideoStartTs is not null) bytes.AddRange(VideoStartTs.TlSerialize());
+                if(VideoEmojiMarkup is not null) bytes.AddRange(VideoEmojiMarkup.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class PhotosUploadProfilePhoto : TlFunction<PhotosPhotoBase> {
             public static readonly byte[] Identifier = [181,163,136,3,];
-            private int Flags;
             public bool Fallback {get;set;}
             public InputUserBase? Bot {get;set;}
             public InputFileBase? File {get;set;}
@@ -6689,28 +6360,25 @@ namespace Photos {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Fallback.TlSerialize());
-                bytes.AddRange(Bot is null ? [0x0] : Bot.TlSerialize());
-                bytes.AddRange(File is null ? [0x0] : File.TlSerialize());
-                bytes.AddRange(Video is null ? [0x0] : Video.TlSerialize());
-                bytes.AddRange(VideoStartTs is null ? [0x0] : VideoStartTs.TlSerialize());
-                bytes.AddRange(VideoEmojiMarkup is null ? [0x0] : VideoEmojiMarkup.TlSerialize());
+                bytes.AddRange((0 | (Bot is not null ? 32 : 0) | (File is not null ? 1 : 0) | (Video is not null ? 2 : 0) | (VideoStartTs is not null ? 4 : 0) | (VideoEmojiMarkup is not null ? 16 : 0) ).TlSerialize());
+                if(Bot is not null) bytes.AddRange(Bot.TlSerialize());
+                if(File is not null) bytes.AddRange(File.TlSerialize());
+                if(Video is not null) bytes.AddRange(Video.TlSerialize());
+                if(VideoStartTs is not null) bytes.AddRange(VideoStartTs.TlSerialize());
+                if(VideoEmojiMarkup is not null) bytes.AddRange(VideoEmojiMarkup.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class PhotosUpdateProfilePhoto : TlFunction<PhotosPhotoBase> {
             public static readonly byte[] Identifier = [57,32,232,9,];
-            private int Flags;
             public bool Fallback {get;set;}
             public InputUserBase? Bot {get;set;}
             public required InputPhotoBase Id {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Fallback.TlSerialize());
-                bytes.AddRange(Bot is null ? [0x0] : Bot.TlSerialize());
+                bytes.AddRange((0 | (Bot is not null ? 2 : 0) ).TlSerialize());
+                if(Bot is not null) bytes.AddRange(Bot.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 return bytes.ToArray();
             }
@@ -6718,9 +6386,9 @@ namespace Photos {
         public sealed class PhotosGetUserPhotos : TlFunction<PhotosPhotosBase> {
             public static readonly byte[] Identifier = [168,50,205,145,];
             public required InputUserBase UserId {get;set;}
-            public required int Offset {get;set;}
-            public required long MaxId {get;set;}
-            public required int Limit {get;set;}
+            public int Offset {get;set;}
+            public long MaxId {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -6745,16 +6413,14 @@ namespace Photos {
 namespace Premium {
         public sealed class PremiumGetBoostsList : TlFunction<PremiumBoostsListBase> {
             public static readonly byte[] Identifier = [96,118,246,96,];
-            private int Flags;
             public bool Gifts {get;set;}
             public required InputPeerBase Peer {get;set;}
             public required string Offset {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Gifts.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Offset.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
@@ -6763,14 +6429,13 @@ namespace Premium {
         }
         public sealed class PremiumApplyBoost : TlFunction<PremiumMyBoostsBase> {
             public static readonly byte[] Identifier = [70,167,125,107,];
-            private int Flags;
             public List<int>? Slots {get;set;}
             public required InputPeerBase Peer {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Slots is null ? [0x0] : Slots.TlSerialize());
+                bytes.AddRange((0 | (Slots is not null ? 1 : 0) ).TlSerialize());
+                if(Slots is not null) bytes.AddRange(Slots.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 return bytes.ToArray();
             }
@@ -6810,9 +6475,9 @@ namespace Stats {
         public sealed class StatsGetMessagePublicForwards : TlFunction<StatsPublicForwardsBase> {
             public static readonly byte[] Identifier = [68,1,21,95,];
             public required InputChannelBase Channel {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public required string Offset {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -6825,15 +6490,13 @@ namespace Stats {
         }
         public sealed class StatsGetMessageStats : TlFunction<StatsMessageStatsBase> {
             public static readonly byte[] Identifier = [245,163,224,182,];
-            private int Flags;
             public bool Dark {get;set;}
             public required InputChannelBase Channel {get;set;}
-            public required int MsgId {get;set;}
+            public int MsgId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Dark.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
                 bytes.AddRange(MsgId.TlSerialize());
                 return bytes.ToArray();
@@ -6841,15 +6504,13 @@ namespace Stats {
         }
         public sealed class StatsGetStoryStats : TlFunction<StatsStoryStatsBase> {
             public static readonly byte[] Identifier = [64,239,79,55,];
-            private int Flags;
             public bool Dark {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Dark.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 return bytes.ToArray();
@@ -6858,9 +6519,9 @@ namespace Stats {
         public sealed class StatsGetStoryPublicForwards : TlFunction<StatsPublicForwardsBase> {
             public static readonly byte[] Identifier = [246,126,67,166,];
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public required string Offset {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -6873,42 +6534,37 @@ namespace Stats {
         }
         public sealed class StatsGetBroadcastStats : TlFunction<StatsBroadcastStatsBase> {
             public static readonly byte[] Identifier = [26,68,66,171,];
-            private int Flags;
             public bool Dark {get;set;}
             public required InputChannelBase Channel {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Dark.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class StatsLoadAsyncGraph : TlFunction<StatsGraphBase> {
             public static readonly byte[] Identifier = [160,95,29,98,];
-            private int Flags;
             public required string Token {get;set;}
             public long? X {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (X is not null ? 1 : 0) ).TlSerialize());
                 bytes.AddRange(Token.TlSerialize());
-                bytes.AddRange(X is null ? [0x0] : X.TlSerialize());
+                if(X is not null) bytes.AddRange(X.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class StatsGetMegagroupStats : TlFunction<StatsMegagroupStatsBase> {
             public static readonly byte[] Identifier = [7,134,223,220,];
-            private int Flags;
             public bool Dark {get;set;}
             public required InputChannelBase Channel {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Dark.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
                 return bytes.ToArray();
             }
@@ -6917,7 +6573,6 @@ namespace Stats {
 namespace Stickers {
         public sealed class StickersCreateStickerSet : TlFunction<MessagesStickerSetBase> {
             public static readonly byte[] Identifier = [103,171,33,144,];
-            private int Flags;
             public bool Masks {get;set;}
             public bool Animated {get;set;}
             public bool Videos {get;set;}
@@ -6932,24 +6587,18 @@ namespace Stickers {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Masks.TlSerialize());
-                bytes.AddRange(Animated.TlSerialize());
-                bytes.AddRange(Videos.TlSerialize());
-                bytes.AddRange(Emojis.TlSerialize());
-                bytes.AddRange(TextColor.TlSerialize());
+                bytes.AddRange((0 | (Thumb is not null ? 4 : 0) | (Software is not null ? 8 : 0) ).TlSerialize());
                 bytes.AddRange(UserId.TlSerialize());
                 bytes.AddRange(Title.TlSerialize());
                 bytes.AddRange(ShortName.TlSerialize());
-                bytes.AddRange(Thumb is null ? [0x0] : Thumb.TlSerialize());
+                if(Thumb is not null) bytes.AddRange(Thumb.TlSerialize());
                 bytes.AddRange(Stickers.TlSerialize());
-                bytes.AddRange(Software is null ? [0x0] : Software.TlSerialize());
+                if(Software is not null) bytes.AddRange(Software.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class StickersChangeSticker : TlFunction<MessagesStickerSetBase> {
             public static readonly byte[] Identifier = [188,126,83,245,];
-            private int Flags;
             public required InputDocumentBase Sticker {get;set;}
             public string? Emoji {get;set;}
             public MaskCoordsBase? MaskCoords {get;set;}
@@ -6957,34 +6606,33 @@ namespace Stickers {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Emoji is not null ? 1 : 0) | (MaskCoords is not null ? 2 : 0) | (Keywords is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Sticker.TlSerialize());
-                bytes.AddRange(Emoji is null ? [0x0] : Emoji.TlSerialize());
-                bytes.AddRange(MaskCoords is null ? [0x0] : MaskCoords.TlSerialize());
-                bytes.AddRange(Keywords is null ? [0x0] : Keywords.TlSerialize());
+                if(Emoji is not null) bytes.AddRange(Emoji.TlSerialize());
+                if(MaskCoords is not null) bytes.AddRange(MaskCoords.TlSerialize());
+                if(Keywords is not null) bytes.AddRange(Keywords.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class StickersSetStickerSetThumb : TlFunction<MessagesStickerSetBase> {
             public static readonly byte[] Identifier = [146,83,106,167,];
-            private int Flags;
             public required InputStickerSetBase Stickerset {get;set;}
             public InputDocumentBase? Thumb {get;set;}
             public long? ThumbDocumentId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Thumb is not null ? 1 : 0) | (ThumbDocumentId is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Stickerset.TlSerialize());
-                bytes.AddRange(Thumb is null ? [0x0] : Thumb.TlSerialize());
-                bytes.AddRange(ThumbDocumentId is null ? [0x0] : ThumbDocumentId.TlSerialize());
+                if(Thumb is not null) bytes.AddRange(Thumb.TlSerialize());
+                if(ThumbDocumentId is not null) bytes.AddRange(ThumbDocumentId.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class StickersChangeStickerPosition : TlFunction<MessagesStickerSetBase> {
             public static readonly byte[] Identifier = [202,212,182,255,];
             public required InputDocumentBase Sticker {get;set;}
-            public required int Position {get;set;}
+            public int Position {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -7061,7 +6709,6 @@ namespace Stickers {
 namespace Stories {
         public sealed class StoriesSendStory : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [75,105,230,228,];
-            private int Flags;
             public bool Pinned {get;set;}
             public bool Noforwards {get;set;}
             public bool FwdModified {get;set;}
@@ -7071,50 +6718,43 @@ namespace Stories {
             public string? Caption {get;set;}
             public List<MessageEntityBase>? Entities {get;set;}
             public required List<InputPrivacyRuleBase> PrivacyRules {get;set;}
-            public required long RandomId {get;set;}
+            public long RandomId {get;set;}
             public int? Period {get;set;}
             public InputPeerBase? FwdFromId {get;set;}
             public int? FwdFromStory {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Pinned.TlSerialize());
-                bytes.AddRange(Noforwards.TlSerialize());
-                bytes.AddRange(FwdModified.TlSerialize());
+                bytes.AddRange((0 | (MediaAreas is not null ? 32 : 0) | (Caption is not null ? 1 : 0) | (Entities is not null ? 2 : 0) | (Period is not null ? 8 : 0) | (FwdFromId is not null ? 64 : 0) | (FwdFromStory is not null ? 64 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Media.TlSerialize());
-                bytes.AddRange(MediaAreas is null ? [0x0] : MediaAreas.TlSerialize());
-                bytes.AddRange(Caption is null ? [0x0] : Caption.TlSerialize());
-                bytes.AddRange(Entities is null ? [0x0] : Entities.TlSerialize());
+                if(MediaAreas is not null) bytes.AddRange(MediaAreas.TlSerialize());
+                if(Caption is not null) bytes.AddRange(Caption.TlSerialize());
+                if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
                 bytes.AddRange(PrivacyRules.TlSerialize());
                 bytes.AddRange(RandomId.TlSerialize());
-                bytes.AddRange(Period is null ? [0x0] : Period.TlSerialize());
-                bytes.AddRange(FwdFromId is null ? [0x0] : FwdFromId.TlSerialize());
-                bytes.AddRange(FwdFromStory is null ? [0x0] : FwdFromStory.TlSerialize());
+                if(Period is not null) bytes.AddRange(Period.TlSerialize());
+                if(FwdFromId is not null) bytes.AddRange(FwdFromId.TlSerialize());
+                if(FwdFromStory is not null) bytes.AddRange(FwdFromStory.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class StoriesGetStoryViewsList : TlFunction<StoriesStoryViewsListBase> {
             public static readonly byte[] Identifier = [87,60,210,126,];
-            private int Flags;
             public bool JustContacts {get;set;}
             public bool ReactionsFirst {get;set;}
             public bool ForwardsFirst {get;set;}
             public required InputPeerBase Peer {get;set;}
             public string? Q {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public required string Offset {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(JustContacts.TlSerialize());
-                bytes.AddRange(ReactionsFirst.TlSerialize());
-                bytes.AddRange(ForwardsFirst.TlSerialize());
+                bytes.AddRange((0 | (Q is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(Q is null ? [0x0] : Q.TlSerialize());
+                if(Q is not null) bytes.AddRange(Q.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
                 bytes.AddRange(Offset.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
@@ -7123,9 +6763,8 @@ namespace Stories {
         }
         public sealed class StoriesEditStory : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [70,186,131,181,];
-            private int Flags;
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public InputMediaBase? Media {get;set;}
             public List<MediaAreaBase>? MediaAreas {get;set;}
             public string? Caption {get;set;}
@@ -7134,51 +6773,47 @@ namespace Stories {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (Media is not null ? 1 : 0) | (MediaAreas is not null ? 8 : 0) | (Caption is not null ? 2 : 0) | (Entities is not null ? 2 : 0) | (PrivacyRules is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Media is null ? [0x0] : Media.TlSerialize());
-                bytes.AddRange(MediaAreas is null ? [0x0] : MediaAreas.TlSerialize());
-                bytes.AddRange(Caption is null ? [0x0] : Caption.TlSerialize());
-                bytes.AddRange(Entities is null ? [0x0] : Entities.TlSerialize());
-                bytes.AddRange(PrivacyRules is null ? [0x0] : PrivacyRules.TlSerialize());
+                if(Media is not null) bytes.AddRange(Media.TlSerialize());
+                if(MediaAreas is not null) bytes.AddRange(MediaAreas.TlSerialize());
+                if(Caption is not null) bytes.AddRange(Caption.TlSerialize());
+                if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
+                if(PrivacyRules is not null) bytes.AddRange(PrivacyRules.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class StoriesGetStoryReactionsList : TlFunction<StoriesStoryReactionsListBase> {
             public static readonly byte[] Identifier = [31,136,178,185,];
-            private int Flags;
             public bool ForwardsFirst {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public ReactionBase? Reaction {get;set;}
             public string? Offset {get;set;}
-            public required int Limit {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(ForwardsFirst.TlSerialize());
+                bytes.AddRange((0 | (Reaction is not null ? 1 : 0) | (Offset is not null ? 2 : 0) ).TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Reaction is null ? [0x0] : Reaction.TlSerialize());
-                bytes.AddRange(Offset is null ? [0x0] : Offset.TlSerialize());
+                if(Reaction is not null) bytes.AddRange(Reaction.TlSerialize());
+                if(Offset is not null) bytes.AddRange(Offset.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class StoriesSendReaction : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [178,54,215,127,];
-            private int Flags;
             public bool AddToRecent {get;set;}
             public required InputPeerBase Peer {get;set;}
-            public required int StoryId {get;set;}
+            public int StoryId {get;set;}
             public required ReactionBase Reaction {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(AddToRecent.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(StoryId.TlSerialize());
                 bytes.AddRange(Reaction.TlSerialize());
@@ -7187,17 +6822,14 @@ namespace Stories {
         }
         public sealed class StoriesGetAllStories : TlFunction<StoriesAllStoriesBase> {
             public static readonly byte[] Identifier = [37,214,176,238,];
-            private int Flags;
             public bool Next {get;set;}
             public bool Hidden {get;set;}
             public string? State {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Next.TlSerialize());
-                bytes.AddRange(Hidden.TlSerialize());
-                bytes.AddRange(State is null ? [0x0] : State.TlSerialize());
+                bytes.AddRange((0 | (State is not null ? 1 : 0) ).TlSerialize());
+                if(State is not null) bytes.AddRange(State.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -7227,15 +6859,14 @@ namespace Stories {
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Peer.TlSerialize());
                 bytes.AddRange(Id.TlSerialize());
-                bytes.AddRange(Pinned.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class StoriesGetPinnedStories : TlFunction<StoriesStoriesBase> {
             public static readonly byte[] Identifier = [220,165,33,88,];
             public required InputPeerBase Peer {get;set;}
-            public required int OffsetId {get;set;}
-            public required int Limit {get;set;}
+            public int OffsetId {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -7248,8 +6879,8 @@ namespace Stories {
         public sealed class StoriesGetStoriesArchive : TlFunction<StoriesStoriesBase> {
             public static readonly byte[] Identifier = [22,32,53,180,];
             public required InputPeerBase Peer {get;set;}
-            public required int OffsetId {get;set;}
-            public required int Limit {get;set;}
+            public int OffsetId {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -7261,15 +6892,12 @@ namespace Stories {
         }
         public sealed class StoriesActivateStealthMode : TlFunction<UpdatesBase> {
             public static readonly byte[] Identifier = [102,209,187,87,];
-            private int Flags;
             public bool Past {get;set;}
             public bool Future {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Past.TlSerialize());
-                bytes.AddRange(Future.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -7300,7 +6928,7 @@ namespace Stories {
         public sealed class StoriesReadStories : TlFunction<TlList<TlInt>> {
             public static readonly byte[] Identifier = [200,218,86,165,];
             public required InputPeerBase Peer {get;set;}
-            public required int MaxId {get;set;}
+            public int MaxId {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -7336,7 +6964,7 @@ namespace Stories {
         public sealed class StoriesExportStoryLink : TlFunction<ExportedStoryLinkBase> {
             public static readonly byte[] Identifier = [32,239,141,123,];
             public required InputPeerBase Peer {get;set;}
-            public required int Id {get;set;}
+            public int Id {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -7353,7 +6981,6 @@ namespace Stories {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
                 bytes.AddRange(Peer.TlSerialize());
-                bytes.AddRange(Hidden.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -7373,7 +7000,6 @@ namespace Stories {
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Hidden.TlSerialize());
                 return bytes.ToArray();
             }
         }
@@ -7417,39 +7043,36 @@ namespace Stories {
 namespace Updates {
         public sealed class UpdatesGetDifference : TlFunction<UpdatesDifferenceBase> {
             public static readonly byte[] Identifier = [99,247,194,25,];
-            private int Flags;
-            public required int Pts {get;set;}
+            public int Pts {get;set;}
             public int? PtsLimit {get;set;}
             public int? PtsTotalLimit {get;set;}
-            public required int Date {get;set;}
-            public required int Qts {get;set;}
+            public int Date {get;set;}
+            public int Qts {get;set;}
             public int? QtsLimit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
+                bytes.AddRange((0 | (PtsLimit is not null ? 2 : 0) | (PtsTotalLimit is not null ? 1 : 0) | (QtsLimit is not null ? 4 : 0) ).TlSerialize());
                 bytes.AddRange(Pts.TlSerialize());
-                bytes.AddRange(PtsLimit is null ? [0x0] : PtsLimit.TlSerialize());
-                bytes.AddRange(PtsTotalLimit is null ? [0x0] : PtsTotalLimit.TlSerialize());
+                if(PtsLimit is not null) bytes.AddRange(PtsLimit.TlSerialize());
+                if(PtsTotalLimit is not null) bytes.AddRange(PtsTotalLimit.TlSerialize());
                 bytes.AddRange(Date.TlSerialize());
                 bytes.AddRange(Qts.TlSerialize());
-                bytes.AddRange(QtsLimit is null ? [0x0] : QtsLimit.TlSerialize());
+                if(QtsLimit is not null) bytes.AddRange(QtsLimit.TlSerialize());
                 return bytes.ToArray();
             }
         }
         public sealed class UpdatesGetChannelDifference : TlFunction<UpdatesChannelDifferenceBase> {
             public static readonly byte[] Identifier = [120,61,23,3,];
-            private int Flags;
             public bool Force {get;set;}
             public required InputChannelBase Channel {get;set;}
             public required ChannelMessagesFilterBase Filter {get;set;}
-            public required int Pts {get;set;}
-            public required int Limit {get;set;}
+            public int Pts {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Force.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Channel.TlSerialize());
                 bytes.AddRange(Filter.TlSerialize());
                 bytes.AddRange(Pts.TlSerialize());
@@ -7469,18 +7092,15 @@ namespace Updates {
 namespace Upload {
         public sealed class UploadGetFile : TlFunction<UploadFileBase> {
             public static readonly byte[] Identifier = [190,53,83,190,];
-            private int Flags;
             public bool Precise {get;set;}
             public bool CdnSupported {get;set;}
             public required InputFileLocationBase Location {get;set;}
-            public required long Offset {get;set;}
-            public required int Limit {get;set;}
+            public long Offset {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
-                bytes.AddRange(Flags.TlSerialize());
-                bytes.AddRange(Precise.TlSerialize());
-                bytes.AddRange(CdnSupported.TlSerialize());
+                bytes.AddRange(0.TlSerialize());
                 bytes.AddRange(Location.TlSerialize());
                 bytes.AddRange(Offset.TlSerialize());
                 bytes.AddRange(Limit.TlSerialize());
@@ -7489,9 +7109,9 @@ namespace Upload {
         }
         public sealed class UploadSaveBigFilePart : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [61,103,123,222,];
-            public required long FileId {get;set;}
-            public required int FilePart {get;set;}
-            public required int FileTotalParts {get;set;}
+            public long FileId {get;set;}
+            public int FilePart {get;set;}
+            public int FileTotalParts {get;set;}
             public required byte[] Bytes {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -7505,8 +7125,8 @@ namespace Upload {
         }
         public sealed class UploadSaveFilePart : TlFunction<TlBool> {
             public static readonly byte[] Identifier = [33,166,4,179,];
-            public required long FileId {get;set;}
-            public required int FilePart {get;set;}
+            public long FileId {get;set;}
+            public int FilePart {get;set;}
             public required byte[] Bytes {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
@@ -7520,8 +7140,8 @@ namespace Upload {
         public sealed class UploadGetWebFile : TlFunction<UploadWebFileBase> {
             public static readonly byte[] Identifier = [141,129,230,36,];
             public required InputWebFileLocationBase Location {get;set;}
-            public required int Offset {get;set;}
-            public required int Limit {get;set;}
+            public int Offset {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -7534,8 +7154,8 @@ namespace Upload {
         public sealed class UploadGetCdnFile : TlFunction<UploadCdnFileBase> {
             public static readonly byte[] Identifier = [218,105,95,57,];
             public required byte[] FileToken {get;set;}
-            public required long Offset {get;set;}
-            public required int Limit {get;set;}
+            public long Offset {get;set;}
+            public int Limit {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -7560,7 +7180,7 @@ namespace Upload {
         public sealed class UploadGetCdnFileHashes : TlFunction<TlList<FileHashBase>> {
             public static readonly byte[] Identifier = [49,63,220,145,];
             public required byte[] FileToken {get;set;}
-            public required long Offset {get;set;}
+            public long Offset {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
@@ -7572,7 +7192,7 @@ namespace Upload {
         public sealed class UploadGetFileHashes : TlFunction<TlList<FileHashBase>> {
             public static readonly byte[] Identifier = [42,152,86,145,];
             public required InputFileLocationBase Location {get;set;}
-            public required long Offset {get;set;}
+            public long Offset {get;set;}
             public override byte[] TlSerialize() {
                 List<byte> bytes = [];
                 bytes.AddRange(Identifier);
