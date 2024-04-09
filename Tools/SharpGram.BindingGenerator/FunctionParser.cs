@@ -58,11 +58,13 @@ public static class FunctionParser
             foreach (var param in method.Params)
             {
                 //if (param.Type is "X") continue; //todo handle generics
-                b.AppendLine($"            public required {param.Type} {param.Name} {{get;set;}}");
+                if (param.IsFlag)
+                    b.AppendLine($"            private {param.Type} {param.Name};");
+                else
+                    b.AppendLine($"            public{((param.IsNullable || param.Type == "bool") ? "":" required")} {param.Type} {param.Name} {{get;set;}}");
             }
 
-            //todo impl this
-            //b.AppendLine("            public override byte[] TlSerialize() => throw new NotImplementedException();");
+
             var space = new string(' ', 4 * 3);
             b.AppendLine($"{space}public override byte[] TlSerialize() {{");
 

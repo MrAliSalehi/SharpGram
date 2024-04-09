@@ -19,12 +19,8 @@ Dictionary<string, List<Param>> commonParams = [];
 await GenerateTypes();
 
 await GenerateConstructors();
-goto step;
-//await GenerateMtProto();
+//await GenerateMtProto(); DO NOT uncomment this
 await GenerateFunctions();
-
-step:
-
 
 return;
 
@@ -136,9 +132,13 @@ async Task GenerateConstructors()
             strCtor.AppendLine($"    public class {type.Name} : {group.Key}Base, ITlSerializable, ITlDeserializable<{type.Name}> {{");
             TypeParser.GenerateId(strCtor, type.Id, false);
             foreach (var param in type.Params.Where(p => !commonProps.Contains(p)).ToList()) //don't redefine inherited properties
-                strCtor.AppendLine($"        public {param.Type} {param.Name} {{get;set;}} = default!;");
+            {
+                if (param.IsFlag)
+                    strCtor.AppendLine($"        private {param.Type} {param.Name};");
+                else
+                    strCtor.AppendLine($"        public{(param.IsNullable || param.Type == "bool" ? "": " required")} {param.Type} {param.Name} {{get;set;}}");
+            }
 
-            //var flagVarName = type.Params.FirstOrDefault(p => p.IsFlag)?.Name?.Camelize(); //todo
             TypeParser.GenerateTlSerializer(strCtor, type.Params);
             strCtor.AppendLine($"\n        public new static {type.Name} TlDeserialize(Deserializer des) {{");
 
