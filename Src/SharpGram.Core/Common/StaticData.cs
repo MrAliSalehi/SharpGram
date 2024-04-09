@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading.Channels;
 using OneOf.Types;
 
 namespace SharpGram.Core.Common;
@@ -20,4 +21,10 @@ internal static class StaticData
 
     public static readonly DateTime EpochTime = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Local);
 
+    public static readonly BoundedChannelOptions DefaultChannelOptions = new(1)
+    {
+        FullMode = BoundedChannelFullMode.Wait,
+        SingleWriter = true,
+        SingleReader = false,
+    };
 }

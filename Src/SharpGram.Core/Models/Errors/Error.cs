@@ -12,6 +12,7 @@ public abstract class ErrorBase
     public static implicit operator FatalException(ErrorBase e) => new(e);
     public bool Is(TransportErrType te) => this is TransportError e && e.TransportErr == te;
     public bool Is(ConnectionErrType c) => this is ConnectionError connectionError && connectionError.ConnectionErr == c;
+    public abstract override string ToString();
 }
 
 public class ConnectionError : ErrorBase
@@ -77,6 +78,7 @@ public sealed class RpcError : ErrorBase
             Msg = new string(raw.ToCharArray().Where(p=>char.IsLetter(p) || p == '_').ToArray()).ParseRpcErr()
         };
     }
+    public override string ToString() => Msg.ToStringFast();
 }
 
 //TODO add more errors

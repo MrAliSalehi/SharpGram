@@ -17,13 +17,7 @@ namespace SharpGram.Core.Network;
 public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthConnection, T> tcpConnection) : IDisposable
     where T : ITransport, new()
 {
-
-    private static readonly BoundedChannelOptions ChannelOptions = new(1)
-    {
-        FullMode = BoundedChannelFullMode.Wait,
-        SingleWriter = true,
-        SingleReader = false,
-    };
+    
 
     //TODO this is stupid as well, ig the whole "Event" thing needs to be changed...
     private static readonly object Sender = "NetworkManager";
@@ -46,7 +40,7 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
     }
     public ChannelReader<OneOf<byte[], ErrorBase>> Push(byte[] request, bool isContent = true, CancellationToken ct = default)
     {
-        var rp = Channel.CreateBounded<OneOf<byte[], ErrorBase>>(ChannelOptions);
+        var rp = Channel.CreateBounded<OneOf<byte[], ErrorBase>>(StaticData.DefaultChannelOptions);
         _pushLock.WaitAsync(ct);
         RequestQueue.Add(new Request(request, rp, isContent), ct);
         _pushLock.Release();

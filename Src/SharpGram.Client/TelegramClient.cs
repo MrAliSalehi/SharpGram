@@ -1,4 +1,7 @@
+using System.Threading.Channels;
+using EasyTg.Client.Models;
 using OneOf;
+using SharpGram.Core.Common;
 using SharpGram.Core.Contracts;
 using SharpGram.Core.Conversions;
 using SharpGram.Core.Cryptography;
@@ -6,6 +9,7 @@ using SharpGram.Core.Models.Errors;
 using SharpGram.Core.Mtproto.Connections;
 using SharpGram.Core.Mtproto.Transport;
 using SharpGram.Core.Network;
+using SharpGram.Tl.Constructors.AuthSentCodeNs;
 using SharpGram.Tl.Constructors.CodeSettingsNs;
 using SharpGram.Tl.Constructors.ConfigNs;
 using SharpGram.Tl.Functions.Auth;
@@ -75,12 +79,14 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
         return true; //might be a "false" case in the future ?
     }
-    public async Task AuthorizeAsync()
+    public Channel<LoginCode> NewAuthChannel() => Channel.CreateBounded<LoginCode>(StaticData.DefaultChannelOptions);
+    public async Task AuthorizeAsync(ChannelReader<LoginCode> reader)
     {
         if (Session.ClientOptions.IsLocalServer)
             Session.Phone = "9996621234"; //DC 2 with 4 random numbers (1234)
         //TODO login
 
+        resendCode:
         var send = await InvokeWithLayerAsync<AuthSendCode, AuthSentCodeBase>(new AuthSendCode
         {
             Settings = new CodeSettings(),
@@ -88,6 +94,42 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
             ApiId = Session.ApiId,
             PhoneNumber = Session.Phone
         });
+
+        if (send.TryPickT1(out var err, out var sentCodeBase))
+        {
+            //TODO handle err
+            Console.WriteLine($"{err}");
+        }
+
+        if (sentCodeBase is not AuthSentCode sentCode)
+        {
+            throw new FatalException("AuthSentCodeSuccess is not handled at the moment!");
+        }
+
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(TimeSpan.FromSeconds(sentCode.Timeout ?? 300)); //not sure why this would be null, or why 300? idk
+
+        try
+        {
+           await reader.WaitToReadAsync(cts.Token);
+           var code = await reader.ReadAsync(ct);
+
+           await InvokeWithLayerAsync<AuthSignIn,AuthAuthorizationBase>(new AuthSignIn
+           {
+               PhoneCode = code,
+               PhoneNumber = Session.Phone,
+               PhoneCodeHash = sentCode.PhoneCodeHash,
+           });
+        }
+        catch (OperationCanceledException)
+        {
+            //TODO count the attempts, have custom and dynamic policies for retrying
+            Console.WriteLine("your code is now invalid, trying again...");
+            await Task.Delay(TimeSpan.FromSeconds(1), ct);
+            goto resendCode;
+        }
+
+
     }
     public Task<OneOf<TRet, ErrorBase>> InvokeWithLayerAsync<TF, TRet>(TF func) where TRet : ITlDeserializable<TRet> where TF : TlFunction<TRet>
         => InvokeAsync(new InvokeWithLayer<TF, TRet>
