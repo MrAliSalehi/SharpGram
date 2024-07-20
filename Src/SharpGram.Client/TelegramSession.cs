@@ -9,6 +9,7 @@ using SharpGram.Tl.Mtproto;
 
 namespace EasyTg.Client;
 
+//TODO impl custom log functionality using third party packages
 public sealed class TelegramSession
 {
     //json ignore is set bc serializers cant serialize or deserialize complex Enumerable types such as ConcurrentBag which is we are using in Connection session
@@ -20,6 +21,7 @@ public sealed class TelegramSession
     public int ApiId { get; set; }
     public string Phone { get; set; } = "-";
     public ushort MaxConnectionRetries { get; set; } = 3;
+    public string? TwoFactorPassword { get; set; }
     public Config Config { get; internal set; } = new() { DcOptions = [], DcTxtDomainName = "", MeUrlPrefix = "" };
     public ClientOptions ClientOptions { get; set; } = new();
 

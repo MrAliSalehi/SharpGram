@@ -10,10 +10,12 @@ using SharpGram.Core.Models.Errors;
 using SharpGram.Core.Mtproto.Connections;
 using SharpGram.Core.Mtproto.Transport;
 using SharpGram.Core.Network;
+using SharpGram.Tl.Constructors.AccountPasswordNs;
 using SharpGram.Tl.Constructors.AuthAuthorizationNs;
 using SharpGram.Tl.Constructors.AuthSentCodeNs;
 using SharpGram.Tl.Constructors.CodeSettingsNs;
 using SharpGram.Tl.Constructors.ConfigNs;
+using SharpGram.Tl.Functions.Account;
 using SharpGram.Tl.Functions.Auth;
 using SharpGram.Tl.Functions.Help;
 using SharpGram.Tl.Mtproto;
@@ -130,6 +132,11 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
                 switch (err)
                 {
                     case RpcError { Msg: RpcErrors.SessionPasswordNeeded }: //2fa is enabled
+                        await Task.Delay(TimeSpan.FromSeconds(1), cts.Token);
+
+                        //safe to hard cast since it's the only constructor
+                        var token = (AccountPassword)await InvokeUnsafeAsync<AccountGetPassword, AccountPasswordBase>(new AccountGetPassword());
+
                         //TODO handle 2FA
                         break;
                     default:
@@ -158,10 +165,16 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
                 goto resendCode;
             return new LoginError(LoginErrorType.Timeout);
         }
+
         return new Success();
     }
-    public Task<OneOf<TRet, ErrorBase>> InvokeWithLayerAsync<TF, TRet>(TF func) where TRet : ITlDeserializable<TRet> where TF : TlFunction<TRet>
-        => InvokeAsync(new InvokeWithLayer<TF, TRet>
+    /// <summary>
+    /// this is a bad practice and should not be used, currently it's needed for some places
+    /// </summary>
+    internal async Task<TRet> InvokeUnsafeAsync<TF, TRet>(TF func) where TRet : ITlDeserializable<TRet> where TF : TlFunction<TRet> =>
+        (await InvokeWithLayerAsync<TF, TRet>(func)).AsT0;
+    public Task<OneOf<TRet, ErrorBase>> InvokeWithLayerAsync<TF, TRet>(TF func) where TRet : ITlDeserializable<TRet> where TF : TlFunction<TRet> =>
+        InvokeAsync(new InvokeWithLayer<TF, TRet>
         {
             Query = func,
             Layer = 172 //TODO handle layers
