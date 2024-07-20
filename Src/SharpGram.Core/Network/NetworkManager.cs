@@ -11,14 +11,14 @@ using SharpGram.Core.Mtproto.Transport;
 using SharpGram.Tl.Mtproto;
 using SharpGram.Tl.Types;
 using ResultChannel = System.Threading.Channels.Channel<OneOf.OneOf<byte[], SharpGram.Core.Models.Errors.ErrorBase>>;
+
 // ReSharper disable StaticMemberInGenericType
 
 namespace SharpGram.Core.Network;
+
 public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthConnection, T> tcpConnection) : IDisposable
     where T : ITransport, new()
 {
-    
-
     //TODO this is stupid as well, ig the whole "Event" thing needs to be changed...
     private static readonly object Sender = "NetworkManager";
     private TcpConnection<AuthConnection, T> Tcp { get; } = tcpConnection.IntoAuthenticated(comm);
@@ -34,9 +34,13 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
 
         _handles[0] = Task.Run(async () => await RunListenerAsync(ct), ct);
         _handles[1] = Task.Run(async () => await RunSenderAsync(ct), ct);
-        //_handles[2] = Task.Run(async () => await AckHandlerAsync(ct), ct);
-        //await SaltHandlerAsync(ct);
-        //await PingHandlerAsync(ct);
+        //don't need the extra noise while debugging
+#if RELEASE
+
+        _handles[2] = Task.Run(async () => await AckHandlerAsync(ct), ct);
+        await SaltHandlerAsync(ct);
+        await PingHandlerAsync(ct);
+#endif
     }
     public ChannelReader<OneOf<byte[], ErrorBase>> Push(byte[] request, bool isContent = true, CancellationToken ct = default)
     {
