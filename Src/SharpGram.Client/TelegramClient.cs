@@ -1,6 +1,7 @@
 using System.Threading.Channels;
 using EasyTg.Client.Models;
 using OneOf;
+using OneOf.Types;
 using SharpGram.Core.Common;
 using SharpGram.Core.Contracts;
 using SharpGram.Core.Conversions;
@@ -9,6 +10,7 @@ using SharpGram.Core.Models.Errors;
 using SharpGram.Core.Mtproto.Connections;
 using SharpGram.Core.Mtproto.Transport;
 using SharpGram.Core.Network;
+using SharpGram.Tl.Constructors.AuthAuthorizationNs;
 using SharpGram.Tl.Constructors.AuthSentCodeNs;
 using SharpGram.Tl.Constructors.CodeSettingsNs;
 using SharpGram.Tl.Constructors.ConfigNs;
@@ -16,6 +18,7 @@ using SharpGram.Tl.Functions.Auth;
 using SharpGram.Tl.Functions.Help;
 using SharpGram.Tl.Mtproto;
 using SharpGram.Tl.Types;
+using RpcError = SharpGram.Core.Models.Errors.RpcError;
 
 namespace EasyTg.Client;
 
@@ -80,13 +83,15 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
         return true; //might be a "false" case in the future ?
     }
     public Channel<LoginCode> NewAuthChannel() => Channel.CreateBounded<LoginCode>(StaticData.DefaultChannelOptions);
-    public async Task AuthorizeAsync(ChannelReader<LoginCode> reader)
+    public async Task<OneOf<Success, ErrorBase>> AuthorizeAsync(ChannelReader<LoginCode> reader)
     {
         if (Session.ClientOptions.IsLocalServer)
             Session.Phone = "9996621234"; //DC 2 with 4 random numbers (1234)
-        //TODO login
 
+        var attempts = 1;
+        //TODO login
         resendCode:
+        attempts++;
         var send = await InvokeWithLayerAsync<AuthSendCode, AuthSentCodeBase>(new AuthSendCode
         {
             Settings = new CodeSettings(),
@@ -95,41 +100,65 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
             PhoneNumber = Session.Phone
         });
 
-        if (send.TryPickT1(out var err, out var sentCodeBase))
+        if (send.TryPickT1(out var sendErr, out var sentCodeBase))
         {
             //TODO handle err
-            Console.WriteLine($"{err}");
+            Console.WriteLine($"{sendErr}");
         }
 
         if (sentCodeBase is not AuthSentCode sentCode)
-        {
             throw new FatalException("AuthSentCodeSuccess is not handled at the moment!");
-        }
+
 
         var cts = new CancellationTokenSource();
         cts.CancelAfter(TimeSpan.FromSeconds(sentCode.Timeout ?? 300)); //not sure why this would be null, or why 300? idk
 
         try
         {
-           await reader.WaitToReadAsync(cts.Token);
-           var code = await reader.ReadAsync(ct);
+            await reader.WaitToReadAsync(cts.Token);
+            var code = await reader.ReadAsync(ct);
 
-           await InvokeWithLayerAsync<AuthSignIn,AuthAuthorizationBase>(new AuthSignIn
-           {
-               PhoneCode = code,
-               PhoneNumber = Session.Phone,
-               PhoneCodeHash = sentCode.PhoneCodeHash,
-           });
+            var trySignin = await InvokeWithLayerAsync<AuthSignIn, AuthAuthorizationBase>(new AuthSignIn
+            {
+                PhoneCode = code,
+                PhoneNumber = Session.Phone,
+                PhoneCodeHash = sentCode.PhoneCodeHash,
+            });
+
+            if (trySignin.TryPickT1(out var err, out var signIn))
+            {
+                switch (err)
+                {
+                    case RpcError { Msg: RpcErrors.SessionPasswordNeeded }: //2fa is enabled
+                        //TODO handle 2FA
+                        break;
+                    default:
+                        return err;
+                }
+            }
+
+            switch (signIn)
+            {
+                case AuthAuthorization auth:
+                    //TODO handle auth.FutureAuthToken ? maybe?
+                    Console.WriteLine($"logged in as {auth.User.Id}.");
+                    //TODO complete the login
+                    return new Success();
+                case AuthAuthorizationSignUpRequired:
+                    //Third party libraries no longer have permissions to create new accounts
+                    return new LoginError(LoginErrorType.SignupRequired);
+            }
         }
         catch (OperationCanceledException)
         {
-            //TODO count the attempts, have custom and dynamic policies for retrying
+            //TODO have custom and dynamic policies for retrying
             Console.WriteLine("your code is now invalid, trying again...");
             await Task.Delay(TimeSpan.FromSeconds(1), ct);
-            goto resendCode;
+            if (attempts <= ts.MaxConnectionRetries)
+                goto resendCode;
+            return new LoginError(LoginErrorType.Timeout);
         }
-
-
+        return new Success();
     }
     public Task<OneOf<TRet, ErrorBase>> InvokeWithLayerAsync<TF, TRet>(TF func) where TRet : ITlDeserializable<TRet> where TF : TlFunction<TRet>
         => InvokeAsync(new InvokeWithLayer<TF, TRet>

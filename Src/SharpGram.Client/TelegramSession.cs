@@ -11,13 +11,16 @@ namespace EasyTg.Client;
 
 public sealed class TelegramSession
 {
+    //json ignore is set bc serializers cant serialize or deserialize complex Enumerable types such as ConcurrentBag which is we are using in Connection session
+    //so we are manually converting it from ConnectionSessionPoco to the OG type
     [JsonIgnore]
     public ConnectionSession ConnectionSession { get; private set; } = new();
 
     public string ApiHash { get; set; } = "";
     public int ApiId { get; set; }
     public string Phone { get; set; } = "-";
-    public Config Config { get; internal set; } = new() { DcOptions = [], DcTxtDomainName = "",MeUrlPrefix = ""};
+    public ushort MaxConnectionRetries { get; set; } = 3;
+    public Config Config { get; internal set; } = new() { DcOptions = [], DcTxtDomainName = "", MeUrlPrefix = "" };
     public ClientOptions ClientOptions { get; set; } = new();
 
     private static readonly JsonTypeInfo<TelegramSession> DefOption = SessionSerializerContext.Default.TelegramSession;
