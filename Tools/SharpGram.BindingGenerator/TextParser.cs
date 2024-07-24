@@ -45,7 +45,7 @@ public static class TextParser
                 }
                 else if (method.Type.StartsWith("List") || method.Type.StartsWith("Vector"))
                 {
-                    var inner = method.Type.Split('<')[1].Split('>')[0];
+                    var inner = method.Type.Split('<')[1].Split('>')[0].ReplaceBuiltinTypes();
 
                     if (inner.Contains('.'))
                     {

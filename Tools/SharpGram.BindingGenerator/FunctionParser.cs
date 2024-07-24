@@ -40,6 +40,8 @@ public static class FunctionParser
                                 returnType = "TlList<TlLong>";
                             else if (innerType is "int")
                                 returnType = "TlList<TlInt>";
+                            else if (innerType is "bool")
+                                returnType = "TlList<TlBool>";
                         }
                         else
                         {

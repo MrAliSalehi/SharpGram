@@ -91,7 +91,6 @@ public static class TypeParser
     public static List<IGrouping<string, Constructor>> Group(TelegramSchema schema) => schema.Types
         .GroupBy(p => p.Type)
         .Where(g => !g.Key.IsBuiltinType())
-        .Skip(1)
         .ToList();
     public static string? FindNamespace(this List<IGrouping<string, Constructor>> list, string type)
     {
