@@ -10,7 +10,7 @@ namespace SharpGram.Core.Mtproto;
 public sealed class ConnectionSession
 {
     public AuthKey AuthKey { get; set; } = AuthKey.Empty;
-    public long SessionId { get; init; } = BinaryPrimitives.ReadInt64LittleEndian(Helpers.GenRandomBytes(8));
+    public long SessionId { get; internal set; } = BinaryPrimitives.ReadInt64LittleEndian(Helpers.GenRandomBytes(8));
     public int TimeOffsetSeconds { get; set; }
     public ConcurrentBag<FutureSalt> FutureSalts { get; set; } = [];
     public int Sequence { get; set; }
@@ -21,4 +21,16 @@ public sealed class ConnectionSession
     public bool IgnoreUpdates { get; set; } = false;
 
     public bool IsAuthorized() => AuthKey.AuthKeyData.Length != 0;
+    public void Reset()
+    {
+        AuthKey = AuthKey.Empty;
+        SessionId = BinaryPrimitives.ReadInt64LittleEndian(Helpers.GenRandomBytes(8));
+        TimeOffsetSeconds = 0;
+        FutureSalts.Clear();;
+        Sequence = 0;
+        LastMsgId = 0;
+        PendingAcknowledges.Clear();
+        MsgCount = 0;
+        PingId = 0;
+    }
 }

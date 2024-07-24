@@ -1,6 +1,6 @@
 using SharpGram.Core.Mtproto;
 
-namespace EasyTg.Client;
+namespace SharpGram.Client;
 
 internal static class Extensions
 {

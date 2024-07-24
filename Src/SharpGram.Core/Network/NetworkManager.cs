@@ -103,6 +103,7 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
             }
             else
             {
+                Console.WriteLine("failed to write the request");
                 //if write operation failed just return the result, perhaps it could retry after a few moments here..
                 await item.ResultChannel.Writer.WriteAsync(e, ct);
             }

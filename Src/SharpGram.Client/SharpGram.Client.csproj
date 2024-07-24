@@ -4,7 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <RootNamespace>EasyTg.Client</RootNamespace>
+        <RootNamespace>SharpGram.Client</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

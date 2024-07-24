@@ -5,21 +5,30 @@ namespace SharpGram.Core.Models.Errors;
 
 public sealed class RpcError : ErrorBase
 {
-    public RpcErrors Msg { get; private init; } = RpcErrors.None;
+    public RpcErrorTypes Msg { get; private set; } = RpcErrorTypes.None;
+    public required string RawMessage { get; set; }
+    public uint Value { get; set; }
     public static RpcError FromBytes(byte[] result)
     {
         var raw = Encoding.UTF8.GetString(result[8..]);
-        return new RpcError
+        var msg = new string(raw.ToCharArray().Where(p => char.IsLetter(p) || p == '_').ToArray()).Trim();
+        var rp = new RpcError { RawMessage = msg };
+        if (msg.Contains("PHONE_MIGRATE_") || msg.Contains("NETWORK_MIGRATE_") || msg.Contains("FLOOD_WAIT_"))
         {
-            Msg = new string(raw.ToCharArray().Where(p => char.IsLetter(p) || p == '_').ToArray()).ParseRpcErr()
-        };
+            if (!uint.TryParse(msg.Split('_')[2], out var val))
+                throw new FatalException($"could not parse the value coming from the error: {msg}");
+            rp.Value = val;
+        }
+
+        rp.Msg = msg.ParseRpcErr();
+        return rp;
     }
     public override string ToString() => Msg.ToStringFast();
 }
 
 //TODO add more errors
 [EnumExtensions]
-public enum RpcErrors
+public enum RpcErrorTypes
 {
     PhoneCodeEmpty,
     PhoneCodeExpired,
@@ -37,33 +46,37 @@ public enum RpcErrors
     SmsCodeCreateFailed,
     InputRequestTooLong,
     SessionPasswordNeeded,
+    Migrate,
+    Flood,
     None
 }
 
 internal static class EnumExt
 {
     //maybe EnumGenerator can do this? IDK
-    public static RpcErrors ParseRpcErr(this string str)
+    public static RpcErrorTypes ParseRpcErr(this string str)
     {
+        if (str.Contains("MIGRATE")) return RpcErrorTypes.Migrate;
+        if (str.Contains("FLOOD")) return RpcErrorTypes.Flood;
         return str switch
         {
-            "PHONE_CODE_EMPTY"                  => RpcErrors.PhoneCodeEmpty,
-            "PHONE_CODE_EXPIRED"                => RpcErrors.PhoneCodeExpired,
-            "PHONE_CODE_HASH_EMPTY"             => RpcErrors.PhoneCodeHashEmpty,
-            "SEND_CODE_UNAVAILABLE"             => RpcErrors.SendCodeUnavailable,
-            "API_ID_INVALID"                    => RpcErrors.ApiIdInvalid,
-            "API_ID_PUBLISHED_FLOOD"            => RpcErrors.ApiIdPublishedFlood,
-            "AUTH_RESTART"                      => RpcErrors.AuthRestart,
-            "PHONE_NUMBER_APP_SIGNUP_FORBIDDEN" => RpcErrors.PhoneNumberAppSignupForbidden,
-            "PHONE_NUMBER_BANNED"               => RpcErrors.PhoneNumberBanned,
-            "PHONE_NUMBER_FLOOD"                => RpcErrors.PhoneNumberFlood,
-            "PHONE_NUMBER_INVALID"              => RpcErrors.PhoneNumberInvalid,
-            "PHONE_PASSWORD_FLOOD"              => RpcErrors.PhonePasswordFlood,
-            "PHONE_PASSWORD_PROTECTED"          => RpcErrors.PhonePasswordProtected,
-            "SMS_CODE_CREATE_FAILED"            => RpcErrors.SmsCodeCreateFailed,
-            "INPUT_REQUEST_TOO_LONG"            => RpcErrors.InputRequestTooLong,
-            "SESSION_PASSWORD_NEEDED"           => RpcErrors.SessionPasswordNeeded,
-            _                                   => RpcErrors.None
+            "PHONE_CODE_EMPTY"                  => RpcErrorTypes.PhoneCodeEmpty,
+            "PHONE_CODE_EXPIRED"                => RpcErrorTypes.PhoneCodeExpired,
+            "PHONE_CODE_HASH_EMPTY"             => RpcErrorTypes.PhoneCodeHashEmpty,
+            "SEND_CODE_UNAVAILABLE"             => RpcErrorTypes.SendCodeUnavailable,
+            "API_ID_INVALID"                    => RpcErrorTypes.ApiIdInvalid,
+            "API_ID_PUBLISHED_FLOOD"            => RpcErrorTypes.ApiIdPublishedFlood,
+            "AUTH_RESTART"                      => RpcErrorTypes.AuthRestart,
+            "PHONE_NUMBER_APP_SIGNUP_FORBIDDEN" => RpcErrorTypes.PhoneNumberAppSignupForbidden,
+            "PHONE_NUMBER_BANNED"               => RpcErrorTypes.PhoneNumberBanned,
+            "PHONE_NUMBER_FLOOD"                => RpcErrorTypes.PhoneNumberFlood,
+            "PHONE_NUMBER_INVALID"              => RpcErrorTypes.PhoneNumberInvalid,
+            "PHONE_PASSWORD_FLOOD"              => RpcErrorTypes.PhonePasswordFlood,
+            "PHONE_PASSWORD_PROTECTED"          => RpcErrorTypes.PhonePasswordProtected,
+            "SMS_CODE_CREATE_FAILED"            => RpcErrorTypes.SmsCodeCreateFailed,
+            "INPUT_REQUEST_TOO_LONG"            => RpcErrorTypes.InputRequestTooLong,
+            "SESSION_PASSWORD_NEEDED"           => RpcErrorTypes.SessionPasswordNeeded,
+            _                                   => RpcErrorTypes.None
         };
     }
 }

@@ -9,4 +9,14 @@ public class LoginError(LoginErrorType errorType) : ErrorBase
 }
 
 [EnumExtensions]
-public enum LoginErrorType { SignupRequired, None, Timeout,InvalidG,InvalidP }
+public enum LoginErrorType
+{
+    SignupRequired,
+    None,
+    Timeout,
+    InvalidG,
+    InvalidP,
+    TwoFactorPasswordMissing,
+    ChannelIsNotCreated,
+    UserAlreadyLoggedIn
+}

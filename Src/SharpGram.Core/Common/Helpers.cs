@@ -48,4 +48,18 @@ internal static class Helpers
                 return true;
         return false;
     }
+    public static byte[] HashArrays(params byte[][] arrays)
+    {
+        using var sha256 = SHA256.Create();
+        sha256.Initialize();
+        for (var i = 0; i < arrays.Length - 1; i++)
+        {
+            var arr = arrays[i];
+            sha256.TransformBlock(arr, 0, arr.Length, null, 0);
+        }
+
+        var last = arrays.Last();
+        sha256.TransformFinalBlock(last, 0, last.Length);
+        return sha256.Hash!;
+    }
 }

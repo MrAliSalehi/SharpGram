@@ -16,7 +16,7 @@ using Int128 = SharpGram.Core.Models.Types.Int128;
 namespace SharpGram.Tl.Mtproto;
 public static class ManualMtproto
 {
-    public const int TlLayer = 170;
+    public const int TlLayer = 172;
 }
 public partial class ResPq
 {
@@ -296,7 +296,7 @@ public sealed class RpcResult : RpcResultBase
 }
 
 
-public sealed class InitConnection<TFunc, TRet> : TlFunction<TRet> where TFunc : TlFunction<TRet> where TRet : ITlDeserializable<TRet>
+public sealed class InitConnection<TRet> : TlFunction<TRet> where TRet : ITlDeserializable<TRet>
 {
     public static readonly byte[] Identifier = [169,94,205,193];
 
@@ -309,7 +309,7 @@ public sealed class InitConnection<TFunc, TRet> : TlFunction<TRet> where TFunc :
     public string LangCode { get; set; } = default!;
     public InputClientProxyBase? Proxy { get; set; }
     public JSONObjectValueBase? Params { get; set; }
-    public TFunc Query { get; set; } = default!;
+    public TlFunction<TRet> Query { get; set; } = default!;
 
     public override byte[] TlSerialize()
     {
@@ -329,11 +329,11 @@ public sealed class InitConnection<TFunc, TRet> : TlFunction<TRet> where TFunc :
         return bytes.ToArray();
     }
 }
-public sealed class InvokeWithLayer<TFunc, TRet> : TlFunction<TRet> where TFunc : TlFunction<TRet> where TRet: ITlDeserializable<TRet>
+public sealed class InvokeWithLayer<TRet> : TlFunction<TRet> where TRet: ITlDeserializable<TRet>
 {
     private static readonly byte[] Identifier = [13,13,155,218];
-    public int Layer { get; set; } = ManualMtproto.TlLayer;
-    public TFunc Query { get; set; } = default!;
+    public int Layer { get => ManualMtproto.TlLayer; }
+    public TlFunction<TRet> Query { get; set; } = default!;
     public override byte[] TlSerialize()
     {
         List<byte> bytes = [];

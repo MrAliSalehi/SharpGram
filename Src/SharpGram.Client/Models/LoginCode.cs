@@ -1,4 +1,4 @@
-namespace EasyTg.Client.Models;
+namespace SharpGram.Client.Models;
 
 public readonly struct LoginCode(string code)
 {

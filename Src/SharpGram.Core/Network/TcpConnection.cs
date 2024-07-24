@@ -2,11 +2,11 @@ using System.Buffers.Binary;
 using System.Net;
 using System.Net.Sockets;
 using OneOf;
-using SharpGram.Core.Common;
 using SharpGram.Core.Models;
 using SharpGram.Core.Models.Errors;
 using SharpGram.Core.Mtproto.Connections;
 using SharpGram.Core.Mtproto.Transport;
+using SharpGram.Tl.Constructors.DcOptionNs;
 using TransportError = SharpGram.Core.Models.Errors.TransportError;
 
 namespace SharpGram.Core.Network;
@@ -17,25 +17,30 @@ public sealed class TcpConnection<TConnection, TTransport> : IDisposable
 {
     private readonly SemaphoreSlim _lockWrite = new(1);
     private TcpClient TcpClient { get; init; } = default!;
-    private IPEndPoint Dc { get; init; } = default!;
+    private IPEndPoint? EndPoint { get; init; }
     internal TConnection Connection { get; private init; } = default!;
-    internal TTransport Transport { get; init; } = default!;
+    private TTransport Transport { get; init; } = default!;
     private readonly byte[] _lenBuff = new byte[4];
-    private int DcId { get; init; }
     public TcpConnection<AuthConnection, TTransport> IntoAuthenticated(AuthConnection conn)
     {
-        return New(DcId, Transport, TcpClient, conn).AsT0; //already connected to socket so its safe to cast
+        return New(null, Transport, TcpClient, conn).AsT0; //already connected to socket so its safe to cast
     }
 
     /// this is ugly AF
-    public static OneOf<TcpConnection<T1, T2>, ConnectionError> New<T1, T2>(int dcId,
+    public static OneOf<TcpConnection<T1, T2>, ConnectionError> New<T1, T2>(DcOption? dc = default,
                                                                             T2? tr = default,
                                                                             TcpClient? tcpClient = default,
                                                                             T1? conn = default)
         where T1 : IConnection, new() where T2 : ITransport, new()
     {
-        var found = StaticData.DcList.TryGetValue(dcId, out var dc);
-        if (!found) return ConnectionError.New(ConnectionErrType.DcNotFound);
+        IPEndPoint? endpoint = null;
+        if (dc is not null)
+        {
+            endpoint = IPEndPoint.Parse(dc.IpAddress);
+            endpoint.Port = dc.Port;
+            Console.WriteLine($"connecting to {endpoint.Address.ToString()}:{endpoint.Port}");
+        }
+
         return new TcpConnection<T1, T2>
         {
             TcpClient = tcpClient ?? new TcpClient
@@ -43,8 +48,7 @@ public sealed class TcpConnection<TConnection, TTransport> : IDisposable
                 ReceiveTimeout = 500,
                 SendTimeout = 500
             },
-            DcId = dcId,
-            Dc = dc!,
+            EndPoint = endpoint,
             Transport = tr ?? new T2(),
             Connection = conn ?? new T1(),
         };
@@ -53,7 +57,7 @@ public sealed class TcpConnection<TConnection, TTransport> : IDisposable
     public async Task<bool> ConnectAsync(CancellationToken ct = default)
     {
         if (IsConnected()) return false;
-        await TcpClient.ConnectAsync(Dc, ct);
+        await TcpClient.ConnectAsync(EndPoint!, ct);
         return true;
     }
 

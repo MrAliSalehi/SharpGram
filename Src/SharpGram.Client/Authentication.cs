@@ -11,10 +11,11 @@ using SharpGram.Core.Models.Types;
 using SharpGram.Core.Mtproto.Connections;
 using SharpGram.Core.Mtproto.Transport;
 using SharpGram.Core.Network;
+using SharpGram.Tl.Constructors.DcOptionNs;
 using SharpGram.Tl.Mtproto;
 using Int128 = SharpGram.Core.Models.Types.Int128;
 
-namespace EasyTg.Client;
+namespace SharpGram.Client;
 
 public sealed record AuthResult([ReadOnly(true)] byte[] AuthKey, [ReadOnly(true)] int Offset, [ReadOnly(true)] long Salt);
 
@@ -36,9 +37,12 @@ public sealed class Authentication
         _nonce = Int128.GenerateRandom();
         _tcp = tcp;
     }
-    public static async Task<OneOf<Authentication, ConnectionError>> NewAsync(int dcId)
+    /// <summary>
+    /// https://core.telegram.org/mtproto/auth_key
+    /// </summary>
+    public static async Task<OneOf<Authentication, ConnectionError>> NewAsync(DcOption dc)
     {
-        var connected = TcpConnection<UnAuthConnection, Intermediate>.New<UnAuthConnection, Intermediate>(dcId).TryPickT0(out var connection, out var err);
+        var connected = TcpConnection<UnAuthConnection, Intermediate>.New<UnAuthConnection, Intermediate>(dc).TryPickT0(out var connection, out var err);
         if (!connected)
             return err;
         var auth = new Authentication(connection!);

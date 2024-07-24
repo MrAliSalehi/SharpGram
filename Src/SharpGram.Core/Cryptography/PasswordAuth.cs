@@ -1,5 +1,8 @@
 using System.Numerics;
+using System.Security.Cryptography;
+using System.Text;
 using OneOf;
+using SharpGram.Core.Common;
 using SharpGram.Core.Models.Errors;
 using SharpGram.Tl.Constructors.AccountPasswordNs;
 using SharpGram.Tl.Constructors.InputCheckPasswordSRPNs;
@@ -10,21 +13,82 @@ namespace SharpGram.Core.Cryptography;
 
 public static class PasswordAuth
 {
-    public static OneOf<InputCheckPasswordSRPBase, LoginError> Validate(AccountPasswordBase passwordBase)
+    public static OneOf<InputCheckPasswordSRPBase, LoginError> GenerateSrp(AccountPasswordBase passwordBase, string password)
     {
         var pwd = (AccountPassword)passwordBase;
 
         if (pwd.CurrentAlgo is not PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow a)
             throw new FatalException("Invalid KDF");
-        var (p, g, salt1, salt2) = (new BigInteger(a.P, true, true), a.G, a.Salt1, a.Salt2);
+        var (p, gInt, salt1, salt2) = (a.P, a.G, a.Salt1, a.Salt2);
+        var bigP = new BigInteger(p, true, true);
 
-        if (!IsSafePrime(p)) return new LoginError(LoginErrorType.InvalidP);
 
-        if (!IsValidG(g, p)) return new LoginError(LoginErrorType.InvalidG);
+        if (!IsSafePrime(bigP)) return new LoginError(LoginErrorType.InvalidP);
 
-        var (g_a, sr) = (pwd.SrpB, pwd.SecureRandom);
-        //TODO complete the validation and create the Srp object
-        throw new NotImplementedException();
+        if (!IsValidG(gInt, bigP)) return new LoginError(LoginErrorType.InvalidG);
+
+
+        var gHash = new byte[256];
+        gHash[^1] = (byte)gInt;
+        var gBArr = pwd.SrpB!;
+        var gB = new byte[256];
+        gBArr.CopyTo(gB.AsSpan(256 - gBArr.Length));
+
+        var bigG = new BigInteger(gInt);
+        var bigA = new BigInteger(pwd.SecureRandom, true, true);
+        var bigGb = new BigInteger(pwd.SrpB, true, true);
+        var pwdBytes = Encoding.UTF8.GetBytes(password);
+
+        //PH1(password, salt1, salt2) := SH(SH(password, salt1), salt2)
+        var ph1 = Helpers.HashArrays(salt2, Helpers.HashArrays(salt1, pwdBytes, salt1), salt2);
+
+        //PH2(password, salt1, salt2) := SH(pbkdf2(sha512, ph1, salt1, 100000), salt2)
+        var pbk = Rfc2898DeriveBytes.Pbkdf2(ph1, salt1, 100000, HashAlgorithmName.SHA512, 64);
+        var ph2 = Helpers.HashArrays(salt2, pbk, salt2);
+
+        //g_a := pow(g, a) mod p
+        var gaArray = BigInteger.ModPow(bigG, bigA, bigP).ToByteArray(true, true);
+        var gA = new byte[256];
+        gaArray.CopyTo(gA.AsSpan(256 - gaArray.Length));
+        //k := H(p | g)
+        var k = new BigInteger(Helpers.HashArrays(p, gHash), true, true);
+
+        //u := H(g_a | g_b)
+        var u = Helpers.HashArrays(gA, gB);
+        var bigU = new BigInteger(u, true, true);
+
+
+        //x := PH2(password, salt1, salt2)
+        var x = new BigInteger(ph2, true, true);
+
+        //v := pow(g, x) mod p
+        var v = BigInteger.ModPow(bigG, x, bigP);
+
+        //k_v := (k * v) mod p
+        var kV = k * v % bigP;
+
+        //t := (g_b - k_v) mod p (positive modulo, if the result is negative increment by p)
+        var t = (bigGb > kV ? bigGb - kV : kV - bigGb) % bigP;
+
+        //s_a := pow(t, a + u * x) mod p
+        var bigSa = BigInteger.ModPow(t, bigA + bigU * x, bigP).ToByteArray(true, true);
+
+        var sA = new byte[256];
+        bigSa.CopyTo(sA.AsSpan(256 - bigSa.Length));
+
+        //k_a := H(s_a)
+        var kA = SHA256.HashData(sA);
+
+        var hashP = SHA256.HashData(p);
+        var hashG = SHA256.HashData(gHash);
+
+        //xorPg = H(p) xor H(g)
+        var xorPg = hashP.Select((t1, i) => (byte)(t1 ^ hashG[i])).ToArray();
+
+
+        //M1 := H(xorPg | H(salt1) | H(salt2) | g_a | g_b | k_a)
+        var m1 = Helpers.HashArrays(xorPg, SHA256.HashData(salt1), SHA256.HashData(salt2), gA, gB, kA);
+        return new InputCheckPasswordSRP { A = gA, M1 = m1, SrpId = pwd.SrpId!.Value };
     }
     private static bool IsValidG(int g, BigInteger p)
     {
@@ -45,7 +109,7 @@ public static class PasswordAuth
             _ => false
         };
     }
-    public static bool IsSafePrime(BigInteger number)
+    internal static bool IsSafePrime(BigInteger number)
     {
         if (number <= 2)
             return false;

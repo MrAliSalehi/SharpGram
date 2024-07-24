@@ -1,7 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Channels;
-using EasyTg.Client.Models;
 using OneOf;
 using OneOf.Types;
+using SharpGram.Client.Models;
 using SharpGram.Core.Common;
 using SharpGram.Core.Contracts;
 using SharpGram.Core.Conversions;
@@ -10,44 +11,45 @@ using SharpGram.Core.Models.Errors;
 using SharpGram.Core.Mtproto.Connections;
 using SharpGram.Core.Mtproto.Transport;
 using SharpGram.Core.Network;
-using SharpGram.Tl.Constructors.AccountPasswordNs;
 using SharpGram.Tl.Constructors.AuthAuthorizationNs;
 using SharpGram.Tl.Constructors.AuthSentCodeNs;
 using SharpGram.Tl.Constructors.CodeSettingsNs;
 using SharpGram.Tl.Constructors.ConfigNs;
+using SharpGram.Tl.Constructors.DcOptionNs;
+using SharpGram.Tl.Constructors.InputUserNs;
+using SharpGram.Tl.Constructors.UserNs;
 using SharpGram.Tl.Functions.Account;
 using SharpGram.Tl.Functions.Auth;
 using SharpGram.Tl.Functions.Help;
+using SharpGram.Tl.Functions.Users;
 using SharpGram.Tl.Mtproto;
 using SharpGram.Tl.Types;
 using RpcError = SharpGram.Core.Models.Errors.RpcError;
 
-namespace EasyTg.Client;
+namespace SharpGram.Client;
 
+//TODO proper logging
 public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = default) : IDisposable
 {
-    public TelegramSession Session { get; set; } = ts;
+    public TelegramSession Session { get; } = ts;
     private NetworkManager<Intermediate> _requestManager = default!;
-
+    private ChannelReader<LoginCode>? _codeReader;
     public async Task<OneOf<bool, ErrorBase>> ConnectAsync()
     {
-        //todo handle the dc ips properly
-        var dcId = Session.ClientOptions.IsLocalServer ? 7 : Session.ClientOptions.IsTest ? 6 : 2;
+        var dc = Session.GetDc();
         TcpConnection<UnAuthConnection, Intermediate> con;
         if (Session.ConnectionSession.IsAuthorized())
         {
-            // we created the authKey through AuthKey Generation Process. we can now begin an authorized connection. https://core.telegram.org/mtproto/auth_key
-            var tryConnect = TcpConnection<UnAuthConnection, Intermediate>.New<UnAuthConnection, Intermediate>(dcId);
-            if (tryConnect.IsT1) return tryConnect.AsT1;
-            con = tryConnect.AsT0;
+            var tryConnect = TcpConnection<UnAuthConnection, Intermediate>.New<UnAuthConnection, Intermediate>(dc);
+            if (tryConnect.TryPickT1(out var e, out con))
+                return e;
         }
         else
         {
-            var tryAuth = await Authentication.NewAsync(dcId);
+            var tryAuth = await Authentication.NewAsync(dc);
 
-            if (tryAuth.IsT1) return tryAuth.AsT1;
-
-            var auth = tryAuth.AsT0; //failure is already checked
+            if (tryAuth.TryPickT1(out var e, out var auth))
+                return e;
 
             var result = await auth.AuthorizeAsync();
             var authKey = AuthKey.FromBytes(result.AuthKey);
@@ -66,7 +68,7 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
         //TODO handle updates
 
-        var initConn = await InvokeWithLayerAsync<InitConnection<HelpGetConfig, ConfigBase>, ConfigBase>(new()
+        var initConn = await InvokeAsync(new InitConnection<ConfigBase>
         {
             ApiId = Session.ApiId,
             DeviceModel = Session.ClientOptions.DeviceModel,
@@ -75,26 +77,43 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
             SystemLangCode = Session.ClientOptions.SystemLangCode,
             LangCode = Session.ClientOptions.LangCode,
             LangPack = Session.ClientOptions.LangPack,
-            Query = new()
+            Query = new HelpGetConfig()
         });
 
-        if (initConn.IsT1) return initConn.AsT1;
+        if (initConn.TryPickT1(out var er, out var init))
+            return er;
 
-        Session.Config = (Config)initConn.AsT0; //the only possibility
+        Session.Config = (Config)init; //the only possibility
 
         return true; //might be a "false" case in the future ?
     }
-    public Channel<LoginCode> NewAuthChannel() => Channel.CreateBounded<LoginCode>(StaticData.DefaultChannelOptions);
-    public async Task<OneOf<Success, ErrorBase>> AuthorizeAsync(ChannelReader<LoginCode> reader)
+
+    public bool IsAuthorized([MaybeNullWhen(true)] out ChannelWriter<LoginCode> writer)
     {
+        if (Session.User is null)
+        {
+            var channel = Channel.CreateBounded<LoginCode>(StaticData.DefaultChannelOptions);
+            _codeReader = channel.Reader;
+            writer = channel.Writer;
+            return false;
+        }
+
+        writer = null;
+        return true;
+    }
+    public async Task<OneOf<Success, ErrorBase>> AuthorizeAsync(bool force = false)
+    {
+        if (Session.User != null && !force) return new LoginError(LoginErrorType.UserAlreadyLoggedIn);
         if (Session.ClientOptions.IsLocalServer)
             Session.Phone = "9996621234"; //DC 2 with 4 random numbers (1234)
 
         var attempts = 1;
-        //TODO login
         resendCode:
         attempts++;
-        var send = await InvokeWithLayerAsync<AuthSendCode, AuthSentCodeBase>(new AuthSendCode
+
+        var re = await InvokeAsync(new UsersGetUsers{Id = [new InputUserSelf()]});
+
+        var send = await InvokeAsync(new AuthSendCode
         {
             Settings = new CodeSettings(),
             ApiHash = Session.ApiHash,
@@ -113,14 +132,16 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
 
         var cts = new CancellationTokenSource();
-        cts.CancelAfter(TimeSpan.FromSeconds(sentCode.Timeout ?? 300)); //not sure why this would be null, or why 300? idk
+        cts.CancelAfter(TimeSpan.FromSeconds(sentCode.Timeout is null or 0 ? 300 : sentCode.Timeout.Value)); //not sure why this would be null, or why 300? IDK
 
         try
         {
-            await reader.WaitToReadAsync(cts.Token);
-            var code = await reader.ReadAsync(ct);
+            if (_codeReader is null)
+                return new LoginError(LoginErrorType.ChannelIsNotCreated);
+            await _codeReader.WaitToReadAsync(cts.Token);
+            var code = await _codeReader.ReadAsync(ct);
 
-            var trySignin = await InvokeWithLayerAsync<AuthSignIn, AuthAuthorizationBase>(new AuthSignIn
+            var trySignin = await InvokeAsync(new AuthSignIn
             {
                 PhoneCode = code,
                 PhoneNumber = Session.Phone,
@@ -131,14 +152,28 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
             {
                 switch (err)
                 {
-                    case RpcError { Msg: RpcErrors.SessionPasswordNeeded }: //2fa is enabled
+                    case RpcError { Msg: RpcErrorTypes.SessionPasswordNeeded }: //2fa is enabled
+                        if (Session.TwoFactorPassword is null)
+                            return new LoginError(LoginErrorType.TwoFactorPasswordMissing);
+
                         await Task.Delay(TimeSpan.FromSeconds(1), cts.Token);
 
                         //safe to hard cast since it's the only constructor
-                        var token = (AccountPassword)await InvokeUnsafeAsync<AccountGetPassword, AccountPasswordBase>(new AccountGetPassword());
+                        var token = await InvokeUnsafeAsync(new AccountGetPassword());
+                        var trySrp = PasswordAuth.GenerateSrp(token, Session.TwoFactorPassword);
+                        if (trySrp.TryPickT1(out var srpErr, out var srp))
+                            return srpErr;
 
-                        //TODO handle 2FA
-                        break;
+                        var tryCheckPwd = await InvokeAsync(new AuthCheckPassword { Password = srp });
+                        if (tryCheckPwd.TryPickT1(out var checkErr, out var authBase))
+                            return checkErr;
+
+                        if (authBase is AuthAuthorizationSignUpRequired)
+                            return new LoginError(LoginErrorType.SignupRequired);
+
+                        Session.User = (User)((AuthAuthorization)authBase).User;
+                        Console.WriteLine($"logged in as ({Session.User.Id})[{Session.User.Phone}].");
+                        return StaticData.Success;
                     default:
                         return err;
                 }
@@ -148,9 +183,9 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
             {
                 case AuthAuthorization auth:
                     //TODO handle auth.FutureAuthToken ? maybe?
-                    Console.WriteLine($"logged in as {auth.User.Id}.");
-                    //TODO complete the login
-                    return new Success();
+                    Session.User = (User)auth.User;
+                    Console.WriteLine($"logged in as ({Session.User.Id})[{Session.User.Phone}].");
+                    return StaticData.Success;
                 case AuthAuthorizationSignUpRequired:
                     //Third party libraries no longer have permissions to create new accounts
                     return new LoginError(LoginErrorType.SignupRequired);
@@ -161,46 +196,59 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
             //TODO have custom and dynamic policies for retrying
             Console.WriteLine("your code is now invalid, trying again...");
             await Task.Delay(TimeSpan.FromSeconds(1), ct);
-            if (attempts <= ts.MaxConnectionRetries)
+            if (attempts <= Session.MaxConnectionRetries)
                 goto resendCode;
             return new LoginError(LoginErrorType.Timeout);
         }
 
-        return new Success();
+
+        return StaticData.Success;
     }
     /// <summary>
     /// this is a bad practice and should not be used, currently it's needed for some places
     /// </summary>
-    internal async Task<TRet> InvokeUnsafeAsync<TF, TRet>(TF func) where TRet : ITlDeserializable<TRet> where TF : TlFunction<TRet> =>
-        (await InvokeWithLayerAsync<TF, TRet>(func)).AsT0;
-    public Task<OneOf<TRet, ErrorBase>> InvokeWithLayerAsync<TF, TRet>(TF func) where TRet : ITlDeserializable<TRet> where TF : TlFunction<TRet> =>
-        InvokeAsync(new InvokeWithLayer<TF, TRet>
-        {
-            Query = func,
-            Layer = 172 //TODO handle layers
-        });
-    private async Task<OneOf<TRet, ErrorBase>> InvokeAsync<TRet>(TlFunction<TRet> func) where TRet : ITlDeserializable<TRet>
+    public async Task<TRet> InvokeUnsafeAsync<TRet>(TlFunction<TRet> func) where TRet : ITlDeserializable<TRet> => (await InvokeAsync(func)).AsT0;
+
+    public async Task<OneOf<TRet, ErrorBase>> InvokeAsync<TRet>(TlFunction<TRet> func) where TRet : ITlDeserializable<TRet>
     {
+        var withLayer = new InvokeWithLayer<TRet> { Query = func };
+        //TODO reconnection policy
         retry:
-        var reader = _requestManager.Push(func.TlSerialize().ToArray());
+        var reader = _requestManager.Push(withLayer.TlSerialize().ToArray());
         await reader.WaitToReadAsync(ct);
         var response = await reader.ReadAsync(ct);
-        //TODO handle errors
-        if (response.TryPickT1(out var err, out var data))
-        {
-            Console.WriteLine($"err : {err}");
-            if (err.Is(TransportErrType.RetryRequest))
-            {
-                Console.WriteLine("retrying the request");
-                if (ct.IsCancellationRequested)
-                    return err;
-                goto retry; //TODO perhaps there is no need of this
-            }
 
-            return err;
+        if (response.TryPickT0(out var data, out var err))
+            return func.DeserializeResponse(Deserializer.New(data));
+
+        Console.WriteLine($"err : {err}");
+
+        //TODO handle errors
+        if (err.Is(TransportErrType.RetryRequest))
+        {
+            Console.WriteLine("retrying the request");
+            if (ct.IsCancellationRequested)
+                return err;
+            goto retry; //TODO perhaps there is no need of this
         }
 
-        return func.DeserializeResponse(Deserializer.New(data));
+        if (err.Is(RpcErrorTypes.Migrate))
+        {
+            Console.WriteLine("migration requested...changing the dc");
+            var rpcErr = (RpcError)err;
+            var dcToMigrate = rpcErr.Value;
+            if (Session.Config.ThisDc == dcToMigrate)
+                throw new FatalException("the requested dc and currentDc are the same, this should not happen");
+            var targetDc = Session.Config.DcOptions.OfType<DcOption>().FirstOrDefault(p => p.Id == dcToMigrate);
+            Session.ConnectionSession.Reset();
+            Session.CurrentDc = targetDc;
+            //request manager will be recreated automatically
+            await ConnectAsync();
+            await AuthorizeAsync();
+            goto retry;
+        }
+
+        return err;
     }
     public void Dispose()
     {

@@ -1,4 +1,4 @@
-namespace EasyTg.Client;
+namespace SharpGram.Client;
 
 public sealed class ClientOptions
 {
