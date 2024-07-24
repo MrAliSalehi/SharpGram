@@ -92,7 +92,7 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: InputMediaEmpty, InputMediaUploadedPhoto, InputMediaPhoto, InputMediaGeoPoint, InputMediaContact, InputMediaUploadedDocument, InputMediaDocument, InputMediaVenue, InputMediaPhotoExternal, InputMediaDocumentExternal, InputMediaGame, InputMediaInvoice, InputMediaGeoLive, InputMediaPoll, InputMediaDice, InputMediaStory, InputMediaWebPage,
+/// derived Types: InputMediaEmpty, InputMediaUploadedPhoto, InputMediaPhoto, InputMediaGeoPoint, InputMediaContact, InputMediaUploadedDocument, InputMediaDocument, InputMediaVenue, InputMediaPhotoExternal, InputMediaDocumentExternal, InputMediaGame, InputMediaInvoice, InputMediaGeoLive, InputMediaPoll, InputMediaDice, InputMediaStory, InputMediaWebPage, InputMediaPaidMedia,
     public abstract class InputMediaBase : ITlSerializable, ITlDeserializable<InputMediaBase> {
         public static InputMediaBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -131,6 +131,8 @@ namespace SharpGram.Tl.Types;
                 return Tel.InputMediaNs.InputMediaStory.TlDeserialize(des);
             if (id.SequenceEqual(Tel.InputMediaNs.InputMediaWebPage.Identifier))
                 return Tel.InputMediaNs.InputMediaWebPage.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.InputMediaNs.InputMediaPaidMedia.Identifier))
+                return Tel.InputMediaNs.InputMediaPaidMedia.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -145,12 +147,13 @@ namespace SharpGram.Tl.Types;
             Tel.InputMediaNs.InputMediaPhotoExternal InputMediaPhotoExternal440664550 => InputMediaPhotoExternal440664550.TlSerialize(),
             Tel.InputMediaNs.InputMediaDocumentExternal InputMediaDocumentExternal78455655 => InputMediaDocumentExternal78455655.TlSerialize(),
             Tel.InputMediaNs.InputMediaGame InputMediaGame750828557 => InputMediaGame750828557.TlSerialize(),
-            Tel.InputMediaNs.InputMediaInvoice InputMediaInvoice1900697899 => InputMediaInvoice1900697899.TlSerialize(),
+            Tel.InputMediaNs.InputMediaInvoice InputMediaInvoice1080028941 => InputMediaInvoice1080028941.TlSerialize(),
             Tel.InputMediaNs.InputMediaGeoLive InputMediaGeoLive1759532989 => InputMediaGeoLive1759532989.TlSerialize(),
             Tel.InputMediaNs.InputMediaPoll InputMediaPoll261416433 => InputMediaPoll261416433.TlSerialize(),
             Tel.InputMediaNs.InputMediaDice InputMediaDice428884101 => InputMediaDice428884101.TlSerialize(),
             Tel.InputMediaNs.InputMediaStory InputMediaStory1979852936 => InputMediaStory1979852936.TlSerialize(),
             Tel.InputMediaNs.InputMediaWebPage InputMediaWebPage1038383031 => InputMediaWebPage1038383031.TlSerialize(),
+            Tel.InputMediaNs.InputMediaPaidMedia InputMediaPaidMedia1436147773 => InputMediaPaidMedia1436147773.TlSerialize(),
             _=> [],
         };
     }
@@ -368,9 +371,9 @@ namespace SharpGram.Tl.Types;
             Tel.UserStatusNs.UserStatusEmpty UserStatusEmpty164646985 => UserStatusEmpty164646985.TlSerialize(),
             Tel.UserStatusNs.UserStatusOnline UserStatusOnline306628279 => UserStatusOnline306628279.TlSerialize(),
             Tel.UserStatusNs.UserStatusOffline UserStatusOffline9203775 => UserStatusOffline9203775.TlSerialize(),
-            Tel.UserStatusNs.UserStatusRecently UserStatusRecently496024847 => UserStatusRecently496024847.TlSerialize(),
-            Tel.UserStatusNs.UserStatusLastWeek UserStatusLastWeek129960444 => UserStatusLastWeek129960444.TlSerialize(),
-            Tel.UserStatusNs.UserStatusLastMonth UserStatusLastMonth2011940674 => UserStatusLastMonth2011940674.TlSerialize(),
+            Tel.UserStatusNs.UserStatusRecently UserStatusRecently2065268168 => UserStatusRecently2065268168.TlSerialize(),
+            Tel.UserStatusNs.UserStatusLastWeek UserStatusLastWeek1410997530 => UserStatusLastWeek1410997530.TlSerialize(),
+            Tel.UserStatusNs.UserStatusLastMonth UserStatusLastMonth1703516023 => UserStatusLastMonth1703516023.TlSerialize(),
             _=> [],
         };
     }
@@ -420,6 +423,7 @@ namespace SharpGram.Tl.Types;
         public int? RequestsPending {get;set;} = default!;
         public List<long>? RecentRequesters {get;set;} = default!;
         public ChatReactionsBase? AvailableReactions {get;set;} = default!;
+        public int? ReactionsLimit {get;set;} = default!;
         public static ChatFullBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
 
@@ -430,8 +434,8 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.ChatFullNs.ChatFull ChatFull908914376 => ChatFull908914376.TlSerialize(),
-            Tel.ChatFullNs.ChannelFull ChannelFull254528367 => ChannelFull254528367.TlSerialize(),
+            Tel.ChatFullNs.ChatFull ChatFull640893467 => ChatFull640893467.TlSerialize(),
+            Tel.ChatFullNs.ChannelFull ChannelFull1146407795 => ChannelFull1146407795.TlSerialize(),
             _=> [],
         };
     }
@@ -508,12 +512,12 @@ namespace SharpGram.Tl.Types;
         }
         public byte[] TlSerialize() => this switch {
             Tel.MessageNs.MessageEmpty MessageEmpty1868117372 => MessageEmpty1868117372.TlSerialize(),
-            Tel.MessageNs.Message Message1992213009 => Message1992213009.TlSerialize(),
+            Tel.MessageNs.Message Message1808510398 => Message1808510398.TlSerialize(),
             Tel.MessageNs.MessageService MessageService721967202 => MessageService721967202.TlSerialize(),
             _=> [],
         };
     }
-/// derived Types: MessageMediaEmpty, MessageMediaPhoto, MessageMediaGeo, MessageMediaContact, MessageMediaUnsupported, MessageMediaDocument, MessageMediaWebPage, MessageMediaVenue, MessageMediaGame, MessageMediaInvoice, MessageMediaGeoLive, MessageMediaPoll, MessageMediaDice, MessageMediaStory, MessageMediaGiveaway, MessageMediaGiveawayResults,
+/// derived Types: MessageMediaEmpty, MessageMediaPhoto, MessageMediaGeo, MessageMediaContact, MessageMediaUnsupported, MessageMediaDocument, MessageMediaWebPage, MessageMediaVenue, MessageMediaGame, MessageMediaInvoice, MessageMediaGeoLive, MessageMediaPoll, MessageMediaDice, MessageMediaStory, MessageMediaGiveaway, MessageMediaGiveawayResults, MessageMediaPaidMedia,
     public abstract class MessageMediaBase : ITlSerializable, ITlDeserializable<MessageMediaBase> {
         public static MessageMediaBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -550,6 +554,8 @@ namespace SharpGram.Tl.Types;
                 return Tel.MessageMediaNs.MessageMediaGiveaway.TlDeserialize(des);
             if (id.SequenceEqual(Tel.MessageMediaNs.MessageMediaGiveawayResults.Identifier))
                 return Tel.MessageMediaNs.MessageMediaGiveawayResults.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.MessageMediaNs.MessageMediaPaidMedia.Identifier))
+                return Tel.MessageMediaNs.MessageMediaPaidMedia.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -569,10 +575,11 @@ namespace SharpGram.Tl.Types;
             Tel.MessageMediaNs.MessageMediaStory MessageMediaStory1758159491 => MessageMediaStory1758159491.TlSerialize(),
             Tel.MessageMediaNs.MessageMediaGiveaway MessageMediaGiveaway626162256 => MessageMediaGiveaway626162256.TlSerialize(),
             Tel.MessageMediaNs.MessageMediaGiveawayResults MessageMediaGiveawayResults963047320 => MessageMediaGiveawayResults963047320.TlSerialize(),
+            Tel.MessageMediaNs.MessageMediaPaidMedia MessageMediaPaidMedia1467669359 => MessageMediaPaidMedia1467669359.TlSerialize(),
             _=> [],
         };
     }
-/// derived Types: MessageActionEmpty, MessageActionChatCreate, MessageActionChatEditTitle, MessageActionChatEditPhoto, MessageActionChatDeletePhoto, MessageActionChatAddUser, MessageActionChatDeleteUser, MessageActionChatJoinedByLink, MessageActionChannelCreate, MessageActionChatMigrateTo, MessageActionChannelMigrateFrom, MessageActionPinMessage, MessageActionHistoryClear, MessageActionGameScore, MessageActionPaymentSentMe, MessageActionPaymentSent, MessageActionPhoneCall, MessageActionScreenshotTaken, MessageActionCustomAction, MessageActionBotAllowed, MessageActionSecureValuesSentMe, MessageActionSecureValuesSent, MessageActionContactSignUp, MessageActionGeoProximityReached, MessageActionGroupCall, MessageActionInviteToGroupCall, MessageActionSetMessagesTTL, MessageActionGroupCallScheduled, MessageActionSetChatTheme, MessageActionChatJoinedByRequest, MessageActionWebViewDataSentMe, MessageActionWebViewDataSent, MessageActionGiftPremium, MessageActionTopicCreate, MessageActionTopicEdit, MessageActionSuggestProfilePhoto, MessageActionRequestedPeer, MessageActionSetChatWallPaper, MessageActionGiftCode, MessageActionGiveawayLaunch, MessageActionGiveawayResults,
+/// derived Types: MessageActionEmpty, MessageActionChatCreate, MessageActionChatEditTitle, MessageActionChatEditPhoto, MessageActionChatDeletePhoto, MessageActionChatAddUser, MessageActionChatDeleteUser, MessageActionChatJoinedByLink, MessageActionChannelCreate, MessageActionChatMigrateTo, MessageActionChannelMigrateFrom, MessageActionPinMessage, MessageActionHistoryClear, MessageActionGameScore, MessageActionPaymentSentMe, MessageActionPaymentSent, MessageActionPhoneCall, MessageActionScreenshotTaken, MessageActionCustomAction, MessageActionBotAllowed, MessageActionSecureValuesSentMe, MessageActionSecureValuesSent, MessageActionContactSignUp, MessageActionGeoProximityReached, MessageActionGroupCall, MessageActionInviteToGroupCall, MessageActionSetMessagesTTL, MessageActionGroupCallScheduled, MessageActionSetChatTheme, MessageActionChatJoinedByRequest, MessageActionWebViewDataSentMe, MessageActionWebViewDataSent, MessageActionGiftPremium, MessageActionTopicCreate, MessageActionTopicEdit, MessageActionSuggestProfilePhoto, MessageActionRequestedPeer, MessageActionSetChatWallPaper, MessageActionGiftCode, MessageActionGiveawayLaunch, MessageActionGiveawayResults, MessageActionBoostApply, MessageActionRequestedPeerSentMe, MessageActionPaymentRefunded,
     public abstract class MessageActionBase : ITlSerializable, ITlDeserializable<MessageActionBase> {
         public static MessageActionBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -659,6 +666,12 @@ namespace SharpGram.Tl.Types;
                 return Tel.MessageActionNs.MessageActionGiveawayLaunch.TlDeserialize(des);
             if (id.SequenceEqual(Tel.MessageActionNs.MessageActionGiveawayResults.Identifier))
                 return Tel.MessageActionNs.MessageActionGiveawayResults.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.MessageActionNs.MessageActionBoostApply.Identifier))
+                return Tel.MessageActionNs.MessageActionBoostApply.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.MessageActionNs.MessageActionRequestedPeerSentMe.Identifier))
+                return Tel.MessageActionNs.MessageActionRequestedPeerSentMe.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.MessageActionNs.MessageActionPaymentRefunded.Identifier))
+                return Tel.MessageActionNs.MessageActionPaymentRefunded.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -703,6 +716,9 @@ namespace SharpGram.Tl.Types;
             Tel.MessageActionNs.MessageActionGiftCode MessageActionGiftCode1737240073 => MessageActionGiftCode1737240073.TlSerialize(),
             Tel.MessageActionNs.MessageActionGiveawayLaunch MessageActionGiveawayLaunch858499565 => MessageActionGiveawayLaunch858499565.TlSerialize(),
             Tel.MessageActionNs.MessageActionGiveawayResults MessageActionGiveawayResults715107781 => MessageActionGiveawayResults715107781.TlSerialize(),
+            Tel.MessageActionNs.MessageActionBoostApply MessageActionBoostApply872240531 => MessageActionBoostApply872240531.TlSerialize(),
+            Tel.MessageActionNs.MessageActionRequestedPeerSentMe MessageActionRequestedPeerSentMe1816979384 => MessageActionRequestedPeerSentMe1816979384.TlSerialize(),
+            Tel.MessageActionNs.MessageActionPaymentRefunded MessageActionPaymentRefunded1102307842 => MessageActionPaymentRefunded1102307842.TlSerialize(),
             _=> [],
         };
     }
@@ -905,7 +921,7 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.PeerSettingsNs.PeerSettings PeerSettings1525149427 => PeerSettings1525149427.TlSerialize(),
+            Tel.PeerSettingsNs.PeerSettings PeerSettings1395233698 => PeerSettings1395233698.TlSerialize(),
             _=> [],
         };
     }
@@ -982,7 +998,7 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.UserFullNs.UserFull UserFull1179571092 => UserFull1179571092.TlSerialize(),
+            Tel.UserFullNs.UserFull UserFull862357728 => UserFull862357728.TlSerialize(),
             _=> [],
         };
     }
@@ -1230,7 +1246,7 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: UpdateNewMessage, UpdateMessageID, UpdateDeleteMessages, UpdateUserTyping, UpdateChatUserTyping, UpdateChatParticipants, UpdateUserStatus, UpdateUserName, UpdateNewAuthorization, UpdateNewEncryptedMessage, UpdateEncryptedChatTyping, UpdateEncryption, UpdateEncryptedMessagesRead, UpdateChatParticipantAdd, UpdateChatParticipantDelete, UpdateDcOptions, UpdateNotifySettings, UpdateServiceNotification, UpdatePrivacy, UpdateUserPhone, UpdateReadHistoryInbox, UpdateReadHistoryOutbox, UpdateWebPage, UpdateReadMessagesContents, UpdateChannelTooLong, UpdateChannel, UpdateNewChannelMessage, UpdateReadChannelInbox, UpdateDeleteChannelMessages, UpdateChannelMessageViews, UpdateChatParticipantAdmin, UpdateNewStickerSet, UpdateStickerSetsOrder, UpdateStickerSets, UpdateSavedGifs, UpdateBotInlineQuery, UpdateBotInlineSend, UpdateEditChannelMessage, UpdateBotCallbackQuery, UpdateEditMessage, UpdateInlineBotCallbackQuery, UpdateReadChannelOutbox, UpdateDraftMessage, UpdateReadFeaturedStickers, UpdateRecentStickers, UpdateConfig, UpdatePtsChanged, UpdateChannelWebPage, UpdateDialogPinned, UpdatePinnedDialogs, UpdateBotWebhookJSON, UpdateBotWebhookJSONQuery, UpdateBotShippingQuery, UpdateBotPrecheckoutQuery, UpdatePhoneCall, UpdateLangPackTooLong, UpdateLangPack, UpdateFavedStickers, UpdateChannelReadMessagesContents, UpdateContactsReset, UpdateChannelAvailableMessages, UpdateDialogUnreadMark, UpdateMessagePoll, UpdateChatDefaultBannedRights, UpdateFolderPeers, UpdatePeerSettings, UpdatePeerLocated, UpdateNewScheduledMessage, UpdateDeleteScheduledMessages, UpdateTheme, UpdateGeoLiveViewed, UpdateLoginToken, UpdateMessagePollVote, UpdateDialogFilter, UpdateDialogFilterOrder, UpdateDialogFilters, UpdatePhoneCallSignalingData, UpdateChannelMessageForwards, UpdateReadChannelDiscussionInbox, UpdateReadChannelDiscussionOutbox, UpdatePeerBlocked, UpdateChannelUserTyping, UpdatePinnedMessages, UpdatePinnedChannelMessages, UpdateChat, UpdateGroupCallParticipants, UpdateGroupCall, UpdatePeerHistoryTTL, UpdateChatParticipant, UpdateChannelParticipant, UpdateBotStopped, UpdateGroupCallConnection, UpdateBotCommands, UpdatePendingJoinRequests, UpdateBotChatInviteRequester, UpdateMessageReactions, UpdateAttachMenuBots, UpdateWebViewResultSent, UpdateBotMenuButton, UpdateSavedRingtones, UpdateTranscribedAudio, UpdateReadFeaturedEmojiStickers, UpdateUserEmojiStatus, UpdateRecentEmojiStatuses, UpdateRecentReactions, UpdateMoveStickerSetToTop, UpdateMessageExtendedMedia, UpdateChannelPinnedTopic, UpdateChannelPinnedTopics, UpdateUser, UpdateAutoSaveSettings, UpdateGroupInvitePrivacyForbidden, UpdateStory, UpdateReadStories, UpdateStoryID, UpdateStoriesStealthMode, UpdateSentStoryReaction, UpdateBotChatBoost, UpdateChannelViewForumAsMessages, UpdatePeerWallpaper, UpdateBotMessageReaction, UpdateBotMessageReactions, UpdateSavedDialogPinned, UpdatePinnedSavedDialogs,
+/// derived Types: UpdateNewMessage, UpdateMessageID, UpdateDeleteMessages, UpdateUserTyping, UpdateChatUserTyping, UpdateChatParticipants, UpdateUserStatus, UpdateUserName, UpdateNewAuthorization, UpdateNewEncryptedMessage, UpdateEncryptedChatTyping, UpdateEncryption, UpdateEncryptedMessagesRead, UpdateChatParticipantAdd, UpdateChatParticipantDelete, UpdateDcOptions, UpdateNotifySettings, UpdateServiceNotification, UpdatePrivacy, UpdateUserPhone, UpdateReadHistoryInbox, UpdateReadHistoryOutbox, UpdateWebPage, UpdateReadMessagesContents, UpdateChannelTooLong, UpdateChannel, UpdateNewChannelMessage, UpdateReadChannelInbox, UpdateDeleteChannelMessages, UpdateChannelMessageViews, UpdateChatParticipantAdmin, UpdateNewStickerSet, UpdateStickerSetsOrder, UpdateStickerSets, UpdateSavedGifs, UpdateBotInlineQuery, UpdateBotInlineSend, UpdateEditChannelMessage, UpdateBotCallbackQuery, UpdateEditMessage, UpdateInlineBotCallbackQuery, UpdateReadChannelOutbox, UpdateDraftMessage, UpdateReadFeaturedStickers, UpdateRecentStickers, UpdateConfig, UpdatePtsChanged, UpdateChannelWebPage, UpdateDialogPinned, UpdatePinnedDialogs, UpdateBotWebhookJSON, UpdateBotWebhookJSONQuery, UpdateBotShippingQuery, UpdateBotPrecheckoutQuery, UpdatePhoneCall, UpdateLangPackTooLong, UpdateLangPack, UpdateFavedStickers, UpdateChannelReadMessagesContents, UpdateContactsReset, UpdateChannelAvailableMessages, UpdateDialogUnreadMark, UpdateMessagePoll, UpdateChatDefaultBannedRights, UpdateFolderPeers, UpdatePeerSettings, UpdatePeerLocated, UpdateNewScheduledMessage, UpdateDeleteScheduledMessages, UpdateTheme, UpdateGeoLiveViewed, UpdateLoginToken, UpdateMessagePollVote, UpdateDialogFilter, UpdateDialogFilterOrder, UpdateDialogFilters, UpdatePhoneCallSignalingData, UpdateChannelMessageForwards, UpdateReadChannelDiscussionInbox, UpdateReadChannelDiscussionOutbox, UpdatePeerBlocked, UpdateChannelUserTyping, UpdatePinnedMessages, UpdatePinnedChannelMessages, UpdateChat, UpdateGroupCallParticipants, UpdateGroupCall, UpdatePeerHistoryTTL, UpdateChatParticipant, UpdateChannelParticipant, UpdateBotStopped, UpdateGroupCallConnection, UpdateBotCommands, UpdatePendingJoinRequests, UpdateBotChatInviteRequester, UpdateMessageReactions, UpdateAttachMenuBots, UpdateWebViewResultSent, UpdateBotMenuButton, UpdateSavedRingtones, UpdateTranscribedAudio, UpdateReadFeaturedEmojiStickers, UpdateUserEmojiStatus, UpdateRecentEmojiStatuses, UpdateRecentReactions, UpdateMoveStickerSetToTop, UpdateMessageExtendedMedia, UpdateChannelPinnedTopic, UpdateChannelPinnedTopics, UpdateUser, UpdateAutoSaveSettings, UpdateStory, UpdateReadStories, UpdateStoryID, UpdateStoriesStealthMode, UpdateSentStoryReaction, UpdateBotChatBoost, UpdateChannelViewForumAsMessages, UpdatePeerWallpaper, UpdateBotMessageReaction, UpdateBotMessageReactions, UpdateSavedDialogPinned, UpdatePinnedSavedDialogs, UpdateSavedReactionTags, UpdateSmsJob, UpdateQuickReplies, UpdateNewQuickReply, UpdateDeleteQuickReply, UpdateQuickReplyMessage, UpdateDeleteQuickReplyMessages, UpdateBotBusinessConnect, UpdateBotNewBusinessMessage, UpdateBotEditBusinessMessage, UpdateBotDeleteBusinessMessage, UpdateNewStoryReaction, UpdateBroadcastRevenueTransactions, UpdateStarsBalance, UpdateBusinessBotCallbackQuery, UpdateStarsRevenueStatus,
     public abstract class UpdateBase : ITlSerializable, ITlDeserializable<UpdateBase> {
         public static UpdateBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -1457,8 +1473,6 @@ namespace SharpGram.Tl.Types;
                 return Tel.UpdateNs.UpdateUser.TlDeserialize(des);
             if (id.SequenceEqual(Tel.UpdateNs.UpdateAutoSaveSettings.Identifier))
                 return Tel.UpdateNs.UpdateAutoSaveSettings.TlDeserialize(des);
-            if (id.SequenceEqual(Tel.UpdateNs.UpdateGroupInvitePrivacyForbidden.Identifier))
-                return Tel.UpdateNs.UpdateGroupInvitePrivacyForbidden.TlDeserialize(des);
             if (id.SequenceEqual(Tel.UpdateNs.UpdateStory.Identifier))
                 return Tel.UpdateNs.UpdateStory.TlDeserialize(des);
             if (id.SequenceEqual(Tel.UpdateNs.UpdateReadStories.Identifier))
@@ -1483,6 +1497,38 @@ namespace SharpGram.Tl.Types;
                 return Tel.UpdateNs.UpdateSavedDialogPinned.TlDeserialize(des);
             if (id.SequenceEqual(Tel.UpdateNs.UpdatePinnedSavedDialogs.Identifier))
                 return Tel.UpdateNs.UpdatePinnedSavedDialogs.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateSavedReactionTags.Identifier))
+                return Tel.UpdateNs.UpdateSavedReactionTags.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateSmsJob.Identifier))
+                return Tel.UpdateNs.UpdateSmsJob.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateQuickReplies.Identifier))
+                return Tel.UpdateNs.UpdateQuickReplies.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateNewQuickReply.Identifier))
+                return Tel.UpdateNs.UpdateNewQuickReply.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateDeleteQuickReply.Identifier))
+                return Tel.UpdateNs.UpdateDeleteQuickReply.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateQuickReplyMessage.Identifier))
+                return Tel.UpdateNs.UpdateQuickReplyMessage.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateDeleteQuickReplyMessages.Identifier))
+                return Tel.UpdateNs.UpdateDeleteQuickReplyMessages.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateBotBusinessConnect.Identifier))
+                return Tel.UpdateNs.UpdateBotBusinessConnect.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateBotNewBusinessMessage.Identifier))
+                return Tel.UpdateNs.UpdateBotNewBusinessMessage.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateBotEditBusinessMessage.Identifier))
+                return Tel.UpdateNs.UpdateBotEditBusinessMessage.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateBotDeleteBusinessMessage.Identifier))
+                return Tel.UpdateNs.UpdateBotDeleteBusinessMessage.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateNewStoryReaction.Identifier))
+                return Tel.UpdateNs.UpdateNewStoryReaction.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateBroadcastRevenueTransactions.Identifier))
+                return Tel.UpdateNs.UpdateBroadcastRevenueTransactions.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateStarsBalance.Identifier))
+                return Tel.UpdateNs.UpdateStarsBalance.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateBusinessBotCallbackQuery.Identifier))
+                return Tel.UpdateNs.UpdateBusinessBotCallbackQuery.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.UpdateNs.UpdateStarsRevenueStatus.Identifier))
+                return Tel.UpdateNs.UpdateStarsRevenueStatus.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -1592,12 +1638,11 @@ namespace SharpGram.Tl.Types;
             Tel.UpdateNs.UpdateRecentEmojiStatuses UpdateRecentEmojiStatuses821314523 => UpdateRecentEmojiStatuses821314523.TlSerialize(),
             Tel.UpdateNs.UpdateRecentReactions UpdateRecentReactions1870160884 => UpdateRecentReactions1870160884.TlSerialize(),
             Tel.UpdateNs.UpdateMoveStickerSetToTop UpdateMoveStickerSetToTop2030252155 => UpdateMoveStickerSetToTop2030252155.TlSerialize(),
-            Tel.UpdateNs.UpdateMessageExtendedMedia UpdateMessageExtendedMedia1517529484 => UpdateMessageExtendedMedia1517529484.TlSerialize(),
+            Tel.UpdateNs.UpdateMessageExtendedMedia UpdateMessageExtendedMedia710666460 => UpdateMessageExtendedMedia710666460.TlSerialize(),
             Tel.UpdateNs.UpdateChannelPinnedTopic UpdateChannelPinnedTopic422509539 => UpdateChannelPinnedTopic422509539.TlSerialize(),
             Tel.UpdateNs.UpdateChannelPinnedTopics UpdateChannelPinnedTopics31881726 => UpdateChannelPinnedTopics31881726.TlSerialize(),
             Tel.UpdateNs.UpdateUser UpdateUser542282808 => UpdateUser542282808.TlSerialize(),
             Tel.UpdateNs.UpdateAutoSaveSettings UpdateAutoSaveSettings335171433 => UpdateAutoSaveSettings335171433.TlSerialize(),
-            Tel.UpdateNs.UpdateGroupInvitePrivacyForbidden UpdateGroupInvitePrivacyForbidden856651050 => UpdateGroupInvitePrivacyForbidden856651050.TlSerialize(),
             Tel.UpdateNs.UpdateStory UpdateStory1974712216 => UpdateStory1974712216.TlSerialize(),
             Tel.UpdateNs.UpdateReadStories UpdateReadStories145845461 => UpdateReadStories145845461.TlSerialize(),
             Tel.UpdateNs.UpdateStoryID UpdateStoryID468923833 => UpdateStoryID468923833.TlSerialize(),
@@ -1610,6 +1655,22 @@ namespace SharpGram.Tl.Types;
             Tel.UpdateNs.UpdateBotMessageReactions UpdateBotMessageReactions164329305 => UpdateBotMessageReactions164329305.TlSerialize(),
             Tel.UpdateNs.UpdateSavedDialogPinned UpdateSavedDialogPinned1364222348 => UpdateSavedDialogPinned1364222348.TlSerialize(),
             Tel.UpdateNs.UpdatePinnedSavedDialogs UpdatePinnedSavedDialogs1751942566 => UpdatePinnedSavedDialogs1751942566.TlSerialize(),
+            Tel.UpdateNs.UpdateSavedReactionTags UpdateSavedReactionTags969307186 => UpdateSavedReactionTags969307186.TlSerialize(),
+            Tel.UpdateNs.UpdateSmsJob UpdateSmsJob245208620 => UpdateSmsJob245208620.TlSerialize(),
+            Tel.UpdateNs.UpdateQuickReplies UpdateQuickReplies112784718 => UpdateQuickReplies112784718.TlSerialize(),
+            Tel.UpdateNs.UpdateNewQuickReply UpdateNewQuickReply180508905 => UpdateNewQuickReply180508905.TlSerialize(),
+            Tel.UpdateNs.UpdateDeleteQuickReply UpdateDeleteQuickReply1407644140 => UpdateDeleteQuickReply1407644140.TlSerialize(),
+            Tel.UpdateNs.UpdateQuickReplyMessage UpdateQuickReplyMessage1040518415 => UpdateQuickReplyMessage1040518415.TlSerialize(),
+            Tel.UpdateNs.UpdateDeleteQuickReplyMessages UpdateDeleteQuickReplyMessages1450174413 => UpdateDeleteQuickReplyMessages1450174413.TlSerialize(),
+            Tel.UpdateNs.UpdateBotBusinessConnect UpdateBotBusinessConnect1964652166 => UpdateBotBusinessConnect1964652166.TlSerialize(),
+            Tel.UpdateNs.UpdateBotNewBusinessMessage UpdateBotNewBusinessMessage1646578564 => UpdateBotNewBusinessMessage1646578564.TlSerialize(),
+            Tel.UpdateNs.UpdateBotEditBusinessMessage UpdateBotEditBusinessMessage132077692 => UpdateBotEditBusinessMessage132077692.TlSerialize(),
+            Tel.UpdateNs.UpdateBotDeleteBusinessMessage UpdateBotDeleteBusinessMessage1607821266 => UpdateBotDeleteBusinessMessage1607821266.TlSerialize(),
+            Tel.UpdateNs.UpdateNewStoryReaction UpdateNewStoryReaction405070859 => UpdateNewStoryReaction405070859.TlSerialize(),
+            Tel.UpdateNs.UpdateBroadcastRevenueTransactions UpdateBroadcastRevenueTransactions539401739 => UpdateBroadcastRevenueTransactions539401739.TlSerialize(),
+            Tel.UpdateNs.UpdateStarsBalance UpdateStarsBalance263737752 => UpdateStarsBalance263737752.TlSerialize(),
+            Tel.UpdateNs.UpdateBusinessBotCallbackQuery UpdateBusinessBotCallbackQuery513998247 => UpdateBusinessBotCallbackQuery513998247.TlSerialize(),
+            Tel.UpdateNs.UpdateStarsRevenueStatus UpdateStarsRevenueStatus1518030823 => UpdateStarsRevenueStatus1518030823.TlSerialize(),
             _=> [],
         };
     }
@@ -2097,7 +2158,7 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: InputPrivacyKeyStatusTimestamp, InputPrivacyKeyChatInvite, InputPrivacyKeyPhoneCall, InputPrivacyKeyPhoneP2P, InputPrivacyKeyForwards, InputPrivacyKeyProfilePhoto, InputPrivacyKeyPhoneNumber, InputPrivacyKeyAddedByPhone, InputPrivacyKeyVoiceMessages, InputPrivacyKeyAbout,
+/// derived Types: InputPrivacyKeyStatusTimestamp, InputPrivacyKeyChatInvite, InputPrivacyKeyPhoneCall, InputPrivacyKeyPhoneP2P, InputPrivacyKeyForwards, InputPrivacyKeyProfilePhoto, InputPrivacyKeyPhoneNumber, InputPrivacyKeyAddedByPhone, InputPrivacyKeyVoiceMessages, InputPrivacyKeyAbout, InputPrivacyKeyBirthday,
     public abstract class InputPrivacyKeyBase : ITlSerializable, ITlDeserializable<InputPrivacyKeyBase> {
         public static InputPrivacyKeyBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -2122,6 +2183,8 @@ namespace SharpGram.Tl.Types;
                 return Tel.InputPrivacyKeyNs.InputPrivacyKeyVoiceMessages.TlDeserialize(des);
             if (id.SequenceEqual(Tel.InputPrivacyKeyNs.InputPrivacyKeyAbout.Identifier))
                 return Tel.InputPrivacyKeyNs.InputPrivacyKeyAbout.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.InputPrivacyKeyNs.InputPrivacyKeyBirthday.Identifier))
+                return Tel.InputPrivacyKeyNs.InputPrivacyKeyBirthday.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -2135,10 +2198,11 @@ namespace SharpGram.Tl.Types;
             Tel.InputPrivacyKeyNs.InputPrivacyKeyAddedByPhone InputPrivacyKeyAddedByPhone786326563 => InputPrivacyKeyAddedByPhone786326563.TlSerialize(),
             Tel.InputPrivacyKeyNs.InputPrivacyKeyVoiceMessages InputPrivacyKeyVoiceMessages1360618136 => InputPrivacyKeyVoiceMessages1360618136.TlSerialize(),
             Tel.InputPrivacyKeyNs.InputPrivacyKeyAbout InputPrivacyKeyAbout941870144 => InputPrivacyKeyAbout941870144.TlSerialize(),
+            Tel.InputPrivacyKeyNs.InputPrivacyKeyBirthday InputPrivacyKeyBirthday698740276 => InputPrivacyKeyBirthday698740276.TlSerialize(),
             _=> [],
         };
     }
-/// derived Types: PrivacyKeyStatusTimestamp, PrivacyKeyChatInvite, PrivacyKeyPhoneCall, PrivacyKeyPhoneP2P, PrivacyKeyForwards, PrivacyKeyProfilePhoto, PrivacyKeyPhoneNumber, PrivacyKeyAddedByPhone, PrivacyKeyVoiceMessages, PrivacyKeyAbout,
+/// derived Types: PrivacyKeyStatusTimestamp, PrivacyKeyChatInvite, PrivacyKeyPhoneCall, PrivacyKeyPhoneP2P, PrivacyKeyForwards, PrivacyKeyProfilePhoto, PrivacyKeyPhoneNumber, PrivacyKeyAddedByPhone, PrivacyKeyVoiceMessages, PrivacyKeyAbout, PrivacyKeyBirthday,
     public abstract class PrivacyKeyBase : ITlSerializable, ITlDeserializable<PrivacyKeyBase> {
         public static PrivacyKeyBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -2163,6 +2227,8 @@ namespace SharpGram.Tl.Types;
                 return Tel.PrivacyKeyNs.PrivacyKeyVoiceMessages.TlDeserialize(des);
             if (id.SequenceEqual(Tel.PrivacyKeyNs.PrivacyKeyAbout.Identifier))
                 return Tel.PrivacyKeyNs.PrivacyKeyAbout.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.PrivacyKeyNs.PrivacyKeyBirthday.Identifier))
+                return Tel.PrivacyKeyNs.PrivacyKeyBirthday.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -2176,10 +2242,11 @@ namespace SharpGram.Tl.Types;
             Tel.PrivacyKeyNs.PrivacyKeyAddedByPhone PrivacyKeyAddedByPhone1124062251 => PrivacyKeyAddedByPhone1124062251.TlSerialize(),
             Tel.PrivacyKeyNs.PrivacyKeyVoiceMessages PrivacyKeyVoiceMessages110621716 => PrivacyKeyVoiceMessages110621716.TlSerialize(),
             Tel.PrivacyKeyNs.PrivacyKeyAbout PrivacyKeyAbout1534675103 => PrivacyKeyAbout1534675103.TlSerialize(),
+            Tel.PrivacyKeyNs.PrivacyKeyBirthday PrivacyKeyBirthday536913176 => PrivacyKeyBirthday536913176.TlSerialize(),
             _=> [],
         };
     }
-/// derived Types: InputPrivacyValueAllowContacts, InputPrivacyValueAllowAll, InputPrivacyValueAllowUsers, InputPrivacyValueDisallowContacts, InputPrivacyValueDisallowAll, InputPrivacyValueDisallowUsers, InputPrivacyValueAllowChatParticipants, InputPrivacyValueDisallowChatParticipants, InputPrivacyValueAllowCloseFriends,
+/// derived Types: InputPrivacyValueAllowContacts, InputPrivacyValueAllowAll, InputPrivacyValueAllowUsers, InputPrivacyValueDisallowContacts, InputPrivacyValueDisallowAll, InputPrivacyValueDisallowUsers, InputPrivacyValueAllowChatParticipants, InputPrivacyValueDisallowChatParticipants, InputPrivacyValueAllowCloseFriends, InputPrivacyValueAllowPremium,
     public abstract class InputPrivacyRuleBase : ITlSerializable, ITlDeserializable<InputPrivacyRuleBase> {
         public static InputPrivacyRuleBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -2202,6 +2269,8 @@ namespace SharpGram.Tl.Types;
                 return Tel.InputPrivacyRuleNs.InputPrivacyValueDisallowChatParticipants.TlDeserialize(des);
             if (id.SequenceEqual(Tel.InputPrivacyRuleNs.InputPrivacyValueAllowCloseFriends.Identifier))
                 return Tel.InputPrivacyRuleNs.InputPrivacyValueAllowCloseFriends.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.InputPrivacyRuleNs.InputPrivacyValueAllowPremium.Identifier))
+                return Tel.InputPrivacyRuleNs.InputPrivacyValueAllowPremium.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -2214,10 +2283,11 @@ namespace SharpGram.Tl.Types;
             Tel.InputPrivacyRuleNs.InputPrivacyValueAllowChatParticipants InputPrivacyValueAllowChatParticipants2079962673 => InputPrivacyValueAllowChatParticipants2079962673.TlSerialize(),
             Tel.InputPrivacyRuleNs.InputPrivacyValueDisallowChatParticipants InputPrivacyValueDisallowChatParticipants380694650 => InputPrivacyValueDisallowChatParticipants380694650.TlSerialize(),
             Tel.InputPrivacyRuleNs.InputPrivacyValueAllowCloseFriends InputPrivacyValueAllowCloseFriends793067081 => InputPrivacyValueAllowCloseFriends793067081.TlSerialize(),
+            Tel.InputPrivacyRuleNs.InputPrivacyValueAllowPremium InputPrivacyValueAllowPremium2009975281 => InputPrivacyValueAllowPremium2009975281.TlSerialize(),
             _=> [],
         };
     }
-/// derived Types: PrivacyValueAllowContacts, PrivacyValueAllowAll, PrivacyValueAllowUsers, PrivacyValueDisallowContacts, PrivacyValueDisallowAll, PrivacyValueDisallowUsers, PrivacyValueAllowChatParticipants, PrivacyValueDisallowChatParticipants, PrivacyValueAllowCloseFriends,
+/// derived Types: PrivacyValueAllowContacts, PrivacyValueAllowAll, PrivacyValueAllowUsers, PrivacyValueDisallowContacts, PrivacyValueDisallowAll, PrivacyValueDisallowUsers, PrivacyValueAllowChatParticipants, PrivacyValueDisallowChatParticipants, PrivacyValueAllowCloseFriends, PrivacyValueAllowPremium,
     public abstract class PrivacyRuleBase : ITlSerializable, ITlDeserializable<PrivacyRuleBase> {
         public static PrivacyRuleBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -2240,6 +2310,8 @@ namespace SharpGram.Tl.Types;
                 return Tel.PrivacyRuleNs.PrivacyValueDisallowChatParticipants.TlDeserialize(des);
             if (id.SequenceEqual(Tel.PrivacyRuleNs.PrivacyValueAllowCloseFriends.Identifier))
                 return Tel.PrivacyRuleNs.PrivacyValueAllowCloseFriends.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.PrivacyRuleNs.PrivacyValueAllowPremium.Identifier))
+                return Tel.PrivacyRuleNs.PrivacyValueAllowPremium.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -2252,6 +2324,7 @@ namespace SharpGram.Tl.Types;
             Tel.PrivacyRuleNs.PrivacyValueAllowChatParticipants PrivacyValueAllowChatParticipants1796427406 => PrivacyValueAllowChatParticipants1796427406.TlSerialize(),
             Tel.PrivacyRuleNs.PrivacyValueDisallowChatParticipants PrivacyValueDisallowChatParticipants1103656293 => PrivacyValueDisallowChatParticipants1103656293.TlSerialize(),
             Tel.PrivacyRuleNs.PrivacyValueAllowCloseFriends PrivacyValueAllowCloseFriends135735141 => PrivacyValueAllowCloseFriends135735141.TlSerialize(),
+            Tel.PrivacyRuleNs.PrivacyValueAllowPremium PrivacyValueAllowPremium320241333 => PrivacyValueAllowPremium320241333.TlSerialize(),
             _=> [],
         };
     }
@@ -2642,7 +2715,7 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: KeyboardButton, KeyboardButtonUrl, KeyboardButtonCallback, KeyboardButtonRequestPhone, KeyboardButtonRequestGeoLocation, KeyboardButtonSwitchInline, KeyboardButtonGame, KeyboardButtonBuy, KeyboardButtonUrlAuth, InputKeyboardButtonUrlAuth, KeyboardButtonRequestPoll, InputKeyboardButtonUserProfile, KeyboardButtonUserProfile, KeyboardButtonWebView, KeyboardButtonSimpleWebView, KeyboardButtonRequestPeer,
+/// derived Types: KeyboardButton, KeyboardButtonUrl, KeyboardButtonCallback, KeyboardButtonRequestPhone, KeyboardButtonRequestGeoLocation, KeyboardButtonSwitchInline, KeyboardButtonGame, KeyboardButtonBuy, KeyboardButtonUrlAuth, InputKeyboardButtonUrlAuth, KeyboardButtonRequestPoll, InputKeyboardButtonUserProfile, KeyboardButtonUserProfile, KeyboardButtonWebView, KeyboardButtonSimpleWebView, KeyboardButtonRequestPeer, InputKeyboardButtonRequestPeer,
     public abstract class KeyboardButtonBase : ITlSerializable, ITlDeserializable<KeyboardButtonBase> {
         public string Text {get;set;} = default!;
         public static KeyboardButtonBase TlDeserialize(Deserializer des) {
@@ -2680,6 +2753,8 @@ namespace SharpGram.Tl.Types;
                 return Tel.KeyboardButtonNs.KeyboardButtonSimpleWebView.TlDeserialize(des);
             if (id.SequenceEqual(Tel.KeyboardButtonNs.KeyboardButtonRequestPeer.Identifier))
                 return Tel.KeyboardButtonNs.KeyboardButtonRequestPeer.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.KeyboardButtonNs.InputKeyboardButtonRequestPeer.Identifier))
+                return Tel.KeyboardButtonNs.InputKeyboardButtonRequestPeer.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -2699,6 +2774,7 @@ namespace SharpGram.Tl.Types;
             Tel.KeyboardButtonNs.KeyboardButtonWebView KeyboardButtonWebView326529584 => KeyboardButtonWebView326529584.TlSerialize(),
             Tel.KeyboardButtonNs.KeyboardButtonSimpleWebView KeyboardButtonSimpleWebView1598009252 => KeyboardButtonSimpleWebView1598009252.TlSerialize(),
             Tel.KeyboardButtonNs.KeyboardButtonRequestPeer KeyboardButtonRequestPeer1406648280 => KeyboardButtonRequestPeer1406648280.TlSerialize(),
+            Tel.KeyboardButtonNs.InputKeyboardButtonRequestPeer InputKeyboardButtonRequestPeer916050683 => InputKeyboardButtonRequestPeer916050683.TlSerialize(),
             _=> [],
         };
     }
@@ -2811,7 +2887,7 @@ namespace SharpGram.Tl.Types;
             Tel.MessageEntityNs.MessageEntityBankCard MessageEntityBankCard1981704948 => MessageEntityBankCard1981704948.TlSerialize(),
             Tel.MessageEntityNs.MessageEntitySpoiler MessageEntitySpoiler852137487 => MessageEntitySpoiler852137487.TlSerialize(),
             Tel.MessageEntityNs.MessageEntityCustomEmoji MessageEntityCustomEmoji925956616 => MessageEntityCustomEmoji925956616.TlSerialize(),
-            Tel.MessageEntityNs.MessageEntityBlockquote MessageEntityBlockquote34469328 => MessageEntityBlockquote34469328.TlSerialize(),
+            Tel.MessageEntityNs.MessageEntityBlockquote MessageEntityBlockquote238245204 => MessageEntityBlockquote238245204.TlSerialize(),
             _=> [],
         };
     }
@@ -3216,7 +3292,7 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: AuthSentCodeTypeApp, AuthSentCodeTypeSms, AuthSentCodeTypeCall, AuthSentCodeTypeFlashCall, AuthSentCodeTypeMissedCall, AuthSentCodeTypeEmailCode, AuthSentCodeTypeSetUpEmailRequired, AuthSentCodeTypeFragmentSms, AuthSentCodeTypeFirebaseSms,
+/// derived Types: AuthSentCodeTypeApp, AuthSentCodeTypeSms, AuthSentCodeTypeCall, AuthSentCodeTypeFlashCall, AuthSentCodeTypeMissedCall, AuthSentCodeTypeEmailCode, AuthSentCodeTypeSetUpEmailRequired, AuthSentCodeTypeFragmentSms, AuthSentCodeTypeFirebaseSms, AuthSentCodeTypeSmsWord, AuthSentCodeTypeSmsPhrase,
     public abstract class AuthSentCodeTypeBase : ITlSerializable, ITlDeserializable<AuthSentCodeTypeBase> {
         public static AuthSentCodeTypeBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -3239,6 +3315,10 @@ namespace SharpGram.Tl.Types;
                 return Tel.AuthSentCodeTypeNs.AuthSentCodeTypeFragmentSms.TlDeserialize(des);
             if (id.SequenceEqual(Tel.AuthSentCodeTypeNs.AuthSentCodeTypeFirebaseSms.Identifier))
                 return Tel.AuthSentCodeTypeNs.AuthSentCodeTypeFirebaseSms.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.AuthSentCodeTypeNs.AuthSentCodeTypeSmsWord.Identifier))
+                return Tel.AuthSentCodeTypeNs.AuthSentCodeTypeSmsWord.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.AuthSentCodeTypeNs.AuthSentCodeTypeSmsPhrase.Identifier))
+                return Tel.AuthSentCodeTypeNs.AuthSentCodeTypeSmsPhrase.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -3250,7 +3330,9 @@ namespace SharpGram.Tl.Types;
             Tel.AuthSentCodeTypeNs.AuthSentCodeTypeEmailCode AuthSentCodeTypeEmailCode196020837 => AuthSentCodeTypeEmailCode196020837.TlSerialize(),
             Tel.AuthSentCodeTypeNs.AuthSentCodeTypeSetUpEmailRequired AuthSentCodeTypeSetUpEmailRequired1521934870 => AuthSentCodeTypeSetUpEmailRequired1521934870.TlSerialize(),
             Tel.AuthSentCodeTypeNs.AuthSentCodeTypeFragmentSms AuthSentCodeTypeFragmentSms648651719 => AuthSentCodeTypeFragmentSms648651719.TlSerialize(),
-            Tel.AuthSentCodeTypeNs.AuthSentCodeTypeFirebaseSms AuthSentCodeTypeFirebaseSms444918734 => AuthSentCodeTypeFirebaseSms444918734.TlSerialize(),
+            Tel.AuthSentCodeTypeNs.AuthSentCodeTypeFirebaseSms AuthSentCodeTypeFirebaseSms10475318 => AuthSentCodeTypeFirebaseSms10475318.TlSerialize(),
+            Tel.AuthSentCodeTypeNs.AuthSentCodeTypeSmsWord AuthSentCodeTypeSmsWord1542017919 => AuthSentCodeTypeSmsWord1542017919.TlSerialize(),
+            Tel.AuthSentCodeTypeNs.AuthSentCodeTypeSmsPhrase AuthSentCodeTypeSmsPhrase1284008785 => AuthSentCodeTypeSmsPhrase1284008785.TlSerialize(),
             _=> [],
         };
     }
@@ -3426,7 +3508,7 @@ namespace SharpGram.Tl.Types;
         }
         public byte[] TlSerialize() => this switch {
             Tel.DraftMessageNs.DraftMessageEmpty DraftMessageEmpty453805082 => DraftMessageEmpty453805082.TlSerialize(),
-            Tel.DraftMessageNs.DraftMessage DraftMessage1070397423 => DraftMessage1070397423.TlSerialize(),
+            Tel.DraftMessageNs.DraftMessage DraftMessage761606687 => DraftMessage761606687.TlSerialize(),
             _=> [],
         };
     }
@@ -3957,17 +4039,28 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: PaymentsPaymentForm,
+/// derived Types: PaymentsPaymentForm, PaymentsPaymentFormStars,
     public abstract class PaymentsPaymentFormBase : ITlSerializable, ITlDeserializable<PaymentsPaymentFormBase> {
+        public int Flags {get;set;} = default!;
+        public long FormId {get;set;} = default!;
+        public long BotId {get;set;} = default!;
+        public string Title {get;set;} = default!;
+        public string Description {get;set;} = default!;
+        public WebDocumentBase? Photo {get;set;} = default!;
+        public InvoiceBase Invoice {get;set;} = default!;
+        public List<UserBase> Users {get;set;} = default!;
         public static PaymentsPaymentFormBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
 
             if (id.SequenceEqual(Tel.PaymentsPaymentFormNs.PaymentsPaymentForm.Identifier))
                 return Tel.PaymentsPaymentFormNs.PaymentsPaymentForm.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.PaymentsPaymentFormNs.PaymentsPaymentFormStars.Identifier))
+                return Tel.PaymentsPaymentFormNs.PaymentsPaymentFormStars.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
             Tel.PaymentsPaymentFormNs.PaymentsPaymentForm PaymentsPaymentForm1610250415 => PaymentsPaymentForm1610250415.TlSerialize(),
+            Tel.PaymentsPaymentFormNs.PaymentsPaymentFormStars PaymentsPaymentFormStars2079764828 => PaymentsPaymentFormStars2079764828.TlSerialize(),
             _=> [],
         };
     }
@@ -4002,17 +4095,30 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: PaymentsPaymentReceipt,
+/// derived Types: PaymentsPaymentReceipt, PaymentsPaymentReceiptStars,
     public abstract class PaymentsPaymentReceiptBase : ITlSerializable, ITlDeserializable<PaymentsPaymentReceiptBase> {
+        public int Flags {get;set;} = default!;
+        public int Date {get;set;} = default!;
+        public long BotId {get;set;} = default!;
+        public string Title {get;set;} = default!;
+        public string Description {get;set;} = default!;
+        public WebDocumentBase? Photo {get;set;} = default!;
+        public InvoiceBase Invoice {get;set;} = default!;
+        public string Currency {get;set;} = default!;
+        public long TotalAmount {get;set;} = default!;
+        public List<UserBase> Users {get;set;} = default!;
         public static PaymentsPaymentReceiptBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
 
             if (id.SequenceEqual(Tel.PaymentsPaymentReceiptNs.PaymentsPaymentReceipt.Identifier))
                 return Tel.PaymentsPaymentReceiptNs.PaymentsPaymentReceipt.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.PaymentsPaymentReceiptNs.PaymentsPaymentReceiptStars.Identifier))
+                return Tel.PaymentsPaymentReceiptNs.PaymentsPaymentReceiptStars.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
             Tel.PaymentsPaymentReceiptNs.PaymentsPaymentReceipt PaymentsPaymentReceipt1891958275 => PaymentsPaymentReceipt1891958275.TlSerialize(),
+            Tel.PaymentsPaymentReceiptNs.PaymentsPaymentReceiptStars PaymentsPaymentReceiptStars625215430 => PaymentsPaymentReceiptStars625215430.TlSerialize(),
             _=> [],
         };
     }
@@ -4134,7 +4240,7 @@ namespace SharpGram.Tl.Types;
             Tel.PhoneCallNs.PhoneCallWaiting PhoneCallWaiting987599081 => PhoneCallWaiting987599081.TlSerialize(),
             Tel.PhoneCallNs.PhoneCallRequested PhoneCallRequested347139340 => PhoneCallRequested347139340.TlSerialize(),
             Tel.PhoneCallNs.PhoneCallAccepted PhoneCallAccepted912311057 => PhoneCallAccepted912311057.TlSerialize(),
-            Tel.PhoneCallNs.PhoneCall PhoneCall1770029977 => PhoneCall1770029977.TlSerialize(),
+            Tel.PhoneCallNs.PhoneCall PhoneCall810769141 => PhoneCall810769141.TlSerialize(),
             Tel.PhoneCallNs.PhoneCallDiscarded PhoneCallDiscarded1355435489 => PhoneCallDiscarded1355435489.TlSerialize(),
             _=> [],
         };
@@ -4283,7 +4389,7 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: ChannelAdminLogEventActionChangeTitle, ChannelAdminLogEventActionChangeAbout, ChannelAdminLogEventActionChangeUsername, ChannelAdminLogEventActionChangePhoto, ChannelAdminLogEventActionToggleInvites, ChannelAdminLogEventActionToggleSignatures, ChannelAdminLogEventActionUpdatePinned, ChannelAdminLogEventActionEditMessage, ChannelAdminLogEventActionDeleteMessage, ChannelAdminLogEventActionParticipantJoin, ChannelAdminLogEventActionParticipantLeave, ChannelAdminLogEventActionParticipantInvite, ChannelAdminLogEventActionParticipantToggleBan, ChannelAdminLogEventActionParticipantToggleAdmin, ChannelAdminLogEventActionChangeStickerSet, ChannelAdminLogEventActionTogglePreHistoryHidden, ChannelAdminLogEventActionDefaultBannedRights, ChannelAdminLogEventActionStopPoll, ChannelAdminLogEventActionChangeLinkedChat, ChannelAdminLogEventActionChangeLocation, ChannelAdminLogEventActionToggleSlowMode, ChannelAdminLogEventActionStartGroupCall, ChannelAdminLogEventActionDiscardGroupCall, ChannelAdminLogEventActionParticipantMute, ChannelAdminLogEventActionParticipantUnmute, ChannelAdminLogEventActionToggleGroupCallSetting, ChannelAdminLogEventActionParticipantJoinByInvite, ChannelAdminLogEventActionExportedInviteDelete, ChannelAdminLogEventActionExportedInviteRevoke, ChannelAdminLogEventActionExportedInviteEdit, ChannelAdminLogEventActionParticipantVolume, ChannelAdminLogEventActionChangeHistoryTTL, ChannelAdminLogEventActionParticipantJoinByRequest, ChannelAdminLogEventActionToggleNoForwards, ChannelAdminLogEventActionSendMessage, ChannelAdminLogEventActionChangeAvailableReactions, ChannelAdminLogEventActionChangeUsernames, ChannelAdminLogEventActionToggleForum, ChannelAdminLogEventActionCreateTopic, ChannelAdminLogEventActionEditTopic, ChannelAdminLogEventActionDeleteTopic, ChannelAdminLogEventActionPinTopic, ChannelAdminLogEventActionToggleAntiSpam, ChannelAdminLogEventActionChangePeerColor, ChannelAdminLogEventActionChangeProfilePeerColor, ChannelAdminLogEventActionChangeWallpaper, ChannelAdminLogEventActionChangeEmojiStatus,
+/// derived Types: ChannelAdminLogEventActionChangeTitle, ChannelAdminLogEventActionChangeAbout, ChannelAdminLogEventActionChangeUsername, ChannelAdminLogEventActionChangePhoto, ChannelAdminLogEventActionToggleInvites, ChannelAdminLogEventActionToggleSignatures, ChannelAdminLogEventActionUpdatePinned, ChannelAdminLogEventActionEditMessage, ChannelAdminLogEventActionDeleteMessage, ChannelAdminLogEventActionParticipantJoin, ChannelAdminLogEventActionParticipantLeave, ChannelAdminLogEventActionParticipantInvite, ChannelAdminLogEventActionParticipantToggleBan, ChannelAdminLogEventActionParticipantToggleAdmin, ChannelAdminLogEventActionChangeStickerSet, ChannelAdminLogEventActionTogglePreHistoryHidden, ChannelAdminLogEventActionDefaultBannedRights, ChannelAdminLogEventActionStopPoll, ChannelAdminLogEventActionChangeLinkedChat, ChannelAdminLogEventActionChangeLocation, ChannelAdminLogEventActionToggleSlowMode, ChannelAdminLogEventActionStartGroupCall, ChannelAdminLogEventActionDiscardGroupCall, ChannelAdminLogEventActionParticipantMute, ChannelAdminLogEventActionParticipantUnmute, ChannelAdminLogEventActionToggleGroupCallSetting, ChannelAdminLogEventActionParticipantJoinByInvite, ChannelAdminLogEventActionExportedInviteDelete, ChannelAdminLogEventActionExportedInviteRevoke, ChannelAdminLogEventActionExportedInviteEdit, ChannelAdminLogEventActionParticipantVolume, ChannelAdminLogEventActionChangeHistoryTTL, ChannelAdminLogEventActionParticipantJoinByRequest, ChannelAdminLogEventActionToggleNoForwards, ChannelAdminLogEventActionSendMessage, ChannelAdminLogEventActionChangeAvailableReactions, ChannelAdminLogEventActionChangeUsernames, ChannelAdminLogEventActionToggleForum, ChannelAdminLogEventActionCreateTopic, ChannelAdminLogEventActionEditTopic, ChannelAdminLogEventActionDeleteTopic, ChannelAdminLogEventActionPinTopic, ChannelAdminLogEventActionToggleAntiSpam, ChannelAdminLogEventActionChangePeerColor, ChannelAdminLogEventActionChangeProfilePeerColor, ChannelAdminLogEventActionChangeWallpaper, ChannelAdminLogEventActionChangeEmojiStatus, ChannelAdminLogEventActionChangeEmojiStickerSet,
     public abstract class ChannelAdminLogEventActionBase : ITlSerializable, ITlDeserializable<ChannelAdminLogEventActionBase> {
         public static ChannelAdminLogEventActionBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -4382,6 +4488,8 @@ namespace SharpGram.Tl.Types;
                 return Tel.ChannelAdminLogEventActionNs.ChannelAdminLogEventActionChangeWallpaper.TlDeserialize(des);
             if (id.SequenceEqual(Tel.ChannelAdminLogEventActionNs.ChannelAdminLogEventActionChangeEmojiStatus.Identifier))
                 return Tel.ChannelAdminLogEventActionNs.ChannelAdminLogEventActionChangeEmojiStatus.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.ChannelAdminLogEventActionNs.ChannelAdminLogEventActionChangeEmojiStickerSet.Identifier))
+                return Tel.ChannelAdminLogEventActionNs.ChannelAdminLogEventActionChangeEmojiStickerSet.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -4432,6 +4540,7 @@ namespace SharpGram.Tl.Types;
             Tel.ChannelAdminLogEventActionNs.ChannelAdminLogEventActionChangeProfilePeerColor ChannelAdminLogEventActionChangeProfilePeerColor1581742885 => ChannelAdminLogEventActionChangeProfilePeerColor1581742885.TlSerialize(),
             Tel.ChannelAdminLogEventActionNs.ChannelAdminLogEventActionChangeWallpaper ChannelAdminLogEventActionChangeWallpaper834362706 => ChannelAdminLogEventActionChangeWallpaper834362706.TlSerialize(),
             Tel.ChannelAdminLogEventActionNs.ChannelAdminLogEventActionChangeEmojiStatus ChannelAdminLogEventActionChangeEmojiStatus1051328177 => ChannelAdminLogEventActionChangeEmojiStatus1051328177.TlSerialize(),
+            Tel.ChannelAdminLogEventActionNs.ChannelAdminLogEventActionChangeEmojiStickerSet ChannelAdminLogEventActionChangeEmojiStickerSet1188577451 => ChannelAdminLogEventActionChangeEmojiStickerSet1188577451.TlSerialize(),
             _=> [],
         };
     }
@@ -5301,7 +5410,7 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.PollAnswerNs.PollAnswer PollAnswer1823064809 => PollAnswer1823064809.TlSerialize(),
+            Tel.PollAnswerNs.PollAnswer PollAnswer15277366 => PollAnswer15277366.TlSerialize(),
             _=> [],
         };
     }
@@ -5315,7 +5424,7 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.PollNs.Poll Poll2032041631 => Poll2032041631.TlSerialize(),
+            Tel.PollNs.Poll Poll1484026161 => Poll1484026161.TlSerialize(),
             _=> [],
         };
     }
@@ -5832,7 +5941,7 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: WebPageAttributeTheme, WebPageAttributeStory,
+/// derived Types: WebPageAttributeTheme, WebPageAttributeStory, WebPageAttributeStickerSet,
     public abstract class WebPageAttributeBase : ITlSerializable, ITlDeserializable<WebPageAttributeBase> {
         public int Flags {get;set;} = default!;
         public static WebPageAttributeBase TlDeserialize(Deserializer des) {
@@ -5842,11 +5951,14 @@ namespace SharpGram.Tl.Types;
                 return Tel.WebPageAttributeNs.WebPageAttributeTheme.TlDeserialize(des);
             if (id.SequenceEqual(Tel.WebPageAttributeNs.WebPageAttributeStory.Identifier))
                 return Tel.WebPageAttributeNs.WebPageAttributeStory.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.WebPageAttributeNs.WebPageAttributeStickerSet.Identifier))
+                return Tel.WebPageAttributeNs.WebPageAttributeStickerSet.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
             Tel.WebPageAttributeNs.WebPageAttributeTheme WebPageAttributeTheme1421174295 => WebPageAttributeTheme1421174295.TlSerialize(),
             Tel.WebPageAttributeNs.WebPageAttributeStory WebPageAttributeStory781501415 => WebPageAttributeStory781501415.TlSerialize(),
+            Tel.WebPageAttributeNs.WebPageAttributeStickerSet WebPageAttributeStickerSet1355547603 => WebPageAttributeStickerSet1355547603.TlSerialize(),
             _=> [],
         };
     }
@@ -5906,9 +6018,9 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.DialogFilterNs.DialogFilter DialogFilter1949890536 => DialogFilter1949890536.TlSerialize(),
+            Tel.DialogFilterNs.DialogFilter DialogFilter1605718587 => DialogFilter1605718587.TlSerialize(),
             Tel.DialogFilterNs.DialogFilterDefault DialogFilterDefault909284270 => DialogFilterDefault909284270.TlSerialize(),
-            Tel.DialogFilterNs.DialogFilterChatlist DialogFilterChatlist699792216 => DialogFilterChatlist699792216.TlSerialize(),
+            Tel.DialogFilterNs.DialogFilterChatlist DialogFilterChatlist1612542300 => DialogFilterChatlist1612542300.TlSerialize(),
             _=> [],
         };
     }
@@ -6210,7 +6322,7 @@ namespace SharpGram.Tl.Types;
         }
         public byte[] TlSerialize() => this switch {
             Tel.MessageReplyHeaderNs.MessageReplyHeader MessageReplyHeader1346631205 => MessageReplyHeader1346631205.TlSerialize(),
-            Tel.MessageReplyHeaderNs.MessageReplyStoryHeader MessageReplyStoryHeader1667711039 => MessageReplyStoryHeader1667711039.TlSerialize(),
+            Tel.MessageReplyHeaderNs.MessageReplyStoryHeader MessageReplyStoryHeader240843065 => MessageReplyStoryHeader240843065.TlSerialize(),
             _=> [],
         };
     }
@@ -6637,7 +6749,7 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.SponsoredMessageNs.SponsoredMessage SponsoredMessage313293833 => SponsoredMessage313293833.TlSerialize(),
+            Tel.SponsoredMessageNs.SponsoredMessage SponsoredMessage1108478618 => SponsoredMessage1108478618.TlSerialize(),
             _=> [],
         };
     }
@@ -6982,21 +7094,7 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.WebViewResultNs.WebViewResultUrl WebViewResultUrl202659196 => WebViewResultUrl202659196.TlSerialize(),
-            _=> [],
-        };
-    }
-/// derived Types: SimpleWebViewResultUrl,
-    public abstract class SimpleWebViewResultBase : ITlSerializable, ITlDeserializable<SimpleWebViewResultBase> {
-        public static SimpleWebViewResultBase TlDeserialize(Deserializer des) {
-            var id = des.ReadId();
-
-            if (id.SequenceEqual(Tel.SimpleWebViewResultNs.SimpleWebViewResultUrl.Identifier))
-                return Tel.SimpleWebViewResultNs.SimpleWebViewResultUrl.TlDeserialize(des);
-            throw Core.Models.Errors.DeserializationException.InvalidCtor;
-        }
-        public byte[] TlSerialize() => this switch {
-            Tel.SimpleWebViewResultNs.SimpleWebViewResultUrl SimpleWebViewResultUrl2010155333 => SimpleWebViewResultUrl2010155333.TlSerialize(),
+            Tel.WebViewResultNs.WebViewResultUrl WebViewResultUrl1294139288 => WebViewResultUrl1294139288.TlSerialize(),
             _=> [],
         };
     }
@@ -7117,7 +7215,7 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: InputInvoiceMessage, InputInvoiceSlug, InputInvoicePremiumGiftCode,
+/// derived Types: InputInvoiceMessage, InputInvoiceSlug, InputInvoicePremiumGiftCode, InputInvoiceStars,
     public abstract class InputInvoiceBase : ITlSerializable, ITlDeserializable<InputInvoiceBase> {
         public static InputInvoiceBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -7128,12 +7226,15 @@ namespace SharpGram.Tl.Types;
                 return Tel.InputInvoiceNs.InputInvoiceSlug.TlDeserialize(des);
             if (id.SequenceEqual(Tel.InputInvoiceNs.InputInvoicePremiumGiftCode.Identifier))
                 return Tel.InputInvoiceNs.InputInvoicePremiumGiftCode.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.InputInvoiceNs.InputInvoiceStars.Identifier))
+                return Tel.InputInvoiceNs.InputInvoiceStars.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
             Tel.InputInvoiceNs.InputInvoiceMessage InputInvoiceMessage977967015 => InputInvoiceMessage977967015.TlSerialize(),
             Tel.InputInvoiceNs.InputInvoiceSlug InputInvoiceSlug1020867857 => InputInvoiceSlug1020867857.TlSerialize(),
             Tel.InputInvoiceNs.InputInvoicePremiumGiftCode InputInvoicePremiumGiftCode1734841331 => InputInvoicePremiumGiftCode1734841331.TlSerialize(),
+            Tel.InputInvoiceNs.InputInvoiceStars InputInvoiceStars497236696 => InputInvoiceStars497236696.TlSerialize(),
             _=> [],
         };
     }
@@ -7179,7 +7280,7 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: InputStorePaymentPremiumSubscription, InputStorePaymentGiftPremium, InputStorePaymentPremiumGiftCode, InputStorePaymentPremiumGiveaway,
+/// derived Types: InputStorePaymentPremiumSubscription, InputStorePaymentGiftPremium, InputStorePaymentPremiumGiftCode, InputStorePaymentPremiumGiveaway, InputStorePaymentStars,
     public abstract class InputStorePaymentPurposeBase : ITlSerializable, ITlDeserializable<InputStorePaymentPurposeBase> {
         public static InputStorePaymentPurposeBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
@@ -7192,6 +7293,8 @@ namespace SharpGram.Tl.Types;
                 return Tel.InputStorePaymentPurposeNs.InputStorePaymentPremiumGiftCode.TlDeserialize(des);
             if (id.SequenceEqual(Tel.InputStorePaymentPurposeNs.InputStorePaymentPremiumGiveaway.Identifier))
                 return Tel.InputStorePaymentPurposeNs.InputStorePaymentPremiumGiveaway.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.InputStorePaymentPurposeNs.InputStorePaymentStars.Identifier))
+                return Tel.InputStorePaymentPurposeNs.InputStorePaymentStars.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
@@ -7199,6 +7302,7 @@ namespace SharpGram.Tl.Types;
             Tel.InputStorePaymentPurposeNs.InputStorePaymentGiftPremium InputStorePaymentGiftPremium1634697192 => InputStorePaymentGiftPremium1634697192.TlSerialize(),
             Tel.InputStorePaymentPurposeNs.InputStorePaymentPremiumGiftCode InputStorePaymentPremiumGiftCode1551868097 => InputStorePaymentPremiumGiftCode1551868097.TlSerialize(),
             Tel.InputStorePaymentPurposeNs.InputStorePaymentPremiumGiveaway InputStorePaymentPremiumGiveaway369444042 => InputStorePaymentPremiumGiveaway369444042.TlSerialize(),
+            Tel.InputStorePaymentPurposeNs.InputStorePaymentStars InputStorePaymentStars1326377183 => InputStorePaymentStars1326377183.TlSerialize(),
             _=> [],
         };
     }
@@ -7553,17 +7657,25 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: EmojiGroup,
+/// derived Types: EmojiGroup, EmojiGroupGreeting, EmojiGroupPremium,
     public abstract class EmojiGroupBase : ITlSerializable, ITlDeserializable<EmojiGroupBase> {
+        public string Title {get;set;} = default!;
+        public long IconEmojiId {get;set;} = default!;
         public static EmojiGroupBase TlDeserialize(Deserializer des) {
             var id = des.ReadId();
 
             if (id.SequenceEqual(Tel.EmojiGroupNs.EmojiGroup.Identifier))
                 return Tel.EmojiGroupNs.EmojiGroup.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.EmojiGroupNs.EmojiGroupGreeting.Identifier))
+                return Tel.EmojiGroupNs.EmojiGroupGreeting.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.EmojiGroupNs.EmojiGroupPremium.Identifier))
+                return Tel.EmojiGroupNs.EmojiGroupPremium.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
             Tel.EmojiGroupNs.EmojiGroup EmojiGroup2056961449 => EmojiGroup2056961449.TlSerialize(),
+            Tel.EmojiGroupNs.EmojiGroupGreeting EmojiGroupGreeting2133693241 => EmojiGroupGreeting2133693241.TlSerialize(),
+            Tel.EmojiGroupNs.EmojiGroupPremium EmojiGroupPremium154914612 => EmojiGroupPremium154914612.TlSerialize(),
             _=> [],
         };
     }
@@ -7716,20 +7828,6 @@ namespace SharpGram.Tl.Types;
         }
         public byte[] TlSerialize() => this switch {
             Tel.MessagesBotAppNs.MessagesBotApp MessagesBotApp347034123 => MessagesBotApp347034123.TlSerialize(),
-            _=> [],
-        };
-    }
-/// derived Types: AppWebViewResultUrl,
-    public abstract class AppWebViewResultBase : ITlSerializable, ITlDeserializable<AppWebViewResultBase> {
-        public static AppWebViewResultBase TlDeserialize(Deserializer des) {
-            var id = des.ReadId();
-
-            if (id.SequenceEqual(Tel.AppWebViewResultNs.AppWebViewResultUrl.Identifier))
-                return Tel.AppWebViewResultNs.AppWebViewResultUrl.TlDeserialize(des);
-            throw Core.Models.Errors.DeserializationException.InvalidCtor;
-        }
-        public byte[] TlSerialize() => this switch {
-            Tel.AppWebViewResultNs.AppWebViewResultUrl AppWebViewResultUrl1008422669 => AppWebViewResultUrl1008422669.TlSerialize(),
             _=> [],
         };
     }
@@ -7886,20 +7984,6 @@ namespace SharpGram.Tl.Types;
             _=> [],
         };
     }
-/// derived Types: SponsoredWebPage,
-    public abstract class SponsoredWebPageBase : ITlSerializable, ITlDeserializable<SponsoredWebPageBase> {
-        public static SponsoredWebPageBase TlDeserialize(Deserializer des) {
-            var id = des.ReadId();
-
-            if (id.SequenceEqual(Tel.SponsoredWebPageNs.SponsoredWebPage.Identifier))
-                return Tel.SponsoredWebPageNs.SponsoredWebPage.TlDeserialize(des);
-            throw Core.Models.Errors.DeserializationException.InvalidCtor;
-        }
-        public byte[] TlSerialize() => this switch {
-            Tel.SponsoredWebPageNs.SponsoredWebPage SponsoredWebPage1035529315 => SponsoredWebPage1035529315.TlSerialize(),
-            _=> [],
-        };
-    }
 /// derived Types: StoryViews,
     public abstract class StoryViewsBase : ITlSerializable, ITlDeserializable<StoryViewsBase> {
         public static StoryViewsBase TlDeserialize(Deserializer des) {
@@ -7931,7 +8015,7 @@ namespace SharpGram.Tl.Types;
         public byte[] TlSerialize() => this switch {
             Tel.StoryItemNs.StoryItemDeleted StoryItemDeleted1374088783 => StoryItemDeleted1374088783.TlSerialize(),
             Tel.StoryItemNs.StoryItemSkipped StoryItemSkipped5388013 => StoryItemSkipped5388013.TlSerialize(),
-            Tel.StoryItemNs.StoryItem StoryItem1352440415 => StoryItem1352440415.TlSerialize(),
+            Tel.StoryItemNs.StoryItem StoryItem2041735716 => StoryItem2041735716.TlSerialize(),
             _=> [],
         };
     }
@@ -7965,7 +8049,7 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.StoriesStoriesNs.StoriesStories StoriesStories1574486984 => StoriesStories1574486984.TlSerialize(),
+            Tel.StoriesStoriesNs.StoriesStories StoriesStories1673780490 => StoriesStories1673780490.TlSerialize(),
             _=> [],
         };
     }
@@ -8033,7 +8117,7 @@ namespace SharpGram.Tl.Types;
         }
         public byte[] TlSerialize() => this switch {
             Tel.InputReplyToNs.InputReplyToMessage InputReplyToMessage583071445 => InputReplyToMessage583071445.TlSerialize(),
-            Tel.InputReplyToNs.InputReplyToStory InputReplyToStory363917955 => InputReplyToStory363917955.TlSerialize(),
+            Tel.InputReplyToNs.InputReplyToStory InputReplyToStory1484862010 => InputReplyToStory1484862010.TlSerialize(),
             _=> [],
         };
     }
@@ -8075,11 +8159,11 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.MediaAreaCoordinatesNs.MediaAreaCoordinates MediaAreaCoordinates64088654 => MediaAreaCoordinates64088654.TlSerialize(),
+            Tel.MediaAreaCoordinatesNs.MediaAreaCoordinates MediaAreaCoordinates808853502 => MediaAreaCoordinates808853502.TlSerialize(),
             _=> [],
         };
     }
-/// derived Types: MediaAreaVenue, InputMediaAreaVenue, MediaAreaGeoPoint, MediaAreaSuggestedReaction, MediaAreaChannelPost, InputMediaAreaChannelPost,
+/// derived Types: MediaAreaVenue, InputMediaAreaVenue, MediaAreaGeoPoint, MediaAreaSuggestedReaction, MediaAreaChannelPost, InputMediaAreaChannelPost, MediaAreaUrl,
     public abstract class MediaAreaBase : ITlSerializable, ITlDeserializable<MediaAreaBase> {
         public MediaAreaCoordinatesBase Coordinates {get;set;} = default!;
         public static MediaAreaBase TlDeserialize(Deserializer des) {
@@ -8097,15 +8181,18 @@ namespace SharpGram.Tl.Types;
                 return Tel.MediaAreaNs.MediaAreaChannelPost.TlDeserialize(des);
             if (id.SequenceEqual(Tel.MediaAreaNs.InputMediaAreaChannelPost.Identifier))
                 return Tel.MediaAreaNs.InputMediaAreaChannelPost.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.MediaAreaNs.MediaAreaUrl.Identifier))
+                return Tel.MediaAreaNs.MediaAreaUrl.TlDeserialize(des);
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
             Tel.MediaAreaNs.MediaAreaVenue MediaAreaVenue1098720356 => MediaAreaVenue1098720356.TlSerialize(),
             Tel.MediaAreaNs.InputMediaAreaVenue InputMediaAreaVenue1300094593 => InputMediaAreaVenue1300094593.TlSerialize(),
-            Tel.MediaAreaNs.MediaAreaGeoPoint MediaAreaGeoPoint544523486 => MediaAreaGeoPoint544523486.TlSerialize(),
+            Tel.MediaAreaNs.MediaAreaGeoPoint MediaAreaGeoPoint891992787 => MediaAreaGeoPoint891992787.TlSerialize(),
             Tel.MediaAreaNs.MediaAreaSuggestedReaction MediaAreaSuggestedReaction340088945 => MediaAreaSuggestedReaction340088945.TlSerialize(),
             Tel.MediaAreaNs.MediaAreaChannelPost MediaAreaChannelPost1996756655 => MediaAreaChannelPost1996756655.TlSerialize(),
             Tel.MediaAreaNs.InputMediaAreaChannelPost InputMediaAreaChannelPost577893055 => InputMediaAreaChannelPost577893055.TlSerialize(),
+            Tel.MediaAreaNs.MediaAreaUrl MediaAreaUrl926421125 => MediaAreaUrl926421125.TlSerialize(),
             _=> [],
         };
     }
@@ -8402,7 +8489,7 @@ namespace SharpGram.Tl.Types;
             throw Core.Models.Errors.DeserializationException.InvalidCtor;
         }
         public byte[] TlSerialize() => this switch {
-            Tel.HelpPeerColorOptionNs.HelpPeerColorOption HelpPeerColorOption276549461 => HelpPeerColorOption276549461.TlSerialize(),
+            Tel.HelpPeerColorOptionNs.HelpPeerColorOption HelpPeerColorOption1377014082 => HelpPeerColorOption1377014082.TlSerialize(),
             _=> [],
         };
     }
@@ -8488,6 +8575,996 @@ namespace SharpGram.Tl.Types;
             Tel.MessagesSavedDialogsNs.MessagesSavedDialogs MessagesSavedDialogs130358751 => MessagesSavedDialogs130358751.TlSerialize(),
             Tel.MessagesSavedDialogsNs.MessagesSavedDialogsSlice MessagesSavedDialogsSlice1153080793 => MessagesSavedDialogsSlice1153080793.TlSerialize(),
             Tel.MessagesSavedDialogsNs.MessagesSavedDialogsNotModified MessagesSavedDialogsNotModified1071681560 => MessagesSavedDialogsNotModified1071681560.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: SavedReactionTag,
+    public abstract class SavedReactionTagBase : ITlSerializable, ITlDeserializable<SavedReactionTagBase> {
+        public static SavedReactionTagBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.SavedReactionTagNs.SavedReactionTag.Identifier))
+                return Tel.SavedReactionTagNs.SavedReactionTag.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.SavedReactionTagNs.SavedReactionTag SavedReactionTag881854424 => SavedReactionTag881854424.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: MessagesSavedReactionTagsNotModified, MessagesSavedReactionTags,
+    public abstract class MessagesSavedReactionTagsBase : ITlSerializable, ITlDeserializable<MessagesSavedReactionTagsBase> {
+        public static MessagesSavedReactionTagsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.MessagesSavedReactionTagsNs.MessagesSavedReactionTagsNotModified.Identifier))
+                return Tel.MessagesSavedReactionTagsNs.MessagesSavedReactionTagsNotModified.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.MessagesSavedReactionTagsNs.MessagesSavedReactionTags.Identifier))
+                return Tel.MessagesSavedReactionTagsNs.MessagesSavedReactionTags.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.MessagesSavedReactionTagsNs.MessagesSavedReactionTagsNotModified MessagesSavedReactionTagsNotModified2003084817 => MessagesSavedReactionTagsNotModified2003084817.TlSerialize(),
+            Tel.MessagesSavedReactionTagsNs.MessagesSavedReactionTags MessagesSavedReactionTags844731658 => MessagesSavedReactionTags844731658.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: OutboxReadDate,
+    public abstract class OutboxReadDateBase : ITlSerializable, ITlDeserializable<OutboxReadDateBase> {
+        public static OutboxReadDateBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.OutboxReadDateNs.OutboxReadDate.Identifier))
+                return Tel.OutboxReadDateNs.OutboxReadDate.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.OutboxReadDateNs.OutboxReadDate OutboxReadDate1001931436 => OutboxReadDate1001931436.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: SmsjobsEligibleToJoin,
+    public abstract class SmsjobsEligibilityToJoinBase : ITlSerializable, ITlDeserializable<SmsjobsEligibilityToJoinBase> {
+        public static SmsjobsEligibilityToJoinBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.SmsjobsEligibilityToJoinNs.SmsjobsEligibleToJoin.Identifier))
+                return Tel.SmsjobsEligibilityToJoinNs.SmsjobsEligibleToJoin.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.SmsjobsEligibilityToJoinNs.SmsjobsEligibleToJoin SmsjobsEligibleToJoin594852657 => SmsjobsEligibleToJoin594852657.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: SmsjobsStatus,
+    public abstract class SmsjobsStatusBase : ITlSerializable, ITlDeserializable<SmsjobsStatusBase> {
+        public static SmsjobsStatusBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.SmsjobsStatusNs.SmsjobsStatus.Identifier))
+                return Tel.SmsjobsStatusNs.SmsjobsStatus.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.SmsjobsStatusNs.SmsjobsStatus SmsjobsStatus720277905 => SmsjobsStatus720277905.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: SmsJob,
+    public abstract class SmsJobBase : ITlSerializable, ITlDeserializable<SmsJobBase> {
+        public static SmsJobBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.SmsJobNs.SmsJob.Identifier))
+                return Tel.SmsJobNs.SmsJob.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.SmsJobNs.SmsJob SmsJob425595208 => SmsJob425595208.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BusinessWeeklyOpen,
+    public abstract class BusinessWeeklyOpenBase : ITlSerializable, ITlDeserializable<BusinessWeeklyOpenBase> {
+        public static BusinessWeeklyOpenBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BusinessWeeklyOpenNs.BusinessWeeklyOpen.Identifier))
+                return Tel.BusinessWeeklyOpenNs.BusinessWeeklyOpen.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BusinessWeeklyOpenNs.BusinessWeeklyOpen BusinessWeeklyOpen302717625 => BusinessWeeklyOpen302717625.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BusinessWorkHours,
+    public abstract class BusinessWorkHoursBase : ITlSerializable, ITlDeserializable<BusinessWorkHoursBase> {
+        public static BusinessWorkHoursBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BusinessWorkHoursNs.BusinessWorkHours.Identifier))
+                return Tel.BusinessWorkHoursNs.BusinessWorkHours.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BusinessWorkHoursNs.BusinessWorkHours BusinessWorkHours1936543592 => BusinessWorkHours1936543592.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BusinessLocation,
+    public abstract class BusinessLocationBase : ITlSerializable, ITlDeserializable<BusinessLocationBase> {
+        public static BusinessLocationBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BusinessLocationNs.BusinessLocation.Identifier))
+                return Tel.BusinessLocationNs.BusinessLocation.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BusinessLocationNs.BusinessLocation BusinessLocation1403249929 => BusinessLocation1403249929.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: InputBusinessRecipients,
+    public abstract class InputBusinessRecipientsBase : ITlSerializable, ITlDeserializable<InputBusinessRecipientsBase> {
+        public static InputBusinessRecipientsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.InputBusinessRecipientsNs.InputBusinessRecipients.Identifier))
+                return Tel.InputBusinessRecipientsNs.InputBusinessRecipients.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.InputBusinessRecipientsNs.InputBusinessRecipients InputBusinessRecipients1871393450 => InputBusinessRecipients1871393450.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BusinessRecipients,
+    public abstract class BusinessRecipientsBase : ITlSerializable, ITlDeserializable<BusinessRecipientsBase> {
+        public static BusinessRecipientsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BusinessRecipientsNs.BusinessRecipients.Identifier))
+                return Tel.BusinessRecipientsNs.BusinessRecipients.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BusinessRecipientsNs.BusinessRecipients BusinessRecipients554733559 => BusinessRecipients554733559.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BusinessAwayMessageScheduleAlways, BusinessAwayMessageScheduleOutsideWorkHours, BusinessAwayMessageScheduleCustom,
+    public abstract class BusinessAwayMessageScheduleBase : ITlSerializable, ITlDeserializable<BusinessAwayMessageScheduleBase> {
+        public static BusinessAwayMessageScheduleBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BusinessAwayMessageScheduleNs.BusinessAwayMessageScheduleAlways.Identifier))
+                return Tel.BusinessAwayMessageScheduleNs.BusinessAwayMessageScheduleAlways.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.BusinessAwayMessageScheduleNs.BusinessAwayMessageScheduleOutsideWorkHours.Identifier))
+                return Tel.BusinessAwayMessageScheduleNs.BusinessAwayMessageScheduleOutsideWorkHours.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.BusinessAwayMessageScheduleNs.BusinessAwayMessageScheduleCustom.Identifier))
+                return Tel.BusinessAwayMessageScheduleNs.BusinessAwayMessageScheduleCustom.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BusinessAwayMessageScheduleNs.BusinessAwayMessageScheduleAlways BusinessAwayMessageScheduleAlways910564679 => BusinessAwayMessageScheduleAlways910564679.TlSerialize(),
+            Tel.BusinessAwayMessageScheduleNs.BusinessAwayMessageScheduleOutsideWorkHours BusinessAwayMessageScheduleOutsideWorkHours1007487743 => BusinessAwayMessageScheduleOutsideWorkHours1007487743.TlSerialize(),
+            Tel.BusinessAwayMessageScheduleNs.BusinessAwayMessageScheduleCustom BusinessAwayMessageScheduleCustom867328308 => BusinessAwayMessageScheduleCustom867328308.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: InputBusinessGreetingMessage,
+    public abstract class InputBusinessGreetingMessageBase : ITlSerializable, ITlDeserializable<InputBusinessGreetingMessageBase> {
+        public static InputBusinessGreetingMessageBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.InputBusinessGreetingMessageNs.InputBusinessGreetingMessage.Identifier))
+                return Tel.InputBusinessGreetingMessageNs.InputBusinessGreetingMessage.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.InputBusinessGreetingMessageNs.InputBusinessGreetingMessage InputBusinessGreetingMessage26528571 => InputBusinessGreetingMessage26528571.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BusinessGreetingMessage,
+    public abstract class BusinessGreetingMessageBase : ITlSerializable, ITlDeserializable<BusinessGreetingMessageBase> {
+        public static BusinessGreetingMessageBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BusinessGreetingMessageNs.BusinessGreetingMessage.Identifier))
+                return Tel.BusinessGreetingMessageNs.BusinessGreetingMessage.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BusinessGreetingMessageNs.BusinessGreetingMessage BusinessGreetingMessage451302485 => BusinessGreetingMessage451302485.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: InputBusinessAwayMessage,
+    public abstract class InputBusinessAwayMessageBase : ITlSerializable, ITlDeserializable<InputBusinessAwayMessageBase> {
+        public static InputBusinessAwayMessageBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.InputBusinessAwayMessageNs.InputBusinessAwayMessage.Identifier))
+                return Tel.InputBusinessAwayMessageNs.InputBusinessAwayMessage.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.InputBusinessAwayMessageNs.InputBusinessAwayMessage InputBusinessAwayMessage2094959136 => InputBusinessAwayMessage2094959136.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BusinessAwayMessage,
+    public abstract class BusinessAwayMessageBase : ITlSerializable, ITlDeserializable<BusinessAwayMessageBase> {
+        public static BusinessAwayMessageBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BusinessAwayMessageNs.BusinessAwayMessage.Identifier))
+                return Tel.BusinessAwayMessageNs.BusinessAwayMessage.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BusinessAwayMessageNs.BusinessAwayMessage BusinessAwayMessage283809188 => BusinessAwayMessage283809188.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: Timezone,
+    public abstract class TimezoneBase : ITlSerializable, ITlDeserializable<TimezoneBase> {
+        public static TimezoneBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.TimezoneNs.Timezone.Identifier))
+                return Tel.TimezoneNs.Timezone.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.TimezoneNs.Timezone Timezone7173643 => Timezone7173643.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: HelpTimezonesListNotModified, HelpTimezonesList,
+    public abstract class HelpTimezonesListBase : ITlSerializable, ITlDeserializable<HelpTimezonesListBase> {
+        public static HelpTimezonesListBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.HelpTimezonesListNs.HelpTimezonesListNotModified.Identifier))
+                return Tel.HelpTimezonesListNs.HelpTimezonesListNotModified.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.HelpTimezonesListNs.HelpTimezonesList.Identifier))
+                return Tel.HelpTimezonesListNs.HelpTimezonesList.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.HelpTimezonesListNs.HelpTimezonesListNotModified HelpTimezonesListNotModified1761146676 => HelpTimezonesListNotModified1761146676.TlSerialize(),
+            Tel.HelpTimezonesListNs.HelpTimezonesList HelpTimezonesList2071260529 => HelpTimezonesList2071260529.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: QuickReply,
+    public abstract class QuickReplyBase : ITlSerializable, ITlDeserializable<QuickReplyBase> {
+        public static QuickReplyBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.QuickReplyNs.QuickReply.Identifier))
+                return Tel.QuickReplyNs.QuickReply.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.QuickReplyNs.QuickReply QuickReply110563371 => QuickReply110563371.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: InputQuickReplyShortcut, InputQuickReplyShortcutId,
+    public abstract class InputQuickReplyShortcutBase : ITlSerializable, ITlDeserializable<InputQuickReplyShortcutBase> {
+        public static InputQuickReplyShortcutBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.InputQuickReplyShortcutNs.InputQuickReplyShortcut.Identifier))
+                return Tel.InputQuickReplyShortcutNs.InputQuickReplyShortcut.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.InputQuickReplyShortcutNs.InputQuickReplyShortcutId.Identifier))
+                return Tel.InputQuickReplyShortcutNs.InputQuickReplyShortcutId.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.InputQuickReplyShortcutNs.InputQuickReplyShortcut InputQuickReplyShortcut609840449 => InputQuickReplyShortcut609840449.TlSerialize(),
+            Tel.InputQuickReplyShortcutNs.InputQuickReplyShortcutId InputQuickReplyShortcutId18418929 => InputQuickReplyShortcutId18418929.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: MessagesQuickReplies, MessagesQuickRepliesNotModified,
+    public abstract class MessagesQuickRepliesBase : ITlSerializable, ITlDeserializable<MessagesQuickRepliesBase> {
+        public static MessagesQuickRepliesBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.MessagesQuickRepliesNs.MessagesQuickReplies.Identifier))
+                return Tel.MessagesQuickRepliesNs.MessagesQuickReplies.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.MessagesQuickRepliesNs.MessagesQuickRepliesNotModified.Identifier))
+                return Tel.MessagesQuickRepliesNs.MessagesQuickRepliesNotModified.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.MessagesQuickRepliesNs.MessagesQuickReplies MessagesQuickReplies963811691 => MessagesQuickReplies963811691.TlSerialize(),
+            Tel.MessagesQuickRepliesNs.MessagesQuickRepliesNotModified MessagesQuickRepliesNotModified1603398491 => MessagesQuickRepliesNotModified1603398491.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: ConnectedBot,
+    public abstract class ConnectedBotBase : ITlSerializable, ITlDeserializable<ConnectedBotBase> {
+        public static ConnectedBotBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.ConnectedBotNs.ConnectedBot.Identifier))
+                return Tel.ConnectedBotNs.ConnectedBot.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.ConnectedBotNs.ConnectedBot ConnectedBot1123645951 => ConnectedBot1123645951.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: AccountConnectedBots,
+    public abstract class AccountConnectedBotsBase : ITlSerializable, ITlDeserializable<AccountConnectedBotsBase> {
+        public static AccountConnectedBotsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.AccountConnectedBotsNs.AccountConnectedBots.Identifier))
+                return Tel.AccountConnectedBotsNs.AccountConnectedBots.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.AccountConnectedBotsNs.AccountConnectedBots AccountConnectedBots400029819 => AccountConnectedBots400029819.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: MessagesDialogFilters,
+    public abstract class MessagesDialogFiltersBase : ITlSerializable, ITlDeserializable<MessagesDialogFiltersBase> {
+        public static MessagesDialogFiltersBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.MessagesDialogFiltersNs.MessagesDialogFilters.Identifier))
+                return Tel.MessagesDialogFiltersNs.MessagesDialogFilters.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.MessagesDialogFiltersNs.MessagesDialogFilters MessagesDialogFilters718878489 => MessagesDialogFilters718878489.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: Birthday,
+    public abstract class BirthdayBase : ITlSerializable, ITlDeserializable<BirthdayBase> {
+        public static BirthdayBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BirthdayNs.Birthday.Identifier))
+                return Tel.BirthdayNs.Birthday.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BirthdayNs.Birthday Birthday1821253126 => Birthday1821253126.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BotBusinessConnection,
+    public abstract class BotBusinessConnectionBase : ITlSerializable, ITlDeserializable<BotBusinessConnectionBase> {
+        public static BotBusinessConnectionBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BotBusinessConnectionNs.BotBusinessConnection.Identifier))
+                return Tel.BotBusinessConnectionNs.BotBusinessConnection.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BotBusinessConnectionNs.BotBusinessConnection BotBusinessConnection1989921868 => BotBusinessConnection1989921868.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: InputBusinessIntro,
+    public abstract class InputBusinessIntroBase : ITlSerializable, ITlDeserializable<InputBusinessIntroBase> {
+        public static InputBusinessIntroBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.InputBusinessIntroNs.InputBusinessIntro.Identifier))
+                return Tel.InputBusinessIntroNs.InputBusinessIntro.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.InputBusinessIntroNs.InputBusinessIntro InputBusinessIntro163867085 => InputBusinessIntro163867085.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BusinessIntro,
+    public abstract class BusinessIntroBase : ITlSerializable, ITlDeserializable<BusinessIntroBase> {
+        public static BusinessIntroBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BusinessIntroNs.BusinessIntro.Identifier))
+                return Tel.BusinessIntroNs.BusinessIntro.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BusinessIntroNs.BusinessIntro BusinessIntro1510606445 => BusinessIntro1510606445.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: MessagesMyStickers,
+    public abstract class MessagesMyStickersBase : ITlSerializable, ITlDeserializable<MessagesMyStickersBase> {
+        public static MessagesMyStickersBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.MessagesMyStickersNs.MessagesMyStickers.Identifier))
+                return Tel.MessagesMyStickersNs.MessagesMyStickers.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.MessagesMyStickersNs.MessagesMyStickers MessagesMyStickers83926371 => MessagesMyStickers83926371.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: InputCollectibleUsername, InputCollectiblePhone,
+    public abstract class InputCollectibleBase : ITlSerializable, ITlDeserializable<InputCollectibleBase> {
+        public static InputCollectibleBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.InputCollectibleNs.InputCollectibleUsername.Identifier))
+                return Tel.InputCollectibleNs.InputCollectibleUsername.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.InputCollectibleNs.InputCollectiblePhone.Identifier))
+                return Tel.InputCollectibleNs.InputCollectiblePhone.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.InputCollectibleNs.InputCollectibleUsername InputCollectibleUsername476815191 => InputCollectibleUsername476815191.TlSerialize(),
+            Tel.InputCollectibleNs.InputCollectiblePhone InputCollectiblePhone1562241884 => InputCollectiblePhone1562241884.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: FragmentCollectibleInfo,
+    public abstract class FragmentCollectibleInfoBase : ITlSerializable, ITlDeserializable<FragmentCollectibleInfoBase> {
+        public static FragmentCollectibleInfoBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.FragmentCollectibleInfoNs.FragmentCollectibleInfo.Identifier))
+                return Tel.FragmentCollectibleInfoNs.FragmentCollectibleInfo.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.FragmentCollectibleInfoNs.FragmentCollectibleInfo FragmentCollectibleInfo1857945489 => FragmentCollectibleInfo1857945489.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: InputBusinessBotRecipients,
+    public abstract class InputBusinessBotRecipientsBase : ITlSerializable, ITlDeserializable<InputBusinessBotRecipientsBase> {
+        public static InputBusinessBotRecipientsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.InputBusinessBotRecipientsNs.InputBusinessBotRecipients.Identifier))
+                return Tel.InputBusinessBotRecipientsNs.InputBusinessBotRecipients.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.InputBusinessBotRecipientsNs.InputBusinessBotRecipients InputBusinessBotRecipients991587810 => InputBusinessBotRecipients991587810.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BusinessBotRecipients,
+    public abstract class BusinessBotRecipientsBase : ITlSerializable, ITlDeserializable<BusinessBotRecipientsBase> {
+        public static BusinessBotRecipientsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BusinessBotRecipientsNs.BusinessBotRecipients.Identifier))
+                return Tel.BusinessBotRecipientsNs.BusinessBotRecipients.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BusinessBotRecipientsNs.BusinessBotRecipients BusinessBotRecipients1198722189 => BusinessBotRecipients1198722189.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: ContactBirthday,
+    public abstract class ContactBirthdayBase : ITlSerializable, ITlDeserializable<ContactBirthdayBase> {
+        public static ContactBirthdayBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.ContactBirthdayNs.ContactBirthday.Identifier))
+                return Tel.ContactBirthdayNs.ContactBirthday.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.ContactBirthdayNs.ContactBirthday ContactBirthday496600883 => ContactBirthday496600883.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: ContactsContactBirthdays,
+    public abstract class ContactsContactBirthdaysBase : ITlSerializable, ITlDeserializable<ContactsContactBirthdaysBase> {
+        public static ContactsContactBirthdaysBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.ContactsContactBirthdaysNs.ContactsContactBirthdays.Identifier))
+                return Tel.ContactsContactBirthdaysNs.ContactsContactBirthdays.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.ContactsContactBirthdaysNs.ContactsContactBirthdays ContactsContactBirthdays290452237 => ContactsContactBirthdays290452237.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: MissingInvitee,
+    public abstract class MissingInviteeBase : ITlSerializable, ITlDeserializable<MissingInviteeBase> {
+        public static MissingInviteeBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.MissingInviteeNs.MissingInvitee.Identifier))
+                return Tel.MissingInviteeNs.MissingInvitee.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.MissingInviteeNs.MissingInvitee MissingInvitee1653379620 => MissingInvitee1653379620.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: MessagesInvitedUsers,
+    public abstract class MessagesInvitedUsersBase : ITlSerializable, ITlDeserializable<MessagesInvitedUsersBase> {
+        public static MessagesInvitedUsersBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.MessagesInvitedUsersNs.MessagesInvitedUsers.Identifier))
+                return Tel.MessagesInvitedUsersNs.MessagesInvitedUsers.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.MessagesInvitedUsersNs.MessagesInvitedUsers MessagesInvitedUsers2136862630 => MessagesInvitedUsers2136862630.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: InputBusinessChatLink,
+    public abstract class InputBusinessChatLinkBase : ITlSerializable, ITlDeserializable<InputBusinessChatLinkBase> {
+        public static InputBusinessChatLinkBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.InputBusinessChatLinkNs.InputBusinessChatLink.Identifier))
+                return Tel.InputBusinessChatLinkNs.InputBusinessChatLink.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.InputBusinessChatLinkNs.InputBusinessChatLink InputBusinessChatLink292003751 => InputBusinessChatLink292003751.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BusinessChatLink,
+    public abstract class BusinessChatLinkBase : ITlSerializable, ITlDeserializable<BusinessChatLinkBase> {
+        public static BusinessChatLinkBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BusinessChatLinkNs.BusinessChatLink.Identifier))
+                return Tel.BusinessChatLinkNs.BusinessChatLink.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BusinessChatLinkNs.BusinessChatLink BusinessChatLink1263638929 => BusinessChatLink1263638929.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: AccountBusinessChatLinks,
+    public abstract class AccountBusinessChatLinksBase : ITlSerializable, ITlDeserializable<AccountBusinessChatLinksBase> {
+        public static AccountBusinessChatLinksBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.AccountBusinessChatLinksNs.AccountBusinessChatLinks.Identifier))
+                return Tel.AccountBusinessChatLinksNs.AccountBusinessChatLinks.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.AccountBusinessChatLinksNs.AccountBusinessChatLinks AccountBusinessChatLinks331111727 => AccountBusinessChatLinks331111727.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: AccountResolvedBusinessChatLinks,
+    public abstract class AccountResolvedBusinessChatLinksBase : ITlSerializable, ITlDeserializable<AccountResolvedBusinessChatLinksBase> {
+        public static AccountResolvedBusinessChatLinksBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.AccountResolvedBusinessChatLinksNs.AccountResolvedBusinessChatLinks.Identifier))
+                return Tel.AccountResolvedBusinessChatLinksNs.AccountResolvedBusinessChatLinks.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.AccountResolvedBusinessChatLinksNs.AccountResolvedBusinessChatLinks AccountResolvedBusinessChatLinks1708937439 => AccountResolvedBusinessChatLinks1708937439.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: RequestedPeerUser, RequestedPeerChat, RequestedPeerChannel,
+    public abstract class RequestedPeerBase : ITlSerializable, ITlDeserializable<RequestedPeerBase> {
+        public int Flags {get;set;} = default!;
+        public PhotoBase? Photo {get;set;} = default!;
+        public static RequestedPeerBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.RequestedPeerNs.RequestedPeerUser.Identifier))
+                return Tel.RequestedPeerNs.RequestedPeerUser.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.RequestedPeerNs.RequestedPeerChat.Identifier))
+                return Tel.RequestedPeerNs.RequestedPeerChat.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.RequestedPeerNs.RequestedPeerChannel.Identifier))
+                return Tel.RequestedPeerNs.RequestedPeerChannel.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.RequestedPeerNs.RequestedPeerUser RequestedPeerUser701500310 => RequestedPeerUser701500310.TlSerialize(),
+            Tel.RequestedPeerNs.RequestedPeerChat RequestedPeerChat1929860175 => RequestedPeerChat1929860175.TlSerialize(),
+            Tel.RequestedPeerNs.RequestedPeerChannel RequestedPeerChannel1952185372 => RequestedPeerChannel1952185372.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: SponsoredMessageReportOption,
+    public abstract class SponsoredMessageReportOptionBase : ITlSerializable, ITlDeserializable<SponsoredMessageReportOptionBase> {
+        public static SponsoredMessageReportOptionBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.SponsoredMessageReportOptionNs.SponsoredMessageReportOption.Identifier))
+                return Tel.SponsoredMessageReportOptionNs.SponsoredMessageReportOption.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.SponsoredMessageReportOptionNs.SponsoredMessageReportOption SponsoredMessageReportOption1124938064 => SponsoredMessageReportOption1124938064.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: ChannelsSponsoredMessageReportResultChooseOption, ChannelsSponsoredMessageReportResultAdsHidden, ChannelsSponsoredMessageReportResultReported,
+    public abstract class ChannelsSponsoredMessageReportResultBase : ITlSerializable, ITlDeserializable<ChannelsSponsoredMessageReportResultBase> {
+        public static ChannelsSponsoredMessageReportResultBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.ChannelsSponsoredMessageReportResultNs.ChannelsSponsoredMessageReportResultChooseOption.Identifier))
+                return Tel.ChannelsSponsoredMessageReportResultNs.ChannelsSponsoredMessageReportResultChooseOption.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.ChannelsSponsoredMessageReportResultNs.ChannelsSponsoredMessageReportResultAdsHidden.Identifier))
+                return Tel.ChannelsSponsoredMessageReportResultNs.ChannelsSponsoredMessageReportResultAdsHidden.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.ChannelsSponsoredMessageReportResultNs.ChannelsSponsoredMessageReportResultReported.Identifier))
+                return Tel.ChannelsSponsoredMessageReportResultNs.ChannelsSponsoredMessageReportResultReported.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.ChannelsSponsoredMessageReportResultNs.ChannelsSponsoredMessageReportResultChooseOption ChannelsSponsoredMessageReportResultChooseOption2073059774 => ChannelsSponsoredMessageReportResultChooseOption2073059774.TlSerialize(),
+            Tel.ChannelsSponsoredMessageReportResultNs.ChannelsSponsoredMessageReportResultAdsHidden ChannelsSponsoredMessageReportResultAdsHidden1044107055 => ChannelsSponsoredMessageReportResultAdsHidden1044107055.TlSerialize(),
+            Tel.ChannelsSponsoredMessageReportResultNs.ChannelsSponsoredMessageReportResultReported ChannelsSponsoredMessageReportResultReported1384544183 => ChannelsSponsoredMessageReportResultReported1384544183.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: StatsBroadcastRevenueStats,
+    public abstract class StatsBroadcastRevenueStatsBase : ITlSerializable, ITlDeserializable<StatsBroadcastRevenueStatsBase> {
+        public static StatsBroadcastRevenueStatsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.StatsBroadcastRevenueStatsNs.StatsBroadcastRevenueStats.Identifier))
+                return Tel.StatsBroadcastRevenueStatsNs.StatsBroadcastRevenueStats.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.StatsBroadcastRevenueStatsNs.StatsBroadcastRevenueStats StatsBroadcastRevenueStats1409802903 => StatsBroadcastRevenueStats1409802903.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: StatsBroadcastRevenueWithdrawalUrl,
+    public abstract class StatsBroadcastRevenueWithdrawalUrlBase : ITlSerializable, ITlDeserializable<StatsBroadcastRevenueWithdrawalUrlBase> {
+        public static StatsBroadcastRevenueWithdrawalUrlBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.StatsBroadcastRevenueWithdrawalUrlNs.StatsBroadcastRevenueWithdrawalUrl.Identifier))
+                return Tel.StatsBroadcastRevenueWithdrawalUrlNs.StatsBroadcastRevenueWithdrawalUrl.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.StatsBroadcastRevenueWithdrawalUrlNs.StatsBroadcastRevenueWithdrawalUrl StatsBroadcastRevenueWithdrawalUrl328886473 => StatsBroadcastRevenueWithdrawalUrl328886473.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BroadcastRevenueTransactionProceeds, BroadcastRevenueTransactionWithdrawal, BroadcastRevenueTransactionRefund,
+    public abstract class BroadcastRevenueTransactionBase : ITlSerializable, ITlDeserializable<BroadcastRevenueTransactionBase> {
+        public long Amount {get;set;} = default!;
+        public static BroadcastRevenueTransactionBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BroadcastRevenueTransactionNs.BroadcastRevenueTransactionProceeds.Identifier))
+                return Tel.BroadcastRevenueTransactionNs.BroadcastRevenueTransactionProceeds.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.BroadcastRevenueTransactionNs.BroadcastRevenueTransactionWithdrawal.Identifier))
+                return Tel.BroadcastRevenueTransactionNs.BroadcastRevenueTransactionWithdrawal.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.BroadcastRevenueTransactionNs.BroadcastRevenueTransactionRefund.Identifier))
+                return Tel.BroadcastRevenueTransactionNs.BroadcastRevenueTransactionRefund.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BroadcastRevenueTransactionNs.BroadcastRevenueTransactionProceeds BroadcastRevenueTransactionProceeds1434332356 => BroadcastRevenueTransactionProceeds1434332356.TlSerialize(),
+            Tel.BroadcastRevenueTransactionNs.BroadcastRevenueTransactionWithdrawal BroadcastRevenueTransactionWithdrawal1515784568 => BroadcastRevenueTransactionWithdrawal1515784568.TlSerialize(),
+            Tel.BroadcastRevenueTransactionNs.BroadcastRevenueTransactionRefund BroadcastRevenueTransactionRefund1121127726 => BroadcastRevenueTransactionRefund1121127726.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: StatsBroadcastRevenueTransactions,
+    public abstract class StatsBroadcastRevenueTransactionsBase : ITlSerializable, ITlDeserializable<StatsBroadcastRevenueTransactionsBase> {
+        public static StatsBroadcastRevenueTransactionsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.StatsBroadcastRevenueTransactionsNs.StatsBroadcastRevenueTransactions.Identifier))
+                return Tel.StatsBroadcastRevenueTransactionsNs.StatsBroadcastRevenueTransactions.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.StatsBroadcastRevenueTransactionsNs.StatsBroadcastRevenueTransactions StatsBroadcastRevenueTransactions2028632986 => StatsBroadcastRevenueTransactions2028632986.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: ReactionNotificationsFromContacts, ReactionNotificationsFromAll,
+    public abstract class ReactionNotificationsFromBase : ITlSerializable, ITlDeserializable<ReactionNotificationsFromBase> {
+        public static ReactionNotificationsFromBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.ReactionNotificationsFromNs.ReactionNotificationsFromContacts.Identifier))
+                return Tel.ReactionNotificationsFromNs.ReactionNotificationsFromContacts.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.ReactionNotificationsFromNs.ReactionNotificationsFromAll.Identifier))
+                return Tel.ReactionNotificationsFromNs.ReactionNotificationsFromAll.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.ReactionNotificationsFromNs.ReactionNotificationsFromContacts ReactionNotificationsFromContacts1161583078 => ReactionNotificationsFromContacts1161583078.TlSerialize(),
+            Tel.ReactionNotificationsFromNs.ReactionNotificationsFromAll ReactionNotificationsFromAll1268654752 => ReactionNotificationsFromAll1268654752.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: ReactionsNotifySettings,
+    public abstract class ReactionsNotifySettingsBase : ITlSerializable, ITlDeserializable<ReactionsNotifySettingsBase> {
+        public static ReactionsNotifySettingsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.ReactionsNotifySettingsNs.ReactionsNotifySettings.Identifier))
+                return Tel.ReactionsNotifySettingsNs.ReactionsNotifySettings.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.ReactionsNotifySettingsNs.ReactionsNotifySettings ReactionsNotifySettings1457736048 => ReactionsNotifySettings1457736048.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: BroadcastRevenueBalances,
+    public abstract class BroadcastRevenueBalancesBase : ITlSerializable, ITlDeserializable<BroadcastRevenueBalancesBase> {
+        public static BroadcastRevenueBalancesBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.BroadcastRevenueBalancesNs.BroadcastRevenueBalances.Identifier))
+                return Tel.BroadcastRevenueBalancesNs.BroadcastRevenueBalances.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.BroadcastRevenueBalancesNs.BroadcastRevenueBalances BroadcastRevenueBalances2076642874 => BroadcastRevenueBalances2076642874.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: AvailableEffect,
+    public abstract class AvailableEffectBase : ITlSerializable, ITlDeserializable<AvailableEffectBase> {
+        public static AvailableEffectBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.AvailableEffectNs.AvailableEffect.Identifier))
+                return Tel.AvailableEffectNs.AvailableEffect.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.AvailableEffectNs.AvailableEffect AvailableEffect1815879042 => AvailableEffect1815879042.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: MessagesAvailableEffectsNotModified, MessagesAvailableEffects,
+    public abstract class MessagesAvailableEffectsBase : ITlSerializable, ITlDeserializable<MessagesAvailableEffectsBase> {
+        public static MessagesAvailableEffectsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.MessagesAvailableEffectsNs.MessagesAvailableEffectsNotModified.Identifier))
+                return Tel.MessagesAvailableEffectsNs.MessagesAvailableEffectsNotModified.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.MessagesAvailableEffectsNs.MessagesAvailableEffects.Identifier))
+                return Tel.MessagesAvailableEffectsNs.MessagesAvailableEffects.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.MessagesAvailableEffectsNs.MessagesAvailableEffectsNotModified MessagesAvailableEffectsNotModified772957605 => MessagesAvailableEffectsNotModified772957605.TlSerialize(),
+            Tel.MessagesAvailableEffectsNs.MessagesAvailableEffects MessagesAvailableEffects1109696146 => MessagesAvailableEffects1109696146.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: FactCheck,
+    public abstract class FactCheckBase : ITlSerializable, ITlDeserializable<FactCheckBase> {
+        public static FactCheckBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.FactCheckNs.FactCheck.Identifier))
+                return Tel.FactCheckNs.FactCheck.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.FactCheckNs.FactCheck FactCheck1197736753 => FactCheck1197736753.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: StarsTransactionPeerUnsupported, StarsTransactionPeerAppStore, StarsTransactionPeerPlayMarket, StarsTransactionPeerPremiumBot, StarsTransactionPeerFragment, StarsTransactionPeer, StarsTransactionPeerAds,
+    public abstract class StarsTransactionPeerBase : ITlSerializable, ITlDeserializable<StarsTransactionPeerBase> {
+        public static StarsTransactionPeerBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.StarsTransactionPeerNs.StarsTransactionPeerUnsupported.Identifier))
+                return Tel.StarsTransactionPeerNs.StarsTransactionPeerUnsupported.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.StarsTransactionPeerNs.StarsTransactionPeerAppStore.Identifier))
+                return Tel.StarsTransactionPeerNs.StarsTransactionPeerAppStore.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.StarsTransactionPeerNs.StarsTransactionPeerPlayMarket.Identifier))
+                return Tel.StarsTransactionPeerNs.StarsTransactionPeerPlayMarket.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.StarsTransactionPeerNs.StarsTransactionPeerPremiumBot.Identifier))
+                return Tel.StarsTransactionPeerNs.StarsTransactionPeerPremiumBot.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.StarsTransactionPeerNs.StarsTransactionPeerFragment.Identifier))
+                return Tel.StarsTransactionPeerNs.StarsTransactionPeerFragment.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.StarsTransactionPeerNs.StarsTransactionPeer.Identifier))
+                return Tel.StarsTransactionPeerNs.StarsTransactionPeer.TlDeserialize(des);
+            if (id.SequenceEqual(Tel.StarsTransactionPeerNs.StarsTransactionPeerAds.Identifier))
+                return Tel.StarsTransactionPeerNs.StarsTransactionPeerAds.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.StarsTransactionPeerNs.StarsTransactionPeerUnsupported StarsTransactionPeerUnsupported1779253276 => StarsTransactionPeerUnsupported1779253276.TlSerialize(),
+            Tel.StarsTransactionPeerNs.StarsTransactionPeerAppStore StarsTransactionPeerAppStore1269320843 => StarsTransactionPeerAppStore1269320843.TlSerialize(),
+            Tel.StarsTransactionPeerNs.StarsTransactionPeerPlayMarket StarsTransactionPeerPlayMarket2069236235 => StarsTransactionPeerPlayMarket2069236235.TlSerialize(),
+            Tel.StarsTransactionPeerNs.StarsTransactionPeerPremiumBot StarsTransactionPeerPremiumBot621656824 => StarsTransactionPeerPremiumBot621656824.TlSerialize(),
+            Tel.StarsTransactionPeerNs.StarsTransactionPeerFragment StarsTransactionPeerFragment382740222 => StarsTransactionPeerFragment382740222.TlSerialize(),
+            Tel.StarsTransactionPeerNs.StarsTransactionPeer StarsTransactionPeer670195363 => StarsTransactionPeer670195363.TlSerialize(),
+            Tel.StarsTransactionPeerNs.StarsTransactionPeerAds StarsTransactionPeerAds1617438738 => StarsTransactionPeerAds1617438738.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: StarsTopupOption,
+    public abstract class StarsTopupOptionBase : ITlSerializable, ITlDeserializable<StarsTopupOptionBase> {
+        public static StarsTopupOptionBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.StarsTopupOptionNs.StarsTopupOption.Identifier))
+                return Tel.StarsTopupOptionNs.StarsTopupOption.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.StarsTopupOptionNs.StarsTopupOption StarsTopupOption198776256 => StarsTopupOption198776256.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: StarsTransaction,
+    public abstract class StarsTransactionBase : ITlSerializable, ITlDeserializable<StarsTransactionBase> {
+        public static StarsTransactionBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.StarsTransactionNs.StarsTransaction.Identifier))
+                return Tel.StarsTransactionNs.StarsTransaction.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.StarsTransactionNs.StarsTransaction StarsTransaction766853519 => StarsTransaction766853519.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: PaymentsStarsStatus,
+    public abstract class PaymentsStarsStatusBase : ITlSerializable, ITlDeserializable<PaymentsStarsStatusBase> {
+        public static PaymentsStarsStatusBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.PaymentsStarsStatusNs.PaymentsStarsStatus.Identifier))
+                return Tel.PaymentsStarsStatusNs.PaymentsStarsStatus.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.PaymentsStarsStatusNs.PaymentsStarsStatus PaymentsStarsStatus1930105248 => PaymentsStarsStatus1930105248.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: FoundStory,
+    public abstract class FoundStoryBase : ITlSerializable, ITlDeserializable<FoundStoryBase> {
+        public static FoundStoryBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.FoundStoryNs.FoundStory.Identifier))
+                return Tel.FoundStoryNs.FoundStory.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.FoundStoryNs.FoundStory FoundStory394605632 => FoundStory394605632.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: StoriesFoundStories,
+    public abstract class StoriesFoundStoriesBase : ITlSerializable, ITlDeserializable<StoriesFoundStoriesBase> {
+        public static StoriesFoundStoriesBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.StoriesFoundStoriesNs.StoriesFoundStories.Identifier))
+                return Tel.StoriesFoundStoriesNs.StoriesFoundStories.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.StoriesFoundStoriesNs.StoriesFoundStories StoriesFoundStories488736969 => StoriesFoundStories488736969.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: GeoPointAddress,
+    public abstract class GeoPointAddressBase : ITlSerializable, ITlDeserializable<GeoPointAddressBase> {
+        public static GeoPointAddressBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.GeoPointAddressNs.GeoPointAddress.Identifier))
+                return Tel.GeoPointAddressNs.GeoPointAddress.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.GeoPointAddressNs.GeoPointAddress GeoPointAddress565420653 => GeoPointAddress565420653.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: StarsRevenueStatus,
+    public abstract class StarsRevenueStatusBase : ITlSerializable, ITlDeserializable<StarsRevenueStatusBase> {
+        public static StarsRevenueStatusBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.StarsRevenueStatusNs.StarsRevenueStatus.Identifier))
+                return Tel.StarsRevenueStatusNs.StarsRevenueStatus.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.StarsRevenueStatusNs.StarsRevenueStatus StarsRevenueStatus2033461574 => StarsRevenueStatus2033461574.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: PaymentsStarsRevenueStats,
+    public abstract class PaymentsStarsRevenueStatsBase : ITlSerializable, ITlDeserializable<PaymentsStarsRevenueStatsBase> {
+        public static PaymentsStarsRevenueStatsBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.PaymentsStarsRevenueStatsNs.PaymentsStarsRevenueStats.Identifier))
+                return Tel.PaymentsStarsRevenueStatsNs.PaymentsStarsRevenueStats.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.PaymentsStarsRevenueStatsNs.PaymentsStarsRevenueStats PaymentsStarsRevenueStats919881925 => PaymentsStarsRevenueStats919881925.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: PaymentsStarsRevenueWithdrawalUrl,
+    public abstract class PaymentsStarsRevenueWithdrawalUrlBase : ITlSerializable, ITlDeserializable<PaymentsStarsRevenueWithdrawalUrlBase> {
+        public static PaymentsStarsRevenueWithdrawalUrlBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.PaymentsStarsRevenueWithdrawalUrlNs.PaymentsStarsRevenueWithdrawalUrl.Identifier))
+                return Tel.PaymentsStarsRevenueWithdrawalUrlNs.PaymentsStarsRevenueWithdrawalUrl.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.PaymentsStarsRevenueWithdrawalUrlNs.PaymentsStarsRevenueWithdrawalUrl PaymentsStarsRevenueWithdrawalUrl497778871 => PaymentsStarsRevenueWithdrawalUrl497778871.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: PaymentsStarsRevenueAdsAccountUrl,
+    public abstract class PaymentsStarsRevenueAdsAccountUrlBase : ITlSerializable, ITlDeserializable<PaymentsStarsRevenueAdsAccountUrlBase> {
+        public static PaymentsStarsRevenueAdsAccountUrlBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.PaymentsStarsRevenueAdsAccountUrlNs.PaymentsStarsRevenueAdsAccountUrl.Identifier))
+                return Tel.PaymentsStarsRevenueAdsAccountUrlNs.PaymentsStarsRevenueAdsAccountUrl.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.PaymentsStarsRevenueAdsAccountUrlNs.PaymentsStarsRevenueAdsAccountUrl PaymentsStarsRevenueAdsAccountUrl961445665 => PaymentsStarsRevenueAdsAccountUrl961445665.TlSerialize(),
+            _=> [],
+        };
+    }
+/// derived Types: InputStarsTransaction,
+    public abstract class InputStarsTransactionBase : ITlSerializable, ITlDeserializable<InputStarsTransactionBase> {
+        public static InputStarsTransactionBase TlDeserialize(Deserializer des) {
+            var id = des.ReadId();
+
+            if (id.SequenceEqual(Tel.InputStarsTransactionNs.InputStarsTransaction.Identifier))
+                return Tel.InputStarsTransactionNs.InputStarsTransaction.TlDeserialize(des);
+            throw Core.Models.Errors.DeserializationException.InvalidCtor;
+        }
+        public byte[] TlSerialize() => this switch {
+            Tel.InputStarsTransactionNs.InputStarsTransaction InputStarsTransaction543876817 => InputStarsTransaction543876817.TlSerialize(),
             _=> [],
         };
     }

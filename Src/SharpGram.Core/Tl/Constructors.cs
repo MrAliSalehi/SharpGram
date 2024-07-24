@@ -627,26 +627,26 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
         }
     }
     public class InputMediaInvoice : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaInvoice> {
-        public static readonly byte[] Identifier = [213,166,181,142,];
+        public static readonly byte[] Identifier = [13,239,95,64,];
         public required string Title {get;set;}
         public required string Description {get;set;}
         public InputWebDocumentBase? Photo {get;set;}
         public required InvoiceBase Invoice {get;set;}
         public required byte[] Payload {get;set;}
-        public required string Provider {get;set;}
+        public string? Provider {get;set;}
         public required DataJSONBase ProviderData {get;set;}
         public string? StartParam {get;set;}
         public InputMediaBase? ExtendedMedia {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Photo is not null ? 1 : 0) | (StartParam is not null ? 2 : 0) | (ExtendedMedia is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Photo is not null ? 1 : 0) | (Provider is not null ? 8 : 0) | (StartParam is not null ? 2 : 0) | (ExtendedMedia is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             bytes.AddRange(Description.TlSerialize());
             if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
             bytes.AddRange(Invoice.TlSerialize());
             bytes.AddRange(Payload.TlSerialize());
-            bytes.AddRange(Provider.TlSerialize());
+            if(Provider is not null) bytes.AddRange(Provider.TlSerialize());
             bytes.AddRange(ProviderData.TlSerialize());
             if(StartParam is not null) bytes.AddRange(StartParam.TlSerialize());
             if(ExtendedMedia is not null) bytes.AddRange(ExtendedMedia.TlSerialize());
@@ -661,7 +661,7 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             var photoLocal = (flagsLocal & 1) is 0 ? default : InputWebDocumentBase.TlDeserialize(des) ;
             var invoiceLocal =  InvoiceBase.TlDeserialize(des);
             var payloadLocal =  des.As<byte[]>().Read();
-            var providerLocal =  des.As<string>().Read();
+            var providerLocal = (flagsLocal & 8) is 0 ? default : des.As<string>().Read() ;
             var providerDataLocal =  DataJSONBase.TlDeserialize(des);
             var startParamLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var extendedMediaLocal = (flagsLocal & 4) is 0 ? default : InputMediaBase.TlDeserialize(des) ;
@@ -811,6 +811,28 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
             ForceSmallMedia = forceSmallMediaLocal,
             Optional = optionalLocal,
             Url = urlLocal,
+            };
+        }
+    }
+    public class InputMediaPaidMedia : InputMediaBase, ITlSerializable, ITlDeserializable<InputMediaPaidMedia> {
+        public static readonly byte[] Identifier = [195,31,102,170,];
+        public long StarsAmount {get;set;}
+        public required List<InputMediaBase> ExtendedMedia {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(StarsAmount.TlSerialize());
+            bytes.AddRange(ExtendedMedia.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputMediaPaidMedia TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var starsAmountLocal =  des.As<long>().Read();
+            var extendedMediaLocal =  des.Read<InputMediaBase>();
+            return new() {
+            StarsAmount = starsAmountLocal,
+            ExtendedMedia = extendedMediaLocal,
             };
         }
     }
@@ -1494,6 +1516,8 @@ namespace SharpGram.Tl.Constructors.UserNs {
         public bool CloseFriend {get;set;}
         public bool StoriesHidden {get;set;}
         public bool StoriesUnavailable {get;set;}
+        public bool ContactRequirePremium {get;set;}
+        public bool BotBusiness {get;set;}
         public long? AccessHash {get;set;}
         public string? FirstName {get;set;}
         public string? LastName {get;set;}
@@ -1561,6 +1585,8 @@ namespace SharpGram.Tl.Constructors.UserNs {
             var closeFriendLocal = (flags2Local & 4) is 0 ? default : true ;
             var storiesHiddenLocal = (flags2Local & 8) is 0 ? default : true ;
             var storiesUnavailableLocal = (flags2Local & 16) is 0 ? default : true ;
+            var contactRequirePremiumLocal = (flags2Local & 1024) is 0 ? default : true ;
+            var botBusinessLocal = (flags2Local & 2048) is 0 ? default : true ;
             var idLocal =  des.As<long>().Read();
             var accessHashLocal = (flagsLocal & 1) is 0 ? default : des.As<long>().Read() ;
             var firstNameLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
@@ -1601,6 +1627,8 @@ namespace SharpGram.Tl.Constructors.UserNs {
             CloseFriend = closeFriendLocal,
             StoriesHidden = storiesHiddenLocal,
             StoriesUnavailable = storiesUnavailableLocal,
+            ContactRequirePremium = contactRequirePremiumLocal,
+            BotBusiness = botBusinessLocal,
             Id = idLocal,
             AccessHash = accessHashLocal,
             FirstName = firstNameLocal,
@@ -1728,44 +1756,59 @@ namespace SharpGram.Tl.Constructors.UserStatusNs {
         }
     }
     public class UserStatusRecently : UserStatusBase, ITlSerializable, ITlDeserializable<UserStatusRecently> {
-        public static readonly byte[] Identifier = [241,66,111,226,];
+        public static readonly byte[] Identifier = [200,125,25,123,];
+        public bool ByMe {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
             return bytes.ToArray();
         }
 
         public new static UserStatusRecently TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var byMeLocal = (flagsLocal & 1) is 0 ? default : true ;
             return new() {
+            ByMe = byMeLocal,
             };
         }
     }
     public class UserStatusLastWeek : UserStatusBase, ITlSerializable, ITlDeserializable<UserStatusLastWeek> {
-        public static readonly byte[] Identifier = [252,9,191,7,];
+        public static readonly byte[] Identifier = [26,29,26,84,];
+        public bool ByMe {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
             return bytes.ToArray();
         }
 
         public new static UserStatusLastWeek TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var byMeLocal = (flagsLocal & 1) is 0 ? default : true ;
             return new() {
+            ByMe = byMeLocal,
             };
         }
     }
     public class UserStatusLastMonth : UserStatusBase, ITlSerializable, ITlDeserializable<UserStatusLastMonth> {
-        public static readonly byte[] Identifier = [66,199,235,119,];
+        public static readonly byte[] Identifier = [119,151,137,101,];
+        public bool ByMe {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
             return bytes.ToArray();
         }
 
         public new static UserStatusLastMonth TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var byMeLocal = (flagsLocal & 1) is 0 ? default : true ;
             return new() {
+            ByMe = byMeLocal,
             };
         }
     }
@@ -2076,14 +2119,14 @@ namespace SharpGram.Tl.Constructors.ChatNs {
 }
 namespace SharpGram.Tl.Constructors.ChatFullNs {
     public class ChatFull : ChatFullBase, ITlSerializable, ITlDeserializable<ChatFull> {
-        public static readonly byte[] Identifier = [56,17,211,201,];
+        public static readonly byte[] Identifier = [27,66,51,38,];
         public required ChatParticipantsBase Participants {get;set;}
         public PhotoBase? ChatPhoto {get;set;}
         public List<BotInfoBase>? BotInfo {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ChatPhoto is not null ? 4 : 0) | (ExportedInvite is not null ? 8192 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (Call is not null ? 4096 : 0) | (TtlPeriod is not null ? 16384 : 0) | (GroupcallDefaultJoinAs is not null ? 32768 : 0) | (ThemeEmoticon is not null ? 65536 : 0) | (RequestsPending is not null ? 131072 : 0) | (RecentRequesters is not null ? 131072 : 0) | (AvailableReactions is not null ? 262144 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ChatPhoto is not null ? 4 : 0) | (ExportedInvite is not null ? 8192 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (Call is not null ? 4096 : 0) | (TtlPeriod is not null ? 16384 : 0) | (GroupcallDefaultJoinAs is not null ? 32768 : 0) | (ThemeEmoticon is not null ? 65536 : 0) | (RequestsPending is not null ? 131072 : 0) | (RecentRequesters is not null ? 131072 : 0) | (AvailableReactions is not null ? 262144 : 0) | (ReactionsLimit is not null ? 1048576 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(About.TlSerialize());
             bytes.AddRange(Participants.TlSerialize());
@@ -2100,6 +2143,7 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             if(RequestsPending is not null) bytes.AddRange(RequestsPending.TlSerialize());
             if(RecentRequesters is not null) bytes.AddRange(RecentRequesters.TlSerialize());
             if(AvailableReactions is not null) bytes.AddRange(AvailableReactions.TlSerialize());
+            if(ReactionsLimit is not null) bytes.AddRange(ReactionsLimit.TlSerialize());
             return bytes.ToArray();
         }
 
@@ -2125,6 +2169,7 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             var requestsPendingLocal = (flagsLocal & 131072) is 0 ? default : des.As<int>().Read() ;
             var recentRequestersLocal = (flagsLocal & 131072) is 0 ? default : des.ReadNumbers<long>() ;
             var availableReactionsLocal = (flagsLocal & 262144) is 0 ? default : ChatReactionsBase.TlDeserialize(des) ;
+            var reactionsLimitLocal = (flagsLocal & 1048576) is 0 ? default : des.As<int>().Read() ;
             return new() {
             CanSetUsername = canSetUsernameLocal,
             HasScheduled = hasScheduledLocal,
@@ -2145,11 +2190,12 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             RequestsPending = requestsPendingLocal,
             RecentRequesters = recentRequestersLocal,
             AvailableReactions = availableReactionsLocal,
+            ReactionsLimit = reactionsLimitLocal,
             };
         }
     }
     public class ChannelFull : ChatFullBase, ITlSerializable, ITlDeserializable<ChannelFull> {
-        public static readonly byte[] Identifier = [111,203,43,15,];
+        public static readonly byte[] Identifier = [141,52,171,187,];
         public bool CanViewParticipants {get;set;}
         public bool CanSetStickers {get;set;}
         public bool HiddenPrehistory {get;set;}
@@ -2161,6 +2207,10 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
         public bool ParticipantsHidden {get;set;}
         public bool StoriesPinnedAvailable {get;set;}
         public bool ViewForumAsMessages {get;set;}
+        public bool RestrictedSponsored {get;set;}
+        public bool CanViewRevenue {get;set;}
+        public bool PaidMediaAllowed {get;set;}
+        public bool CanViewStarsRevenue {get;set;}
         public int? ParticipantsCount {get;set;}
         public int? AdminsCount {get;set;}
         public int? KickedCount {get;set;}
@@ -2185,11 +2235,14 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
         public PeerBase? DefaultSendAs {get;set;}
         public PeerStoriesBase? Stories {get;set;}
         public WallPaperBase? Wallpaper {get;set;}
+        public int? BoostsApplied {get;set;}
+        public int? BoostsUnrestrict {get;set;}
+        public StickerSetBase? Emojiset {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ParticipantsCount is not null ? 1 : 0) | (AdminsCount is not null ? 2 : 0) | (KickedCount is not null ? 4 : 0) | (BannedCount is not null ? 4 : 0) | (OnlineCount is not null ? 8192 : 0) | (ExportedInvite is not null ? 8388608 : 0) | (MigratedFromChatId is not null ? 16 : 0) | (MigratedFromMaxId is not null ? 16 : 0) | (PinnedMsgId is not null ? 32 : 0) | (Stickerset is not null ? 256 : 0) | (AvailableMinId is not null ? 512 : 0) | (FolderId is not null ? 2048 : 0) | (LinkedChatId is not null ? 16384 : 0) | (Location is not null ? 32768 : 0) | (SlowmodeSeconds is not null ? 131072 : 0) | (SlowmodeNextSendDate is not null ? 262144 : 0) | (StatsDc is not null ? 4096 : 0) | (Call is not null ? 2097152 : 0) | (TtlPeriod is not null ? 16777216 : 0) | (PendingSuggestions is not null ? 33554432 : 0) | (GroupcallDefaultJoinAs is not null ? 67108864 : 0) | (ThemeEmoticon is not null ? 134217728 : 0) | (RequestsPending is not null ? 268435456 : 0) | (RecentRequesters is not null ? 268435456 : 0) | (DefaultSendAs is not null ? 536870912 : 0) | (AvailableReactions is not null ? 1073741824 : 0) | (Stories is not null ? 16 : 0) | (Wallpaper is not null ? 128 : 0) ).TlSerialize());
-            bytes.AddRange((0 | (ParticipantsCount is not null ? 1 : 0) | (AdminsCount is not null ? 2 : 0) | (KickedCount is not null ? 4 : 0) | (BannedCount is not null ? 4 : 0) | (OnlineCount is not null ? 8192 : 0) | (ExportedInvite is not null ? 8388608 : 0) | (MigratedFromChatId is not null ? 16 : 0) | (MigratedFromMaxId is not null ? 16 : 0) | (PinnedMsgId is not null ? 32 : 0) | (Stickerset is not null ? 256 : 0) | (AvailableMinId is not null ? 512 : 0) | (FolderId is not null ? 2048 : 0) | (LinkedChatId is not null ? 16384 : 0) | (Location is not null ? 32768 : 0) | (SlowmodeSeconds is not null ? 131072 : 0) | (SlowmodeNextSendDate is not null ? 262144 : 0) | (StatsDc is not null ? 4096 : 0) | (Call is not null ? 2097152 : 0) | (TtlPeriod is not null ? 16777216 : 0) | (PendingSuggestions is not null ? 33554432 : 0) | (GroupcallDefaultJoinAs is not null ? 67108864 : 0) | (ThemeEmoticon is not null ? 134217728 : 0) | (RequestsPending is not null ? 268435456 : 0) | (RecentRequesters is not null ? 268435456 : 0) | (DefaultSendAs is not null ? 536870912 : 0) | (AvailableReactions is not null ? 1073741824 : 0) | (Stories is not null ? 16 : 0) | (Wallpaper is not null ? 128 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ParticipantsCount is not null ? 1 : 0) | (AdminsCount is not null ? 2 : 0) | (KickedCount is not null ? 4 : 0) | (BannedCount is not null ? 4 : 0) | (OnlineCount is not null ? 8192 : 0) | (ExportedInvite is not null ? 8388608 : 0) | (MigratedFromChatId is not null ? 16 : 0) | (MigratedFromMaxId is not null ? 16 : 0) | (PinnedMsgId is not null ? 32 : 0) | (Stickerset is not null ? 256 : 0) | (AvailableMinId is not null ? 512 : 0) | (FolderId is not null ? 2048 : 0) | (LinkedChatId is not null ? 16384 : 0) | (Location is not null ? 32768 : 0) | (SlowmodeSeconds is not null ? 131072 : 0) | (SlowmodeNextSendDate is not null ? 262144 : 0) | (StatsDc is not null ? 4096 : 0) | (Call is not null ? 2097152 : 0) | (TtlPeriod is not null ? 16777216 : 0) | (PendingSuggestions is not null ? 33554432 : 0) | (GroupcallDefaultJoinAs is not null ? 67108864 : 0) | (ThemeEmoticon is not null ? 134217728 : 0) | (RequestsPending is not null ? 268435456 : 0) | (RecentRequesters is not null ? 268435456 : 0) | (DefaultSendAs is not null ? 536870912 : 0) | (AvailableReactions is not null ? 1073741824 : 0) | (ReactionsLimit is not null ? 8192 : 0) | (Stories is not null ? 16 : 0) | (Wallpaper is not null ? 128 : 0) | (BoostsApplied is not null ? 256 : 0) | (BoostsUnrestrict is not null ? 512 : 0) | (Emojiset is not null ? 1024 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ParticipantsCount is not null ? 1 : 0) | (AdminsCount is not null ? 2 : 0) | (KickedCount is not null ? 4 : 0) | (BannedCount is not null ? 4 : 0) | (OnlineCount is not null ? 8192 : 0) | (ExportedInvite is not null ? 8388608 : 0) | (MigratedFromChatId is not null ? 16 : 0) | (MigratedFromMaxId is not null ? 16 : 0) | (PinnedMsgId is not null ? 32 : 0) | (Stickerset is not null ? 256 : 0) | (AvailableMinId is not null ? 512 : 0) | (FolderId is not null ? 2048 : 0) | (LinkedChatId is not null ? 16384 : 0) | (Location is not null ? 32768 : 0) | (SlowmodeSeconds is not null ? 131072 : 0) | (SlowmodeNextSendDate is not null ? 262144 : 0) | (StatsDc is not null ? 4096 : 0) | (Call is not null ? 2097152 : 0) | (TtlPeriod is not null ? 16777216 : 0) | (PendingSuggestions is not null ? 33554432 : 0) | (GroupcallDefaultJoinAs is not null ? 67108864 : 0) | (ThemeEmoticon is not null ? 134217728 : 0) | (RequestsPending is not null ? 268435456 : 0) | (RecentRequesters is not null ? 268435456 : 0) | (DefaultSendAs is not null ? 536870912 : 0) | (AvailableReactions is not null ? 1073741824 : 0) | (ReactionsLimit is not null ? 8192 : 0) | (Stories is not null ? 16 : 0) | (Wallpaper is not null ? 128 : 0) | (BoostsApplied is not null ? 256 : 0) | (BoostsUnrestrict is not null ? 512 : 0) | (Emojiset is not null ? 1024 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(About.TlSerialize());
             if(ParticipantsCount is not null) bytes.AddRange(ParticipantsCount.TlSerialize());
@@ -2225,8 +2278,12 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             if(RecentRequesters is not null) bytes.AddRange(RecentRequesters.TlSerialize());
             if(DefaultSendAs is not null) bytes.AddRange(DefaultSendAs.TlSerialize());
             if(AvailableReactions is not null) bytes.AddRange(AvailableReactions.TlSerialize());
+            if(ReactionsLimit is not null) bytes.AddRange(ReactionsLimit.TlSerialize());
             if(Stories is not null) bytes.AddRange(Stories.TlSerialize());
             if(Wallpaper is not null) bytes.AddRange(Wallpaper.TlSerialize());
+            if(BoostsApplied is not null) bytes.AddRange(BoostsApplied.TlSerialize());
+            if(BoostsUnrestrict is not null) bytes.AddRange(BoostsUnrestrict.TlSerialize());
+            if(Emojiset is not null) bytes.AddRange(Emojiset.TlSerialize());
             return bytes.ToArray();
         }
 
@@ -2248,6 +2305,10 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             var translationsDisabledLocal = (flags2Local & 8) is 0 ? default : true ;
             var storiesPinnedAvailableLocal = (flags2Local & 32) is 0 ? default : true ;
             var viewForumAsMessagesLocal = (flags2Local & 64) is 0 ? default : true ;
+            var restrictedSponsoredLocal = (flags2Local & 2048) is 0 ? default : true ;
+            var canViewRevenueLocal = (flags2Local & 4096) is 0 ? default : true ;
+            var paidMediaAllowedLocal = (flags2Local & 16384) is 0 ? default : true ;
+            var canViewStarsRevenueLocal = (flags2Local & 32768) is 0 ? default : true ;
             var idLocal =  des.As<long>().Read();
             var aboutLocal =  des.As<string>().Read();
             var participantsCountLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
@@ -2283,8 +2344,12 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             var recentRequestersLocal = (flagsLocal & 268435456) is 0 ? default : des.ReadNumbers<long>() ;
             var defaultSendAsLocal = (flagsLocal & 536870912) is 0 ? default : PeerBase.TlDeserialize(des) ;
             var availableReactionsLocal = (flagsLocal & 1073741824) is 0 ? default : ChatReactionsBase.TlDeserialize(des) ;
+            var reactionsLimitLocal = (flags2Local & 8192) is 0 ? default : des.As<int>().Read() ;
             var storiesLocal = (flags2Local & 16) is 0 ? default : PeerStoriesBase.TlDeserialize(des) ;
             var wallpaperLocal = (flags2Local & 128) is 0 ? default : WallPaperBase.TlDeserialize(des) ;
+            var boostsAppliedLocal = (flags2Local & 256) is 0 ? default : des.As<int>().Read() ;
+            var boostsUnrestrictLocal = (flags2Local & 512) is 0 ? default : des.As<int>().Read() ;
+            var emojisetLocal = (flags2Local & 1024) is 0 ? default : StickerSetBase.TlDeserialize(des) ;
             return new() {
             CanViewParticipants = canViewParticipantsLocal,
             CanSetUsername = canSetUsernameLocal,
@@ -2300,6 +2365,10 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             TranslationsDisabled = translationsDisabledLocal,
             StoriesPinnedAvailable = storiesPinnedAvailableLocal,
             ViewForumAsMessages = viewForumAsMessagesLocal,
+            RestrictedSponsored = restrictedSponsoredLocal,
+            CanViewRevenue = canViewRevenueLocal,
+            PaidMediaAllowed = paidMediaAllowedLocal,
+            CanViewStarsRevenue = canViewStarsRevenueLocal,
             Id = idLocal,
             About = aboutLocal,
             ParticipantsCount = participantsCountLocal,
@@ -2335,8 +2404,12 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
             RecentRequesters = recentRequestersLocal,
             DefaultSendAs = defaultSendAsLocal,
             AvailableReactions = availableReactionsLocal,
+            ReactionsLimit = reactionsLimitLocal,
             Stories = storiesLocal,
             Wallpaper = wallpaperLocal,
+            BoostsApplied = boostsAppliedLocal,
+            BoostsUnrestrict = boostsUnrestrictLocal,
+            Emojiset = emojisetLocal,
             };
         }
     }
@@ -2540,7 +2613,7 @@ namespace SharpGram.Tl.Constructors.MessageNs {
         }
     }
     public class Message : MessageBase, ITlSerializable, ITlDeserializable<Message> {
-        public static readonly byte[] Identifier = [17,194,190,118,];
+        public static readonly byte[] Identifier = [66,82,52,148,];
         public bool Out {get;set;}
         public bool Mentioned {get;set;}
         public bool MediaUnread {get;set;}
@@ -2552,11 +2625,14 @@ namespace SharpGram.Tl.Constructors.MessageNs {
         public bool Pinned {get;set;}
         public bool Noforwards {get;set;}
         public bool InvertMedia {get;set;}
+        public bool Offline {get;set;}
         public PeerBase? FromId {get;set;}
+        public int? FromBoostsApplied {get;set;}
         public required PeerBase PeerId {get;set;}
         public PeerBase? SavedPeerId {get;set;}
         public MessageFwdHeaderBase? FwdFrom {get;set;}
         public long? ViaBotId {get;set;}
+        public long? ViaBusinessBotId {get;set;}
         public MessageReplyHeaderBase? ReplyTo {get;set;}
         public int Date {get;set;}
         public required string MessageInner {get;set;}
@@ -2572,16 +2648,22 @@ namespace SharpGram.Tl.Constructors.MessageNs {
         public MessageReactionsBase? Reactions {get;set;}
         public List<RestrictionReasonBase>? RestrictionReason {get;set;}
         public int? TtlPeriod {get;set;}
+        public int? QuickReplyShortcutId {get;set;}
+        public long? Effect {get;set;}
+        public FactCheckBase? Factcheck {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FromId is not null ? 256 : 0) | (SavedPeerId is not null ? 268435456 : 0) | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ReplyTo is not null ? 8 : 0) | (Media is not null ? 512 : 0) | (ReplyMarkup is not null ? 64 : 0) | (Entities is not null ? 128 : 0) | (Views is not null ? 1024 : 0) | (Forwards is not null ? 1024 : 0) | (Replies is not null ? 8388608 : 0) | (EditDate is not null ? 32768 : 0) | (PostAuthor is not null ? 65536 : 0) | (GroupedId is not null ? 131072 : 0) | (Reactions is not null ? 1048576 : 0) | (RestrictionReason is not null ? 4194304 : 0) | (TtlPeriod is not null ? 33554432 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (FromId is not null ? 256 : 0) | (FromBoostsApplied is not null ? 536870912 : 0) | (SavedPeerId is not null ? 268435456 : 0) | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ViaBusinessBotId is not null ? 1 : 0) | (ReplyTo is not null ? 8 : 0) | (Media is not null ? 512 : 0) | (ReplyMarkup is not null ? 64 : 0) | (Entities is not null ? 128 : 0) | (Views is not null ? 1024 : 0) | (Forwards is not null ? 1024 : 0) | (Replies is not null ? 8388608 : 0) | (EditDate is not null ? 32768 : 0) | (PostAuthor is not null ? 65536 : 0) | (GroupedId is not null ? 131072 : 0) | (Reactions is not null ? 1048576 : 0) | (RestrictionReason is not null ? 4194304 : 0) | (TtlPeriod is not null ? 33554432 : 0) | (QuickReplyShortcutId is not null ? 1073741824 : 0) | (Effect is not null ? 4 : 0) | (Factcheck is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (FromId is not null ? 256 : 0) | (FromBoostsApplied is not null ? 536870912 : 0) | (SavedPeerId is not null ? 268435456 : 0) | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ViaBusinessBotId is not null ? 1 : 0) | (ReplyTo is not null ? 8 : 0) | (Media is not null ? 512 : 0) | (ReplyMarkup is not null ? 64 : 0) | (Entities is not null ? 128 : 0) | (Views is not null ? 1024 : 0) | (Forwards is not null ? 1024 : 0) | (Replies is not null ? 8388608 : 0) | (EditDate is not null ? 32768 : 0) | (PostAuthor is not null ? 65536 : 0) | (GroupedId is not null ? 131072 : 0) | (Reactions is not null ? 1048576 : 0) | (RestrictionReason is not null ? 4194304 : 0) | (TtlPeriod is not null ? 33554432 : 0) | (QuickReplyShortcutId is not null ? 1073741824 : 0) | (Effect is not null ? 4 : 0) | (Factcheck is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(FromId is not null) bytes.AddRange(FromId.TlSerialize());
+            if(FromBoostsApplied is not null) bytes.AddRange(FromBoostsApplied.TlSerialize());
             bytes.AddRange(PeerId.TlSerialize());
             if(SavedPeerId is not null) bytes.AddRange(SavedPeerId.TlSerialize());
             if(FwdFrom is not null) bytes.AddRange(FwdFrom.TlSerialize());
             if(ViaBotId is not null) bytes.AddRange(ViaBotId.TlSerialize());
+            if(ViaBusinessBotId is not null) bytes.AddRange(ViaBusinessBotId.TlSerialize());
             if(ReplyTo is not null) bytes.AddRange(ReplyTo.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             bytes.AddRange(MessageInner.TlSerialize());
@@ -2597,6 +2679,9 @@ namespace SharpGram.Tl.Constructors.MessageNs {
             if(Reactions is not null) bytes.AddRange(Reactions.TlSerialize());
             if(RestrictionReason is not null) bytes.AddRange(RestrictionReason.TlSerialize());
             if(TtlPeriod is not null) bytes.AddRange(TtlPeriod.TlSerialize());
+            if(QuickReplyShortcutId is not null) bytes.AddRange(QuickReplyShortcutId.TlSerialize());
+            if(Effect is not null) bytes.AddRange(Effect.TlSerialize());
+            if(Factcheck is not null) bytes.AddRange(Factcheck.TlSerialize());
             return bytes.ToArray();
         }
 
@@ -2614,12 +2699,16 @@ namespace SharpGram.Tl.Constructors.MessageNs {
             var pinnedLocal = (flagsLocal & 16777216) is 0 ? default : true ;
             var noforwardsLocal = (flagsLocal & 67108864) is 0 ? default : true ;
             var invertMediaLocal = (flagsLocal & 134217728) is 0 ? default : true ;
+            var flags2Local =  des.As<int>().Read();
+            var offlineLocal = (flags2Local & 2) is 0 ? default : true ;
             var idLocal =  des.As<int>().Read();
             var fromIdLocal = (flagsLocal & 256) is 0 ? default : PeerBase.TlDeserialize(des) ;
+            var fromBoostsAppliedLocal = (flagsLocal & 536870912) is 0 ? default : des.As<int>().Read() ;
             var peerIdLocal =  PeerBase.TlDeserialize(des);
             var savedPeerIdLocal = (flagsLocal & 268435456) is 0 ? default : PeerBase.TlDeserialize(des) ;
             var fwdFromLocal = (flagsLocal & 4) is 0 ? default : MessageFwdHeaderBase.TlDeserialize(des) ;
             var viaBotIdLocal = (flagsLocal & 2048) is 0 ? default : des.As<long>().Read() ;
+            var viaBusinessBotIdLocal = (flags2Local & 1) is 0 ? default : des.As<long>().Read() ;
             var replyToLocal = (flagsLocal & 8) is 0 ? default : MessageReplyHeaderBase.TlDeserialize(des) ;
             var dateLocal =  des.As<int>().Read();
             var messageInnerLocal =  des.As<string>().Read();
@@ -2635,6 +2724,9 @@ namespace SharpGram.Tl.Constructors.MessageNs {
             var reactionsLocal = (flagsLocal & 1048576) is 0 ? default : MessageReactionsBase.TlDeserialize(des) ;
             var restrictionReasonLocal = (flagsLocal & 4194304) is 0 ? default : des.Read<RestrictionReasonBase>() ;
             var ttlPeriodLocal = (flagsLocal & 33554432) is 0 ? default : des.As<int>().Read() ;
+            var quickReplyShortcutIdLocal = (flagsLocal & 1073741824) is 0 ? default : des.As<int>().Read() ;
+            var effectLocal = (flags2Local & 4) is 0 ? default : des.As<long>().Read() ;
+            var factcheckLocal = (flags2Local & 8) is 0 ? default : FactCheckBase.TlDeserialize(des) ;
             return new() {
             Out = outLocal,
             Mentioned = mentionedLocal,
@@ -2647,12 +2739,15 @@ namespace SharpGram.Tl.Constructors.MessageNs {
             Pinned = pinnedLocal,
             Noforwards = noforwardsLocal,
             InvertMedia = invertMediaLocal,
+            Offline = offlineLocal,
             Id = idLocal,
             FromId = fromIdLocal,
+            FromBoostsApplied = fromBoostsAppliedLocal,
             PeerId = peerIdLocal,
             SavedPeerId = savedPeerIdLocal,
             FwdFrom = fwdFromLocal,
             ViaBotId = viaBotIdLocal,
+            ViaBusinessBotId = viaBusinessBotIdLocal,
             ReplyTo = replyToLocal,
             Date = dateLocal,
             MessageInner = messageInnerLocal,
@@ -2668,6 +2763,9 @@ namespace SharpGram.Tl.Constructors.MessageNs {
             Reactions = reactionsLocal,
             RestrictionReason = restrictionReasonLocal,
             TtlPeriod = ttlPeriodLocal,
+            QuickReplyShortcutId = quickReplyShortcutIdLocal,
+            Effect = effectLocal,
+            Factcheck = factcheckLocal,
             };
         }
     }
@@ -3236,6 +3334,28 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
             Months = monthsLocal,
             PrizeDescription = prizeDescriptionLocal,
             UntilDate = untilDateLocal,
+            };
+        }
+    }
+    public class MessageMediaPaidMedia : MessageMediaBase, ITlSerializable, ITlDeserializable<MessageMediaPaidMedia> {
+        public static readonly byte[] Identifier = [145,36,133,168,];
+        public long StarsAmount {get;set;}
+        public required List<MessageExtendedMediaBase> ExtendedMedia {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(StarsAmount.TlSerialize());
+            bytes.AddRange(ExtendedMedia.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MessageMediaPaidMedia TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var starsAmountLocal =  des.As<long>().Read();
+            var extendedMediaLocal =  des.Read<MessageExtendedMediaBase>();
+            return new() {
+            StarsAmount = starsAmountLocal,
+            ExtendedMedia = extendedMediaLocal,
             };
         }
     }
@@ -4154,6 +4274,82 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
             };
         }
     }
+    public class MessageActionBoostApply : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionBoostApply> {
+        public static readonly byte[] Identifier = [109,170,2,204,];
+        public int Boosts {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Boosts.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MessageActionBoostApply TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var boostsLocal =  des.As<int>().Read();
+            return new() {
+            Boosts = boostsLocal,
+            };
+        }
+    }
+    public class MessageActionRequestedPeerSentMe : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionRequestedPeerSentMe> {
+        public static readonly byte[] Identifier = [72,24,179,147,];
+        public int ButtonId {get;set;}
+        public required List<RequestedPeerBase> Peers {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(ButtonId.TlSerialize());
+            bytes.AddRange(Peers.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MessageActionRequestedPeerSentMe TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var buttonIdLocal =  des.As<int>().Read();
+            var peersLocal =  des.Read<RequestedPeerBase>();
+            return new() {
+            ButtonId = buttonIdLocal,
+            Peers = peersLocal,
+            };
+        }
+    }
+    public class MessageActionPaymentRefunded : MessageActionBase, ITlSerializable, ITlDeserializable<MessageActionPaymentRefunded> {
+        public static readonly byte[] Identifier = [2,226,179,65,];
+        public required PeerBase Peer {get;set;}
+        public required string Currency {get;set;}
+        public long TotalAmount {get;set;}
+        public byte[]? Payload {get;set;}
+        public required PaymentChargeBase Charge {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Payload is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(Peer.TlSerialize());
+            bytes.AddRange(Currency.TlSerialize());
+            bytes.AddRange(TotalAmount.TlSerialize());
+            if(Payload is not null) bytes.AddRange(Payload.TlSerialize());
+            bytes.AddRange(Charge.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MessageActionPaymentRefunded TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var peerLocal =  PeerBase.TlDeserialize(des);
+            var currencyLocal =  des.As<string>().Read();
+            var totalAmountLocal =  des.As<long>().Read();
+            var payloadLocal = (flagsLocal & 1) is 0 ? default : des.As<byte[]>().Read() ;
+            var chargeLocal =  PaymentChargeBase.TlDeserialize(des);
+            return new() {
+            Peer = peerLocal,
+            Currency = currencyLocal,
+            TotalAmount = totalAmountLocal,
+            Payload = payloadLocal,
+            Charge = chargeLocal,
+            };
+        }
+    }
 
 
 }
@@ -4873,7 +5069,7 @@ namespace SharpGram.Tl.Constructors.PeerNotifySettingsNs {
 }
 namespace SharpGram.Tl.Constructors.PeerSettingsNs {
     public class PeerSettings : PeerSettingsBase, ITlSerializable, ITlDeserializable<PeerSettings> {
-        public static readonly byte[] Identifier = [13,17,24,165,];
+        public static readonly byte[] Identifier = [94,108,214,172,];
         public bool ReportSpam {get;set;}
         public bool AddContact {get;set;}
         public bool BlockContact {get;set;}
@@ -4883,16 +5079,22 @@ namespace SharpGram.Tl.Constructors.PeerSettingsNs {
         public bool Autoarchived {get;set;}
         public bool InviteMembers {get;set;}
         public bool RequestChatBroadcast {get;set;}
+        public bool BusinessBotPaused {get;set;}
+        public bool BusinessBotCanReply {get;set;}
         public int? GeoDistance {get;set;}
         public string? RequestChatTitle {get;set;}
         public int? RequestChatDate {get;set;}
+        public long? BusinessBotId {get;set;}
+        public string? BusinessBotManageUrl {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (GeoDistance is not null ? 64 : 0) | (RequestChatTitle is not null ? 512 : 0) | (RequestChatDate is not null ? 512 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (GeoDistance is not null ? 64 : 0) | (RequestChatTitle is not null ? 512 : 0) | (RequestChatDate is not null ? 512 : 0) | (BusinessBotId is not null ? 8192 : 0) | (BusinessBotManageUrl is not null ? 8192 : 0) ).TlSerialize());
             if(GeoDistance is not null) bytes.AddRange(GeoDistance.TlSerialize());
             if(RequestChatTitle is not null) bytes.AddRange(RequestChatTitle.TlSerialize());
             if(RequestChatDate is not null) bytes.AddRange(RequestChatDate.TlSerialize());
+            if(BusinessBotId is not null) bytes.AddRange(BusinessBotId.TlSerialize());
+            if(BusinessBotManageUrl is not null) bytes.AddRange(BusinessBotManageUrl.TlSerialize());
             return bytes.ToArray();
         }
 
@@ -4908,9 +5110,13 @@ namespace SharpGram.Tl.Constructors.PeerSettingsNs {
             var autoarchivedLocal = (flagsLocal & 128) is 0 ? default : true ;
             var inviteMembersLocal = (flagsLocal & 256) is 0 ? default : true ;
             var requestChatBroadcastLocal = (flagsLocal & 1024) is 0 ? default : true ;
+            var businessBotPausedLocal = (flagsLocal & 2048) is 0 ? default : true ;
+            var businessBotCanReplyLocal = (flagsLocal & 4096) is 0 ? default : true ;
             var geoDistanceLocal = (flagsLocal & 64) is 0 ? default : des.As<int>().Read() ;
             var requestChatTitleLocal = (flagsLocal & 512) is 0 ? default : des.As<string>().Read() ;
             var requestChatDateLocal = (flagsLocal & 512) is 0 ? default : des.As<int>().Read() ;
+            var businessBotIdLocal = (flagsLocal & 8192) is 0 ? default : des.As<long>().Read() ;
+            var businessBotManageUrlLocal = (flagsLocal & 8192) is 0 ? default : des.As<string>().Read() ;
             return new() {
             ReportSpam = reportSpamLocal,
             AddContact = addContactLocal,
@@ -4921,9 +5127,13 @@ namespace SharpGram.Tl.Constructors.PeerSettingsNs {
             Autoarchived = autoarchivedLocal,
             InviteMembers = inviteMembersLocal,
             RequestChatBroadcast = requestChatBroadcastLocal,
+            BusinessBotPaused = businessBotPausedLocal,
+            BusinessBotCanReply = businessBotCanReplyLocal,
             GeoDistance = geoDistanceLocal,
             RequestChatTitle = requestChatTitleLocal,
             RequestChatDate = requestChatDateLocal,
+            BusinessBotId = businessBotIdLocal,
+            BusinessBotManageUrl = businessBotManageUrlLocal,
             };
         }
     }
@@ -5150,7 +5360,7 @@ namespace SharpGram.Tl.Constructors.ReportReasonNs {
 }
 namespace SharpGram.Tl.Constructors.UserFullNs {
     public class UserFull : UserFullBase, ITlSerializable, ITlDeserializable<UserFull> {
-        public static readonly byte[] Identifier = [108,44,177,185,];
+        public static readonly byte[] Identifier = [32,119,153,204,];
         public bool Blocked {get;set;}
         public bool PhoneCallsAvailable {get;set;}
         public bool PhoneCallsPrivate {get;set;}
@@ -5162,6 +5372,9 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
         public bool StoriesPinnedAvailable {get;set;}
         public bool BlockedMyStoriesFrom {get;set;}
         public bool WallpaperOverridden {get;set;}
+        public bool ContactRequirePremium {get;set;}
+        public bool ReadDatesPrivate {get;set;}
+        public bool SponsoredEnabled {get;set;}
         public long Id {get;set;}
         public string? About {get;set;}
         public required PeerSettingsBase Settings {get;set;}
@@ -5181,10 +5394,19 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
         public List<PremiumGiftOptionBase>? PremiumGifts {get;set;}
         public WallPaperBase? Wallpaper {get;set;}
         public PeerStoriesBase? Stories {get;set;}
+        public BusinessWorkHoursBase? BusinessWorkHours {get;set;}
+        public BusinessLocationBase? BusinessLocation {get;set;}
+        public BusinessGreetingMessageBase? BusinessGreetingMessage {get;set;}
+        public BusinessAwayMessageBase? BusinessAwayMessage {get;set;}
+        public BusinessIntroBase? BusinessIntro {get;set;}
+        public BirthdayBase? Birthday {get;set;}
+        public long? PersonalChannelId {get;set;}
+        public int? PersonalChannelMessage {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (About is not null ? 2 : 0) | (PersonalPhoto is not null ? 2097152 : 0) | (ProfilePhoto is not null ? 4 : 0) | (FallbackPhoto is not null ? 4194304 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (TtlPeriod is not null ? 16384 : 0) | (ThemeEmoticon is not null ? 32768 : 0) | (PrivateForwardName is not null ? 65536 : 0) | (BotGroupAdminRights is not null ? 131072 : 0) | (BotBroadcastAdminRights is not null ? 262144 : 0) | (PremiumGifts is not null ? 524288 : 0) | (Wallpaper is not null ? 16777216 : 0) | (Stories is not null ? 33554432 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (About is not null ? 2 : 0) | (PersonalPhoto is not null ? 2097152 : 0) | (ProfilePhoto is not null ? 4 : 0) | (FallbackPhoto is not null ? 4194304 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (TtlPeriod is not null ? 16384 : 0) | (ThemeEmoticon is not null ? 32768 : 0) | (PrivateForwardName is not null ? 65536 : 0) | (BotGroupAdminRights is not null ? 131072 : 0) | (BotBroadcastAdminRights is not null ? 262144 : 0) | (PremiumGifts is not null ? 524288 : 0) | (Wallpaper is not null ? 16777216 : 0) | (Stories is not null ? 33554432 : 0) | (BusinessWorkHours is not null ? 1 : 0) | (BusinessLocation is not null ? 2 : 0) | (BusinessGreetingMessage is not null ? 4 : 0) | (BusinessAwayMessage is not null ? 8 : 0) | (BusinessIntro is not null ? 16 : 0) | (Birthday is not null ? 32 : 0) | (PersonalChannelId is not null ? 64 : 0) | (PersonalChannelMessage is not null ? 64 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (About is not null ? 2 : 0) | (PersonalPhoto is not null ? 2097152 : 0) | (ProfilePhoto is not null ? 4 : 0) | (FallbackPhoto is not null ? 4194304 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (TtlPeriod is not null ? 16384 : 0) | (ThemeEmoticon is not null ? 32768 : 0) | (PrivateForwardName is not null ? 65536 : 0) | (BotGroupAdminRights is not null ? 131072 : 0) | (BotBroadcastAdminRights is not null ? 262144 : 0) | (PremiumGifts is not null ? 524288 : 0) | (Wallpaper is not null ? 16777216 : 0) | (Stories is not null ? 33554432 : 0) | (BusinessWorkHours is not null ? 1 : 0) | (BusinessLocation is not null ? 2 : 0) | (BusinessGreetingMessage is not null ? 4 : 0) | (BusinessAwayMessage is not null ? 8 : 0) | (BusinessIntro is not null ? 16 : 0) | (Birthday is not null ? 32 : 0) | (PersonalChannelId is not null ? 64 : 0) | (PersonalChannelMessage is not null ? 64 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(About is not null) bytes.AddRange(About.TlSerialize());
             bytes.AddRange(Settings.TlSerialize());
@@ -5204,6 +5426,14 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
             if(PremiumGifts is not null) bytes.AddRange(PremiumGifts.TlSerialize());
             if(Wallpaper is not null) bytes.AddRange(Wallpaper.TlSerialize());
             if(Stories is not null) bytes.AddRange(Stories.TlSerialize());
+            if(BusinessWorkHours is not null) bytes.AddRange(BusinessWorkHours.TlSerialize());
+            if(BusinessLocation is not null) bytes.AddRange(BusinessLocation.TlSerialize());
+            if(BusinessGreetingMessage is not null) bytes.AddRange(BusinessGreetingMessage.TlSerialize());
+            if(BusinessAwayMessage is not null) bytes.AddRange(BusinessAwayMessage.TlSerialize());
+            if(BusinessIntro is not null) bytes.AddRange(BusinessIntro.TlSerialize());
+            if(Birthday is not null) bytes.AddRange(Birthday.TlSerialize());
+            if(PersonalChannelId is not null) bytes.AddRange(PersonalChannelId.TlSerialize());
+            if(PersonalChannelMessage is not null) bytes.AddRange(PersonalChannelMessage.TlSerialize());
             return bytes.ToArray();
         }
 
@@ -5221,6 +5451,10 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
             var storiesPinnedAvailableLocal = (flagsLocal & 67108864) is 0 ? default : true ;
             var blockedMyStoriesFromLocal = (flagsLocal & 134217728) is 0 ? default : true ;
             var wallpaperOverriddenLocal = (flagsLocal & 268435456) is 0 ? default : true ;
+            var contactRequirePremiumLocal = (flagsLocal & 536870912) is 0 ? default : true ;
+            var readDatesPrivateLocal = (flagsLocal & 1073741824) is 0 ? default : true ;
+            var flags2Local =  des.As<int>().Read();
+            var sponsoredEnabledLocal = (flags2Local & 128) is 0 ? default : true ;
             var idLocal =  des.As<long>().Read();
             var aboutLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var settingsLocal =  PeerSettingsBase.TlDeserialize(des);
@@ -5240,6 +5474,14 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
             var premiumGiftsLocal = (flagsLocal & 524288) is 0 ? default : des.Read<PremiumGiftOptionBase>() ;
             var wallpaperLocal = (flagsLocal & 16777216) is 0 ? default : WallPaperBase.TlDeserialize(des) ;
             var storiesLocal = (flagsLocal & 33554432) is 0 ? default : PeerStoriesBase.TlDeserialize(des) ;
+            var businessWorkHoursLocal = (flags2Local & 1) is 0 ? default : BusinessWorkHoursBase.TlDeserialize(des) ;
+            var businessLocationLocal = (flags2Local & 2) is 0 ? default : BusinessLocationBase.TlDeserialize(des) ;
+            var businessGreetingMessageLocal = (flags2Local & 4) is 0 ? default : BusinessGreetingMessageBase.TlDeserialize(des) ;
+            var businessAwayMessageLocal = (flags2Local & 8) is 0 ? default : BusinessAwayMessageBase.TlDeserialize(des) ;
+            var businessIntroLocal = (flags2Local & 16) is 0 ? default : BusinessIntroBase.TlDeserialize(des) ;
+            var birthdayLocal = (flags2Local & 32) is 0 ? default : BirthdayBase.TlDeserialize(des) ;
+            var personalChannelIdLocal = (flags2Local & 64) is 0 ? default : des.As<long>().Read() ;
+            var personalChannelMessageLocal = (flags2Local & 64) is 0 ? default : des.As<int>().Read() ;
             return new() {
             Blocked = blockedLocal,
             PhoneCallsAvailable = phoneCallsAvailableLocal,
@@ -5252,6 +5494,9 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
             StoriesPinnedAvailable = storiesPinnedAvailableLocal,
             BlockedMyStoriesFrom = blockedMyStoriesFromLocal,
             WallpaperOverridden = wallpaperOverriddenLocal,
+            ContactRequirePremium = contactRequirePremiumLocal,
+            ReadDatesPrivate = readDatesPrivateLocal,
+            SponsoredEnabled = sponsoredEnabledLocal,
             Id = idLocal,
             About = aboutLocal,
             Settings = settingsLocal,
@@ -5271,6 +5516,14 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
             PremiumGifts = premiumGiftsLocal,
             Wallpaper = wallpaperLocal,
             Stories = storiesLocal,
+            BusinessWorkHours = businessWorkHoursLocal,
+            BusinessLocation = businessLocationLocal,
+            BusinessGreetingMessage = businessGreetingMessageLocal,
+            BusinessAwayMessage = businessAwayMessageLocal,
+            BusinessIntro = businessIntroLocal,
+            Birthday = birthdayLocal,
+            PersonalChannelId = personalChannelIdLocal,
+            PersonalChannelMessage = personalChannelMessageLocal,
             };
         }
     }
@@ -8725,10 +8978,10 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         }
     }
     public class UpdateMessageExtendedMedia : UpdateBase, ITlSerializable, ITlDeserializable<UpdateMessageExtendedMedia> {
-        public static readonly byte[] Identifier = [140,169,115,90,];
+        public static readonly byte[] Identifier = [36,23,164,213,];
         public required PeerBase Peer {get;set;}
         public int MsgId {get;set;}
-        public required MessageExtendedMediaBase ExtendedMedia {get;set;}
+        public required List<MessageExtendedMediaBase> ExtendedMedia {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -8742,7 +8995,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
             var peerLocal =  PeerBase.TlDeserialize(des);
             var msgIdLocal =  des.As<int>().Read();
-            var extendedMediaLocal =  MessageExtendedMediaBase.TlDeserialize(des);
+            var extendedMediaLocal =  des.Read<MessageExtendedMediaBase>();
             return new() {
             Peer = peerLocal,
             MsgId = msgIdLocal,
@@ -8830,24 +9083,6 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new static UpdateAutoSaveSettings TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
             return new() {
-            };
-        }
-    }
-    public class UpdateGroupInvitePrivacyForbidden : UpdateBase, ITlSerializable, ITlDeserializable<UpdateGroupInvitePrivacyForbidden> {
-        public static readonly byte[] Identifier = [214,138,240,204,];
-        public long UserId {get;set;}
-        public new byte[] TlSerialize() {
-            List<byte> bytes = [];
-            bytes.AddRange(Identifier);
-            bytes.AddRange(UserId.TlSerialize());
-            return bytes.ToArray();
-        }
-
-        public new static UpdateGroupInvitePrivacyForbidden TlDeserialize(Deserializer des) {
-            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
-            var userIdLocal =  des.As<long>().Read();
-            return new() {
-            UserId = userIdLocal,
             };
         }
     }
@@ -9151,6 +9386,380 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
             var orderLocal = (flagsLocal & 1) is 0 ? default : des.Read<DialogPeerBase>() ;
             return new() {
             Order = orderLocal,
+            };
+        }
+    }
+    public class UpdateSavedReactionTags : UpdateBase, ITlSerializable, ITlDeserializable<UpdateSavedReactionTags> {
+        public static readonly byte[] Identifier = [50,116,198,57,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static UpdateSavedReactionTags TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class UpdateSmsJob : UpdateBase, ITlSerializable, ITlDeserializable<UpdateSmsJob> {
+        public static readonly byte[] Identifier = [212,105,98,241,];
+        public required string JobId {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(JobId.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateSmsJob TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var jobIdLocal =  des.As<string>().Read();
+            return new() {
+            JobId = jobIdLocal,
+            };
+        }
+    }
+    public class UpdateQuickReplies : UpdateBase, ITlSerializable, ITlDeserializable<UpdateQuickReplies> {
+        public static readonly byte[] Identifier = [178,10,71,249,];
+        public required List<QuickReplyBase> QuickReplies {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(QuickReplies.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateQuickReplies TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var quickRepliesLocal =  des.Read<QuickReplyBase>();
+            return new() {
+            QuickReplies = quickRepliesLocal,
+            };
+        }
+    }
+    public class UpdateNewQuickReply : UpdateBase, ITlSerializable, ITlDeserializable<UpdateNewQuickReply> {
+        public static readonly byte[] Identifier = [23,167,61,245,];
+        public required QuickReplyBase QuickReply {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(QuickReply.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateNewQuickReply TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var quickReplyLocal =  QuickReplyBase.TlDeserialize(des);
+            return new() {
+            QuickReply = quickReplyLocal,
+            };
+        }
+    }
+    public class UpdateDeleteQuickReply : UpdateBase, ITlSerializable, ITlDeserializable<UpdateDeleteQuickReply> {
+        public static readonly byte[] Identifier = [236,241,230,83,];
+        public int ShortcutId {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(ShortcutId.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateDeleteQuickReply TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var shortcutIdLocal =  des.As<int>().Read();
+            return new() {
+            ShortcutId = shortcutIdLocal,
+            };
+        }
+    }
+    public class UpdateQuickReplyMessage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateQuickReplyMessage> {
+        public static readonly byte[] Identifier = [15,13,5,62,];
+        public required MessageBase Message {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Message.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateQuickReplyMessage TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var messageLocal =  MessageBase.TlDeserialize(des);
+            return new() {
+            Message = messageLocal,
+            };
+        }
+    }
+    public class UpdateDeleteQuickReplyMessages : UpdateBase, ITlSerializable, ITlDeserializable<UpdateDeleteQuickReplyMessages> {
+        public static readonly byte[] Identifier = [205,231,111,86,];
+        public int ShortcutId {get;set;}
+        public required List<int> Messages {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(ShortcutId.TlSerialize());
+            bytes.AddRange(Messages.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateDeleteQuickReplyMessages TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var shortcutIdLocal =  des.As<int>().Read();
+            var messagesLocal =  des.ReadNumbers<int>();
+            return new() {
+            ShortcutId = shortcutIdLocal,
+            Messages = messagesLocal,
+            };
+        }
+    }
+    public class UpdateBotBusinessConnect : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotBusinessConnect> {
+        public static readonly byte[] Identifier = [122,201,229,138,];
+        public required BotBusinessConnectionBase Connection {get;set;}
+        public int Qts {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Connection.TlSerialize());
+            bytes.AddRange(Qts.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateBotBusinessConnect TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var connectionLocal =  BotBusinessConnectionBase.TlDeserialize(des);
+            var qtsLocal =  des.As<int>().Read();
+            return new() {
+            Connection = connectionLocal,
+            Qts = qtsLocal,
+            };
+        }
+    }
+    public class UpdateBotNewBusinessMessage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotNewBusinessMessage> {
+        public static readonly byte[] Identifier = [124,52,219,157,];
+        public required string ConnectionId {get;set;}
+        public required MessageBase Message {get;set;}
+        public MessageBase? ReplyToMessage {get;set;}
+        public int Qts {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (ReplyToMessage is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(ConnectionId.TlSerialize());
+            bytes.AddRange(Message.TlSerialize());
+            if(ReplyToMessage is not null) bytes.AddRange(ReplyToMessage.TlSerialize());
+            bytes.AddRange(Qts.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateBotNewBusinessMessage TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var connectionIdLocal =  des.As<string>().Read();
+            var messageLocal =  MessageBase.TlDeserialize(des);
+            var replyToMessageLocal = (flagsLocal & 1) is 0 ? default : MessageBase.TlDeserialize(des) ;
+            var qtsLocal =  des.As<int>().Read();
+            return new() {
+            ConnectionId = connectionIdLocal,
+            Message = messageLocal,
+            ReplyToMessage = replyToMessageLocal,
+            Qts = qtsLocal,
+            };
+        }
+    }
+    public class UpdateBotEditBusinessMessage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotEditBusinessMessage> {
+        public static readonly byte[] Identifier = [124,88,223,7,];
+        public required string ConnectionId {get;set;}
+        public required MessageBase Message {get;set;}
+        public MessageBase? ReplyToMessage {get;set;}
+        public int Qts {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (ReplyToMessage is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(ConnectionId.TlSerialize());
+            bytes.AddRange(Message.TlSerialize());
+            if(ReplyToMessage is not null) bytes.AddRange(ReplyToMessage.TlSerialize());
+            bytes.AddRange(Qts.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateBotEditBusinessMessage TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var connectionIdLocal =  des.As<string>().Read();
+            var messageLocal =  MessageBase.TlDeserialize(des);
+            var replyToMessageLocal = (flagsLocal & 1) is 0 ? default : MessageBase.TlDeserialize(des) ;
+            var qtsLocal =  des.As<int>().Read();
+            return new() {
+            ConnectionId = connectionIdLocal,
+            Message = messageLocal,
+            ReplyToMessage = replyToMessageLocal,
+            Qts = qtsLocal,
+            };
+        }
+    }
+    public class UpdateBotDeleteBusinessMessage : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBotDeleteBusinessMessage> {
+        public static readonly byte[] Identifier = [46,152,42,160,];
+        public required string ConnectionId {get;set;}
+        public required PeerBase Peer {get;set;}
+        public required List<int> Messages {get;set;}
+        public int Qts {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(ConnectionId.TlSerialize());
+            bytes.AddRange(Peer.TlSerialize());
+            bytes.AddRange(Messages.TlSerialize());
+            bytes.AddRange(Qts.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateBotDeleteBusinessMessage TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var connectionIdLocal =  des.As<string>().Read();
+            var peerLocal =  PeerBase.TlDeserialize(des);
+            var messagesLocal =  des.ReadNumbers<int>();
+            var qtsLocal =  des.As<int>().Read();
+            return new() {
+            ConnectionId = connectionIdLocal,
+            Peer = peerLocal,
+            Messages = messagesLocal,
+            Qts = qtsLocal,
+            };
+        }
+    }
+    public class UpdateNewStoryReaction : UpdateBase, ITlSerializable, ITlDeserializable<UpdateNewStoryReaction> {
+        public static readonly byte[] Identifier = [11,228,36,24,];
+        public int StoryId {get;set;}
+        public required PeerBase Peer {get;set;}
+        public required ReactionBase Reaction {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(StoryId.TlSerialize());
+            bytes.AddRange(Peer.TlSerialize());
+            bytes.AddRange(Reaction.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateNewStoryReaction TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var storyIdLocal =  des.As<int>().Read();
+            var peerLocal =  PeerBase.TlDeserialize(des);
+            var reactionLocal =  ReactionBase.TlDeserialize(des);
+            return new() {
+            StoryId = storyIdLocal,
+            Peer = peerLocal,
+            Reaction = reactionLocal,
+            };
+        }
+    }
+    public class UpdateBroadcastRevenueTransactions : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBroadcastRevenueTransactions> {
+        public static readonly byte[] Identifier = [245,97,217,223,];
+        public required PeerBase Peer {get;set;}
+        public required BroadcastRevenueBalancesBase Balances {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Peer.TlSerialize());
+            bytes.AddRange(Balances.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateBroadcastRevenueTransactions TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var peerLocal =  PeerBase.TlDeserialize(des);
+            var balancesLocal =  BroadcastRevenueBalancesBase.TlDeserialize(des);
+            return new() {
+            Peer = peerLocal,
+            Balances = balancesLocal,
+            };
+        }
+    }
+    public class UpdateStarsBalance : UpdateBase, ITlSerializable, ITlDeserializable<UpdateStarsBalance> {
+        public static readonly byte[] Identifier = [152,81,184,15,];
+        public long Balance {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Balance.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateStarsBalance TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var balanceLocal =  des.As<long>().Read();
+            return new() {
+            Balance = balanceLocal,
+            };
+        }
+    }
+    public class UpdateBusinessBotCallbackQuery : UpdateBase, ITlSerializable, ITlDeserializable<UpdateBusinessBotCallbackQuery> {
+        public static readonly byte[] Identifier = [167,253,162,30,];
+        public long QueryId {get;set;}
+        public long UserId {get;set;}
+        public required string ConnectionId {get;set;}
+        public required MessageBase Message {get;set;}
+        public MessageBase? ReplyToMessage {get;set;}
+        public long ChatInstance {get;set;}
+        public byte[]? Data {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (ReplyToMessage is not null ? 4 : 0) | (Data is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(QueryId.TlSerialize());
+            bytes.AddRange(UserId.TlSerialize());
+            bytes.AddRange(ConnectionId.TlSerialize());
+            bytes.AddRange(Message.TlSerialize());
+            if(ReplyToMessage is not null) bytes.AddRange(ReplyToMessage.TlSerialize());
+            bytes.AddRange(ChatInstance.TlSerialize());
+            if(Data is not null) bytes.AddRange(Data.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateBusinessBotCallbackQuery TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var queryIdLocal =  des.As<long>().Read();
+            var userIdLocal =  des.As<long>().Read();
+            var connectionIdLocal =  des.As<string>().Read();
+            var messageLocal =  MessageBase.TlDeserialize(des);
+            var replyToMessageLocal = (flagsLocal & 4) is 0 ? default : MessageBase.TlDeserialize(des) ;
+            var chatInstanceLocal =  des.As<long>().Read();
+            var dataLocal = (flagsLocal & 1) is 0 ? default : des.As<byte[]>().Read() ;
+            return new() {
+            QueryId = queryIdLocal,
+            UserId = userIdLocal,
+            ConnectionId = connectionIdLocal,
+            Message = messageLocal,
+            ReplyToMessage = replyToMessageLocal,
+            ChatInstance = chatInstanceLocal,
+            Data = dataLocal,
+            };
+        }
+    }
+    public class UpdateStarsRevenueStatus : UpdateBase, ITlSerializable, ITlDeserializable<UpdateStarsRevenueStatus> {
+        public static readonly byte[] Identifier = [25,176,132,165,];
+        public required PeerBase Peer {get;set;}
+        public required StarsRevenueStatusBase Status {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Peer.TlSerialize());
+            bytes.AddRange(Status.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static UpdateStarsRevenueStatus TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var peerLocal =  PeerBase.TlDeserialize(des);
+            var statusLocal =  StarsRevenueStatusBase.TlDeserialize(des);
+            return new() {
+            Peer = peerLocal,
+            Status = statusLocal,
             };
         }
     }
@@ -11322,6 +11931,20 @@ namespace SharpGram.Tl.Constructors.InputPrivacyKeyNs {
             };
         }
     }
+    public class InputPrivacyKeyBirthday : InputPrivacyKeyBase, ITlSerializable, ITlDeserializable<InputPrivacyKeyBirthday> {
+        public static readonly byte[] Identifier = [204,17,90,214,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static InputPrivacyKeyBirthday TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
 
 
 }
@@ -11461,6 +12084,20 @@ namespace SharpGram.Tl.Constructors.PrivacyKeyNs {
         }
 
         public new static PrivacyKeyAbout TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class PrivacyKeyBirthday : PrivacyKeyBase, ITlSerializable, ITlDeserializable<PrivacyKeyBirthday> {
+        public static readonly byte[] Identifier = [24,165,0,32,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static PrivacyKeyBirthday TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
             return new() {
             };
@@ -11612,6 +12249,20 @@ namespace SharpGram.Tl.Constructors.InputPrivacyRuleNs {
             };
         }
     }
+    public class InputPrivacyValueAllowPremium : InputPrivacyRuleBase, ITlSerializable, ITlDeserializable<InputPrivacyValueAllowPremium> {
+        public static readonly byte[] Identifier = [241,201,205,119,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static InputPrivacyValueAllowPremium TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
 
 
 }
@@ -11753,6 +12404,20 @@ namespace SharpGram.Tl.Constructors.PrivacyRuleNs {
         }
 
         public new static PrivacyValueAllowCloseFriends TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class PrivacyValueAllowPremium : PrivacyRuleBase, ITlSerializable, ITlDeserializable<PrivacyValueAllowPremium> {
+        public static readonly byte[] Identifier = [75,129,233,236,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static PrivacyValueAllowPremium TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
             return new() {
             };
@@ -12985,11 +13650,10 @@ namespace SharpGram.Tl.Constructors.StickerSetNs {
         public bool Archived {get;set;}
         public bool Official {get;set;}
         public bool Masks {get;set;}
-        public bool Animated {get;set;}
-        public bool Videos {get;set;}
         public bool Emojis {get;set;}
         public bool TextColor {get;set;}
         public bool ChannelEmojiStatus {get;set;}
+        public bool Creator {get;set;}
         public int? InstalledDate {get;set;}
         public long Id {get;set;}
         public long AccessHash {get;set;}
@@ -13025,11 +13689,10 @@ namespace SharpGram.Tl.Constructors.StickerSetNs {
             var archivedLocal = (flagsLocal & 2) is 0 ? default : true ;
             var officialLocal = (flagsLocal & 4) is 0 ? default : true ;
             var masksLocal = (flagsLocal & 8) is 0 ? default : true ;
-            var animatedLocal = (flagsLocal & 32) is 0 ? default : true ;
-            var videosLocal = (flagsLocal & 64) is 0 ? default : true ;
             var emojisLocal = (flagsLocal & 128) is 0 ? default : true ;
             var textColorLocal = (flagsLocal & 512) is 0 ? default : true ;
             var channelEmojiStatusLocal = (flagsLocal & 1024) is 0 ? default : true ;
+            var creatorLocal = (flagsLocal & 2048) is 0 ? default : true ;
             var installedDateLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
             var idLocal =  des.As<long>().Read();
             var accessHashLocal =  des.As<long>().Read();
@@ -13045,11 +13708,10 @@ namespace SharpGram.Tl.Constructors.StickerSetNs {
             Archived = archivedLocal,
             Official = officialLocal,
             Masks = masksLocal,
-            Animated = animatedLocal,
-            Videos = videosLocal,
             Emojis = emojisLocal,
             TextColor = textColorLocal,
             ChannelEmojiStatus = channelEmojiStatusLocal,
+            Creator = creatorLocal,
             InstalledDate = installedDateLocal,
             Id = idLocal,
             AccessHash = accessHashLocal,
@@ -13541,6 +14203,46 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
             var peerTypeLocal =  RequestPeerTypeBase.TlDeserialize(des);
             var maxQuantityLocal =  des.As<int>().Read();
             return new() {
+            Text = textLocal,
+            ButtonId = buttonIdLocal,
+            PeerType = peerTypeLocal,
+            MaxQuantity = maxQuantityLocal,
+            };
+        }
+    }
+    public class InputKeyboardButtonRequestPeer : KeyboardButtonBase, ITlSerializable, ITlDeserializable<InputKeyboardButtonRequestPeer> {
+        public static readonly byte[] Identifier = [5,45,102,201,];
+        public bool NameRequested {get;set;}
+        public bool UsernameRequested {get;set;}
+        public bool PhotoRequested {get;set;}
+        public int ButtonId {get;set;}
+        public required RequestPeerTypeBase PeerType {get;set;}
+        public int MaxQuantity {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(Text.TlSerialize());
+            bytes.AddRange(ButtonId.TlSerialize());
+            bytes.AddRange(PeerType.TlSerialize());
+            bytes.AddRange(MaxQuantity.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputKeyboardButtonRequestPeer TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var nameRequestedLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var usernameRequestedLocal = (flagsLocal & 2) is 0 ? default : true ;
+            var photoRequestedLocal = (flagsLocal & 4) is 0 ? default : true ;
+            var textLocal =  des.As<string>().Read();
+            var buttonIdLocal =  des.As<int>().Read();
+            var peerTypeLocal =  RequestPeerTypeBase.TlDeserialize(des);
+            var maxQuantityLocal =  des.As<int>().Read();
+            return new() {
+            NameRequested = nameRequestedLocal,
+            UsernameRequested = usernameRequestedLocal,
+            PhotoRequested = photoRequestedLocal,
             Text = textLocal,
             ButtonId = buttonIdLocal,
             PeerType = peerTypeLocal,
@@ -14098,10 +14800,12 @@ namespace SharpGram.Tl.Constructors.MessageEntityNs {
         }
     }
     public class MessageEntityBlockquote : MessageEntityBase, ITlSerializable, ITlDeserializable<MessageEntityBlockquote> {
-        public static readonly byte[] Identifier = [208,245,13,2,];
+        public static readonly byte[] Identifier = [172,170,204,241,];
+        public bool Collapsed {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
             bytes.AddRange(Offset.TlSerialize());
             bytes.AddRange(Length.TlSerialize());
             return bytes.ToArray();
@@ -14109,9 +14813,12 @@ namespace SharpGram.Tl.Constructors.MessageEntityNs {
 
         public new static MessageEntityBlockquote TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var collapsedLocal = (flagsLocal & 1) is 0 ? default : true ;
             var offsetLocal =  des.As<int>().Read();
             var lengthLocal =  des.As<int>().Read();
             return new() {
+            Collapsed = collapsedLocal,
             Offset = offsetLocal,
             Length = lengthLocal,
             };
@@ -16058,16 +16765,20 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
         }
     }
     public class AuthSentCodeTypeFirebaseSms : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeFirebaseSms> {
-        public static readonly byte[] Identifier = [50,20,123,229,];
+        public static readonly byte[] Identifier = [54,215,159,0,];
         public byte[]? Nonce {get;set;}
+        public long? PlayIntegrityProjectId {get;set;}
+        public byte[]? PlayIntegrityNonce {get;set;}
         public string? Receipt {get;set;}
         public int? PushTimeout {get;set;}
         public int Length {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Nonce is not null ? 1 : 0) | (Receipt is not null ? 2 : 0) | (PushTimeout is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Nonce is not null ? 1 : 0) | (PlayIntegrityProjectId is not null ? 4 : 0) | (PlayIntegrityNonce is not null ? 4 : 0) | (Receipt is not null ? 2 : 0) | (PushTimeout is not null ? 2 : 0) ).TlSerialize());
             if(Nonce is not null) bytes.AddRange(Nonce.TlSerialize());
+            if(PlayIntegrityProjectId is not null) bytes.AddRange(PlayIntegrityProjectId.TlSerialize());
+            if(PlayIntegrityNonce is not null) bytes.AddRange(PlayIntegrityNonce.TlSerialize());
             if(Receipt is not null) bytes.AddRange(Receipt.TlSerialize());
             if(PushTimeout is not null) bytes.AddRange(PushTimeout.TlSerialize());
             bytes.AddRange(Length.TlSerialize());
@@ -16078,14 +16789,58 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
             var flagsLocal =  des.As<int>().Read();
             var nonceLocal = (flagsLocal & 1) is 0 ? default : des.As<byte[]>().Read() ;
+            var playIntegrityProjectIdLocal = (flagsLocal & 4) is 0 ? default : des.As<long>().Read() ;
+            var playIntegrityNonceLocal = (flagsLocal & 4) is 0 ? default : des.As<byte[]>().Read() ;
             var receiptLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
             var pushTimeoutLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
             var lengthLocal =  des.As<int>().Read();
             return new() {
             Nonce = nonceLocal,
+            PlayIntegrityProjectId = playIntegrityProjectIdLocal,
+            PlayIntegrityNonce = playIntegrityNonceLocal,
             Receipt = receiptLocal,
             PushTimeout = pushTimeoutLocal,
             Length = lengthLocal,
+            };
+        }
+    }
+    public class AuthSentCodeTypeSmsWord : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeSmsWord> {
+        public static readonly byte[] Identifier = [129,172,22,164,];
+        public string? Beginning {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Beginning is not null ? 1 : 0) ).TlSerialize());
+            if(Beginning is not null) bytes.AddRange(Beginning.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static AuthSentCodeTypeSmsWord TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var beginningLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            return new() {
+            Beginning = beginningLocal,
+            };
+        }
+    }
+    public class AuthSentCodeTypeSmsPhrase : AuthSentCodeTypeBase, ITlSerializable, ITlDeserializable<AuthSentCodeTypeSmsPhrase> {
+        public static readonly byte[] Identifier = [175,148,119,179,];
+        public string? Beginning {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Beginning is not null ? 1 : 0) ).TlSerialize());
+            if(Beginning is not null) bytes.AddRange(Beginning.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static AuthSentCodeTypeSmsPhrase TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var beginningLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            return new() {
+            Beginning = beginningLocal,
             };
         }
     }
@@ -16528,7 +17283,7 @@ namespace SharpGram.Tl.Constructors.DraftMessageNs {
         }
     }
     public class DraftMessage : DraftMessageBase, ITlSerializable, ITlDeserializable<DraftMessage> {
-        public static readonly byte[] Identifier = [239,247,204,63,];
+        public static readonly byte[] Identifier = [31,50,101,45,];
         public bool NoWebpage {get;set;}
         public bool InvertMedia {get;set;}
         public InputReplyToBase? ReplyTo {get;set;}
@@ -16536,15 +17291,17 @@ namespace SharpGram.Tl.Constructors.DraftMessageNs {
         public List<MessageEntityBase>? Entities {get;set;}
         public InputMediaBase? Media {get;set;}
         public int Date {get;set;}
+        public long? Effect {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ReplyTo is not null ? 16 : 0) | (Entities is not null ? 8 : 0) | (Media is not null ? 32 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ReplyTo is not null ? 16 : 0) | (Entities is not null ? 8 : 0) | (Media is not null ? 32 : 0) | (Effect is not null ? 128 : 0) ).TlSerialize());
             if(ReplyTo is not null) bytes.AddRange(ReplyTo.TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
             if(Media is not null) bytes.AddRange(Media.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
+            if(Effect is not null) bytes.AddRange(Effect.TlSerialize());
             return bytes.ToArray();
         }
 
@@ -16558,6 +17315,7 @@ namespace SharpGram.Tl.Constructors.DraftMessageNs {
             var entitiesLocal = (flagsLocal & 8) is 0 ? default : des.Read<MessageEntityBase>() ;
             var mediaLocal = (flagsLocal & 32) is 0 ? default : InputMediaBase.TlDeserialize(des) ;
             var dateLocal =  des.As<int>().Read();
+            var effectLocal = (flagsLocal & 128) is 0 ? default : des.As<long>().Read() ;
             return new() {
             NoWebpage = noWebpageLocal,
             InvertMedia = invertMediaLocal,
@@ -16566,6 +17324,7 @@ namespace SharpGram.Tl.Constructors.DraftMessageNs {
             Entities = entitiesLocal,
             Media = mediaLocal,
             Date = dateLocal,
+            Effect = effectLocal,
             };
         }
     }
@@ -18573,12 +19332,6 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentFormNs {
         public static readonly byte[] Identifier = [81,135,5,160,];
         public bool CanSaveCredentials {get;set;}
         public bool PasswordMissing {get;set;}
-        public long FormId {get;set;}
-        public long BotId {get;set;}
-        public required string Title {get;set;}
-        public required string Description {get;set;}
-        public WebDocumentBase? Photo {get;set;}
-        public required InvoiceBase Invoice {get;set;}
         public long ProviderId {get;set;}
         public required string Url {get;set;}
         public string? NativeProvider {get;set;}
@@ -18586,7 +19339,6 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentFormNs {
         public List<PaymentFormMethodBase>? AdditionalMethods {get;set;}
         public PaymentRequestedInfoBase? SavedInfo {get;set;}
         public List<PaymentSavedCredentialsBase>? SavedCredentials {get;set;}
-        public required List<UserBase> Users {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -18643,6 +19395,43 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentFormNs {
             AdditionalMethods = additionalMethodsLocal,
             SavedInfo = savedInfoLocal,
             SavedCredentials = savedCredentialsLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+    public class PaymentsPaymentFormStars : PaymentsPaymentFormBase, ITlSerializable, ITlDeserializable<PaymentsPaymentFormStars> {
+        public static readonly byte[] Identifier = [92,177,246,123,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Photo is not null ? 32 : 0) ).TlSerialize());
+            bytes.AddRange(FormId.TlSerialize());
+            bytes.AddRange(BotId.TlSerialize());
+            bytes.AddRange(Title.TlSerialize());
+            bytes.AddRange(Description.TlSerialize());
+            if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
+            bytes.AddRange(Invoice.TlSerialize());
+            bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static PaymentsPaymentFormStars TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var formIdLocal =  des.As<long>().Read();
+            var botIdLocal =  des.As<long>().Read();
+            var titleLocal =  des.As<string>().Read();
+            var descriptionLocal =  des.As<string>().Read();
+            var photoLocal = (flagsLocal & 32) is 0 ? default : WebDocumentBase.TlDeserialize(des) ;
+            var invoiceLocal =  InvoiceBase.TlDeserialize(des);
+            var usersLocal =  des.Read<UserBase>();
+            return new() {
+            FormId = formIdLocal,
+            BotId = botIdLocal,
+            Title = titleLocal,
+            Description = descriptionLocal,
+            Photo = photoLocal,
+            Invoice = invoiceLocal,
             Users = usersLocal,
             };
         }
@@ -18721,20 +19510,11 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentResultNs {
 namespace SharpGram.Tl.Constructors.PaymentsPaymentReceiptNs {
     public class PaymentsPaymentReceipt : PaymentsPaymentReceiptBase, ITlSerializable, ITlDeserializable<PaymentsPaymentReceipt> {
         public static readonly byte[] Identifier = [3,254,196,112,];
-        public int Date {get;set;}
-        public long BotId {get;set;}
         public long ProviderId {get;set;}
-        public required string Title {get;set;}
-        public required string Description {get;set;}
-        public WebDocumentBase? Photo {get;set;}
-        public required InvoiceBase Invoice {get;set;}
         public PaymentRequestedInfoBase? Info {get;set;}
         public ShippingOptionBase? Shipping {get;set;}
         public long? TipAmount {get;set;}
-        public required string Currency {get;set;}
-        public long TotalAmount {get;set;}
         public required string CredentialsTitle {get;set;}
-        public required List<UserBase> Users {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -18787,6 +19567,53 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentReceiptNs {
             Currency = currencyLocal,
             TotalAmount = totalAmountLocal,
             CredentialsTitle = credentialsTitleLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+    public class PaymentsPaymentReceiptStars : PaymentsPaymentReceiptBase, ITlSerializable, ITlDeserializable<PaymentsPaymentReceiptStars> {
+        public static readonly byte[] Identifier = [58,248,187,218,];
+        public required string TransactionId {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Photo is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange(Date.TlSerialize());
+            bytes.AddRange(BotId.TlSerialize());
+            bytes.AddRange(Title.TlSerialize());
+            bytes.AddRange(Description.TlSerialize());
+            if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
+            bytes.AddRange(Invoice.TlSerialize());
+            bytes.AddRange(Currency.TlSerialize());
+            bytes.AddRange(TotalAmount.TlSerialize());
+            bytes.AddRange(TransactionId.TlSerialize());
+            bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static PaymentsPaymentReceiptStars TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var dateLocal =  des.As<int>().Read();
+            var botIdLocal =  des.As<long>().Read();
+            var titleLocal =  des.As<string>().Read();
+            var descriptionLocal =  des.As<string>().Read();
+            var photoLocal = (flagsLocal & 4) is 0 ? default : WebDocumentBase.TlDeserialize(des) ;
+            var invoiceLocal =  InvoiceBase.TlDeserialize(des);
+            var currencyLocal =  des.As<string>().Read();
+            var totalAmountLocal =  des.As<long>().Read();
+            var transactionIdLocal =  des.As<string>().Read();
+            var usersLocal =  des.Read<UserBase>();
+            return new() {
+            Date = dateLocal,
+            BotId = botIdLocal,
+            Title = titleLocal,
+            Description = descriptionLocal,
+            Photo = photoLocal,
+            Invoice = invoiceLocal,
+            Currency = currencyLocal,
+            TotalAmount = totalAmountLocal,
+            TransactionId = transactionIdLocal,
             Users = usersLocal,
             };
         }
@@ -19181,7 +20008,7 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
         }
     }
     public class PhoneCall : PhoneCallBase, ITlSerializable, ITlDeserializable<PhoneCall> {
-        public static readonly byte[] Identifier = [103,124,127,150,];
+        public static readonly byte[] Identifier = [245,90,83,48,];
         public bool P2pAllowed {get;set;}
         public bool Video {get;set;}
         public long AccessHash {get;set;}
@@ -19193,10 +20020,11 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
         public required PhoneCallProtocolBase Protocol {get;set;}
         public required List<PhoneConnectionBase> Connections {get;set;}
         public int StartDate {get;set;}
+        public DataJSONBase? CustomParameters {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (CustomParameters is not null ? 128 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
@@ -19207,6 +20035,7 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
             bytes.AddRange(Protocol.TlSerialize());
             bytes.AddRange(Connections.TlSerialize());
             bytes.AddRange(StartDate.TlSerialize());
+            if(CustomParameters is not null) bytes.AddRange(CustomParameters.TlSerialize());
             return bytes.ToArray();
         }
 
@@ -19225,6 +20054,7 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
             var protocolLocal =  PhoneCallProtocolBase.TlDeserialize(des);
             var connectionsLocal =  des.Read<PhoneConnectionBase>();
             var startDateLocal =  des.As<int>().Read();
+            var customParametersLocal = (flagsLocal & 128) is 0 ? default : DataJSONBase.TlDeserialize(des) ;
             return new() {
             P2pAllowed = p2pAllowedLocal,
             Video = videoLocal,
@@ -19238,6 +20068,7 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
             Protocol = protocolLocal,
             Connections = connectionsLocal,
             StartDate = startDateLocal,
+            CustomParameters = customParametersLocal,
             };
         }
     }
@@ -20621,6 +21452,28 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
             return new() {
             PrevValue = prevValueLocal,
             NewValue = newValueLocal,
+            };
+        }
+    }
+    public class ChannelAdminLogEventActionChangeEmojiStickerSet : ChannelAdminLogEventActionBase, ITlSerializable, ITlDeserializable<ChannelAdminLogEventActionChangeEmojiStickerSet> {
+        public static readonly byte[] Identifier = [171,64,216,70,];
+        public required InputStickerSetBase PrevStickerset {get;set;}
+        public required InputStickerSetBase NewStickerset {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(PrevStickerset.TlSerialize());
+            bytes.AddRange(NewStickerset.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static ChannelAdminLogEventActionChangeEmojiStickerSet TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var prevStickersetLocal =  InputStickerSetBase.TlDeserialize(des);
+            var newStickersetLocal =  InputStickerSetBase.TlDeserialize(des);
+            return new() {
+            PrevStickerset = prevStickersetLocal,
+            NewStickerset = newStickersetLocal,
             };
         }
     }
@@ -23093,8 +23946,8 @@ namespace SharpGram.Tl.Constructors.HelpUserInfoNs {
 }
 namespace SharpGram.Tl.Constructors.PollAnswerNs {
     public class PollAnswer : PollAnswerBase, ITlSerializable, ITlDeserializable<PollAnswer> {
-        public static readonly byte[] Identifier = [233,194,169,108,];
-        public required string Text {get;set;}
+        public static readonly byte[] Identifier = [202,226,22,255,];
+        public required TextWithEntitiesBase Text {get;set;}
         public required byte[] Option {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -23106,7 +23959,7 @@ namespace SharpGram.Tl.Constructors.PollAnswerNs {
 
         public new static PollAnswer TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
-            var textLocal =  des.As<string>().Read();
+            var textLocal =  TextWithEntitiesBase.TlDeserialize(des);
             var optionLocal =  des.As<byte[]>().Read();
             return new() {
             Text = textLocal,
@@ -23119,13 +23972,13 @@ namespace SharpGram.Tl.Constructors.PollAnswerNs {
 }
 namespace SharpGram.Tl.Constructors.PollNs {
     public class Poll : PollBase, ITlSerializable, ITlDeserializable<Poll> {
-        public static readonly byte[] Identifier = [97,129,225,134,];
+        public static readonly byte[] Identifier = [49,113,116,88,];
         public long Id {get;set;}
         public bool Closed {get;set;}
         public bool PublicVoters {get;set;}
         public bool MultipleChoice {get;set;}
         public bool Quiz {get;set;}
-        public required string Question {get;set;}
+        public required TextWithEntitiesBase Question {get;set;}
         public required List<PollAnswerBase> Answers {get;set;}
         public int? ClosePeriod {get;set;}
         public int? CloseDate {get;set;}
@@ -23149,7 +24002,7 @@ namespace SharpGram.Tl.Constructors.PollNs {
             var publicVotersLocal = (flagsLocal & 2) is 0 ? default : true ;
             var multipleChoiceLocal = (flagsLocal & 4) is 0 ? default : true ;
             var quizLocal = (flagsLocal & 8) is 0 ? default : true ;
-            var questionLocal =  des.As<string>().Read();
+            var questionLocal =  TextWithEntitiesBase.TlDeserialize(des);
             var answersLocal =  des.Read<PollAnswerBase>();
             var closePeriodLocal = (flagsLocal & 16) is 0 ? default : des.As<int>().Read() ;
             var closeDateLocal = (flagsLocal & 32) is 0 ? default : des.As<int>().Read() ;
@@ -23549,6 +24402,7 @@ namespace SharpGram.Tl.Constructors.CodeSettingsNs {
         public bool AllowAppHash {get;set;}
         public bool AllowMissedCall {get;set;}
         public bool AllowFirebase {get;set;}
+        public bool UnknownNumber {get;set;}
         public List<byte[]>? LogoutTokens {get;set;}
         public string? Token {get;set;}
         public bool AppSandbox {get;set;}
@@ -23569,6 +24423,7 @@ namespace SharpGram.Tl.Constructors.CodeSettingsNs {
             var allowAppHashLocal = (flagsLocal & 16) is 0 ? default : true ;
             var allowMissedCallLocal = (flagsLocal & 32) is 0 ? default : true ;
             var allowFirebaseLocal = (flagsLocal & 128) is 0 ? default : true ;
+            var unknownNumberLocal = (flagsLocal & 512) is 0 ? default : true ;
             var logoutTokensLocal = (flagsLocal & 64) is 0 ? default : des.ReadByteArrayList() ;
             var tokenLocal = (flagsLocal & 256) is 0 ? default : des.As<string>().Read() ;
             var appSandboxLocal = (flagsLocal & 256) is 0 ? default : true ;
@@ -23578,6 +24433,7 @@ namespace SharpGram.Tl.Constructors.CodeSettingsNs {
             AllowAppHash = allowAppHashLocal,
             AllowMissedCall = allowMissedCallLocal,
             AllowFirebase = allowFirebaseLocal,
+            UnknownNumber = unknownNumberLocal,
             LogoutTokens = logoutTokensLocal,
             Token = tokenLocal,
             AppSandbox = appSandboxLocal,
@@ -24639,6 +25495,32 @@ namespace SharpGram.Tl.Constructors.WebPageAttributeNs {
             };
         }
     }
+    public class WebPageAttributeStickerSet : WebPageAttributeBase, ITlSerializable, ITlDeserializable<WebPageAttributeStickerSet> {
+        public static readonly byte[] Identifier = [211,3,204,80,];
+        public bool Emojis {get;set;}
+        public bool TextColor {get;set;}
+        public required List<DocumentBase> Stickers {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(Stickers.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static WebPageAttributeStickerSet TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var emojisLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var textColorLocal = (flagsLocal & 2) is 0 ? default : true ;
+            var stickersLocal =  des.Read<DocumentBase>();
+            return new() {
+            Emojis = emojisLocal,
+            TextColor = textColorLocal,
+            Stickers = stickersLocal,
+            };
+        }
+    }
 
 
 }
@@ -24736,7 +25618,7 @@ namespace SharpGram.Tl.Constructors.PaymentsBankCardDataNs {
 }
 namespace SharpGram.Tl.Constructors.DialogFilterNs {
     public class DialogFilter : DialogFilterBase, ITlSerializable, ITlDeserializable<DialogFilter> {
-        public static readonly byte[] Identifier = [232,247,56,116,];
+        public static readonly byte[] Identifier = [59,82,181,95,];
         public bool Contacts {get;set;}
         public bool NonContacts {get;set;}
         public bool Groups {get;set;}
@@ -24748,16 +25630,18 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
         public int Id {get;set;}
         public required string Title {get;set;}
         public string? Emoticon {get;set;}
+        public int? Color {get;set;}
         public required List<InputPeerBase> PinnedPeers {get;set;}
         public required List<InputPeerBase> IncludePeers {get;set;}
         public required List<InputPeerBase> ExcludePeers {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Emoticon is not null ? 33554432 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Emoticon is not null ? 33554432 : 0) | (Color is not null ? 134217728 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             if(Emoticon is not null) bytes.AddRange(Emoticon.TlSerialize());
+            if(Color is not null) bytes.AddRange(Color.TlSerialize());
             bytes.AddRange(PinnedPeers.TlSerialize());
             bytes.AddRange(IncludePeers.TlSerialize());
             bytes.AddRange(ExcludePeers.TlSerialize());
@@ -24778,6 +25662,7 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
             var idLocal =  des.As<int>().Read();
             var titleLocal =  des.As<string>().Read();
             var emoticonLocal = (flagsLocal & 33554432) is 0 ? default : des.As<string>().Read() ;
+            var colorLocal = (flagsLocal & 134217728) is 0 ? default : des.As<int>().Read() ;
             var pinnedPeersLocal =  des.Read<InputPeerBase>();
             var includePeersLocal =  des.Read<InputPeerBase>();
             var excludePeersLocal =  des.Read<InputPeerBase>();
@@ -24793,6 +25678,7 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
             Id = idLocal,
             Title = titleLocal,
             Emoticon = emoticonLocal,
+            Color = colorLocal,
             PinnedPeers = pinnedPeersLocal,
             IncludePeers = includePeersLocal,
             ExcludePeers = excludePeersLocal,
@@ -24814,20 +25700,22 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
         }
     }
     public class DialogFilterChatlist : DialogFilterBase, ITlSerializable, ITlDeserializable<DialogFilterChatlist> {
-        public static readonly byte[] Identifier = [168,4,74,214,];
+        public static readonly byte[] Identifier = [164,142,226,159,];
         public bool HasMyInvites {get;set;}
         public int Id {get;set;}
         public required string Title {get;set;}
         public string? Emoticon {get;set;}
+        public int? Color {get;set;}
         public required List<InputPeerBase> PinnedPeers {get;set;}
         public required List<InputPeerBase> IncludePeers {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Emoticon is not null ? 33554432 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Emoticon is not null ? 33554432 : 0) | (Color is not null ? 134217728 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             if(Emoticon is not null) bytes.AddRange(Emoticon.TlSerialize());
+            if(Color is not null) bytes.AddRange(Color.TlSerialize());
             bytes.AddRange(PinnedPeers.TlSerialize());
             bytes.AddRange(IncludePeers.TlSerialize());
             return bytes.ToArray();
@@ -24840,6 +25728,7 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
             var idLocal =  des.As<int>().Read();
             var titleLocal =  des.As<string>().Read();
             var emoticonLocal = (flagsLocal & 33554432) is 0 ? default : des.As<string>().Read() ;
+            var colorLocal = (flagsLocal & 134217728) is 0 ? default : des.As<int>().Read() ;
             var pinnedPeersLocal =  des.Read<InputPeerBase>();
             var includePeersLocal =  des.Read<InputPeerBase>();
             return new() {
@@ -24847,6 +25736,7 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
             Id = idLocal,
             Title = titleLocal,
             Emoticon = emoticonLocal,
+            Color = colorLocal,
             PinnedPeers = pinnedPeersLocal,
             IncludePeers = includePeersLocal,
             };
@@ -25462,6 +26352,8 @@ namespace SharpGram.Tl.Constructors.GlobalPrivacySettingsNs {
         public bool ArchiveAndMuteNewNoncontactPeers {get;set;}
         public bool KeepArchivedUnmuted {get;set;}
         public bool KeepArchivedFolders {get;set;}
+        public bool HideReadMarks {get;set;}
+        public bool NewNoncontactPeersRequirePremium {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
@@ -25475,10 +26367,14 @@ namespace SharpGram.Tl.Constructors.GlobalPrivacySettingsNs {
             var archiveAndMuteNewNoncontactPeersLocal = (flagsLocal & 1) is 0 ? default : true ;
             var keepArchivedUnmutedLocal = (flagsLocal & 2) is 0 ? default : true ;
             var keepArchivedFoldersLocal = (flagsLocal & 4) is 0 ? default : true ;
+            var hideReadMarksLocal = (flagsLocal & 8) is 0 ? default : true ;
+            var newNoncontactPeersRequirePremiumLocal = (flagsLocal & 16) is 0 ? default : true ;
             return new() {
             ArchiveAndMuteNewNoncontactPeers = archiveAndMuteNewNoncontactPeersLocal,
             KeepArchivedUnmuted = keepArchivedUnmutedLocal,
             KeepArchivedFolders = keepArchivedFoldersLocal,
+            HideReadMarks = hideReadMarksLocal,
+            NewNoncontactPeersRequirePremium = newNoncontactPeersRequirePremiumLocal,
             };
         }
     }
@@ -25765,23 +26661,23 @@ namespace SharpGram.Tl.Constructors.MessageReplyHeaderNs {
         }
     }
     public class MessageReplyStoryHeader : MessageReplyHeaderBase, ITlSerializable, ITlDeserializable<MessageReplyStoryHeader> {
-        public static readonly byte[] Identifier = [193,191,152,156,];
-        public long UserId {get;set;}
+        public static readonly byte[] Identifier = [57,249,90,14,];
+        public required PeerBase Peer {get;set;}
         public int StoryId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(UserId.TlSerialize());
+            bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(StoryId.TlSerialize());
             return bytes.ToArray();
         }
 
         public new static MessageReplyStoryHeader TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
-            var userIdLocal =  des.As<long>().Read();
+            var peerLocal =  PeerBase.TlDeserialize(des);
             var storyIdLocal =  des.As<int>().Read();
             return new() {
-            UserId = userIdLocal,
+            Peer = peerLocal,
             StoryId = storyIdLocal,
             };
         }
@@ -26897,37 +27793,31 @@ namespace SharpGram.Tl.Constructors.AccountResetPasswordResultNs {
 }
 namespace SharpGram.Tl.Constructors.SponsoredMessageNs {
     public class SponsoredMessage : SponsoredMessageBase, ITlSerializable, ITlDeserializable<SponsoredMessage> {
-        public static readonly byte[] Identifier = [247,131,83,237,];
+        public static readonly byte[] Identifier = [102,245,237,189,];
         public bool Recommended {get;set;}
-        public bool ShowPeerPhoto {get;set;}
+        public bool CanReport {get;set;}
         public required byte[] RandomId {get;set;}
-        public PeerBase? FromId {get;set;}
-        public ChatInviteBase? ChatInvite {get;set;}
-        public string? ChatInviteHash {get;set;}
-        public int? ChannelPost {get;set;}
-        public string? StartParam {get;set;}
-        public SponsoredWebPageBase? Webpage {get;set;}
-        public BotAppBase? App {get;set;}
+        public required string Url {get;set;}
+        public required string Title {get;set;}
         public required string Message {get;set;}
         public List<MessageEntityBase>? Entities {get;set;}
-        public string? ButtonText {get;set;}
+        public PhotoBase? Photo {get;set;}
+        public PeerColorBase? Color {get;set;}
+        public required string ButtonText {get;set;}
         public string? SponsorInfo {get;set;}
         public string? AdditionalInfo {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FromId is not null ? 8 : 0) | (ChatInvite is not null ? 16 : 0) | (ChatInviteHash is not null ? 16 : 0) | (ChannelPost is not null ? 4 : 0) | (StartParam is not null ? 1 : 0) | (Webpage is not null ? 512 : 0) | (App is not null ? 1024 : 0) | (Entities is not null ? 2 : 0) | (ButtonText is not null ? 2048 : 0) | (SponsorInfo is not null ? 128 : 0) | (AdditionalInfo is not null ? 256 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Entities is not null ? 2 : 0) | (Photo is not null ? 64 : 0) | (Color is not null ? 8192 : 0) | (SponsorInfo is not null ? 128 : 0) | (AdditionalInfo is not null ? 256 : 0) ).TlSerialize());
             bytes.AddRange(RandomId.TlSerialize());
-            if(FromId is not null) bytes.AddRange(FromId.TlSerialize());
-            if(ChatInvite is not null) bytes.AddRange(ChatInvite.TlSerialize());
-            if(ChatInviteHash is not null) bytes.AddRange(ChatInviteHash.TlSerialize());
-            if(ChannelPost is not null) bytes.AddRange(ChannelPost.TlSerialize());
-            if(StartParam is not null) bytes.AddRange(StartParam.TlSerialize());
-            if(Webpage is not null) bytes.AddRange(Webpage.TlSerialize());
-            if(App is not null) bytes.AddRange(App.TlSerialize());
+            bytes.AddRange(Url.TlSerialize());
+            bytes.AddRange(Title.TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
-            if(ButtonText is not null) bytes.AddRange(ButtonText.TlSerialize());
+            if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
+            if(Color is not null) bytes.AddRange(Color.TlSerialize());
+            bytes.AddRange(ButtonText.TlSerialize());
             if(SponsorInfo is not null) bytes.AddRange(SponsorInfo.TlSerialize());
             if(AdditionalInfo is not null) bytes.AddRange(AdditionalInfo.TlSerialize());
             return bytes.ToArray();
@@ -26937,33 +27827,27 @@ namespace SharpGram.Tl.Constructors.SponsoredMessageNs {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
             var flagsLocal =  des.As<int>().Read();
             var recommendedLocal = (flagsLocal & 32) is 0 ? default : true ;
-            var showPeerPhotoLocal = (flagsLocal & 64) is 0 ? default : true ;
+            var canReportLocal = (flagsLocal & 4096) is 0 ? default : true ;
             var randomIdLocal =  des.As<byte[]>().Read();
-            var fromIdLocal = (flagsLocal & 8) is 0 ? default : PeerBase.TlDeserialize(des) ;
-            var chatInviteLocal = (flagsLocal & 16) is 0 ? default : ChatInviteBase.TlDeserialize(des) ;
-            var chatInviteHashLocal = (flagsLocal & 16) is 0 ? default : des.As<string>().Read() ;
-            var channelPostLocal = (flagsLocal & 4) is 0 ? default : des.As<int>().Read() ;
-            var startParamLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
-            var webpageLocal = (flagsLocal & 512) is 0 ? default : SponsoredWebPageBase.TlDeserialize(des) ;
-            var appLocal = (flagsLocal & 1024) is 0 ? default : BotAppBase.TlDeserialize(des) ;
+            var urlLocal =  des.As<string>().Read();
+            var titleLocal =  des.As<string>().Read();
             var messageLocal =  des.As<string>().Read();
             var entitiesLocal = (flagsLocal & 2) is 0 ? default : des.Read<MessageEntityBase>() ;
-            var buttonTextLocal = (flagsLocal & 2048) is 0 ? default : des.As<string>().Read() ;
+            var photoLocal = (flagsLocal & 64) is 0 ? default : PhotoBase.TlDeserialize(des) ;
+            var colorLocal = (flagsLocal & 8192) is 0 ? default : PeerColorBase.TlDeserialize(des) ;
+            var buttonTextLocal =  des.As<string>().Read();
             var sponsorInfoLocal = (flagsLocal & 128) is 0 ? default : des.As<string>().Read() ;
             var additionalInfoLocal = (flagsLocal & 256) is 0 ? default : des.As<string>().Read() ;
             return new() {
             Recommended = recommendedLocal,
-            ShowPeerPhoto = showPeerPhotoLocal,
+            CanReport = canReportLocal,
             RandomId = randomIdLocal,
-            FromId = fromIdLocal,
-            ChatInvite = chatInviteLocal,
-            ChatInviteHash = chatInviteHashLocal,
-            ChannelPost = channelPostLocal,
-            StartParam = startParamLocal,
-            Webpage = webpageLocal,
-            App = appLocal,
+            Url = urlLocal,
+            Title = titleLocal,
             Message = messageLocal,
             Entities = entitiesLocal,
+            Photo = photoLocal,
+            Color = colorLocal,
             ButtonText = buttonTextLocal,
             SponsorInfo = sponsorInfoLocal,
             AdditionalInfo = additionalInfoLocal,
@@ -27319,6 +28203,7 @@ namespace SharpGram.Tl.Constructors.MessageReactionsNs {
         public static readonly byte[] Identifier = [121,148,43,79,];
         public bool Min {get;set;}
         public bool CanSeeList {get;set;}
+        public bool ReactionsAsTags {get;set;}
         public required List<ReactionCountBase> Results {get;set;}
         public List<MessagePeerReactionBase>? RecentReactions {get;set;}
         public new byte[] TlSerialize() {
@@ -27335,11 +28220,13 @@ namespace SharpGram.Tl.Constructors.MessageReactionsNs {
             var flagsLocal =  des.As<int>().Read();
             var minLocal = (flagsLocal & 1) is 0 ? default : true ;
             var canSeeListLocal = (flagsLocal & 4) is 0 ? default : true ;
+            var reactionsAsTagsLocal = (flagsLocal & 8) is 0 ? default : true ;
             var resultsLocal =  des.Read<ReactionCountBase>();
             var recentReactionsLocal = (flagsLocal & 2) is 0 ? default : des.Read<MessagePeerReactionBase>() ;
             return new() {
             Min = minLocal,
             CanSeeList = canSeeListLocal,
+            ReactionsAsTags = reactionsAsTagsLocal,
             Results = resultsLocal,
             RecentReactions = recentReactionsLocal,
             };
@@ -27793,45 +28680,28 @@ namespace SharpGram.Tl.Constructors.AttachMenuBotsBotNs {
 }
 namespace SharpGram.Tl.Constructors.WebViewResultNs {
     public class WebViewResultUrl : WebViewResultBase, ITlSerializable, ITlDeserializable<WebViewResultUrl> {
-        public static readonly byte[] Identifier = [124,85,20,12,];
-        public long QueryId {get;set;}
+        public static readonly byte[] Identifier = [152,255,34,77,];
+        public bool Fullsize {get;set;}
+        public long? QueryId {get;set;}
         public required string Url {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(QueryId.TlSerialize());
+            bytes.AddRange((0 | (QueryId is not null ? 1 : 0) ).TlSerialize());
+            if(QueryId is not null) bytes.AddRange(QueryId.TlSerialize());
             bytes.AddRange(Url.TlSerialize());
             return bytes.ToArray();
         }
 
         public new static WebViewResultUrl TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
-            var queryIdLocal =  des.As<long>().Read();
+            var flagsLocal =  des.As<int>().Read();
+            var fullsizeLocal = (flagsLocal & 2) is 0 ? default : true ;
+            var queryIdLocal = (flagsLocal & 1) is 0 ? default : des.As<long>().Read() ;
             var urlLocal =  des.As<string>().Read();
             return new() {
+            Fullsize = fullsizeLocal,
             QueryId = queryIdLocal,
-            Url = urlLocal,
-            };
-        }
-    }
-
-
-}
-namespace SharpGram.Tl.Constructors.SimpleWebViewResultNs {
-    public class SimpleWebViewResultUrl : SimpleWebViewResultBase, ITlSerializable, ITlDeserializable<SimpleWebViewResultUrl> {
-        public static readonly byte[] Identifier = [187,118,47,136,];
-        public required string Url {get;set;}
-        public new byte[] TlSerialize() {
-            List<byte> bytes = [];
-            bytes.AddRange(Identifier);
-            bytes.AddRange(Url.TlSerialize());
-            return bytes.ToArray();
-        }
-
-        public new static SimpleWebViewResultUrl TlDeserialize(Deserializer des) {
-            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
-            var urlLocal =  des.As<string>().Read();
-            return new() {
             Url = urlLocal,
             };
         }
@@ -28202,6 +29072,24 @@ namespace SharpGram.Tl.Constructors.InputInvoiceNs {
             };
         }
     }
+    public class InputInvoiceStars : InputInvoiceBase, ITlSerializable, ITlDeserializable<InputInvoiceStars> {
+        public static readonly byte[] Identifier = [216,58,163,29,];
+        public required StarsTopupOptionBase Option {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Option.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputInvoiceStars TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var optionLocal =  StarsTopupOptionBase.TlDeserialize(des);
+            return new() {
+            Option = optionLocal,
+            };
+        }
+    }
 
 
 }
@@ -28438,6 +29326,34 @@ namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
             PrizeDescription = prizeDescriptionLocal,
             RandomId = randomIdLocal,
             UntilDate = untilDateLocal,
+            Currency = currencyLocal,
+            Amount = amountLocal,
+            };
+        }
+    }
+    public class InputStorePaymentStars : InputStorePaymentPurposeBase, ITlSerializable, ITlDeserializable<InputStorePaymentStars> {
+        public static readonly byte[] Identifier = [223,232,14,79,];
+        public long Stars {get;set;}
+        public required string Currency {get;set;}
+        public long Amount {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(Stars.TlSerialize());
+            bytes.AddRange(Currency.TlSerialize());
+            bytes.AddRange(Amount.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputStorePaymentStars TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var starsLocal =  des.As<long>().Read();
+            var currencyLocal =  des.As<string>().Read();
+            var amountLocal =  des.As<long>().Read();
+            return new() {
+            Stars = starsLocal,
             Currency = currencyLocal,
             Amount = amountLocal,
             };
@@ -29437,8 +30353,6 @@ namespace SharpGram.Tl.Constructors.EmojiListNs {
 namespace SharpGram.Tl.Constructors.EmojiGroupNs {
     public class EmojiGroup : EmojiGroupBase, ITlSerializable, ITlDeserializable<EmojiGroup> {
         public static readonly byte[] Identifier = [169,189,154,122,];
-        public required string Title {get;set;}
-        public long IconEmojiId {get;set;}
         public required List<string> Emoticons {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
@@ -29458,6 +30372,50 @@ namespace SharpGram.Tl.Constructors.EmojiGroupNs {
             Title = titleLocal,
             IconEmojiId = iconEmojiIdLocal,
             Emoticons = emoticonsLocal,
+            };
+        }
+    }
+    public class EmojiGroupGreeting : EmojiGroupBase, ITlSerializable, ITlDeserializable<EmojiGroupGreeting> {
+        public static readonly byte[] Identifier = [199,108,210,128,];
+        public required List<string> Emoticons {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Title.TlSerialize());
+            bytes.AddRange(IconEmojiId.TlSerialize());
+            bytes.AddRange(Emoticons.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static EmojiGroupGreeting TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var titleLocal =  des.As<string>().Read();
+            var iconEmojiIdLocal =  des.As<long>().Read();
+            var emoticonsLocal =  des.ReadStrings();
+            return new() {
+            Title = titleLocal,
+            IconEmojiId = iconEmojiIdLocal,
+            Emoticons = emoticonsLocal,
+            };
+        }
+    }
+    public class EmojiGroupPremium : EmojiGroupBase, ITlSerializable, ITlDeserializable<EmojiGroupPremium> {
+        public static readonly byte[] Identifier = [52,207,59,9,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Title.TlSerialize());
+            bytes.AddRange(IconEmojiId.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static EmojiGroupPremium TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var titleLocal =  des.As<string>().Read();
+            var iconEmojiIdLocal =  des.As<long>().Read();
+            return new() {
+            Title = titleLocal,
+            IconEmojiId = iconEmojiIdLocal,
             };
         }
     }
@@ -29837,28 +30795,6 @@ namespace SharpGram.Tl.Constructors.MessagesBotAppNs {
 
 
 }
-namespace SharpGram.Tl.Constructors.AppWebViewResultNs {
-    public class AppWebViewResultUrl : AppWebViewResultBase, ITlSerializable, ITlDeserializable<AppWebViewResultUrl> {
-        public static readonly byte[] Identifier = [13,79,27,60,];
-        public required string Url {get;set;}
-        public new byte[] TlSerialize() {
-            List<byte> bytes = [];
-            bytes.AddRange(Identifier);
-            bytes.AddRange(Url.TlSerialize());
-            return bytes.ToArray();
-        }
-
-        public new static AppWebViewResultUrl TlDeserialize(Deserializer des) {
-            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
-            var urlLocal =  des.As<string>().Read();
-            return new() {
-            Url = urlLocal,
-            };
-        }
-    }
-
-
-}
 namespace SharpGram.Tl.Constructors.InlineBotWebViewNs {
     public class InlineBotWebView : InlineBotWebViewBase, ITlSerializable, ITlDeserializable<InlineBotWebView> {
         public static readonly byte[] Identifier = [213,149,114,181,];
@@ -30223,38 +31159,6 @@ namespace SharpGram.Tl.Constructors.MessagePeerVoteNs {
 
 
 }
-namespace SharpGram.Tl.Constructors.SponsoredWebPageNs {
-    public class SponsoredWebPage : SponsoredWebPageBase, ITlSerializable, ITlDeserializable<SponsoredWebPage> {
-        public static readonly byte[] Identifier = [99,236,184,61,];
-        public required string Url {get;set;}
-        public required string SiteName {get;set;}
-        public PhotoBase? Photo {get;set;}
-        public new byte[] TlSerialize() {
-            List<byte> bytes = [];
-            bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Photo is not null ? 1 : 0) ).TlSerialize());
-            bytes.AddRange(Url.TlSerialize());
-            bytes.AddRange(SiteName.TlSerialize());
-            if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
-            return bytes.ToArray();
-        }
-
-        public new static SponsoredWebPage TlDeserialize(Deserializer des) {
-            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
-            var flagsLocal =  des.As<int>().Read();
-            var urlLocal =  des.As<string>().Read();
-            var siteNameLocal =  des.As<string>().Read();
-            var photoLocal = (flagsLocal & 1) is 0 ? default : PhotoBase.TlDeserialize(des) ;
-            return new() {
-            Url = urlLocal,
-            SiteName = siteNameLocal,
-            Photo = photoLocal,
-            };
-        }
-    }
-
-
-}
 namespace SharpGram.Tl.Constructors.StoryViewsNs {
     public class StoryViews : StoryViewsBase, ITlSerializable, ITlDeserializable<StoryViews> {
         public static readonly byte[] Identifier = [214,92,89,141,];
@@ -30347,7 +31251,7 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
         }
     }
     public class StoryItem : StoryItemBase, ITlSerializable, ITlDeserializable<StoryItem> {
-        public static readonly byte[] Identifier = [161,101,99,175,];
+        public static readonly byte[] Identifier = [36,106,178,121,];
         public bool Pinned {get;set;}
         public bool Public {get;set;}
         public bool CloseFriends {get;set;}
@@ -30358,6 +31262,7 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
         public bool SelectedContacts {get;set;}
         public bool Out {get;set;}
         public int Date {get;set;}
+        public PeerBase? FromId {get;set;}
         public StoryFwdHeaderBase? FwdFrom {get;set;}
         public int ExpireDate {get;set;}
         public string? Caption {get;set;}
@@ -30370,9 +31275,10 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FwdFrom is not null ? 131072 : 0) | (Caption is not null ? 1 : 0) | (Entities is not null ? 2 : 0) | (MediaAreas is not null ? 16384 : 0) | (Privacy is not null ? 4 : 0) | (Views is not null ? 8 : 0) | (SentReaction is not null ? 32768 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (FromId is not null ? 262144 : 0) | (FwdFrom is not null ? 131072 : 0) | (Caption is not null ? 1 : 0) | (Entities is not null ? 2 : 0) | (MediaAreas is not null ? 16384 : 0) | (Privacy is not null ? 4 : 0) | (Views is not null ? 8 : 0) | (SentReaction is not null ? 32768 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
+            if(FromId is not null) bytes.AddRange(FromId.TlSerialize());
             if(FwdFrom is not null) bytes.AddRange(FwdFrom.TlSerialize());
             bytes.AddRange(ExpireDate.TlSerialize());
             if(Caption is not null) bytes.AddRange(Caption.TlSerialize());
@@ -30399,6 +31305,7 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
             var outLocal = (flagsLocal & 65536) is 0 ? default : true ;
             var idLocal =  des.As<int>().Read();
             var dateLocal =  des.As<int>().Read();
+            var fromIdLocal = (flagsLocal & 262144) is 0 ? default : PeerBase.TlDeserialize(des) ;
             var fwdFromLocal = (flagsLocal & 131072) is 0 ? default : StoryFwdHeaderBase.TlDeserialize(des) ;
             var expireDateLocal =  des.As<int>().Read();
             var captionLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
@@ -30420,6 +31327,7 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
             Out = outLocal,
             Id = idLocal,
             Date = dateLocal,
+            FromId = fromIdLocal,
             FwdFrom = fwdFromLocal,
             ExpireDate = expireDateLocal,
             Caption = captionLocal,
@@ -30504,16 +31412,19 @@ namespace SharpGram.Tl.Constructors.StoriesAllStoriesNs {
 }
 namespace SharpGram.Tl.Constructors.StoriesStoriesNs {
     public class StoriesStories : StoriesStoriesBase, ITlSerializable, ITlDeserializable<StoriesStories> {
-        public static readonly byte[] Identifier = [200,195,216,93,];
+        public static readonly byte[] Identifier = [10,221,195,99,];
         public int Count {get;set;}
         public required List<StoryItemBase> Stories {get;set;}
+        public List<int>? PinnedToTop {get;set;}
         public required List<ChatBase> Chats {get;set;}
         public required List<UserBase> Users {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (PinnedToTop is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Count.TlSerialize());
             bytes.AddRange(Stories.TlSerialize());
+            if(PinnedToTop is not null) bytes.AddRange(PinnedToTop.TlSerialize());
             bytes.AddRange(Chats.TlSerialize());
             bytes.AddRange(Users.TlSerialize());
             return bytes.ToArray();
@@ -30521,13 +31432,16 @@ namespace SharpGram.Tl.Constructors.StoriesStoriesNs {
 
         public new static StoriesStories TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
             var countLocal =  des.As<int>().Read();
             var storiesLocal =  des.Read<StoryItemBase>();
+            var pinnedToTopLocal = (flagsLocal & 1) is 0 ? default : des.ReadNumbers<int>() ;
             var chatsLocal =  des.Read<ChatBase>();
             var usersLocal =  des.Read<UserBase>();
             return new() {
             Count = countLocal,
             Stories = storiesLocal,
+            PinnedToTop = pinnedToTopLocal,
             Chats = chatsLocal,
             Users = usersLocal,
             };
@@ -30744,23 +31658,23 @@ namespace SharpGram.Tl.Constructors.InputReplyToNs {
         }
     }
     public class InputReplyToStory : InputReplyToBase, ITlSerializable, ITlDeserializable<InputReplyToStory> {
-        public static readonly byte[] Identifier = [131,242,176,21,];
-        public required InputUserBase UserId {get;set;}
+        public static readonly byte[] Identifier = [58,50,129,88,];
+        public required InputPeerBase Peer {get;set;}
         public int StoryId {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(UserId.TlSerialize());
+            bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(StoryId.TlSerialize());
             return bytes.ToArray();
         }
 
         public new static InputReplyToStory TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
-            var userIdLocal =  InputUserBase.TlDeserialize(des);
+            var peerLocal =  InputPeerBase.TlDeserialize(des);
             var storyIdLocal =  des.As<int>().Read();
             return new() {
-            UserId = userIdLocal,
+            Peer = peerLocal,
             StoryId = storyIdLocal,
             };
         }
@@ -30820,36 +31734,42 @@ namespace SharpGram.Tl.Constructors.StoriesStealthModeNs {
 }
 namespace SharpGram.Tl.Constructors.MediaAreaCoordinatesNs {
     public class MediaAreaCoordinates : MediaAreaCoordinatesBase, ITlSerializable, ITlDeserializable<MediaAreaCoordinates> {
-        public static readonly byte[] Identifier = [78,234,209,3,];
+        public static readonly byte[] Identifier = [2,224,201,207,];
         public double X {get;set;}
         public double Y {get;set;}
         public double W {get;set;}
         public double H {get;set;}
         public double Rotation {get;set;}
+        public double? Radius {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Radius is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(X.TlSerialize());
             bytes.AddRange(Y.TlSerialize());
             bytes.AddRange(W.TlSerialize());
             bytes.AddRange(H.TlSerialize());
             bytes.AddRange(Rotation.TlSerialize());
+            if(Radius is not null) bytes.AddRange(Radius.TlSerialize());
             return bytes.ToArray();
         }
 
         public new static MediaAreaCoordinates TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
             var xLocal =  des.As<double>().Read();
             var yLocal =  des.As<double>().Read();
             var wLocal =  des.As<double>().Read();
             var hLocal =  des.As<double>().Read();
             var rotationLocal =  des.As<double>().Read();
+            var radiusLocal = (flagsLocal & 1) is 0 ? default : des.As<double>().Read() ;
             return new() {
             X = xLocal,
             Y = yLocal,
             W = wLocal,
             H = hLocal,
             Rotation = rotationLocal,
+            Radius = radiusLocal,
             };
         }
     }
@@ -30924,23 +31844,29 @@ namespace SharpGram.Tl.Constructors.MediaAreaNs {
         }
     }
     public class MediaAreaGeoPoint : MediaAreaBase, ITlSerializable, ITlDeserializable<MediaAreaGeoPoint> {
-        public static readonly byte[] Identifier = [34,59,139,223,];
+        public static readonly byte[] Identifier = [45,69,213,202,];
         public required GeoPointBase Geo {get;set;}
+        public GeoPointAddressBase? Address {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Address is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Coordinates.TlSerialize());
             bytes.AddRange(Geo.TlSerialize());
+            if(Address is not null) bytes.AddRange(Address.TlSerialize());
             return bytes.ToArray();
         }
 
         public new static MediaAreaGeoPoint TlDeserialize(Deserializer des) {
             ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
             var coordinatesLocal =  MediaAreaCoordinatesBase.TlDeserialize(des);
             var geoLocal =  GeoPointBase.TlDeserialize(des);
+            var addressLocal = (flagsLocal & 1) is 0 ? default : GeoPointAddressBase.TlDeserialize(des) ;
             return new() {
             Coordinates = coordinatesLocal,
             Geo = geoLocal,
+            Address = addressLocal,
             };
         }
     }
@@ -31020,6 +31946,27 @@ namespace SharpGram.Tl.Constructors.MediaAreaNs {
             Coordinates = coordinatesLocal,
             Channel = channelLocal,
             MsgId = msgIdLocal,
+            };
+        }
+    }
+    public class MediaAreaUrl : MediaAreaBase, ITlSerializable, ITlDeserializable<MediaAreaUrl> {
+        public static readonly byte[] Identifier = [133,16,56,55,];
+        public required string Url {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Coordinates.TlSerialize());
+            bytes.AddRange(Url.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MediaAreaUrl TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var coordinatesLocal =  MediaAreaCoordinatesBase.TlDeserialize(des);
+            var urlLocal =  des.As<string>().Read();
+            return new() {
+            Coordinates = coordinatesLocal,
+            Url = urlLocal,
             };
         }
     }
@@ -31836,20 +32783,22 @@ namespace SharpGram.Tl.Constructors.HelpPeerColorSetNs {
 }
 namespace SharpGram.Tl.Constructors.HelpPeerColorOptionNs {
     public class HelpPeerColorOption : HelpPeerColorOptionBase, ITlSerializable, ITlDeserializable<HelpPeerColorOption> {
-        public static readonly byte[] Identifier = [171,48,132,239,];
+        public static readonly byte[] Identifier = [190,110,236,173,];
         public bool Hidden {get;set;}
         public int ColorId {get;set;}
         public HelpPeerColorSetBase? Colors {get;set;}
         public HelpPeerColorSetBase? DarkColors {get;set;}
         public int? ChannelMinLevel {get;set;}
+        public int? GroupMinLevel {get;set;}
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Colors is not null ? 2 : 0) | (DarkColors is not null ? 4 : 0) | (ChannelMinLevel is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Colors is not null ? 2 : 0) | (DarkColors is not null ? 4 : 0) | (ChannelMinLevel is not null ? 8 : 0) | (GroupMinLevel is not null ? 16 : 0) ).TlSerialize());
             bytes.AddRange(ColorId.TlSerialize());
             if(Colors is not null) bytes.AddRange(Colors.TlSerialize());
             if(DarkColors is not null) bytes.AddRange(DarkColors.TlSerialize());
             if(ChannelMinLevel is not null) bytes.AddRange(ChannelMinLevel.TlSerialize());
+            if(GroupMinLevel is not null) bytes.AddRange(GroupMinLevel.TlSerialize());
             return bytes.ToArray();
         }
 
@@ -31861,12 +32810,14 @@ namespace SharpGram.Tl.Constructors.HelpPeerColorOptionNs {
             var colorsLocal = (flagsLocal & 2) is 0 ? default : HelpPeerColorSetBase.TlDeserialize(des) ;
             var darkColorsLocal = (flagsLocal & 4) is 0 ? default : HelpPeerColorSetBase.TlDeserialize(des) ;
             var channelMinLevelLocal = (flagsLocal & 8) is 0 ? default : des.As<int>().Read() ;
+            var groupMinLevelLocal = (flagsLocal & 16) is 0 ? default : des.As<int>().Read() ;
             return new() {
             Hidden = hiddenLocal,
             ColorId = colorIdLocal,
             Colors = colorsLocal,
             DarkColors = darkColorsLocal,
             ChannelMinLevel = channelMinLevelLocal,
+            GroupMinLevel = groupMinLevelLocal,
             };
         }
     }
@@ -32134,6 +33085,2489 @@ namespace SharpGram.Tl.Constructors.MessagesSavedDialogsNs {
             var countLocal =  des.As<int>().Read();
             return new() {
             Count = countLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.SavedReactionTagNs {
+    public class SavedReactionTag : SavedReactionTagBase, ITlSerializable, ITlDeserializable<SavedReactionTag> {
+        public static readonly byte[] Identifier = [40,248,111,203,];
+        public required ReactionBase Reaction {get;set;}
+        public string? Title {get;set;}
+        public int Count {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Title is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(Reaction.TlSerialize());
+            if(Title is not null) bytes.AddRange(Title.TlSerialize());
+            bytes.AddRange(Count.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static SavedReactionTag TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var reactionLocal =  ReactionBase.TlDeserialize(des);
+            var titleLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            var countLocal =  des.As<int>().Read();
+            return new() {
+            Reaction = reactionLocal,
+            Title = titleLocal,
+            Count = countLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.MessagesSavedReactionTagsNs {
+    public class MessagesSavedReactionTagsNotModified : MessagesSavedReactionTagsBase, ITlSerializable, ITlDeserializable<MessagesSavedReactionTagsNotModified> {
+        public static readonly byte[] Identifier = [239,89,155,136,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static MessagesSavedReactionTagsNotModified TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class MessagesSavedReactionTags : MessagesSavedReactionTagsBase, ITlSerializable, ITlDeserializable<MessagesSavedReactionTags> {
+        public static readonly byte[] Identifier = [10,149,89,50,];
+        public required List<SavedReactionTagBase> Tags {get;set;}
+        public long Hash {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Tags.TlSerialize());
+            bytes.AddRange(Hash.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MessagesSavedReactionTags TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var tagsLocal =  des.Read<SavedReactionTagBase>();
+            var hashLocal =  des.As<long>().Read();
+            return new() {
+            Tags = tagsLocal,
+            Hash = hashLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.OutboxReadDateNs {
+    public class OutboxReadDate : OutboxReadDateBase, ITlSerializable, ITlDeserializable<OutboxReadDate> {
+        public static readonly byte[] Identifier = [172,66,184,59,];
+        public int Date {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Date.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static OutboxReadDate TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var dateLocal =  des.As<int>().Read();
+            return new() {
+            Date = dateLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.SmsjobsEligibilityToJoinNs {
+    public class SmsjobsEligibleToJoin : SmsjobsEligibilityToJoinBase, ITlSerializable, ITlDeserializable<SmsjobsEligibleToJoin> {
+        public static readonly byte[] Identifier = [207,68,139,220,];
+        public required string TermsUrl {get;set;}
+        public int MonthlySentSms {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(TermsUrl.TlSerialize());
+            bytes.AddRange(MonthlySentSms.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static SmsjobsEligibleToJoin TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var termsUrlLocal =  des.As<string>().Read();
+            var monthlySentSmsLocal =  des.As<int>().Read();
+            return new() {
+            TermsUrl = termsUrlLocal,
+            MonthlySentSms = monthlySentSmsLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.SmsjobsStatusNs {
+    public class SmsjobsStatus : SmsjobsStatusBase, ITlSerializable, ITlDeserializable<SmsjobsStatus> {
+        public static readonly byte[] Identifier = [145,145,238,42,];
+        public bool AllowInternational {get;set;}
+        public int RecentSent {get;set;}
+        public int RecentSince {get;set;}
+        public int RecentRemains {get;set;}
+        public int TotalSent {get;set;}
+        public int TotalSince {get;set;}
+        public string? LastGiftSlug {get;set;}
+        public required string TermsUrl {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (LastGiftSlug is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange(RecentSent.TlSerialize());
+            bytes.AddRange(RecentSince.TlSerialize());
+            bytes.AddRange(RecentRemains.TlSerialize());
+            bytes.AddRange(TotalSent.TlSerialize());
+            bytes.AddRange(TotalSince.TlSerialize());
+            if(LastGiftSlug is not null) bytes.AddRange(LastGiftSlug.TlSerialize());
+            bytes.AddRange(TermsUrl.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static SmsjobsStatus TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var allowInternationalLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var recentSentLocal =  des.As<int>().Read();
+            var recentSinceLocal =  des.As<int>().Read();
+            var recentRemainsLocal =  des.As<int>().Read();
+            var totalSentLocal =  des.As<int>().Read();
+            var totalSinceLocal =  des.As<int>().Read();
+            var lastGiftSlugLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
+            var termsUrlLocal =  des.As<string>().Read();
+            return new() {
+            AllowInternational = allowInternationalLocal,
+            RecentSent = recentSentLocal,
+            RecentSince = recentSinceLocal,
+            RecentRemains = recentRemainsLocal,
+            TotalSent = totalSentLocal,
+            TotalSince = totalSinceLocal,
+            LastGiftSlug = lastGiftSlugLocal,
+            TermsUrl = termsUrlLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.SmsJobNs {
+    public class SmsJob : SmsJobBase, ITlSerializable, ITlDeserializable<SmsJob> {
+        public static readonly byte[] Identifier = [184,238,161,230,];
+        public required string JobId {get;set;}
+        public required string PhoneNumber {get;set;}
+        public required string Text {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(JobId.TlSerialize());
+            bytes.AddRange(PhoneNumber.TlSerialize());
+            bytes.AddRange(Text.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static SmsJob TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var jobIdLocal =  des.As<string>().Read();
+            var phoneNumberLocal =  des.As<string>().Read();
+            var textLocal =  des.As<string>().Read();
+            return new() {
+            JobId = jobIdLocal,
+            PhoneNumber = phoneNumberLocal,
+            Text = textLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BusinessWeeklyOpenNs {
+    public class BusinessWeeklyOpen : BusinessWeeklyOpenBase, ITlSerializable, ITlDeserializable<BusinessWeeklyOpen> {
+        public static readonly byte[] Identifier = [185,26,11,18,];
+        public int StartMinute {get;set;}
+        public int EndMinute {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(StartMinute.TlSerialize());
+            bytes.AddRange(EndMinute.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BusinessWeeklyOpen TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var startMinuteLocal =  des.As<int>().Read();
+            var endMinuteLocal =  des.As<int>().Read();
+            return new() {
+            StartMinute = startMinuteLocal,
+            EndMinute = endMinuteLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BusinessWorkHoursNs {
+    public class BusinessWorkHours : BusinessWorkHoursBase, ITlSerializable, ITlDeserializable<BusinessWorkHours> {
+        public static readonly byte[] Identifier = [152,176,146,140,];
+        public bool OpenNow {get;set;}
+        public required string TimezoneId {get;set;}
+        public required List<BusinessWeeklyOpenBase> WeeklyOpen {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(TimezoneId.TlSerialize());
+            bytes.AddRange(WeeklyOpen.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BusinessWorkHours TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var openNowLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var timezoneIdLocal =  des.As<string>().Read();
+            var weeklyOpenLocal =  des.Read<BusinessWeeklyOpenBase>();
+            return new() {
+            OpenNow = openNowLocal,
+            TimezoneId = timezoneIdLocal,
+            WeeklyOpen = weeklyOpenLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BusinessLocationNs {
+    public class BusinessLocation : BusinessLocationBase, ITlSerializable, ITlDeserializable<BusinessLocation> {
+        public static readonly byte[] Identifier = [247,26,92,172,];
+        public GeoPointBase? GeoPoint {get;set;}
+        public required string Address {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (GeoPoint is not null ? 1 : 0) ).TlSerialize());
+            if(GeoPoint is not null) bytes.AddRange(GeoPoint.TlSerialize());
+            bytes.AddRange(Address.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BusinessLocation TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var geoPointLocal = (flagsLocal & 1) is 0 ? default : GeoPointBase.TlDeserialize(des) ;
+            var addressLocal =  des.As<string>().Read();
+            return new() {
+            GeoPoint = geoPointLocal,
+            Address = addressLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.InputBusinessRecipientsNs {
+    public class InputBusinessRecipients : InputBusinessRecipientsBase, ITlSerializable, ITlDeserializable<InputBusinessRecipients> {
+        public static readonly byte[] Identifier = [170,50,139,111,];
+        public bool ExistingChats {get;set;}
+        public bool NewChats {get;set;}
+        public bool Contacts {get;set;}
+        public bool NonContacts {get;set;}
+        public bool ExcludeSelected {get;set;}
+        public List<InputUserBase>? Users {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Users is not null ? 16 : 0) ).TlSerialize());
+            if(Users is not null) bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputBusinessRecipients TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var existingChatsLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var newChatsLocal = (flagsLocal & 2) is 0 ? default : true ;
+            var contactsLocal = (flagsLocal & 4) is 0 ? default : true ;
+            var nonContactsLocal = (flagsLocal & 8) is 0 ? default : true ;
+            var excludeSelectedLocal = (flagsLocal & 32) is 0 ? default : true ;
+            var usersLocal = (flagsLocal & 16) is 0 ? default : des.Read<InputUserBase>() ;
+            return new() {
+            ExistingChats = existingChatsLocal,
+            NewChats = newChatsLocal,
+            Contacts = contactsLocal,
+            NonContacts = nonContactsLocal,
+            ExcludeSelected = excludeSelectedLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BusinessRecipientsNs {
+    public class BusinessRecipients : BusinessRecipientsBase, ITlSerializable, ITlDeserializable<BusinessRecipients> {
+        public static readonly byte[] Identifier = [247,143,16,33,];
+        public bool ExistingChats {get;set;}
+        public bool NewChats {get;set;}
+        public bool Contacts {get;set;}
+        public bool NonContacts {get;set;}
+        public bool ExcludeSelected {get;set;}
+        public List<long>? Users {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Users is not null ? 16 : 0) ).TlSerialize());
+            if(Users is not null) bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BusinessRecipients TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var existingChatsLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var newChatsLocal = (flagsLocal & 2) is 0 ? default : true ;
+            var contactsLocal = (flagsLocal & 4) is 0 ? default : true ;
+            var nonContactsLocal = (flagsLocal & 8) is 0 ? default : true ;
+            var excludeSelectedLocal = (flagsLocal & 32) is 0 ? default : true ;
+            var usersLocal = (flagsLocal & 16) is 0 ? default : des.ReadNumbers<long>() ;
+            return new() {
+            ExistingChats = existingChatsLocal,
+            NewChats = newChatsLocal,
+            Contacts = contactsLocal,
+            NonContacts = nonContactsLocal,
+            ExcludeSelected = excludeSelectedLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BusinessAwayMessageScheduleNs {
+    public class BusinessAwayMessageScheduleAlways : BusinessAwayMessageScheduleBase, ITlSerializable, ITlDeserializable<BusinessAwayMessageScheduleAlways> {
+        public static readonly byte[] Identifier = [185,226,185,201,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static BusinessAwayMessageScheduleAlways TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class BusinessAwayMessageScheduleOutsideWorkHours : BusinessAwayMessageScheduleBase, ITlSerializable, ITlDeserializable<BusinessAwayMessageScheduleOutsideWorkHours> {
+        public static readonly byte[] Identifier = [1,245,242,195,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static BusinessAwayMessageScheduleOutsideWorkHours TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class BusinessAwayMessageScheduleCustom : BusinessAwayMessageScheduleBase, ITlSerializable, ITlDeserializable<BusinessAwayMessageScheduleCustom> {
+        public static readonly byte[] Identifier = [204,158,77,204,];
+        public int StartDate {get;set;}
+        public int EndDate {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(StartDate.TlSerialize());
+            bytes.AddRange(EndDate.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BusinessAwayMessageScheduleCustom TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var startDateLocal =  des.As<int>().Read();
+            var endDateLocal =  des.As<int>().Read();
+            return new() {
+            StartDate = startDateLocal,
+            EndDate = endDateLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.InputBusinessGreetingMessageNs {
+    public class InputBusinessGreetingMessage : InputBusinessGreetingMessageBase, ITlSerializable, ITlDeserializable<InputBusinessGreetingMessage> {
+        public static readonly byte[] Identifier = [59,203,148,1,];
+        public int ShortcutId {get;set;}
+        public required InputBusinessRecipientsBase Recipients {get;set;}
+        public int NoActivityDays {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(ShortcutId.TlSerialize());
+            bytes.AddRange(Recipients.TlSerialize());
+            bytes.AddRange(NoActivityDays.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputBusinessGreetingMessage TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var shortcutIdLocal =  des.As<int>().Read();
+            var recipientsLocal =  InputBusinessRecipientsBase.TlDeserialize(des);
+            var noActivityDaysLocal =  des.As<int>().Read();
+            return new() {
+            ShortcutId = shortcutIdLocal,
+            Recipients = recipientsLocal,
+            NoActivityDays = noActivityDaysLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BusinessGreetingMessageNs {
+    public class BusinessGreetingMessage : BusinessGreetingMessageBase, ITlSerializable, ITlDeserializable<BusinessGreetingMessage> {
+        public static readonly byte[] Identifier = [171,171,25,229,];
+        public int ShortcutId {get;set;}
+        public required BusinessRecipientsBase Recipients {get;set;}
+        public int NoActivityDays {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(ShortcutId.TlSerialize());
+            bytes.AddRange(Recipients.TlSerialize());
+            bytes.AddRange(NoActivityDays.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BusinessGreetingMessage TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var shortcutIdLocal =  des.As<int>().Read();
+            var recipientsLocal =  BusinessRecipientsBase.TlDeserialize(des);
+            var noActivityDaysLocal =  des.As<int>().Read();
+            return new() {
+            ShortcutId = shortcutIdLocal,
+            Recipients = recipientsLocal,
+            NoActivityDays = noActivityDaysLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.InputBusinessAwayMessageNs {
+    public class InputBusinessAwayMessage : InputBusinessAwayMessageBase, ITlSerializable, ITlDeserializable<InputBusinessAwayMessage> {
+        public static readonly byte[] Identifier = [224,117,33,131,];
+        public bool OfflineOnly {get;set;}
+        public int ShortcutId {get;set;}
+        public required BusinessAwayMessageScheduleBase Schedule {get;set;}
+        public required InputBusinessRecipientsBase Recipients {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(ShortcutId.TlSerialize());
+            bytes.AddRange(Schedule.TlSerialize());
+            bytes.AddRange(Recipients.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputBusinessAwayMessage TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var offlineOnlyLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var shortcutIdLocal =  des.As<int>().Read();
+            var scheduleLocal =  BusinessAwayMessageScheduleBase.TlDeserialize(des);
+            var recipientsLocal =  InputBusinessRecipientsBase.TlDeserialize(des);
+            return new() {
+            OfflineOnly = offlineOnlyLocal,
+            ShortcutId = shortcutIdLocal,
+            Schedule = scheduleLocal,
+            Recipients = recipientsLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BusinessAwayMessageNs {
+    public class BusinessAwayMessage : BusinessAwayMessageBase, ITlSerializable, ITlDeserializable<BusinessAwayMessage> {
+        public static readonly byte[] Identifier = [92,106,21,239,];
+        public bool OfflineOnly {get;set;}
+        public int ShortcutId {get;set;}
+        public required BusinessAwayMessageScheduleBase Schedule {get;set;}
+        public required BusinessRecipientsBase Recipients {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(ShortcutId.TlSerialize());
+            bytes.AddRange(Schedule.TlSerialize());
+            bytes.AddRange(Recipients.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BusinessAwayMessage TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var offlineOnlyLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var shortcutIdLocal =  des.As<int>().Read();
+            var scheduleLocal =  BusinessAwayMessageScheduleBase.TlDeserialize(des);
+            var recipientsLocal =  BusinessRecipientsBase.TlDeserialize(des);
+            return new() {
+            OfflineOnly = offlineOnlyLocal,
+            ShortcutId = shortcutIdLocal,
+            Schedule = scheduleLocal,
+            Recipients = recipientsLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.TimezoneNs {
+    public class Timezone : TimezoneBase, ITlSerializable, ITlDeserializable<Timezone> {
+        public static readonly byte[] Identifier = [245,137,146,255,];
+        public required string Id {get;set;}
+        public required string Name {get;set;}
+        public int UtcOffset {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Id.TlSerialize());
+            bytes.AddRange(Name.TlSerialize());
+            bytes.AddRange(UtcOffset.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static Timezone TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var idLocal =  des.As<string>().Read();
+            var nameLocal =  des.As<string>().Read();
+            var utcOffsetLocal =  des.As<int>().Read();
+            return new() {
+            Id = idLocal,
+            Name = nameLocal,
+            UtcOffset = utcOffsetLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.HelpTimezonesListNs {
+    public class HelpTimezonesListNotModified : HelpTimezonesListBase, ITlSerializable, ITlDeserializable<HelpTimezonesListNotModified> {
+        public static readonly byte[] Identifier = [204,8,7,151,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static HelpTimezonesListNotModified TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class HelpTimezonesList : HelpTimezonesListBase, ITlSerializable, ITlDeserializable<HelpTimezonesList> {
+        public static readonly byte[] Identifier = [113,237,116,123,];
+        public required List<TimezoneBase> Timezones {get;set;}
+        public int Hash {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Timezones.TlSerialize());
+            bytes.AddRange(Hash.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static HelpTimezonesList TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var timezonesLocal =  des.Read<TimezoneBase>();
+            var hashLocal =  des.As<int>().Read();
+            return new() {
+            Timezones = timezonesLocal,
+            Hash = hashLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.QuickReplyNs {
+    public class QuickReply : QuickReplyBase, ITlSerializable, ITlDeserializable<QuickReply> {
+        public static readonly byte[] Identifier = [43,16,151,6,];
+        public int ShortcutId {get;set;}
+        public required string Shortcut {get;set;}
+        public int TopMessage {get;set;}
+        public int Count {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(ShortcutId.TlSerialize());
+            bytes.AddRange(Shortcut.TlSerialize());
+            bytes.AddRange(TopMessage.TlSerialize());
+            bytes.AddRange(Count.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static QuickReply TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var shortcutIdLocal =  des.As<int>().Read();
+            var shortcutLocal =  des.As<string>().Read();
+            var topMessageLocal =  des.As<int>().Read();
+            var countLocal =  des.As<int>().Read();
+            return new() {
+            ShortcutId = shortcutIdLocal,
+            Shortcut = shortcutLocal,
+            TopMessage = topMessageLocal,
+            Count = countLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.InputQuickReplyShortcutNs {
+    public class InputQuickReplyShortcut : InputQuickReplyShortcutBase, ITlSerializable, ITlDeserializable<InputQuickReplyShortcut> {
+        public static readonly byte[] Identifier = [65,109,89,36,];
+        public required string Shortcut {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Shortcut.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputQuickReplyShortcut TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var shortcutLocal =  des.As<string>().Read();
+            return new() {
+            Shortcut = shortcutLocal,
+            };
+        }
+    }
+    public class InputQuickReplyShortcutId : InputQuickReplyShortcutBase, ITlSerializable, ITlDeserializable<InputQuickReplyShortcutId> {
+        public static readonly byte[] Identifier = [241,12,25,1,];
+        public int ShortcutId {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(ShortcutId.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputQuickReplyShortcutId TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var shortcutIdLocal =  des.As<int>().Read();
+            return new() {
+            ShortcutId = shortcutIdLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.MessagesQuickRepliesNs {
+    public class MessagesQuickReplies : MessagesQuickRepliesBase, ITlSerializable, ITlDeserializable<MessagesQuickReplies> {
+        public static readonly byte[] Identifier = [149,102,141,198,];
+        public required List<QuickReplyBase> QuickReplies {get;set;}
+        public required List<MessageBase> Messages {get;set;}
+        public required List<ChatBase> Chats {get;set;}
+        public required List<UserBase> Users {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(QuickReplies.TlSerialize());
+            bytes.AddRange(Messages.TlSerialize());
+            bytes.AddRange(Chats.TlSerialize());
+            bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MessagesQuickReplies TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var quickRepliesLocal =  des.Read<QuickReplyBase>();
+            var messagesLocal =  des.Read<MessageBase>();
+            var chatsLocal =  des.Read<ChatBase>();
+            var usersLocal =  des.Read<UserBase>();
+            return new() {
+            QuickReplies = quickRepliesLocal,
+            Messages = messagesLocal,
+            Chats = chatsLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+    public class MessagesQuickRepliesNotModified : MessagesQuickRepliesBase, ITlSerializable, ITlDeserializable<MessagesQuickRepliesNotModified> {
+        public static readonly byte[] Identifier = [91,235,145,95,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static MessagesQuickRepliesNotModified TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.ConnectedBotNs {
+    public class ConnectedBot : ConnectedBotBase, ITlSerializable, ITlDeserializable<ConnectedBot> {
+        public static readonly byte[] Identifier = [1,134,6,189,];
+        public bool CanReply {get;set;}
+        public long BotId {get;set;}
+        public required BusinessBotRecipientsBase Recipients {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(BotId.TlSerialize());
+            bytes.AddRange(Recipients.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static ConnectedBot TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var canReplyLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var botIdLocal =  des.As<long>().Read();
+            var recipientsLocal =  BusinessBotRecipientsBase.TlDeserialize(des);
+            return new() {
+            CanReply = canReplyLocal,
+            BotId = botIdLocal,
+            Recipients = recipientsLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.AccountConnectedBotsNs {
+    public class AccountConnectedBots : AccountConnectedBotsBase, ITlSerializable, ITlDeserializable<AccountConnectedBots> {
+        public static readonly byte[] Identifier = [123,248,215,23,];
+        public required List<ConnectedBotBase> ConnectedBots {get;set;}
+        public required List<UserBase> Users {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(ConnectedBots.TlSerialize());
+            bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static AccountConnectedBots TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var connectedBotsLocal =  des.Read<ConnectedBotBase>();
+            var usersLocal =  des.Read<UserBase>();
+            return new() {
+            ConnectedBots = connectedBotsLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.MessagesDialogFiltersNs {
+    public class MessagesDialogFilters : MessagesDialogFiltersBase, ITlSerializable, ITlDeserializable<MessagesDialogFilters> {
+        public static readonly byte[] Identifier = [25,55,217,42,];
+        public bool TagsEnabled {get;set;}
+        public required List<DialogFilterBase> Filters {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(Filters.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MessagesDialogFilters TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var tagsEnabledLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var filtersLocal =  des.Read<DialogFilterBase>();
+            return new() {
+            TagsEnabled = tagsEnabledLocal,
+            Filters = filtersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BirthdayNs {
+    public class Birthday : BirthdayBase, ITlSerializable, ITlDeserializable<Birthday> {
+        public static readonly byte[] Identifier = [6,30,142,108,];
+        public int Day {get;set;}
+        public int Month {get;set;}
+        public int? Year {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Year is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(Day.TlSerialize());
+            bytes.AddRange(Month.TlSerialize());
+            if(Year is not null) bytes.AddRange(Year.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static Birthday TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var dayLocal =  des.As<int>().Read();
+            var monthLocal =  des.As<int>().Read();
+            var yearLocal = (flagsLocal & 1) is 0 ? default : des.As<int>().Read() ;
+            return new() {
+            Day = dayLocal,
+            Month = monthLocal,
+            Year = yearLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BotBusinessConnectionNs {
+    public class BotBusinessConnection : BotBusinessConnectionBase, ITlSerializable, ITlDeserializable<BotBusinessConnection> {
+        public static readonly byte[] Identifier = [180,51,100,137,];
+        public bool CanReply {get;set;}
+        public bool Disabled {get;set;}
+        public required string ConnectionId {get;set;}
+        public long UserId {get;set;}
+        public int DcId {get;set;}
+        public int Date {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(ConnectionId.TlSerialize());
+            bytes.AddRange(UserId.TlSerialize());
+            bytes.AddRange(DcId.TlSerialize());
+            bytes.AddRange(Date.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BotBusinessConnection TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var canReplyLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var disabledLocal = (flagsLocal & 2) is 0 ? default : true ;
+            var connectionIdLocal =  des.As<string>().Read();
+            var userIdLocal =  des.As<long>().Read();
+            var dcIdLocal =  des.As<int>().Read();
+            var dateLocal =  des.As<int>().Read();
+            return new() {
+            CanReply = canReplyLocal,
+            Disabled = disabledLocal,
+            ConnectionId = connectionIdLocal,
+            UserId = userIdLocal,
+            DcId = dcIdLocal,
+            Date = dateLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.InputBusinessIntroNs {
+    public class InputBusinessIntro : InputBusinessIntroBase, ITlSerializable, ITlDeserializable<InputBusinessIntro> {
+        public static readonly byte[] Identifier = [205,105,196,9,];
+        public required string Title {get;set;}
+        public required string Description {get;set;}
+        public InputDocumentBase? Sticker {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Sticker is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(Title.TlSerialize());
+            bytes.AddRange(Description.TlSerialize());
+            if(Sticker is not null) bytes.AddRange(Sticker.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputBusinessIntro TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var titleLocal =  des.As<string>().Read();
+            var descriptionLocal =  des.As<string>().Read();
+            var stickerLocal = (flagsLocal & 1) is 0 ? default : InputDocumentBase.TlDeserialize(des) ;
+            return new() {
+            Title = titleLocal,
+            Description = descriptionLocal,
+            Sticker = stickerLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BusinessIntroNs {
+    public class BusinessIntro : BusinessIntroBase, ITlSerializable, ITlDeserializable<BusinessIntro> {
+        public static readonly byte[] Identifier = [109,6,10,90,];
+        public required string Title {get;set;}
+        public required string Description {get;set;}
+        public DocumentBase? Sticker {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Sticker is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(Title.TlSerialize());
+            bytes.AddRange(Description.TlSerialize());
+            if(Sticker is not null) bytes.AddRange(Sticker.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BusinessIntro TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var titleLocal =  des.As<string>().Read();
+            var descriptionLocal =  des.As<string>().Read();
+            var stickerLocal = (flagsLocal & 1) is 0 ? default : DocumentBase.TlDeserialize(des) ;
+            return new() {
+            Title = titleLocal,
+            Description = descriptionLocal,
+            Sticker = stickerLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.MessagesMyStickersNs {
+    public class MessagesMyStickers : MessagesMyStickersBase, ITlSerializable, ITlDeserializable<MessagesMyStickers> {
+        public static readonly byte[] Identifier = [157,98,255,250,];
+        public int Count {get;set;}
+        public required List<StickerSetCoveredBase> Sets {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Count.TlSerialize());
+            bytes.AddRange(Sets.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MessagesMyStickers TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var countLocal =  des.As<int>().Read();
+            var setsLocal =  des.Read<StickerSetCoveredBase>();
+            return new() {
+            Count = countLocal,
+            Sets = setsLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.InputCollectibleNs {
+    public class InputCollectibleUsername : InputCollectibleBase, ITlSerializable, ITlDeserializable<InputCollectibleUsername> {
+        public static readonly byte[] Identifier = [169,96,148,227,];
+        public required string Username {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Username.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputCollectibleUsername TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var usernameLocal =  des.As<string>().Read();
+            return new() {
+            Username = usernameLocal,
+            };
+        }
+    }
+    public class InputCollectiblePhone : InputCollectibleBase, ITlSerializable, ITlDeserializable<InputCollectiblePhone> {
+        public static readonly byte[] Identifier = [164,20,226,162,];
+        public required string Phone {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Phone.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputCollectiblePhone TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var phoneLocal =  des.As<string>().Read();
+            return new() {
+            Phone = phoneLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.FragmentCollectibleInfoNs {
+    public class FragmentCollectibleInfo : FragmentCollectibleInfoBase, ITlSerializable, ITlDeserializable<FragmentCollectibleInfo> {
+        public static readonly byte[] Identifier = [145,255,189,110,];
+        public int PurchaseDate {get;set;}
+        public required string Currency {get;set;}
+        public long Amount {get;set;}
+        public required string CryptoCurrency {get;set;}
+        public long CryptoAmount {get;set;}
+        public required string Url {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(PurchaseDate.TlSerialize());
+            bytes.AddRange(Currency.TlSerialize());
+            bytes.AddRange(Amount.TlSerialize());
+            bytes.AddRange(CryptoCurrency.TlSerialize());
+            bytes.AddRange(CryptoAmount.TlSerialize());
+            bytes.AddRange(Url.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static FragmentCollectibleInfo TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var purchaseDateLocal =  des.As<int>().Read();
+            var currencyLocal =  des.As<string>().Read();
+            var amountLocal =  des.As<long>().Read();
+            var cryptoCurrencyLocal =  des.As<string>().Read();
+            var cryptoAmountLocal =  des.As<long>().Read();
+            var urlLocal =  des.As<string>().Read();
+            return new() {
+            PurchaseDate = purchaseDateLocal,
+            Currency = currencyLocal,
+            Amount = amountLocal,
+            CryptoCurrency = cryptoCurrencyLocal,
+            CryptoAmount = cryptoAmountLocal,
+            Url = urlLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.InputBusinessBotRecipientsNs {
+    public class InputBusinessBotRecipients : InputBusinessBotRecipientsBase, ITlSerializable, ITlDeserializable<InputBusinessBotRecipients> {
+        public static readonly byte[] Identifier = [30,146,229,196,];
+        public bool ExistingChats {get;set;}
+        public bool NewChats {get;set;}
+        public bool Contacts {get;set;}
+        public bool NonContacts {get;set;}
+        public bool ExcludeSelected {get;set;}
+        public List<InputUserBase>? Users {get;set;}
+        public List<InputUserBase>? ExcludeUsers {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Users is not null ? 16 : 0) | (ExcludeUsers is not null ? 64 : 0) ).TlSerialize());
+            if(Users is not null) bytes.AddRange(Users.TlSerialize());
+            if(ExcludeUsers is not null) bytes.AddRange(ExcludeUsers.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputBusinessBotRecipients TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var existingChatsLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var newChatsLocal = (flagsLocal & 2) is 0 ? default : true ;
+            var contactsLocal = (flagsLocal & 4) is 0 ? default : true ;
+            var nonContactsLocal = (flagsLocal & 8) is 0 ? default : true ;
+            var excludeSelectedLocal = (flagsLocal & 32) is 0 ? default : true ;
+            var usersLocal = (flagsLocal & 16) is 0 ? default : des.Read<InputUserBase>() ;
+            var excludeUsersLocal = (flagsLocal & 64) is 0 ? default : des.Read<InputUserBase>() ;
+            return new() {
+            ExistingChats = existingChatsLocal,
+            NewChats = newChatsLocal,
+            Contacts = contactsLocal,
+            NonContacts = nonContactsLocal,
+            ExcludeSelected = excludeSelectedLocal,
+            Users = usersLocal,
+            ExcludeUsers = excludeUsersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BusinessBotRecipientsNs {
+    public class BusinessBotRecipients : BusinessBotRecipientsBase, ITlSerializable, ITlDeserializable<BusinessBotRecipients> {
+        public static readonly byte[] Identifier = [115,243,140,184,];
+        public bool ExistingChats {get;set;}
+        public bool NewChats {get;set;}
+        public bool Contacts {get;set;}
+        public bool NonContacts {get;set;}
+        public bool ExcludeSelected {get;set;}
+        public List<long>? Users {get;set;}
+        public List<long>? ExcludeUsers {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Users is not null ? 16 : 0) | (ExcludeUsers is not null ? 64 : 0) ).TlSerialize());
+            if(Users is not null) bytes.AddRange(Users.TlSerialize());
+            if(ExcludeUsers is not null) bytes.AddRange(ExcludeUsers.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BusinessBotRecipients TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var existingChatsLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var newChatsLocal = (flagsLocal & 2) is 0 ? default : true ;
+            var contactsLocal = (flagsLocal & 4) is 0 ? default : true ;
+            var nonContactsLocal = (flagsLocal & 8) is 0 ? default : true ;
+            var excludeSelectedLocal = (flagsLocal & 32) is 0 ? default : true ;
+            var usersLocal = (flagsLocal & 16) is 0 ? default : des.ReadNumbers<long>() ;
+            var excludeUsersLocal = (flagsLocal & 64) is 0 ? default : des.ReadNumbers<long>() ;
+            return new() {
+            ExistingChats = existingChatsLocal,
+            NewChats = newChatsLocal,
+            Contacts = contactsLocal,
+            NonContacts = nonContactsLocal,
+            ExcludeSelected = excludeSelectedLocal,
+            Users = usersLocal,
+            ExcludeUsers = excludeUsersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.ContactBirthdayNs {
+    public class ContactBirthday : ContactBirthdayBase, ITlSerializable, ITlDeserializable<ContactBirthday> {
+        public static readonly byte[] Identifier = [51,135,153,29,];
+        public long ContactId {get;set;}
+        public required BirthdayBase Birthday {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(ContactId.TlSerialize());
+            bytes.AddRange(Birthday.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static ContactBirthday TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var contactIdLocal =  des.As<long>().Read();
+            var birthdayLocal =  BirthdayBase.TlDeserialize(des);
+            return new() {
+            ContactId = contactIdLocal,
+            Birthday = birthdayLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.ContactsContactBirthdaysNs {
+    public class ContactsContactBirthdays : ContactsContactBirthdaysBase, ITlSerializable, ITlDeserializable<ContactsContactBirthdays> {
+        public static readonly byte[] Identifier = [13,243,79,17,];
+        public required List<ContactBirthdayBase> Contacts {get;set;}
+        public required List<UserBase> Users {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Contacts.TlSerialize());
+            bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static ContactsContactBirthdays TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var contactsLocal =  des.Read<ContactBirthdayBase>();
+            var usersLocal =  des.Read<UserBase>();
+            return new() {
+            Contacts = contactsLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.MissingInviteeNs {
+    public class MissingInvitee : MissingInviteeBase, ITlSerializable, ITlDeserializable<MissingInvitee> {
+        public static readonly byte[] Identifier = [36,146,140,98,];
+        public bool PremiumWouldAllowInvite {get;set;}
+        public bool PremiumRequiredForPm {get;set;}
+        public long UserId {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(UserId.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MissingInvitee TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var premiumWouldAllowInviteLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var premiumRequiredForPmLocal = (flagsLocal & 2) is 0 ? default : true ;
+            var userIdLocal =  des.As<long>().Read();
+            return new() {
+            PremiumWouldAllowInvite = premiumWouldAllowInviteLocal,
+            PremiumRequiredForPm = premiumRequiredForPmLocal,
+            UserId = userIdLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.MessagesInvitedUsersNs {
+    public class MessagesInvitedUsers : MessagesInvitedUsersBase, ITlSerializable, ITlDeserializable<MessagesInvitedUsers> {
+        public static readonly byte[] Identifier = [166,239,93,127,];
+        public required UpdatesBase Updates {get;set;}
+        public required List<MissingInviteeBase> MissingInvitees {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Updates.TlSerialize());
+            bytes.AddRange(MissingInvitees.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MessagesInvitedUsers TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var updatesLocal =  UpdatesBase.TlDeserialize(des);
+            var missingInviteesLocal =  des.Read<MissingInviteeBase>();
+            return new() {
+            Updates = updatesLocal,
+            MissingInvitees = missingInviteesLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.InputBusinessChatLinkNs {
+    public class InputBusinessChatLink : InputBusinessChatLinkBase, ITlSerializable, ITlDeserializable<InputBusinessChatLink> {
+        public static readonly byte[] Identifier = [167,159,103,17,];
+        public required string Message {get;set;}
+        public List<MessageEntityBase>? Entities {get;set;}
+        public string? Title {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Entities is not null ? 1 : 0) | (Title is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange(Message.TlSerialize());
+            if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
+            if(Title is not null) bytes.AddRange(Title.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputBusinessChatLink TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var messageLocal =  des.As<string>().Read();
+            var entitiesLocal = (flagsLocal & 1) is 0 ? default : des.Read<MessageEntityBase>() ;
+            var titleLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
+            return new() {
+            Message = messageLocal,
+            Entities = entitiesLocal,
+            Title = titleLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BusinessChatLinkNs {
+    public class BusinessChatLink : BusinessChatLinkBase, ITlSerializable, ITlDeserializable<BusinessChatLink> {
+        public static readonly byte[] Identifier = [111,102,174,180,];
+        public required string Link {get;set;}
+        public required string Message {get;set;}
+        public List<MessageEntityBase>? Entities {get;set;}
+        public string? Title {get;set;}
+        public int Views {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Entities is not null ? 1 : 0) | (Title is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange(Link.TlSerialize());
+            bytes.AddRange(Message.TlSerialize());
+            if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
+            if(Title is not null) bytes.AddRange(Title.TlSerialize());
+            bytes.AddRange(Views.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BusinessChatLink TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var linkLocal =  des.As<string>().Read();
+            var messageLocal =  des.As<string>().Read();
+            var entitiesLocal = (flagsLocal & 1) is 0 ? default : des.Read<MessageEntityBase>() ;
+            var titleLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
+            var viewsLocal =  des.As<int>().Read();
+            return new() {
+            Link = linkLocal,
+            Message = messageLocal,
+            Entities = entitiesLocal,
+            Title = titleLocal,
+            Views = viewsLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.AccountBusinessChatLinksNs {
+    public class AccountBusinessChatLinks : AccountBusinessChatLinksBase, ITlSerializable, ITlDeserializable<AccountBusinessChatLinks> {
+        public static readonly byte[] Identifier = [209,162,67,236,];
+        public required List<BusinessChatLinkBase> Links {get;set;}
+        public required List<ChatBase> Chats {get;set;}
+        public required List<UserBase> Users {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Links.TlSerialize());
+            bytes.AddRange(Chats.TlSerialize());
+            bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static AccountBusinessChatLinks TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var linksLocal =  des.Read<BusinessChatLinkBase>();
+            var chatsLocal =  des.Read<ChatBase>();
+            var usersLocal =  des.Read<UserBase>();
+            return new() {
+            Links = linksLocal,
+            Chats = chatsLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.AccountResolvedBusinessChatLinksNs {
+    public class AccountResolvedBusinessChatLinks : AccountResolvedBusinessChatLinksBase, ITlSerializable, ITlDeserializable<AccountResolvedBusinessChatLinks> {
+        public static readonly byte[] Identifier = [33,175,35,154,];
+        public required PeerBase Peer {get;set;}
+        public required string Message {get;set;}
+        public List<MessageEntityBase>? Entities {get;set;}
+        public required List<ChatBase> Chats {get;set;}
+        public required List<UserBase> Users {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Entities is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(Peer.TlSerialize());
+            bytes.AddRange(Message.TlSerialize());
+            if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
+            bytes.AddRange(Chats.TlSerialize());
+            bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static AccountResolvedBusinessChatLinks TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var peerLocal =  PeerBase.TlDeserialize(des);
+            var messageLocal =  des.As<string>().Read();
+            var entitiesLocal = (flagsLocal & 1) is 0 ? default : des.Read<MessageEntityBase>() ;
+            var chatsLocal =  des.Read<ChatBase>();
+            var usersLocal =  des.Read<UserBase>();
+            return new() {
+            Peer = peerLocal,
+            Message = messageLocal,
+            Entities = entitiesLocal,
+            Chats = chatsLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.RequestedPeerNs {
+    public class RequestedPeerUser : RequestedPeerBase, ITlSerializable, ITlDeserializable<RequestedPeerUser> {
+        public static readonly byte[] Identifier = [106,244,47,214,];
+        public long UserId {get;set;}
+        public string? FirstName {get;set;}
+        public string? LastName {get;set;}
+        public string? Username {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (FirstName is not null ? 1 : 0) | (LastName is not null ? 1 : 0) | (Username is not null ? 2 : 0) | (Photo is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange(UserId.TlSerialize());
+            if(FirstName is not null) bytes.AddRange(FirstName.TlSerialize());
+            if(LastName is not null) bytes.AddRange(LastName.TlSerialize());
+            if(Username is not null) bytes.AddRange(Username.TlSerialize());
+            if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static RequestedPeerUser TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var userIdLocal =  des.As<long>().Read();
+            var firstNameLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            var lastNameLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            var usernameLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
+            var photoLocal = (flagsLocal & 4) is 0 ? default : PhotoBase.TlDeserialize(des) ;
+            return new() {
+            UserId = userIdLocal,
+            FirstName = firstNameLocal,
+            LastName = lastNameLocal,
+            Username = usernameLocal,
+            Photo = photoLocal,
+            };
+        }
+    }
+    public class RequestedPeerChat : RequestedPeerBase, ITlSerializable, ITlDeserializable<RequestedPeerChat> {
+        public static readonly byte[] Identifier = [79,84,7,115,];
+        public long ChatId {get;set;}
+        public string? Title {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Title is not null ? 1 : 0) | (Photo is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange(ChatId.TlSerialize());
+            if(Title is not null) bytes.AddRange(Title.TlSerialize());
+            if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static RequestedPeerChat TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var chatIdLocal =  des.As<long>().Read();
+            var titleLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            var photoLocal = (flagsLocal & 4) is 0 ? default : PhotoBase.TlDeserialize(des) ;
+            return new() {
+            ChatId = chatIdLocal,
+            Title = titleLocal,
+            Photo = photoLocal,
+            };
+        }
+    }
+    public class RequestedPeerChannel : RequestedPeerBase, ITlSerializable, ITlDeserializable<RequestedPeerChannel> {
+        public static readonly byte[] Identifier = [228,3,164,139,];
+        public long ChannelId {get;set;}
+        public string? Title {get;set;}
+        public string? Username {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Title is not null ? 1 : 0) | (Username is not null ? 2 : 0) | (Photo is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange(ChannelId.TlSerialize());
+            if(Title is not null) bytes.AddRange(Title.TlSerialize());
+            if(Username is not null) bytes.AddRange(Username.TlSerialize());
+            if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static RequestedPeerChannel TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var channelIdLocal =  des.As<long>().Read();
+            var titleLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            var usernameLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
+            var photoLocal = (flagsLocal & 4) is 0 ? default : PhotoBase.TlDeserialize(des) ;
+            return new() {
+            ChannelId = channelIdLocal,
+            Title = titleLocal,
+            Username = usernameLocal,
+            Photo = photoLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.SponsoredMessageReportOptionNs {
+    public class SponsoredMessageReportOption : SponsoredMessageReportOptionBase, ITlSerializable, ITlDeserializable<SponsoredMessageReportOption> {
+        public static readonly byte[] Identifier = [80,49,13,67,];
+        public required string Text {get;set;}
+        public required byte[] Option {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Text.TlSerialize());
+            bytes.AddRange(Option.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static SponsoredMessageReportOption TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var textLocal =  des.As<string>().Read();
+            var optionLocal =  des.As<byte[]>().Read();
+            return new() {
+            Text = textLocal,
+            Option = optionLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.ChannelsSponsoredMessageReportResultNs {
+    public class ChannelsSponsoredMessageReportResultChooseOption : ChannelsSponsoredMessageReportResultBase, ITlSerializable, ITlDeserializable<ChannelsSponsoredMessageReportResultChooseOption> {
+        public static readonly byte[] Identifier = [66,158,111,132,];
+        public required string Title {get;set;}
+        public required List<SponsoredMessageReportOptionBase> Options {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Title.TlSerialize());
+            bytes.AddRange(Options.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static ChannelsSponsoredMessageReportResultChooseOption TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var titleLocal =  des.As<string>().Read();
+            var optionsLocal =  des.Read<SponsoredMessageReportOptionBase>();
+            return new() {
+            Title = titleLocal,
+            Options = optionsLocal,
+            };
+        }
+    }
+    public class ChannelsSponsoredMessageReportResultAdsHidden : ChannelsSponsoredMessageReportResultBase, ITlSerializable, ITlDeserializable<ChannelsSponsoredMessageReportResultAdsHidden> {
+        public static readonly byte[] Identifier = [47,207,59,62,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static ChannelsSponsoredMessageReportResultAdsHidden TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class ChannelsSponsoredMessageReportResultReported : ChannelsSponsoredMessageReportResultBase, ITlSerializable, ITlDeserializable<ChannelsSponsoredMessageReportResultReported> {
+        public static readonly byte[] Identifier = [73,136,121,173,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static ChannelsSponsoredMessageReportResultReported TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.StatsBroadcastRevenueStatsNs {
+    public class StatsBroadcastRevenueStats : StatsBroadcastRevenueStatsBase, ITlSerializable, ITlDeserializable<StatsBroadcastRevenueStats> {
+        public static readonly byte[] Identifier = [151,226,7,84,];
+        public required StatsGraphBase TopHoursGraph {get;set;}
+        public required StatsGraphBase RevenueGraph {get;set;}
+        public required BroadcastRevenueBalancesBase Balances {get;set;}
+        public double UsdRate {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(TopHoursGraph.TlSerialize());
+            bytes.AddRange(RevenueGraph.TlSerialize());
+            bytes.AddRange(Balances.TlSerialize());
+            bytes.AddRange(UsdRate.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static StatsBroadcastRevenueStats TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var topHoursGraphLocal =  StatsGraphBase.TlDeserialize(des);
+            var revenueGraphLocal =  StatsGraphBase.TlDeserialize(des);
+            var balancesLocal =  BroadcastRevenueBalancesBase.TlDeserialize(des);
+            var usdRateLocal =  des.As<double>().Read();
+            return new() {
+            TopHoursGraph = topHoursGraphLocal,
+            RevenueGraph = revenueGraphLocal,
+            Balances = balancesLocal,
+            UsdRate = usdRateLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.StatsBroadcastRevenueWithdrawalUrlNs {
+    public class StatsBroadcastRevenueWithdrawalUrl : StatsBroadcastRevenueWithdrawalUrlBase, ITlSerializable, ITlDeserializable<StatsBroadcastRevenueWithdrawalUrl> {
+        public static readonly byte[] Identifier = [55,151,101,236,];
+        public required string Url {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Url.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static StatsBroadcastRevenueWithdrawalUrl TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var urlLocal =  des.As<string>().Read();
+            return new() {
+            Url = urlLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BroadcastRevenueTransactionNs {
+    public class BroadcastRevenueTransactionProceeds : BroadcastRevenueTransactionBase, ITlSerializable, ITlDeserializable<BroadcastRevenueTransactionProceeds> {
+        public static readonly byte[] Identifier = [196,44,126,85,];
+        public int FromDate {get;set;}
+        public int ToDate {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Amount.TlSerialize());
+            bytes.AddRange(FromDate.TlSerialize());
+            bytes.AddRange(ToDate.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BroadcastRevenueTransactionProceeds TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var amountLocal =  des.As<long>().Read();
+            var fromDateLocal =  des.As<int>().Read();
+            var toDateLocal =  des.As<int>().Read();
+            return new() {
+            Amount = amountLocal,
+            FromDate = fromDateLocal,
+            ToDate = toDateLocal,
+            };
+        }
+    }
+    public class BroadcastRevenueTransactionWithdrawal : BroadcastRevenueTransactionBase, ITlSerializable, ITlDeserializable<BroadcastRevenueTransactionWithdrawal> {
+        public static readonly byte[] Identifier = [120,9,89,90,];
+        public bool Pending {get;set;}
+        public bool Failed {get;set;}
+        public int Date {get;set;}
+        public required string Provider {get;set;}
+        public int? TransactionDate {get;set;}
+        public string? TransactionUrl {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (TransactionDate is not null ? 2 : 0) | (TransactionUrl is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange(Amount.TlSerialize());
+            bytes.AddRange(Date.TlSerialize());
+            bytes.AddRange(Provider.TlSerialize());
+            if(TransactionDate is not null) bytes.AddRange(TransactionDate.TlSerialize());
+            if(TransactionUrl is not null) bytes.AddRange(TransactionUrl.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BroadcastRevenueTransactionWithdrawal TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var pendingLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var failedLocal = (flagsLocal & 4) is 0 ? default : true ;
+            var amountLocal =  des.As<long>().Read();
+            var dateLocal =  des.As<int>().Read();
+            var providerLocal =  des.As<string>().Read();
+            var transactionDateLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
+            var transactionUrlLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
+            return new() {
+            Pending = pendingLocal,
+            Failed = failedLocal,
+            Amount = amountLocal,
+            Date = dateLocal,
+            Provider = providerLocal,
+            TransactionDate = transactionDateLocal,
+            TransactionUrl = transactionUrlLocal,
+            };
+        }
+    }
+    public class BroadcastRevenueTransactionRefund : BroadcastRevenueTransactionBase, ITlSerializable, ITlDeserializable<BroadcastRevenueTransactionRefund> {
+        public static readonly byte[] Identifier = [46,13,211,66,];
+        public int Date {get;set;}
+        public required string Provider {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Amount.TlSerialize());
+            bytes.AddRange(Date.TlSerialize());
+            bytes.AddRange(Provider.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BroadcastRevenueTransactionRefund TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var amountLocal =  des.As<long>().Read();
+            var dateLocal =  des.As<int>().Read();
+            var providerLocal =  des.As<string>().Read();
+            return new() {
+            Amount = amountLocal,
+            Date = dateLocal,
+            Provider = providerLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.StatsBroadcastRevenueTransactionsNs {
+    public class StatsBroadcastRevenueTransactions : StatsBroadcastRevenueTransactionsBase, ITlSerializable, ITlDeserializable<StatsBroadcastRevenueTransactions> {
+        public static readonly byte[] Identifier = [102,132,21,135,];
+        public int Count {get;set;}
+        public required List<BroadcastRevenueTransactionBase> Transactions {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Count.TlSerialize());
+            bytes.AddRange(Transactions.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static StatsBroadcastRevenueTransactions TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var countLocal =  des.As<int>().Read();
+            var transactionsLocal =  des.Read<BroadcastRevenueTransactionBase>();
+            return new() {
+            Count = countLocal,
+            Transactions = transactionsLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.ReactionNotificationsFromNs {
+    public class ReactionNotificationsFromContacts : ReactionNotificationsFromBase, ITlSerializable, ITlDeserializable<ReactionNotificationsFromContacts> {
+        public static readonly byte[] Identifier = [26,166,195,186,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static ReactionNotificationsFromContacts TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class ReactionNotificationsFromAll : ReactionNotificationsFromBase, ITlSerializable, ITlDeserializable<ReactionNotificationsFromAll> {
+        public static readonly byte[] Identifier = [160,34,158,75,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static ReactionNotificationsFromAll TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.ReactionsNotifySettingsNs {
+    public class ReactionsNotifySettings : ReactionsNotifySettingsBase, ITlSerializable, ITlDeserializable<ReactionsNotifySettings> {
+        public static readonly byte[] Identifier = [112,73,227,86,];
+        public ReactionNotificationsFromBase? MessagesNotifyFrom {get;set;}
+        public ReactionNotificationsFromBase? StoriesNotifyFrom {get;set;}
+        public required NotificationSoundBase Sound {get;set;}
+        public bool ShowPreviews {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (MessagesNotifyFrom is not null ? 1 : 0) | (StoriesNotifyFrom is not null ? 2 : 0) ).TlSerialize());
+            if(MessagesNotifyFrom is not null) bytes.AddRange(MessagesNotifyFrom.TlSerialize());
+            if(StoriesNotifyFrom is not null) bytes.AddRange(StoriesNotifyFrom.TlSerialize());
+            bytes.AddRange(Sound.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static ReactionsNotifySettings TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var messagesNotifyFromLocal = (flagsLocal & 1) is 0 ? default : ReactionNotificationsFromBase.TlDeserialize(des) ;
+            var storiesNotifyFromLocal = (flagsLocal & 2) is 0 ? default : ReactionNotificationsFromBase.TlDeserialize(des) ;
+            var soundLocal =  NotificationSoundBase.TlDeserialize(des);
+            var showPreviewsLocal =  des.As<bool>().Read();
+            return new() {
+            MessagesNotifyFrom = messagesNotifyFromLocal,
+            StoriesNotifyFrom = storiesNotifyFromLocal,
+            Sound = soundLocal,
+            ShowPreviews = showPreviewsLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.BroadcastRevenueBalancesNs {
+    public class BroadcastRevenueBalances : BroadcastRevenueBalancesBase, ITlSerializable, ITlDeserializable<BroadcastRevenueBalances> {
+        public static readonly byte[] Identifier = [198,241,56,132,];
+        public long CurrentBalance {get;set;}
+        public long AvailableBalance {get;set;}
+        public long OverallRevenue {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(CurrentBalance.TlSerialize());
+            bytes.AddRange(AvailableBalance.TlSerialize());
+            bytes.AddRange(OverallRevenue.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static BroadcastRevenueBalances TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var currentBalanceLocal =  des.As<long>().Read();
+            var availableBalanceLocal =  des.As<long>().Read();
+            var overallRevenueLocal =  des.As<long>().Read();
+            return new() {
+            CurrentBalance = currentBalanceLocal,
+            AvailableBalance = availableBalanceLocal,
+            OverallRevenue = overallRevenueLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.AvailableEffectNs {
+    public class AvailableEffect : AvailableEffectBase, ITlSerializable, ITlDeserializable<AvailableEffect> {
+        public static readonly byte[] Identifier = [126,226,195,147,];
+        public bool PremiumRequired {get;set;}
+        public long Id {get;set;}
+        public required string Emoticon {get;set;}
+        public long? StaticIconId {get;set;}
+        public long EffectStickerId {get;set;}
+        public long? EffectAnimationId {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (StaticIconId is not null ? 1 : 0) | (EffectAnimationId is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange(Id.TlSerialize());
+            bytes.AddRange(Emoticon.TlSerialize());
+            if(StaticIconId is not null) bytes.AddRange(StaticIconId.TlSerialize());
+            bytes.AddRange(EffectStickerId.TlSerialize());
+            if(EffectAnimationId is not null) bytes.AddRange(EffectAnimationId.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static AvailableEffect TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var premiumRequiredLocal = (flagsLocal & 4) is 0 ? default : true ;
+            var idLocal =  des.As<long>().Read();
+            var emoticonLocal =  des.As<string>().Read();
+            var staticIconIdLocal = (flagsLocal & 1) is 0 ? default : des.As<long>().Read() ;
+            var effectStickerIdLocal =  des.As<long>().Read();
+            var effectAnimationIdLocal = (flagsLocal & 2) is 0 ? default : des.As<long>().Read() ;
+            return new() {
+            PremiumRequired = premiumRequiredLocal,
+            Id = idLocal,
+            Emoticon = emoticonLocal,
+            StaticIconId = staticIconIdLocal,
+            EffectStickerId = effectStickerIdLocal,
+            EffectAnimationId = effectAnimationIdLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.MessagesAvailableEffectsNs {
+    public class MessagesAvailableEffectsNotModified : MessagesAvailableEffectsBase, ITlSerializable, ITlDeserializable<MessagesAvailableEffectsNotModified> {
+        public static readonly byte[] Identifier = [91,154,237,209,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static MessagesAvailableEffectsNotModified TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class MessagesAvailableEffects : MessagesAvailableEffectsBase, ITlSerializable, ITlDeserializable<MessagesAvailableEffects> {
+        public static readonly byte[] Identifier = [110,97,219,189,];
+        public int Hash {get;set;}
+        public required List<AvailableEffectBase> Effects {get;set;}
+        public required List<DocumentBase> Documents {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Hash.TlSerialize());
+            bytes.AddRange(Effects.TlSerialize());
+            bytes.AddRange(Documents.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static MessagesAvailableEffects TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var hashLocal =  des.As<int>().Read();
+            var effectsLocal =  des.Read<AvailableEffectBase>();
+            var documentsLocal =  des.Read<DocumentBase>();
+            return new() {
+            Hash = hashLocal,
+            Effects = effectsLocal,
+            Documents = documentsLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.FactCheckNs {
+    public class FactCheck : FactCheckBase, ITlSerializable, ITlDeserializable<FactCheck> {
+        public static readonly byte[] Identifier = [207,252,155,184,];
+        public bool NeedCheck {get;set;}
+        public string? Country {get;set;}
+        public TextWithEntitiesBase? Text {get;set;}
+        public long Hash {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Country is not null ? 2 : 0) | (Text is not null ? 2 : 0) ).TlSerialize());
+            if(Country is not null) bytes.AddRange(Country.TlSerialize());
+            if(Text is not null) bytes.AddRange(Text.TlSerialize());
+            bytes.AddRange(Hash.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static FactCheck TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var needCheckLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var countryLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
+            var textLocal = (flagsLocal & 2) is 0 ? default : TextWithEntitiesBase.TlDeserialize(des) ;
+            var hashLocal =  des.As<long>().Read();
+            return new() {
+            NeedCheck = needCheckLocal,
+            Country = countryLocal,
+            Text = textLocal,
+            Hash = hashLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.StarsTransactionPeerNs {
+    public class StarsTransactionPeerUnsupported : StarsTransactionPeerBase, ITlSerializable, ITlDeserializable<StarsTransactionPeerUnsupported> {
+        public static readonly byte[] Identifier = [228,191,242,149,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static StarsTransactionPeerUnsupported TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class StarsTransactionPeerAppStore : StarsTransactionPeerBase, ITlSerializable, ITlDeserializable<StarsTransactionPeerAppStore> {
+        public static readonly byte[] Identifier = [117,179,87,180,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static StarsTransactionPeerAppStore TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class StarsTransactionPeerPlayMarket : StarsTransactionPeerBase, ITlSerializable, ITlDeserializable<StarsTransactionPeerPlayMarket> {
+        public static readonly byte[] Identifier = [11,10,86,123,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static StarsTransactionPeerPlayMarket TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class StarsTransactionPeerPremiumBot : StarsTransactionPeerBase, ITlSerializable, ITlDeserializable<StarsTransactionPeerPremiumBot> {
+        public static readonly byte[] Identifier = [248,186,13,37,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static StarsTransactionPeerPremiumBot TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class StarsTransactionPeerFragment : StarsTransactionPeerBase, ITlSerializable, ITlDeserializable<StarsTransactionPeerFragment> {
+        public static readonly byte[] Identifier = [2,217,47,233,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static StarsTransactionPeerFragment TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+    public class StarsTransactionPeer : StarsTransactionPeerBase, ITlSerializable, ITlDeserializable<StarsTransactionPeer> {
+        public static readonly byte[] Identifier = [93,161,13,216,];
+        public required PeerBase Peer {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Peer.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static StarsTransactionPeer TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var peerLocal =  PeerBase.TlDeserialize(des);
+            return new() {
+            Peer = peerLocal,
+            };
+        }
+    }
+    public class StarsTransactionPeerAds : StarsTransactionPeerBase, ITlSerializable, ITlDeserializable<StarsTransactionPeerAds> {
+        public static readonly byte[] Identifier = [18,40,104,96,];
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            return bytes.ToArray();
+        }
+
+        public new static StarsTransactionPeerAds TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            return new() {
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.StarsTopupOptionNs {
+    public class StarsTopupOption : StarsTopupOptionBase, ITlSerializable, ITlDeserializable<StarsTopupOption> {
+        public static readonly byte[] Identifier = [192,21,217,11,];
+        public bool Extended {get;set;}
+        public long Stars {get;set;}
+        public string? StoreProduct {get;set;}
+        public required string Currency {get;set;}
+        public long Amount {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (StoreProduct is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(Stars.TlSerialize());
+            if(StoreProduct is not null) bytes.AddRange(StoreProduct.TlSerialize());
+            bytes.AddRange(Currency.TlSerialize());
+            bytes.AddRange(Amount.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static StarsTopupOption TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var extendedLocal = (flagsLocal & 2) is 0 ? default : true ;
+            var starsLocal =  des.As<long>().Read();
+            var storeProductLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            var currencyLocal =  des.As<string>().Read();
+            var amountLocal =  des.As<long>().Read();
+            return new() {
+            Extended = extendedLocal,
+            Stars = starsLocal,
+            StoreProduct = storeProductLocal,
+            Currency = currencyLocal,
+            Amount = amountLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.StarsTransactionNs {
+    public class StarsTransaction : StarsTransactionBase, ITlSerializable, ITlDeserializable<StarsTransaction> {
+        public static readonly byte[] Identifier = [143,65,181,45,];
+        public bool Refund {get;set;}
+        public bool Pending {get;set;}
+        public bool Failed {get;set;}
+        public required string Id {get;set;}
+        public long Stars {get;set;}
+        public int Date {get;set;}
+        public required StarsTransactionPeerBase Peer {get;set;}
+        public string? Title {get;set;}
+        public string? Description {get;set;}
+        public WebDocumentBase? Photo {get;set;}
+        public int? TransactionDate {get;set;}
+        public string? TransactionUrl {get;set;}
+        public byte[]? BotPayload {get;set;}
+        public int? MsgId {get;set;}
+        public List<MessageMediaBase>? ExtendedMedia {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (Title is not null ? 1 : 0) | (Description is not null ? 2 : 0) | (Photo is not null ? 4 : 0) | (TransactionDate is not null ? 32 : 0) | (TransactionUrl is not null ? 32 : 0) | (BotPayload is not null ? 128 : 0) | (MsgId is not null ? 256 : 0) | (ExtendedMedia is not null ? 512 : 0) ).TlSerialize());
+            bytes.AddRange(Id.TlSerialize());
+            bytes.AddRange(Stars.TlSerialize());
+            bytes.AddRange(Date.TlSerialize());
+            bytes.AddRange(Peer.TlSerialize());
+            if(Title is not null) bytes.AddRange(Title.TlSerialize());
+            if(Description is not null) bytes.AddRange(Description.TlSerialize());
+            if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
+            if(TransactionDate is not null) bytes.AddRange(TransactionDate.TlSerialize());
+            if(TransactionUrl is not null) bytes.AddRange(TransactionUrl.TlSerialize());
+            if(BotPayload is not null) bytes.AddRange(BotPayload.TlSerialize());
+            if(MsgId is not null) bytes.AddRange(MsgId.TlSerialize());
+            if(ExtendedMedia is not null) bytes.AddRange(ExtendedMedia.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static StarsTransaction TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var refundLocal = (flagsLocal & 8) is 0 ? default : true ;
+            var pendingLocal = (flagsLocal & 16) is 0 ? default : true ;
+            var failedLocal = (flagsLocal & 64) is 0 ? default : true ;
+            var idLocal =  des.As<string>().Read();
+            var starsLocal =  des.As<long>().Read();
+            var dateLocal =  des.As<int>().Read();
+            var peerLocal =  StarsTransactionPeerBase.TlDeserialize(des);
+            var titleLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            var descriptionLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
+            var photoLocal = (flagsLocal & 4) is 0 ? default : WebDocumentBase.TlDeserialize(des) ;
+            var transactionDateLocal = (flagsLocal & 32) is 0 ? default : des.As<int>().Read() ;
+            var transactionUrlLocal = (flagsLocal & 32) is 0 ? default : des.As<string>().Read() ;
+            var botPayloadLocal = (flagsLocal & 128) is 0 ? default : des.As<byte[]>().Read() ;
+            var msgIdLocal = (flagsLocal & 256) is 0 ? default : des.As<int>().Read() ;
+            var extendedMediaLocal = (flagsLocal & 512) is 0 ? default : des.Read<MessageMediaBase>() ;
+            return new() {
+            Refund = refundLocal,
+            Pending = pendingLocal,
+            Failed = failedLocal,
+            Id = idLocal,
+            Stars = starsLocal,
+            Date = dateLocal,
+            Peer = peerLocal,
+            Title = titleLocal,
+            Description = descriptionLocal,
+            Photo = photoLocal,
+            TransactionDate = transactionDateLocal,
+            TransactionUrl = transactionUrlLocal,
+            BotPayload = botPayloadLocal,
+            MsgId = msgIdLocal,
+            ExtendedMedia = extendedMediaLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.PaymentsStarsStatusNs {
+    public class PaymentsStarsStatus : PaymentsStarsStatusBase, ITlSerializable, ITlDeserializable<PaymentsStarsStatus> {
+        public static readonly byte[] Identifier = [96,238,244,140,];
+        public long Balance {get;set;}
+        public required List<StarsTransactionBase> History {get;set;}
+        public string? NextOffset {get;set;}
+        public required List<ChatBase> Chats {get;set;}
+        public required List<UserBase> Users {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (NextOffset is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(Balance.TlSerialize());
+            bytes.AddRange(History.TlSerialize());
+            if(NextOffset is not null) bytes.AddRange(NextOffset.TlSerialize());
+            bytes.AddRange(Chats.TlSerialize());
+            bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static PaymentsStarsStatus TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var balanceLocal =  des.As<long>().Read();
+            var historyLocal =  des.Read<StarsTransactionBase>();
+            var nextOffsetLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            var chatsLocal =  des.Read<ChatBase>();
+            var usersLocal =  des.Read<UserBase>();
+            return new() {
+            Balance = balanceLocal,
+            History = historyLocal,
+            NextOffset = nextOffsetLocal,
+            Chats = chatsLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.FoundStoryNs {
+    public class FoundStory : FoundStoryBase, ITlSerializable, ITlDeserializable<FoundStory> {
+        public static readonly byte[] Identifier = [192,203,122,232,];
+        public required PeerBase Peer {get;set;}
+        public required StoryItemBase Story {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Peer.TlSerialize());
+            bytes.AddRange(Story.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static FoundStory TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var peerLocal =  PeerBase.TlDeserialize(des);
+            var storyLocal =  StoryItemBase.TlDeserialize(des);
+            return new() {
+            Peer = peerLocal,
+            Story = storyLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.StoriesFoundStoriesNs {
+    public class StoriesFoundStories : StoriesFoundStoriesBase, ITlSerializable, ITlDeserializable<StoriesFoundStories> {
+        public static readonly byte[] Identifier = [55,119,222,226,];
+        public int Count {get;set;}
+        public required List<FoundStoryBase> Stories {get;set;}
+        public string? NextOffset {get;set;}
+        public required List<ChatBase> Chats {get;set;}
+        public required List<UserBase> Users {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (NextOffset is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange(Count.TlSerialize());
+            bytes.AddRange(Stories.TlSerialize());
+            if(NextOffset is not null) bytes.AddRange(NextOffset.TlSerialize());
+            bytes.AddRange(Chats.TlSerialize());
+            bytes.AddRange(Users.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static StoriesFoundStories TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var countLocal =  des.As<int>().Read();
+            var storiesLocal =  des.Read<FoundStoryBase>();
+            var nextOffsetLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            var chatsLocal =  des.Read<ChatBase>();
+            var usersLocal =  des.Read<UserBase>();
+            return new() {
+            Count = countLocal,
+            Stories = storiesLocal,
+            NextOffset = nextOffsetLocal,
+            Chats = chatsLocal,
+            Users = usersLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.GeoPointAddressNs {
+    public class GeoPointAddress : GeoPointAddressBase, ITlSerializable, ITlDeserializable<GeoPointAddress> {
+        public static readonly byte[] Identifier = [147,93,76,222,];
+        public required string CountryIso2 {get;set;}
+        public string? State {get;set;}
+        public string? City {get;set;}
+        public string? Street {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (State is not null ? 1 : 0) | (City is not null ? 2 : 0) | (Street is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange(CountryIso2.TlSerialize());
+            if(State is not null) bytes.AddRange(State.TlSerialize());
+            if(City is not null) bytes.AddRange(City.TlSerialize());
+            if(Street is not null) bytes.AddRange(Street.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static GeoPointAddress TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var countryIso2Local =  des.As<string>().Read();
+            var stateLocal = (flagsLocal & 1) is 0 ? default : des.As<string>().Read() ;
+            var cityLocal = (flagsLocal & 2) is 0 ? default : des.As<string>().Read() ;
+            var streetLocal = (flagsLocal & 4) is 0 ? default : des.As<string>().Read() ;
+            return new() {
+            CountryIso2 = countryIso2Local,
+            State = stateLocal,
+            City = cityLocal,
+            Street = streetLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.StarsRevenueStatusNs {
+    public class StarsRevenueStatus : StarsRevenueStatusBase, ITlSerializable, ITlDeserializable<StarsRevenueStatus> {
+        public static readonly byte[] Identifier = [70,41,52,121,];
+        public bool WithdrawalEnabled {get;set;}
+        public long CurrentBalance {get;set;}
+        public long AvailableBalance {get;set;}
+        public long OverallRevenue {get;set;}
+        public int? NextWithdrawalAt {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange((0 | (NextWithdrawalAt is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange(CurrentBalance.TlSerialize());
+            bytes.AddRange(AvailableBalance.TlSerialize());
+            bytes.AddRange(OverallRevenue.TlSerialize());
+            if(NextWithdrawalAt is not null) bytes.AddRange(NextWithdrawalAt.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static StarsRevenueStatus TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var withdrawalEnabledLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var currentBalanceLocal =  des.As<long>().Read();
+            var availableBalanceLocal =  des.As<long>().Read();
+            var overallRevenueLocal =  des.As<long>().Read();
+            var nextWithdrawalAtLocal = (flagsLocal & 2) is 0 ? default : des.As<int>().Read() ;
+            return new() {
+            WithdrawalEnabled = withdrawalEnabledLocal,
+            CurrentBalance = currentBalanceLocal,
+            AvailableBalance = availableBalanceLocal,
+            OverallRevenue = overallRevenueLocal,
+            NextWithdrawalAt = nextWithdrawalAtLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.PaymentsStarsRevenueStatsNs {
+    public class PaymentsStarsRevenueStats : PaymentsStarsRevenueStatsBase, ITlSerializable, ITlDeserializable<PaymentsStarsRevenueStats> {
+        public static readonly byte[] Identifier = [59,183,43,201,];
+        public required StatsGraphBase RevenueGraph {get;set;}
+        public required StarsRevenueStatusBase Status {get;set;}
+        public double UsdRate {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(RevenueGraph.TlSerialize());
+            bytes.AddRange(Status.TlSerialize());
+            bytes.AddRange(UsdRate.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static PaymentsStarsRevenueStats TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var revenueGraphLocal =  StatsGraphBase.TlDeserialize(des);
+            var statusLocal =  StarsRevenueStatusBase.TlDeserialize(des);
+            var usdRateLocal =  des.As<double>().Read();
+            return new() {
+            RevenueGraph = revenueGraphLocal,
+            Status = statusLocal,
+            UsdRate = usdRateLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.PaymentsStarsRevenueWithdrawalUrlNs {
+    public class PaymentsStarsRevenueWithdrawalUrl : PaymentsStarsRevenueWithdrawalUrlBase, ITlSerializable, ITlDeserializable<PaymentsStarsRevenueWithdrawalUrl> {
+        public static readonly byte[] Identifier = [183,128,171,29,];
+        public required string Url {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Url.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static PaymentsStarsRevenueWithdrawalUrl TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var urlLocal =  des.As<string>().Read();
+            return new() {
+            Url = urlLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.PaymentsStarsRevenueAdsAccountUrlNs {
+    public class PaymentsStarsRevenueAdsAccountUrl : PaymentsStarsRevenueAdsAccountUrlBase, ITlSerializable, ITlDeserializable<PaymentsStarsRevenueAdsAccountUrl> {
+        public static readonly byte[] Identifier = [33,127,78,57,];
+        public required string Url {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(Url.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static PaymentsStarsRevenueAdsAccountUrl TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var urlLocal =  des.As<string>().Read();
+            return new() {
+            Url = urlLocal,
+            };
+        }
+    }
+
+
+}
+namespace SharpGram.Tl.Constructors.InputStarsTransactionNs {
+    public class InputStarsTransaction : InputStarsTransactionBase, ITlSerializable, ITlDeserializable<InputStarsTransaction> {
+        public static readonly byte[] Identifier = [209,230,106,32,];
+        public bool Refund {get;set;}
+        public required string Id {get;set;}
+        public new byte[] TlSerialize() {
+            List<byte> bytes = [];
+            bytes.AddRange(Identifier);
+            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange(Id.TlSerialize());
+            return bytes.ToArray();
+        }
+
+        public new static InputStarsTransaction TlDeserialize(Deserializer des) {
+            ArgumentOutOfRangeException.ThrowIfNotEqual(des.IsCorrectId(Identifier), true);
+            var flagsLocal =  des.As<int>().Read();
+            var refundLocal = (flagsLocal & 1) is 0 ? default : true ;
+            var idLocal =  des.As<string>().Read();
+            return new() {
+            Refund = refundLocal,
+            Id = idLocal,
             };
         }
     }
