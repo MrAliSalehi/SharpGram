@@ -48,6 +48,7 @@ public enum RpcErrorTypes
     SessionPasswordNeeded,
     Migrate,
     Flood,
+    AuthKeyUnregistered,
     None
 }
 
@@ -76,6 +77,7 @@ internal static class EnumExt
             "SMS_CODE_CREATE_FAILED"            => RpcErrorTypes.SmsCodeCreateFailed,
             "INPUT_REQUEST_TOO_LONG"            => RpcErrorTypes.InputRequestTooLong,
             "SESSION_PASSWORD_NEEDED"           => RpcErrorTypes.SessionPasswordNeeded,
+            "AUTH_KEY_UNREGISTERED"             => RpcErrorTypes.AuthKeyUnregistered,
             _                                   => RpcErrorTypes.None
         };
     }

@@ -85,6 +85,13 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
         Session.Config = (Config)init; //the only possibility
 
+        if (Session.User is null)
+        {
+            var tryGetMe = await InvokeAsync(new UsersGetUsers { Id = [new InputUserSelf()] });
+            if (tryGetMe.TryPickT0(out var me, out _))
+                Session.User = me.InnerList.OfType<User>().First();
+        }
+
         return true; //might be a "false" case in the future ?
     }
 
@@ -104,14 +111,14 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
     public async Task<OneOf<Success, ErrorBase>> AuthorizeAsync(bool force = false)
     {
         if (Session.User != null && !force) return new LoginError(LoginErrorType.UserAlreadyLoggedIn);
-        if (Session.ClientOptions.IsLocalServer)
-            Session.Phone = "9996621234"; //DC 2 with 4 random numbers (1234)
+        var isTestEnv = Session.ClientOptions.IsLocalServer || Session.ClientOptions.IsTest;
+        if (isTestEnv)
+            Session.Phone = "999662" + Random.Shared.Next(1000, 9999); //99966 + DC 2 + 4 random numbers
 
         var attempts = 1;
         resendCode:
         attempts++;
 
-        var re = await InvokeAsync(new UsersGetUsers{Id = [new InputUserSelf()]});
 
         var send = await InvokeAsync(new AuthSendCode
         {
@@ -138,8 +145,13 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
         {
             if (_codeReader is null)
                 return new LoginError(LoginErrorType.ChannelIsNotCreated);
-            await _codeReader.WaitToReadAsync(cts.Token);
-            var code = await _codeReader.ReadAsync(ct);
+
+            var code = LoginCode.TestCode;
+            if (!isTestEnv) // if this is not test env ask the user for code
+            {
+                await _codeReader.WaitToReadAsync(cts.Token);
+                code = await _codeReader.ReadAsync(ct);
+            }
 
             var trySignin = await InvokeAsync(new AuthSignIn
             {
@@ -158,8 +170,11 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
                         await Task.Delay(TimeSpan.FromSeconds(1), cts.Token);
 
-                        //safe to hard cast since it's the only constructor
-                        var token = await InvokeUnsafeAsync(new AccountGetPassword());
+
+                        var tryToken = await InvokeAsync(new AccountGetPassword());
+                        if (tryToken.TryPickT1(out var e, out var token))
+                            return e;
+
                         var trySrp = PasswordAuth.GenerateSrp(token, Session.TwoFactorPassword);
                         if (trySrp.TryPickT1(out var srpErr, out var srp))
                             return srpErr;
@@ -171,6 +186,7 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
                         if (authBase is AuthAuthorizationSignUpRequired)
                             return new LoginError(LoginErrorType.SignupRequired);
 
+                        //safe to hard cast since it's the only constructor
                         Session.User = (User)((AuthAuthorization)authBase).User;
                         Console.WriteLine($"logged in as ({Session.User.Id})[{Session.User.Phone}].");
                         return StaticData.Success;
@@ -204,17 +220,18 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
         return StaticData.Success;
     }
-    /// <summary>
-    /// this is a bad practice and should not be used, currently it's needed for some places
-    /// </summary>
-    public async Task<TRet> InvokeUnsafeAsync<TRet>(TlFunction<TRet> func) where TRet : ITlDeserializable<TRet> => (await InvokeAsync(func)).AsT0;
-
-    public async Task<OneOf<TRet, ErrorBase>> InvokeAsync<TRet>(TlFunction<TRet> func) where TRet : ITlDeserializable<TRet>
+    public async Task<OneOf<TRet, ErrorBase>> InvokeAsync<TRet>(TlFunction<TRet> request) where TRet : ITlDeserializable<TRet>
     {
-        var withLayer = new InvokeWithLayer<TRet> { Query = func };
+        TlFunction<TRet> func;
+
+        if (Session.ConnectionSession.IgnoreUpdates && request is not InitConnection<TRet>)
+            func = new InvokeWithoutUpdates<TRet> { Query = request };
+        else
+            func = new InvokeWithLayer<TRet> { Query = request };
+
         //TODO reconnection policy
         retry:
-        var reader = _requestManager.Push(withLayer.TlSerialize().ToArray());
+        var reader = _requestManager.Push(func.TlSerialize().ToArray());
         await reader.WaitToReadAsync(ct);
         var response = await reader.ReadAsync(ct);
 
@@ -239,7 +256,7 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
             var dcToMigrate = rpcErr.Value;
             if (Session.Config.ThisDc == dcToMigrate)
                 throw new FatalException("the requested dc and currentDc are the same, this should not happen");
-            var targetDc = Session.Config.DcOptions.OfType<DcOption>().FirstOrDefault(p => p.Id == dcToMigrate);
+            var targetDc = Session.Config.DcOptions.OfType<DcOption>().FirstOrDefault(p => p.Id == dcToMigrate && !p.Ipv6);
             Session.ConnectionSession.Reset();
             Session.CurrentDc = targetDc;
             //request manager will be recreated automatically

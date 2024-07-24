@@ -54,11 +54,11 @@ public sealed class TelegramSession
     }
     public DcOption GetDc()
     {
-        //if (CurrentDc is not null)
+        if (CurrentDc is not null)
             return CurrentDc;
 
-        //var dcId = ClientOptions.IsLocalServer ? 3 : ClientOptions.IsTest ? 2 : 1;
-       // return StaticData.DcList.FirstOrDefault(p => p.Key == dcId && !p.Value.Ipv6).Value;
+        var dcId = ClientOptions.IsLocalServer ? 3 : ClientOptions.IsTest ? 2 : 1;
+       return StaticData.DcList.FirstOrDefault(p => p.Key == dcId && !p.Value.Ipv6).Value;
     }
 }
 

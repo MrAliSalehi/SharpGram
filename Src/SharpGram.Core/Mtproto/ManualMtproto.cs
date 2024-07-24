@@ -14,10 +14,12 @@ using Int128 = SharpGram.Core.Models.Types.Int128;
 
 
 namespace SharpGram.Tl.Mtproto;
+
 public static class ManualMtproto
 {
-    public const int TlLayer = 172;
+    public const int TlLayer = 184;
 }
+
 public partial class ResPq
 {
     public required byte[] P { get; init; }
@@ -295,10 +297,9 @@ public sealed class RpcResult : RpcResultBase
     }
 }
 
-
 public sealed class InitConnection<TRet> : TlFunction<TRet> where TRet : ITlDeserializable<TRet>
 {
-    public static readonly byte[] Identifier = [169,94,205,193];
+    public static readonly byte[] Identifier = [169, 94, 205, 193];
 
     public int ApiId { get; set; }
     public string DeviceModel { get; set; } = default!;
@@ -315,7 +316,7 @@ public sealed class InitConnection<TRet> : TlFunction<TRet> where TRet : ITlDese
     {
         List<byte> bytes = [];
         bytes.AddRange(Identifier);
-        bytes.AddRange((0 | (Proxy is not null ? 1 : 0) | (Params is not null ? 2 : 0) ).TlSerialize());
+        bytes.AddRange((0 | (Proxy is not null ? 1 : 0) | (Params is not null ? 2 : 0)).TlSerialize());
         bytes.AddRange(ApiId.TlSerialize());
         bytes.AddRange(DeviceModel.TlSerialize());
         bytes.AddRange(SystemVersion.TlSerialize());
@@ -329,16 +330,30 @@ public sealed class InitConnection<TRet> : TlFunction<TRet> where TRet : ITlDese
         return bytes.ToArray();
     }
 }
-public sealed class InvokeWithLayer<TRet> : TlFunction<TRet> where TRet: ITlDeserializable<TRet>
+
+public sealed class InvokeWithLayer<TRet> : TlFunction<TRet> where TRet : ITlDeserializable<TRet>
 {
-    private static readonly byte[] Identifier = [13,13,155,218];
-    public int Layer { get => ManualMtproto.TlLayer; }
+    private static readonly byte[] Identifier = [13, 13, 155, 218];
+    public int Layer = ManualMtproto.TlLayer;
     public TlFunction<TRet> Query { get; set; } = default!;
     public override byte[] TlSerialize()
     {
         List<byte> bytes = [];
         bytes.AddRange(Identifier);
         bytes.AddRange(Layer.TlSerialize());
+        bytes.AddRange(Query.TlSerialize());
+        return bytes.ToArray();
+    }
+}
+
+public sealed class InvokeWithoutUpdates<TRet> : TlFunction<TRet> where TRet : ITlDeserializable<TRet>
+{
+    private static readonly byte[] Identifier = [183, 89, 148, 191];
+    public TlFunction<TRet> Query { get; set; } = default!;
+    public override byte[] TlSerialize()
+    {
+        List<byte> bytes = [];
+        bytes.AddRange(Identifier);
         bytes.AddRange(Query.TlSerialize());
         return bytes.ToArray();
     }
