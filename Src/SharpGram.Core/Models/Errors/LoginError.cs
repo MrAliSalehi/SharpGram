@@ -18,5 +18,6 @@ public enum LoginErrorType
     InvalidP,
     TwoFactorPasswordMissing,
     ChannelIsNotCreated,
-    UserAlreadyLoggedIn
+    UserAlreadyLoggedIn,
+    InvalidKdf
 }

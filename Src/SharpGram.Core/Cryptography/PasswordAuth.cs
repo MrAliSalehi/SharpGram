@@ -18,7 +18,7 @@ public static class PasswordAuth
         var pwd = (AccountPassword)passwordBase;
 
         if (pwd.CurrentAlgo is not PasswordKdfAlgoSHA256SHA256PBKDF2HMACSHA512iter100000SHA256ModPow a)
-            throw new FatalException("Invalid KDF");
+            return new LoginError(LoginErrorType.InvalidKdf);
         var (p, gInt, salt1, salt2) = (a.P, a.G, a.Salt1, a.Salt2);
         var bigP = new BigInteger(p, true, true);
 
@@ -90,25 +90,23 @@ public static class PasswordAuth
         var m1 = Helpers.HashArrays(xorPg, SHA256.HashData(salt1), SHA256.HashData(salt2), gA, gB, kA);
         return new InputCheckPasswordSRP { A = gA, M1 = m1, SrpId = pwd.SrpId!.Value };
     }
-    private static bool IsValidG(int g, BigInteger p)
+    /// <summary>
+    ///  https://core.telegram.org/api/srp
+    /// g generates a cyclic subgroup of prime order (p-1)/2, i.e. is a quadratic residue mod p.
+    /// Since g is always equal to 2, 3, 4, 5, 6 or 7, this is easily done using quadratic reciprocity law,
+    /// yielding a simple condition on p mod 4g -- namely, p mod 8 = 7 for g = 2; p mod 3 = 2 for g = 3;
+    /// no extra condition for g = 4; p mod 5 = 1 or 4 for g = 5; p mod 24 = 19 or 23 for g = 6; and p mod 7 = 3, 5 or 6 for g = 7.
+    /// </summary>
+    public static bool IsValidG(int g, BigInteger p) => g switch
     {
-        /* https://core.telegram.org/api/srp
-         * g generates a cyclic subgroup of prime order (p-1)/2, i.e. is a quadratic residue mod p.
-         * Since g is always equal to 2, 3, 4, 5, 6 or 7, this is easily done using quadratic reciprocity law,
-         * yielding a simple condition on p mod 4g -- namely, p mod 8 = 7 for g = 2; p mod 3 = 2 for g = 3;
-         * no extra condition for g = 4; p mod 5 = 1 or 4 for g = 5; p mod 24 = 19 or 23 for g = 6; and p mod 7 = 3, 5 or 6 for g = 7.
-         */
-        return g switch
-        {
-            2 => p % 8 == 7,
-            3 => p % 3 == 2,
-            4 => true,
-            5 => (int)(p % 5) is 1 or 4,
-            6 => (int)(p % 24) is 19 or 23,
-            7 => (int)(p % 7) is 3 or 5 or 6,
-            _ => false
-        };
-    }
+        2 => p % 8 == 7,
+        3 => p % 3 == 2,
+        4 => true,
+        5 => (int)(p % 5) is 1 or 4,
+        6 => (int)(p % 24) is 19 or 23,
+        7 => (int)(p % 7) is 3 or 5 or 6,
+        _ => false
+    };
     internal static bool IsSafePrime(BigInteger number)
     {
         if (number <= 2)
