@@ -11,7 +11,7 @@ public sealed class RpcError : ErrorBase
     public static RpcError FromBytes(byte[] result)
     {
         var raw = Encoding.UTF8.GetString(result[8..]);
-        var msg = new string(raw.ToCharArray().Where(p => char.IsLetter(p) || p == '_').ToArray()).Trim();
+        var msg = new string(raw.ToCharArray().Where(p => char.IsLetter(p) || p == '_' || char.IsDigit(p)).ToArray()).Trim();
         var rp = new RpcError { RawMessage = msg };
         if (msg.Contains("PHONE_MIGRATE_") || msg.Contains("NETWORK_MIGRATE_") || msg.Contains("FLOOD_WAIT_"))
         {

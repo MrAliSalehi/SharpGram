@@ -13,7 +13,7 @@ namespace SharpGram.Core.Cryptography;
 
 public static class PasswordAuth
 {
-    public static OneOf<InputCheckPasswordSRPBase, LoginError> GenerateSrp(AccountPasswordBase passwordBase, string password)
+    public static OneOf<InputCheckPasswordSRPBase, LoginError> GenerateSrp(AccountPasswordBase passwordBase, byte[] password)
     {
         var pwd = (AccountPassword)passwordBase;
 
@@ -37,10 +37,10 @@ public static class PasswordAuth
         var bigG = new BigInteger(gInt);
         var bigA = new BigInteger(pwd.SecureRandom, true, true);
         var bigGb = new BigInteger(pwd.SrpB, true, true);
-        var pwdBytes = Encoding.UTF8.GetBytes(password);
+
 
         //PH1(password, salt1, salt2) := SH(SH(password, salt1), salt2)
-        var ph1 = Helpers.HashArrays(salt2, Helpers.HashArrays(salt1, pwdBytes, salt1), salt2);
+        var ph1 = Helpers.HashArrays(salt2, Helpers.HashArrays(salt1, password, salt1), salt2);
 
         //PH2(password, salt1, salt2) := SH(pbkdf2(sha512, ph1, salt1, 100000), salt2)
         var pbk = Rfc2898DeriveBytes.Pbkdf2(ph1, salt1, 100000, HashAlgorithmName.SHA512, 64);
@@ -88,7 +88,7 @@ public static class PasswordAuth
 
         //M1 := H(xorPg | H(salt1) | H(salt2) | g_a | g_b | k_a)
         var m1 = Helpers.HashArrays(xorPg, SHA256.HashData(salt1), SHA256.HashData(salt2), gA, gB, kA);
-        return new InputCheckPasswordSRP { A = gA, M1 = m1, SrpId = pwd.SrpId!.Value };
+        return new InputCheckPasswordSRP { A = gA, M1 = m1, SrpId = pwd.SrpId ?? 0 };
     }
     /// <summary>
     ///  https://core.telegram.org/api/srp
@@ -107,40 +107,64 @@ public static class PasswordAuth
         7 => (int)(p % 7) is 3 or 5 or 6,
         _ => false
     };
-    internal static bool IsSafePrime(BigInteger number)
+    public static bool IsSafePrime(BigInteger number)
     {
-        if (number <= 2)
-            return false;
-
-        var primes = GetPrimeNumbers(number);
-
-        if (!primes.Contains(number))
-            return false;
-
-        var q = (number - 1) / 2;
-        return primes.Contains(q);
+        return IsPrime(number) && IsPrime((number - 1) / 2);
     }
     /// <summary>
-    /// this function is an implementation of sieve of Eratosthenes algorithm to find all prime numbers
+    /// Miller-Rabin primality test taken from https://stackoverflow.com/questions/33895713/millerrabin-primality-test-in-c-sharp
     /// </summary>
-    /// <param name="limit">return all prime numbers up to the limit</param>
-    private static List<BigInteger> GetPrimeNumbers(BigInteger limit)
+    private static bool IsPrime(this BigInteger source)
     {
-        var isPrime = new bool[(int)(limit + 1)];
-        for (BigInteger i = 2; i <= limit; i++)
-            isPrime[(int)i] = true;
+        if (source == 2 || source == 3)
+            return true;
+        if (source < 2 || source % 2 == 0)
+            return false;
 
-        for (BigInteger p = 2; p * p <= limit; p++)
-            if (isPrime[(int)p])
-                for (var i = p * p; i <= limit; i += p)
-                    isPrime[(int)i] = false;
+        var d = source - 1;
+        var s = 0;
 
+        while (d % 2 == 0)
+        {
+            d /= 2;
+            s += 1;
+        }
 
-        var primes = new List<BigInteger>();
-        for (BigInteger i = 2; i <= limit; i++)
-            if (isPrime[(int)i])
-                primes.Add(i);
+        for (var i = 0; i < 50; i++)
+        {
+            var a = RandomBigInteger(2, source - 2);
+            var x = BigInteger.ModPow(a, d, source);
+            if (x == 1 || x == source - 1)
+                continue;
 
-        return primes;
+            for (var r = 1; r < s; r++)
+            {
+                x = BigInteger.ModPow(x, 2, source);
+                if (x == 1)
+                    return false;
+                if (x == source - 1)
+                    break;
+            }
+
+            if (x != source - 1)
+                return false;
+        }
+
+        return true;
+    }
+    private static BigInteger RandomBigInteger(BigInteger minValue, BigInteger maxValue)
+    {
+        var length = (maxValue - minValue + 1).ToByteArray().Length;
+        var buffer = new byte[length];
+
+        BigInteger result;
+        do
+        {
+            RandomNumberGenerator.Fill(buffer);
+            buffer[^1] &= 0x7F;
+            result = new BigInteger(buffer);
+        } while (result < minValue || result >= maxValue);
+
+        return result;
     }
 }

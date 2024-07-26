@@ -5,8 +5,8 @@ namespace SharpGram.Core.Cryptography;
 // copied and modified under Apache License 2.
 
 /// <summary>
-/// this class along with its unit tests was taken from <a href="https://github.com/mIwr/AesIge">AesIge Package</a> thanks to it's Author.
-/// the only reason it wasn't added as a nuget package was that it needed some modifications so it was copied manually.
+/// this class along with its unit tests was taken from <a href="https://github.com/mIwr/AesIge">AesIge Package</a> thanks to its Author.
+/// the only reason it wasn't added as a nuget package was that it needed some modifications, so it was copied manually.
 /// </summary>
 public sealed class Ige
 {

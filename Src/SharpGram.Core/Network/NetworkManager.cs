@@ -21,11 +21,11 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
 {
     //TODO this is stupid as well, ig the whole "Event" thing needs to be changed...
     private static readonly object Sender = "NetworkManager";
-    private TcpConnection<AuthConnection, T> Tcp { get; } = tcpConnection.IntoAuthenticated(comm);
+    private TcpConnection<AuthConnection, T> Tcp { get; set; } = tcpConnection.IntoAuthenticated(comm);
     private BlockingCollection<Request> RequestQueue { get; set; } = [];
     private readonly ConcurrentDictionary<MsgId, ResultChannel> _resultChannels = [];
     private readonly SemaphoreSlim _pushLock = new(1);
-    private readonly Task[] _handles = new Task[3];
+    private readonly Task?[] _handles = new Task[3];
     public event EventHandler<List<OneOf<UpdatesBase, UpdateGap>>>? UpdateEvent;
     public async Task RunAsync(CancellationToken ct)
     {
@@ -35,8 +35,7 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
         _handles[0] = Task.Run(async () => await RunListenerAsync(ct), ct);
         _handles[1] = Task.Run(async () => await RunSenderAsync(ct), ct);
         //don't need the extra noise while debugging
-#if RELEASE
-
+#if DEBUG
         _handles[2] = Task.Run(async () => await AckHandlerAsync(ct), ct);
         await SaltHandlerAsync(ct);
         await PingHandlerAsync(ct);
@@ -76,7 +75,6 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
                 {
                     Console.WriteLine($"[{id}] Returning Result.");
                     await channel.Writer.WriteAsync(result, ct);
-                    channel.Writer.Complete();
                     _resultChannels.Remove(id, out _);
                 }
             }
@@ -174,7 +172,9 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
         tcpConnection.Dispose();
         Tcp.Dispose();
         RequestQueue.Dispose();
-        foreach (var handle in _handles) handle.Dispose();
+        foreach (var handle in _handles)
+            if (handle is { IsCompleted: true })
+                handle.Dispose();
         Console.WriteLine("NetworkManager Disposed");
     }
 }
