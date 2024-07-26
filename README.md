@@ -15,11 +15,8 @@ the main focus of this library is creating automated tasks and user bots.**
 ***
 ## Use
 
-this project is not on nuget yet, because its not ready to be used in the real world, yet.
-
-you can clone the project and build it yourself.
-
-it will be released on nuget in the future.
+this project is on [nuget](https://www.nuget.org/packages/SharpGram/), BUT it's not ready to be used in the real world, yet.
+and there are no documentations yet.
 
 ## Todo list
 

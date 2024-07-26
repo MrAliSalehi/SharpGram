@@ -218,7 +218,7 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
         //TODO reconnection policy
         retry:
-        Console.WriteLine($"sending {request.GetType()}");
+
         var reader = _requestManager.Push(func.TlSerialize().ToArray());
         await reader.WaitToReadAsync(ct);
         var response = await reader.ReadAsync(ct);

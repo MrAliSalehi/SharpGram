@@ -9,3 +9,4 @@ riderModule.iml
 *.idea
 .idea/
 devSecrets.json
+*.ignore
