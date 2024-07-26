@@ -58,19 +58,21 @@ public static class TypeParser
         {
             if (param.IsFlag)
             {
-                var pm = parameters.Where(p => p is { IsFlag: false, IsNullable: true }).ToList();
+                var pm = parameters.Where(p => p is { IsFlag: false, IsNullable: true } || p.Type is "bool").ToList();
                 if (pm.Count == 0)
                 {
                     b.AppendLine($"{space}    bytes.AddRange(0.TlSerialize());");
-                }else
+                }
+                else
                 {
                     b.Append($"{space}    bytes.AddRange((0 |");
                     foreach (var (param2, i) in pm.Select((v, i) => (v, i)))
                     {
                         b.Append($" ({param2.Name}{(param2.IsNullable ? " is not null" : "")} ? {param2.FlagOffset} : 0) ");
-                        if (i +1 < pm.Count)
+                        if (i + 1 < pm.Count)
                             b.Append('|');
                     }
+
                     b.AppendLine(").TlSerialize());");
                 }
 
