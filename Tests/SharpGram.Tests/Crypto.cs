@@ -73,6 +73,12 @@ public class Crypto
 
         Console.WriteLine();
     }
+    [Test]
+    public void Rand()
+    {
+        var r = new RealRandom();
+        r.Random(1,43503).Should().BeGreaterThan(1).And.BeLessThan(43503);
+    }
 }
 
 class FakeGenerator : IRandomGenerator

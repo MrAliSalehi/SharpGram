@@ -14,7 +14,7 @@ if (File.Exists("testSession"))
 
 var tlSession = TelegramSession.LoadOrCreate(d);
 tlSession.ClientOptions.IsLocalServer = false;
-tlSession.ClientOptions.IsTest = true;
+tlSession.ClientOptions.IsTest = false;
 tlSession.ConnectionSession.IgnoreUpdates = true;
 
 tlSession.ApiId = apiId;
