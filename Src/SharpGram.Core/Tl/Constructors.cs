@@ -339,7 +339,7 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Stickers is not null ? 1 : 0) | (TtlSeconds is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Spoiler ? 4 : 0) | (Stickers is not null ? 1 : 0) | (TtlSeconds is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(File.TlSerialize());
             if(Stickers is not null) bytes.AddRange(Stickers.TlSerialize());
             if(TtlSeconds is not null) bytes.AddRange(TtlSeconds.TlSerialize());
@@ -369,7 +369,7 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (TtlSeconds is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Spoiler ? 2 : 0) | (TtlSeconds is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(TtlSeconds is not null) bytes.AddRange(TtlSeconds.TlSerialize());
             return bytes.ToArray();
@@ -450,7 +450,7 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Thumb is not null ? 4 : 0) | (Stickers is not null ? 1 : 0) | (TtlSeconds is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (NosoundVideo ? 8 : 0) | (ForceFile ? 16 : 0) | (Spoiler ? 32 : 0) | (Thumb is not null ? 4 : 0) | (Stickers is not null ? 1 : 0) | (TtlSeconds is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(File.TlSerialize());
             if(Thumb is not null) bytes.AddRange(Thumb.TlSerialize());
             bytes.AddRange(MimeType.TlSerialize());
@@ -494,7 +494,7 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (TtlSeconds is not null ? 1 : 0) | (Query is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Spoiler ? 4 : 0) | (TtlSeconds is not null ? 1 : 0) | (Query is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(TtlSeconds is not null) bytes.AddRange(TtlSeconds.TlSerialize());
             if(Query is not null) bytes.AddRange(Query.TlSerialize());
@@ -562,7 +562,7 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (TtlSeconds is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Spoiler ? 2 : 0) | (TtlSeconds is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Url.TlSerialize());
             if(TtlSeconds is not null) bytes.AddRange(TtlSeconds.TlSerialize());
             return bytes.ToArray();
@@ -589,7 +589,7 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (TtlSeconds is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Spoiler ? 2 : 0) | (TtlSeconds is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Url.TlSerialize());
             if(TtlSeconds is not null) bytes.AddRange(TtlSeconds.TlSerialize());
             return bytes.ToArray();
@@ -688,7 +688,7 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Heading is not null ? 4 : 0) | (Period is not null ? 2 : 0) | (ProximityNotificationRadius is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Stopped ? 1 : 0) | (Heading is not null ? 4 : 0) | (Period is not null ? 2 : 0) | (ProximityNotificationRadius is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(GeoPoint.TlSerialize());
             if(Heading is not null) bytes.AddRange(Heading.TlSerialize());
             if(Period is not null) bytes.AddRange(Period.TlSerialize());
@@ -794,7 +794,7 @@ namespace SharpGram.Tl.Constructors.InputMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ForceLargeMedia ? 1 : 0) | (ForceSmallMedia ? 2 : 0) | (Optional ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Url.TlSerialize());
             return bytes.ToArray();
         }
@@ -1192,7 +1192,7 @@ namespace SharpGram.Tl.Constructors.InputFileLocationNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Big ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(PhotoId.TlSerialize());
             return bytes.ToArray();
@@ -1537,8 +1537,8 @@ namespace SharpGram.Tl.Constructors.UserNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (AccessHash is not null ? 1 : 0) | (FirstName is not null ? 2 : 0) | (LastName is not null ? 4 : 0) | (Username is not null ? 8 : 0) | (Phone is not null ? 16 : 0) | (Photo is not null ? 32 : 0) | (Status is not null ? 64 : 0) | (BotInfoVersion is not null ? 16384 : 0) | (RestrictionReason is not null ? 262144 : 0) | (BotInlinePlaceholder is not null ? 524288 : 0) | (LangCode is not null ? 4194304 : 0) | (EmojiStatus is not null ? 1073741824 : 0) | (Usernames is not null ? 1 : 0) | (StoriesMaxId is not null ? 32 : 0) | (Color is not null ? 256 : 0) | (ProfileColor is not null ? 512 : 0) ).TlSerialize());
-            bytes.AddRange((0 | (AccessHash is not null ? 1 : 0) | (FirstName is not null ? 2 : 0) | (LastName is not null ? 4 : 0) | (Username is not null ? 8 : 0) | (Phone is not null ? 16 : 0) | (Photo is not null ? 32 : 0) | (Status is not null ? 64 : 0) | (BotInfoVersion is not null ? 16384 : 0) | (RestrictionReason is not null ? 262144 : 0) | (BotInlinePlaceholder is not null ? 524288 : 0) | (LangCode is not null ? 4194304 : 0) | (EmojiStatus is not null ? 1073741824 : 0) | (Usernames is not null ? 1 : 0) | (StoriesMaxId is not null ? 32 : 0) | (Color is not null ? 256 : 0) | (ProfileColor is not null ? 512 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Self ? 1024 : 0) | (Contact ? 2048 : 0) | (MutualContact ? 4096 : 0) | (Deleted ? 8192 : 0) | (Bot ? 16384 : 0) | (BotChatHistory ? 32768 : 0) | (BotNochats ? 65536 : 0) | (Verified ? 131072 : 0) | (Restricted ? 262144 : 0) | (Min ? 1048576 : 0) | (BotInlineGeo ? 2097152 : 0) | (Support ? 8388608 : 0) | (Scam ? 16777216 : 0) | (ApplyMinPhoto ? 33554432 : 0) | (Fake ? 67108864 : 0) | (BotAttachMenu ? 134217728 : 0) | (Premium ? 268435456 : 0) | (AttachMenuEnabled ? 536870912 : 0) | (BotCanEdit ? 2 : 0) | (CloseFriend ? 4 : 0) | (StoriesHidden ? 8 : 0) | (StoriesUnavailable ? 16 : 0) | (ContactRequirePremium ? 1024 : 0) | (BotBusiness ? 2048 : 0) | (AccessHash is not null ? 1 : 0) | (FirstName is not null ? 2 : 0) | (LastName is not null ? 4 : 0) | (Username is not null ? 8 : 0) | (Phone is not null ? 16 : 0) | (Photo is not null ? 32 : 0) | (Status is not null ? 64 : 0) | (BotInfoVersion is not null ? 16384 : 0) | (RestrictionReason is not null ? 262144 : 0) | (BotInlinePlaceholder is not null ? 524288 : 0) | (LangCode is not null ? 4194304 : 0) | (EmojiStatus is not null ? 1073741824 : 0) | (Usernames is not null ? 1 : 0) | (StoriesMaxId is not null ? 32 : 0) | (Color is not null ? 256 : 0) | (ProfileColor is not null ? 512 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Self ? 1024 : 0) | (Contact ? 2048 : 0) | (MutualContact ? 4096 : 0) | (Deleted ? 8192 : 0) | (Bot ? 16384 : 0) | (BotChatHistory ? 32768 : 0) | (BotNochats ? 65536 : 0) | (Verified ? 131072 : 0) | (Restricted ? 262144 : 0) | (Min ? 1048576 : 0) | (BotInlineGeo ? 2097152 : 0) | (Support ? 8388608 : 0) | (Scam ? 16777216 : 0) | (ApplyMinPhoto ? 33554432 : 0) | (Fake ? 67108864 : 0) | (BotAttachMenu ? 134217728 : 0) | (Premium ? 268435456 : 0) | (AttachMenuEnabled ? 536870912 : 0) | (BotCanEdit ? 2 : 0) | (CloseFriend ? 4 : 0) | (StoriesHidden ? 8 : 0) | (StoriesUnavailable ? 16 : 0) | (ContactRequirePremium ? 1024 : 0) | (BotBusiness ? 2048 : 0) | (AccessHash is not null ? 1 : 0) | (FirstName is not null ? 2 : 0) | (LastName is not null ? 4 : 0) | (Username is not null ? 8 : 0) | (Phone is not null ? 16 : 0) | (Photo is not null ? 32 : 0) | (Status is not null ? 64 : 0) | (BotInfoVersion is not null ? 16384 : 0) | (RestrictionReason is not null ? 262144 : 0) | (BotInlinePlaceholder is not null ? 524288 : 0) | (LangCode is not null ? 4194304 : 0) | (EmojiStatus is not null ? 1073741824 : 0) | (Usernames is not null ? 1 : 0) | (StoriesMaxId is not null ? 32 : 0) | (Color is not null ? 256 : 0) | (ProfileColor is not null ? 512 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(AccessHash is not null) bytes.AddRange(AccessHash.TlSerialize());
             if(FirstName is not null) bytes.AddRange(FirstName.TlSerialize());
@@ -1677,7 +1677,7 @@ namespace SharpGram.Tl.Constructors.UserProfilePhotoNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (StrippedThumb is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (HasVideo ? 1 : 0) | (Personal ? 4 : 0) | (StrippedThumb is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(PhotoId.TlSerialize());
             if(StrippedThumb is not null) bytes.AddRange(StrippedThumb.TlSerialize());
             bytes.AddRange(DcId.TlSerialize());
@@ -1761,7 +1761,7 @@ namespace SharpGram.Tl.Constructors.UserStatusNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ByMe ? 1 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -1780,7 +1780,7 @@ namespace SharpGram.Tl.Constructors.UserStatusNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ByMe ? 1 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -1799,7 +1799,7 @@ namespace SharpGram.Tl.Constructors.UserStatusNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ByMe ? 1 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -1852,7 +1852,7 @@ namespace SharpGram.Tl.Constructors.ChatNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (MigratedTo is not null ? 64 : 0) | (AdminRights is not null ? 16384 : 0) | (DefaultBannedRights is not null ? 262144 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Creator ? 1 : 0) | (Left ? 4 : 0) | (Deactivated ? 32 : 0) | (CallActive ? 8388608 : 0) | (CallNotEmpty ? 16777216 : 0) | (Noforwards ? 33554432 : 0) | (MigratedTo is not null ? 64 : 0) | (AdminRights is not null ? 16384 : 0) | (DefaultBannedRights is not null ? 262144 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             bytes.AddRange(Photo.TlSerialize());
@@ -1967,8 +1967,8 @@ namespace SharpGram.Tl.Constructors.ChatNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (AccessHash is not null ? 8192 : 0) | (Username is not null ? 64 : 0) | (RestrictionReason is not null ? 512 : 0) | (AdminRights is not null ? 16384 : 0) | (BannedRights is not null ? 32768 : 0) | (DefaultBannedRights is not null ? 262144 : 0) | (ParticipantsCount is not null ? 131072 : 0) | (Usernames is not null ? 1 : 0) | (StoriesMaxId is not null ? 16 : 0) | (Color is not null ? 128 : 0) | (ProfileColor is not null ? 256 : 0) | (EmojiStatus is not null ? 512 : 0) | (Level is not null ? 1024 : 0) ).TlSerialize());
-            bytes.AddRange((0 | (AccessHash is not null ? 8192 : 0) | (Username is not null ? 64 : 0) | (RestrictionReason is not null ? 512 : 0) | (AdminRights is not null ? 16384 : 0) | (BannedRights is not null ? 32768 : 0) | (DefaultBannedRights is not null ? 262144 : 0) | (ParticipantsCount is not null ? 131072 : 0) | (Usernames is not null ? 1 : 0) | (StoriesMaxId is not null ? 16 : 0) | (Color is not null ? 128 : 0) | (ProfileColor is not null ? 256 : 0) | (EmojiStatus is not null ? 512 : 0) | (Level is not null ? 1024 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Creator ? 1 : 0) | (Left ? 4 : 0) | (Broadcast ? 32 : 0) | (Verified ? 128 : 0) | (Megagroup ? 256 : 0) | (Restricted ? 512 : 0) | (Signatures ? 2048 : 0) | (Min ? 4096 : 0) | (Scam ? 524288 : 0) | (HasLink ? 1048576 : 0) | (HasGeo ? 2097152 : 0) | (SlowmodeEnabled ? 4194304 : 0) | (CallActive ? 8388608 : 0) | (CallNotEmpty ? 16777216 : 0) | (Fake ? 33554432 : 0) | (Gigagroup ? 67108864 : 0) | (Noforwards ? 134217728 : 0) | (JoinToSend ? 268435456 : 0) | (JoinRequest ? 536870912 : 0) | (Forum ? 1073741824 : 0) | (StoriesHidden ? 2 : 0) | (StoriesHiddenMin ? 4 : 0) | (StoriesUnavailable ? 8 : 0) | (AccessHash is not null ? 8192 : 0) | (Username is not null ? 64 : 0) | (RestrictionReason is not null ? 512 : 0) | (AdminRights is not null ? 16384 : 0) | (BannedRights is not null ? 32768 : 0) | (DefaultBannedRights is not null ? 262144 : 0) | (ParticipantsCount is not null ? 131072 : 0) | (Usernames is not null ? 1 : 0) | (StoriesMaxId is not null ? 16 : 0) | (Color is not null ? 128 : 0) | (ProfileColor is not null ? 256 : 0) | (EmojiStatus is not null ? 512 : 0) | (Level is not null ? 1024 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Creator ? 1 : 0) | (Left ? 4 : 0) | (Broadcast ? 32 : 0) | (Verified ? 128 : 0) | (Megagroup ? 256 : 0) | (Restricted ? 512 : 0) | (Signatures ? 2048 : 0) | (Min ? 4096 : 0) | (Scam ? 524288 : 0) | (HasLink ? 1048576 : 0) | (HasGeo ? 2097152 : 0) | (SlowmodeEnabled ? 4194304 : 0) | (CallActive ? 8388608 : 0) | (CallNotEmpty ? 16777216 : 0) | (Fake ? 33554432 : 0) | (Gigagroup ? 67108864 : 0) | (Noforwards ? 134217728 : 0) | (JoinToSend ? 268435456 : 0) | (JoinRequest ? 536870912 : 0) | (Forum ? 1073741824 : 0) | (StoriesHidden ? 2 : 0) | (StoriesHiddenMin ? 4 : 0) | (StoriesUnavailable ? 8 : 0) | (AccessHash is not null ? 8192 : 0) | (Username is not null ? 64 : 0) | (RestrictionReason is not null ? 512 : 0) | (AdminRights is not null ? 16384 : 0) | (BannedRights is not null ? 32768 : 0) | (DefaultBannedRights is not null ? 262144 : 0) | (ParticipantsCount is not null ? 131072 : 0) | (Usernames is not null ? 1 : 0) | (StoriesMaxId is not null ? 16 : 0) | (Color is not null ? 128 : 0) | (ProfileColor is not null ? 256 : 0) | (EmojiStatus is not null ? 512 : 0) | (Level is not null ? 1024 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(AccessHash is not null) bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
@@ -2087,7 +2087,7 @@ namespace SharpGram.Tl.Constructors.ChatNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (UntilDate is not null ? 65536 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Broadcast ? 32 : 0) | (Megagroup ? 256 : 0) | (UntilDate is not null ? 65536 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
@@ -2126,7 +2126,7 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ChatPhoto is not null ? 4 : 0) | (ExportedInvite is not null ? 8192 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (Call is not null ? 4096 : 0) | (TtlPeriod is not null ? 16384 : 0) | (GroupcallDefaultJoinAs is not null ? 32768 : 0) | (ThemeEmoticon is not null ? 65536 : 0) | (RequestsPending is not null ? 131072 : 0) | (RecentRequesters is not null ? 131072 : 0) | (AvailableReactions is not null ? 262144 : 0) | (ReactionsLimit is not null ? 1048576 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (CanSetUsername ? 128 : 0) | (HasScheduled ? 256 : 0) | (TranslationsDisabled ? 524288 : 0) | (ChatPhoto is not null ? 4 : 0) | (ExportedInvite is not null ? 8192 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (Call is not null ? 4096 : 0) | (TtlPeriod is not null ? 16384 : 0) | (GroupcallDefaultJoinAs is not null ? 32768 : 0) | (ThemeEmoticon is not null ? 65536 : 0) | (RequestsPending is not null ? 131072 : 0) | (RecentRequesters is not null ? 131072 : 0) | (AvailableReactions is not null ? 262144 : 0) | (ReactionsLimit is not null ? 1048576 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(About.TlSerialize());
             bytes.AddRange(Participants.TlSerialize());
@@ -2241,8 +2241,8 @@ namespace SharpGram.Tl.Constructors.ChatFullNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ParticipantsCount is not null ? 1 : 0) | (AdminsCount is not null ? 2 : 0) | (KickedCount is not null ? 4 : 0) | (BannedCount is not null ? 4 : 0) | (OnlineCount is not null ? 8192 : 0) | (ExportedInvite is not null ? 8388608 : 0) | (MigratedFromChatId is not null ? 16 : 0) | (MigratedFromMaxId is not null ? 16 : 0) | (PinnedMsgId is not null ? 32 : 0) | (Stickerset is not null ? 256 : 0) | (AvailableMinId is not null ? 512 : 0) | (FolderId is not null ? 2048 : 0) | (LinkedChatId is not null ? 16384 : 0) | (Location is not null ? 32768 : 0) | (SlowmodeSeconds is not null ? 131072 : 0) | (SlowmodeNextSendDate is not null ? 262144 : 0) | (StatsDc is not null ? 4096 : 0) | (Call is not null ? 2097152 : 0) | (TtlPeriod is not null ? 16777216 : 0) | (PendingSuggestions is not null ? 33554432 : 0) | (GroupcallDefaultJoinAs is not null ? 67108864 : 0) | (ThemeEmoticon is not null ? 134217728 : 0) | (RequestsPending is not null ? 268435456 : 0) | (RecentRequesters is not null ? 268435456 : 0) | (DefaultSendAs is not null ? 536870912 : 0) | (AvailableReactions is not null ? 1073741824 : 0) | (ReactionsLimit is not null ? 8192 : 0) | (Stories is not null ? 16 : 0) | (Wallpaper is not null ? 128 : 0) | (BoostsApplied is not null ? 256 : 0) | (BoostsUnrestrict is not null ? 512 : 0) | (Emojiset is not null ? 1024 : 0) ).TlSerialize());
-            bytes.AddRange((0 | (ParticipantsCount is not null ? 1 : 0) | (AdminsCount is not null ? 2 : 0) | (KickedCount is not null ? 4 : 0) | (BannedCount is not null ? 4 : 0) | (OnlineCount is not null ? 8192 : 0) | (ExportedInvite is not null ? 8388608 : 0) | (MigratedFromChatId is not null ? 16 : 0) | (MigratedFromMaxId is not null ? 16 : 0) | (PinnedMsgId is not null ? 32 : 0) | (Stickerset is not null ? 256 : 0) | (AvailableMinId is not null ? 512 : 0) | (FolderId is not null ? 2048 : 0) | (LinkedChatId is not null ? 16384 : 0) | (Location is not null ? 32768 : 0) | (SlowmodeSeconds is not null ? 131072 : 0) | (SlowmodeNextSendDate is not null ? 262144 : 0) | (StatsDc is not null ? 4096 : 0) | (Call is not null ? 2097152 : 0) | (TtlPeriod is not null ? 16777216 : 0) | (PendingSuggestions is not null ? 33554432 : 0) | (GroupcallDefaultJoinAs is not null ? 67108864 : 0) | (ThemeEmoticon is not null ? 134217728 : 0) | (RequestsPending is not null ? 268435456 : 0) | (RecentRequesters is not null ? 268435456 : 0) | (DefaultSendAs is not null ? 536870912 : 0) | (AvailableReactions is not null ? 1073741824 : 0) | (ReactionsLimit is not null ? 8192 : 0) | (Stories is not null ? 16 : 0) | (Wallpaper is not null ? 128 : 0) | (BoostsApplied is not null ? 256 : 0) | (BoostsUnrestrict is not null ? 512 : 0) | (Emojiset is not null ? 1024 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (CanViewParticipants ? 8 : 0) | (CanSetUsername ? 64 : 0) | (CanSetStickers ? 128 : 0) | (HiddenPrehistory ? 1024 : 0) | (CanSetLocation ? 65536 : 0) | (HasScheduled ? 524288 : 0) | (CanViewStats ? 1048576 : 0) | (Blocked ? 4194304 : 0) | (CanDeleteChannel ? 1 : 0) | (Antispam ? 2 : 0) | (ParticipantsHidden ? 4 : 0) | (TranslationsDisabled ? 8 : 0) | (StoriesPinnedAvailable ? 32 : 0) | (ViewForumAsMessages ? 64 : 0) | (RestrictedSponsored ? 2048 : 0) | (CanViewRevenue ? 4096 : 0) | (PaidMediaAllowed ? 16384 : 0) | (CanViewStarsRevenue ? 32768 : 0) | (ParticipantsCount is not null ? 1 : 0) | (AdminsCount is not null ? 2 : 0) | (KickedCount is not null ? 4 : 0) | (BannedCount is not null ? 4 : 0) | (OnlineCount is not null ? 8192 : 0) | (ExportedInvite is not null ? 8388608 : 0) | (MigratedFromChatId is not null ? 16 : 0) | (MigratedFromMaxId is not null ? 16 : 0) | (PinnedMsgId is not null ? 32 : 0) | (Stickerset is not null ? 256 : 0) | (AvailableMinId is not null ? 512 : 0) | (FolderId is not null ? 2048 : 0) | (LinkedChatId is not null ? 16384 : 0) | (Location is not null ? 32768 : 0) | (SlowmodeSeconds is not null ? 131072 : 0) | (SlowmodeNextSendDate is not null ? 262144 : 0) | (StatsDc is not null ? 4096 : 0) | (Call is not null ? 2097152 : 0) | (TtlPeriod is not null ? 16777216 : 0) | (PendingSuggestions is not null ? 33554432 : 0) | (GroupcallDefaultJoinAs is not null ? 67108864 : 0) | (ThemeEmoticon is not null ? 134217728 : 0) | (RequestsPending is not null ? 268435456 : 0) | (RecentRequesters is not null ? 268435456 : 0) | (DefaultSendAs is not null ? 536870912 : 0) | (AvailableReactions is not null ? 1073741824 : 0) | (ReactionsLimit is not null ? 8192 : 0) | (Stories is not null ? 16 : 0) | (Wallpaper is not null ? 128 : 0) | (BoostsApplied is not null ? 256 : 0) | (BoostsUnrestrict is not null ? 512 : 0) | (Emojiset is not null ? 1024 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (CanViewParticipants ? 8 : 0) | (CanSetUsername ? 64 : 0) | (CanSetStickers ? 128 : 0) | (HiddenPrehistory ? 1024 : 0) | (CanSetLocation ? 65536 : 0) | (HasScheduled ? 524288 : 0) | (CanViewStats ? 1048576 : 0) | (Blocked ? 4194304 : 0) | (CanDeleteChannel ? 1 : 0) | (Antispam ? 2 : 0) | (ParticipantsHidden ? 4 : 0) | (TranslationsDisabled ? 8 : 0) | (StoriesPinnedAvailable ? 32 : 0) | (ViewForumAsMessages ? 64 : 0) | (RestrictedSponsored ? 2048 : 0) | (CanViewRevenue ? 4096 : 0) | (PaidMediaAllowed ? 16384 : 0) | (CanViewStarsRevenue ? 32768 : 0) | (ParticipantsCount is not null ? 1 : 0) | (AdminsCount is not null ? 2 : 0) | (KickedCount is not null ? 4 : 0) | (BannedCount is not null ? 4 : 0) | (OnlineCount is not null ? 8192 : 0) | (ExportedInvite is not null ? 8388608 : 0) | (MigratedFromChatId is not null ? 16 : 0) | (MigratedFromMaxId is not null ? 16 : 0) | (PinnedMsgId is not null ? 32 : 0) | (Stickerset is not null ? 256 : 0) | (AvailableMinId is not null ? 512 : 0) | (FolderId is not null ? 2048 : 0) | (LinkedChatId is not null ? 16384 : 0) | (Location is not null ? 32768 : 0) | (SlowmodeSeconds is not null ? 131072 : 0) | (SlowmodeNextSendDate is not null ? 262144 : 0) | (StatsDc is not null ? 4096 : 0) | (Call is not null ? 2097152 : 0) | (TtlPeriod is not null ? 16777216 : 0) | (PendingSuggestions is not null ? 33554432 : 0) | (GroupcallDefaultJoinAs is not null ? 67108864 : 0) | (ThemeEmoticon is not null ? 134217728 : 0) | (RequestsPending is not null ? 268435456 : 0) | (RecentRequesters is not null ? 268435456 : 0) | (DefaultSendAs is not null ? 536870912 : 0) | (AvailableReactions is not null ? 1073741824 : 0) | (ReactionsLimit is not null ? 8192 : 0) | (Stories is not null ? 16 : 0) | (Wallpaper is not null ? 128 : 0) | (BoostsApplied is not null ? 256 : 0) | (BoostsUnrestrict is not null ? 512 : 0) | (Emojiset is not null ? 1024 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(About.TlSerialize());
             if(ParticipantsCount is not null) bytes.AddRange(ParticipantsCount.TlSerialize());
@@ -2563,7 +2563,7 @@ namespace SharpGram.Tl.Constructors.ChatPhotoNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (StrippedThumb is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (HasVideo ? 1 : 0) | (StrippedThumb is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(PhotoId.TlSerialize());
             if(StrippedThumb is not null) bytes.AddRange(StrippedThumb.TlSerialize());
             bytes.AddRange(DcId.TlSerialize());
@@ -2654,8 +2654,8 @@ namespace SharpGram.Tl.Constructors.MessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FromId is not null ? 256 : 0) | (FromBoostsApplied is not null ? 536870912 : 0) | (SavedPeerId is not null ? 268435456 : 0) | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ViaBusinessBotId is not null ? 1 : 0) | (ReplyTo is not null ? 8 : 0) | (Media is not null ? 512 : 0) | (ReplyMarkup is not null ? 64 : 0) | (Entities is not null ? 128 : 0) | (Views is not null ? 1024 : 0) | (Forwards is not null ? 1024 : 0) | (Replies is not null ? 8388608 : 0) | (EditDate is not null ? 32768 : 0) | (PostAuthor is not null ? 65536 : 0) | (GroupedId is not null ? 131072 : 0) | (Reactions is not null ? 1048576 : 0) | (RestrictionReason is not null ? 4194304 : 0) | (TtlPeriod is not null ? 33554432 : 0) | (QuickReplyShortcutId is not null ? 1073741824 : 0) | (Effect is not null ? 4 : 0) | (Factcheck is not null ? 8 : 0) ).TlSerialize());
-            bytes.AddRange((0 | (FromId is not null ? 256 : 0) | (FromBoostsApplied is not null ? 536870912 : 0) | (SavedPeerId is not null ? 268435456 : 0) | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ViaBusinessBotId is not null ? 1 : 0) | (ReplyTo is not null ? 8 : 0) | (Media is not null ? 512 : 0) | (ReplyMarkup is not null ? 64 : 0) | (Entities is not null ? 128 : 0) | (Views is not null ? 1024 : 0) | (Forwards is not null ? 1024 : 0) | (Replies is not null ? 8388608 : 0) | (EditDate is not null ? 32768 : 0) | (PostAuthor is not null ? 65536 : 0) | (GroupedId is not null ? 131072 : 0) | (Reactions is not null ? 1048576 : 0) | (RestrictionReason is not null ? 4194304 : 0) | (TtlPeriod is not null ? 33554432 : 0) | (QuickReplyShortcutId is not null ? 1073741824 : 0) | (Effect is not null ? 4 : 0) | (Factcheck is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Out ? 2 : 0) | (Mentioned ? 16 : 0) | (MediaUnread ? 32 : 0) | (Silent ? 8192 : 0) | (Post ? 16384 : 0) | (FromScheduled ? 262144 : 0) | (Legacy ? 524288 : 0) | (EditHide ? 2097152 : 0) | (Pinned ? 16777216 : 0) | (Noforwards ? 67108864 : 0) | (InvertMedia ? 134217728 : 0) | (Offline ? 2 : 0) | (FromId is not null ? 256 : 0) | (FromBoostsApplied is not null ? 536870912 : 0) | (SavedPeerId is not null ? 268435456 : 0) | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ViaBusinessBotId is not null ? 1 : 0) | (ReplyTo is not null ? 8 : 0) | (Media is not null ? 512 : 0) | (ReplyMarkup is not null ? 64 : 0) | (Entities is not null ? 128 : 0) | (Views is not null ? 1024 : 0) | (Forwards is not null ? 1024 : 0) | (Replies is not null ? 8388608 : 0) | (EditDate is not null ? 32768 : 0) | (PostAuthor is not null ? 65536 : 0) | (GroupedId is not null ? 131072 : 0) | (Reactions is not null ? 1048576 : 0) | (RestrictionReason is not null ? 4194304 : 0) | (TtlPeriod is not null ? 33554432 : 0) | (QuickReplyShortcutId is not null ? 1073741824 : 0) | (Effect is not null ? 4 : 0) | (Factcheck is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Out ? 2 : 0) | (Mentioned ? 16 : 0) | (MediaUnread ? 32 : 0) | (Silent ? 8192 : 0) | (Post ? 16384 : 0) | (FromScheduled ? 262144 : 0) | (Legacy ? 524288 : 0) | (EditHide ? 2097152 : 0) | (Pinned ? 16777216 : 0) | (Noforwards ? 67108864 : 0) | (InvertMedia ? 134217728 : 0) | (Offline ? 2 : 0) | (FromId is not null ? 256 : 0) | (FromBoostsApplied is not null ? 536870912 : 0) | (SavedPeerId is not null ? 268435456 : 0) | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ViaBusinessBotId is not null ? 1 : 0) | (ReplyTo is not null ? 8 : 0) | (Media is not null ? 512 : 0) | (ReplyMarkup is not null ? 64 : 0) | (Entities is not null ? 128 : 0) | (Views is not null ? 1024 : 0) | (Forwards is not null ? 1024 : 0) | (Replies is not null ? 8388608 : 0) | (EditDate is not null ? 32768 : 0) | (PostAuthor is not null ? 65536 : 0) | (GroupedId is not null ? 131072 : 0) | (Reactions is not null ? 1048576 : 0) | (RestrictionReason is not null ? 4194304 : 0) | (TtlPeriod is not null ? 33554432 : 0) | (QuickReplyShortcutId is not null ? 1073741824 : 0) | (Effect is not null ? 4 : 0) | (Factcheck is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(FromId is not null) bytes.AddRange(FromId.TlSerialize());
             if(FromBoostsApplied is not null) bytes.AddRange(FromBoostsApplied.TlSerialize());
@@ -2786,7 +2786,7 @@ namespace SharpGram.Tl.Constructors.MessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FromId is not null ? 256 : 0) | (ReplyTo is not null ? 8 : 0) | (TtlPeriod is not null ? 33554432 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Out ? 2 : 0) | (Mentioned ? 16 : 0) | (MediaUnread ? 32 : 0) | (Silent ? 8192 : 0) | (Post ? 16384 : 0) | (Legacy ? 524288 : 0) | (FromId is not null ? 256 : 0) | (ReplyTo is not null ? 8 : 0) | (TtlPeriod is not null ? 33554432 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(FromId is not null) bytes.AddRange(FromId.TlSerialize());
             bytes.AddRange(PeerId.TlSerialize());
@@ -2856,7 +2856,7 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Photo is not null ? 1 : 0) | (TtlSeconds is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Spoiler ? 8 : 0) | (Photo is not null ? 1 : 0) | (TtlSeconds is not null ? 4 : 0) ).TlSerialize());
             if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
             if(TtlSeconds is not null) bytes.AddRange(TtlSeconds.TlSerialize());
             return bytes.ToArray();
@@ -2954,7 +2954,7 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Document is not null ? 1 : 0) | (AltDocument is not null ? 32 : 0) | (TtlSeconds is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Nopremium ? 8 : 0) | (Spoiler ? 16 : 0) | (Video ? 64 : 0) | (Round ? 128 : 0) | (Voice ? 256 : 0) | (Document is not null ? 1 : 0) | (AltDocument is not null ? 32 : 0) | (TtlSeconds is not null ? 4 : 0) ).TlSerialize());
             if(Document is not null) bytes.AddRange(Document.TlSerialize());
             if(AltDocument is not null) bytes.AddRange(AltDocument.TlSerialize());
             if(TtlSeconds is not null) bytes.AddRange(TtlSeconds.TlSerialize());
@@ -2994,7 +2994,7 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ForceLargeMedia ? 1 : 0) | (ForceSmallMedia ? 2 : 0) | (Manual ? 8 : 0) | (Safe ? 16 : 0) ).TlSerialize());
             bytes.AddRange(Webpage.TlSerialize());
             return bytes.ToArray();
         }
@@ -3087,7 +3087,7 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Photo is not null ? 1 : 0) | (ReceiptMsgId is not null ? 4 : 0) | (ExtendedMedia is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ShippingAddressRequested ? 2 : 0) | (Test ? 8 : 0) | (Photo is not null ? 1 : 0) | (ReceiptMsgId is not null ? 4 : 0) | (ExtendedMedia is not null ? 16 : 0) ).TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             bytes.AddRange(Description.TlSerialize());
             if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
@@ -3211,7 +3211,7 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Story is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ViaMention ? 2 : 0) | (Story is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(Story is not null) bytes.AddRange(Story.TlSerialize());
@@ -3246,7 +3246,7 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (CountriesIso2 is not null ? 2 : 0) | (PrizeDescription is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (OnlyNewSubscribers ? 1 : 0) | (WinnersAreVisible ? 4 : 0) | (CountriesIso2 is not null ? 2 : 0) | (PrizeDescription is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(Channels.TlSerialize());
             if(CountriesIso2 is not null) bytes.AddRange(CountriesIso2.TlSerialize());
             if(PrizeDescription is not null) bytes.AddRange(PrizeDescription.TlSerialize());
@@ -3295,7 +3295,7 @@ namespace SharpGram.Tl.Constructors.MessageMediaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (AdditionalPeersCount is not null ? 8 : 0) | (PrizeDescription is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (OnlyNewSubscribers ? 1 : 0) | (Refunded ? 4 : 0) | (AdditionalPeersCount is not null ? 8 : 0) | (PrizeDescription is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(ChannelId.TlSerialize());
             if(AdditionalPeersCount is not null) bytes.AddRange(AdditionalPeersCount.TlSerialize());
             bytes.AddRange(LaunchMsgId.TlSerialize());
@@ -3624,7 +3624,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Info is not null ? 1 : 0) | (ShippingOptionId is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (RecurringInit ? 4 : 0) | (RecurringUsed ? 8 : 0) | (Info is not null ? 1 : 0) | (ShippingOptionId is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Currency.TlSerialize());
             bytes.AddRange(TotalAmount.TlSerialize());
             bytes.AddRange(Payload.TlSerialize());
@@ -3667,7 +3667,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (InvoiceSlug is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (RecurringInit ? 4 : 0) | (RecurringUsed ? 8 : 0) | (InvoiceSlug is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Currency.TlSerialize());
             bytes.AddRange(TotalAmount.TlSerialize());
             if(InvoiceSlug is not null) bytes.AddRange(InvoiceSlug.TlSerialize());
@@ -3700,7 +3700,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Reason is not null ? 1 : 0) | (Duration is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Video ? 4 : 0) | (Reason is not null ? 1 : 0) | (Duration is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(CallId.TlSerialize());
             if(Reason is not null) bytes.AddRange(Reason.TlSerialize());
             if(Duration is not null) bytes.AddRange(Duration.TlSerialize());
@@ -3763,7 +3763,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Domain is not null ? 1 : 0) | (App is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (AttachMenu ? 2 : 0) | (FromRequest ? 8 : 0) | (Domain is not null ? 1 : 0) | (App is not null ? 4 : 0) ).TlSerialize());
             if(Domain is not null) bytes.AddRange(Domain.TlSerialize());
             if(App is not null) bytes.AddRange(App.TlSerialize());
             return bytes.ToArray();
@@ -4101,7 +4101,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Title is not null ? 1 : 0) | (IconEmojiId is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Title is not null ? 1 : 0) | (IconEmojiId is not null ? 2 : 0) | (Closed ? 4 : 0) | (Hidden ? 8 : 0) ).TlSerialize());
             if(Title is not null) bytes.AddRange(Title.TlSerialize());
             if(IconEmojiId is not null) bytes.AddRange(IconEmojiId.TlSerialize());
             return bytes.ToArray();
@@ -4170,7 +4170,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Same ? 1 : 0) | (ForBoth ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Wallpaper.TlSerialize());
             return bytes.ToArray();
         }
@@ -4202,7 +4202,7 @@ namespace SharpGram.Tl.Constructors.MessageActionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (BoostPeer is not null ? 2 : 0) | (Currency is not null ? 4 : 0) | (Amount is not null ? 4 : 0) | (CryptoCurrency is not null ? 8 : 0) | (CryptoAmount is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ViaGiveaway ? 1 : 0) | (Unclaimed ? 4 : 0) | (BoostPeer is not null ? 2 : 0) | (Currency is not null ? 4 : 0) | (Amount is not null ? 4 : 0) | (CryptoCurrency is not null ? 8 : 0) | (CryptoAmount is not null ? 8 : 0) ).TlSerialize());
             if(BoostPeer is not null) bytes.AddRange(BoostPeer.TlSerialize());
             bytes.AddRange(Months.TlSerialize());
             bytes.AddRange(Slug.TlSerialize());
@@ -4371,7 +4371,7 @@ namespace SharpGram.Tl.Constructors.DialogNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Pts is not null ? 1 : 0) | (Draft is not null ? 2 : 0) | (FolderId is not null ? 16 : 0) | (TtlPeriod is not null ? 32 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Pinned ? 4 : 0) | (UnreadMark ? 8 : 0) | (ViewForumAsMessages ? 64 : 0) | (Pts is not null ? 1 : 0) | (Draft is not null ? 2 : 0) | (FolderId is not null ? 16 : 0) | (TtlPeriod is not null ? 32 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(TopMessage.TlSerialize());
             bytes.AddRange(ReadInboxMaxId.TlSerialize());
@@ -4434,7 +4434,7 @@ namespace SharpGram.Tl.Constructors.DialogNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Pinned ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Folder.TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(TopMessage.TlSerialize());
@@ -4501,7 +4501,7 @@ namespace SharpGram.Tl.Constructors.PhotoNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (VideoSizes is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (HasStickers ? 1 : 0) | (VideoSizes is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(FileReference.TlSerialize());
@@ -4803,7 +4803,7 @@ namespace SharpGram.Tl.Constructors.AuthAuthorizationNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (OtherwiseReloginDays is not null ? 2 : 0) | (TmpSessions is not null ? 1 : 0) | (FutureAuthToken is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (SetupPasswordRequired ? 2 : 0) | (OtherwiseReloginDays is not null ? 2 : 0) | (TmpSessions is not null ? 1 : 0) | (FutureAuthToken is not null ? 4 : 0) ).TlSerialize());
             if(OtherwiseReloginDays is not null) bytes.AddRange(OtherwiseReloginDays.TlSerialize());
             if(TmpSessions is not null) bytes.AddRange(TmpSessions.TlSerialize());
             if(FutureAuthToken is not null) bytes.AddRange(FutureAuthToken.TlSerialize());
@@ -4976,7 +4976,7 @@ namespace SharpGram.Tl.Constructors.InputPeerNotifySettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (MuteUntil is not null ? 4 : 0) | (Sound is not null ? 8 : 0) | (StoriesSound is not null ? 256 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ShowPreviews ? 1 : 0) | (Silent ? 2 : 0) | (MuteUntil is not null ? 4 : 0) | (Sound is not null ? 8 : 0) | (StoriesMuted ? 64 : 0) | (StoriesHideSender ? 128 : 0) | (StoriesSound is not null ? 256 : 0) ).TlSerialize());
             if(MuteUntil is not null) bytes.AddRange(MuteUntil.TlSerialize());
             if(Sound is not null) bytes.AddRange(Sound.TlSerialize());
             if(StoriesSound is not null) bytes.AddRange(StoriesSound.TlSerialize());
@@ -5024,7 +5024,7 @@ namespace SharpGram.Tl.Constructors.PeerNotifySettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (MuteUntil is not null ? 4 : 0) | (IosSound is not null ? 8 : 0) | (AndroidSound is not null ? 16 : 0) | (OtherSound is not null ? 32 : 0) | (StoriesIosSound is not null ? 256 : 0) | (StoriesAndroidSound is not null ? 512 : 0) | (StoriesOtherSound is not null ? 1024 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ShowPreviews ? 1 : 0) | (Silent ? 2 : 0) | (MuteUntil is not null ? 4 : 0) | (IosSound is not null ? 8 : 0) | (AndroidSound is not null ? 16 : 0) | (OtherSound is not null ? 32 : 0) | (StoriesMuted ? 64 : 0) | (StoriesHideSender ? 128 : 0) | (StoriesIosSound is not null ? 256 : 0) | (StoriesAndroidSound is not null ? 512 : 0) | (StoriesOtherSound is not null ? 1024 : 0) ).TlSerialize());
             if(MuteUntil is not null) bytes.AddRange(MuteUntil.TlSerialize());
             if(IosSound is not null) bytes.AddRange(IosSound.TlSerialize());
             if(AndroidSound is not null) bytes.AddRange(AndroidSound.TlSerialize());
@@ -5089,7 +5089,7 @@ namespace SharpGram.Tl.Constructors.PeerSettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (GeoDistance is not null ? 64 : 0) | (RequestChatTitle is not null ? 512 : 0) | (RequestChatDate is not null ? 512 : 0) | (BusinessBotId is not null ? 8192 : 0) | (BusinessBotManageUrl is not null ? 8192 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ReportSpam ? 1 : 0) | (AddContact ? 2 : 0) | (BlockContact ? 4 : 0) | (ShareContact ? 8 : 0) | (NeedContactsException ? 16 : 0) | (ReportGeo ? 32 : 0) | (Autoarchived ? 128 : 0) | (InviteMembers ? 256 : 0) | (RequestChatBroadcast ? 1024 : 0) | (BusinessBotPaused ? 2048 : 0) | (BusinessBotCanReply ? 4096 : 0) | (GeoDistance is not null ? 64 : 0) | (RequestChatTitle is not null ? 512 : 0) | (RequestChatDate is not null ? 512 : 0) | (BusinessBotId is not null ? 8192 : 0) | (BusinessBotManageUrl is not null ? 8192 : 0) ).TlSerialize());
             if(GeoDistance is not null) bytes.AddRange(GeoDistance.TlSerialize());
             if(RequestChatTitle is not null) bytes.AddRange(RequestChatTitle.TlSerialize());
             if(RequestChatDate is not null) bytes.AddRange(RequestChatDate.TlSerialize());
@@ -5152,7 +5152,7 @@ namespace SharpGram.Tl.Constructors.WallPaperNs {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
             bytes.AddRange(Id.TlSerialize());
-            bytes.AddRange((0 | (Settings is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Creator ? 1 : 0) | (Default ? 2 : 0) | (Pattern ? 8 : 0) | (Dark ? 16 : 0) | (Settings is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(Slug.TlSerialize());
             bytes.AddRange(Document.TlSerialize());
@@ -5191,7 +5191,7 @@ namespace SharpGram.Tl.Constructors.WallPaperNs {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
             bytes.AddRange(Id.TlSerialize());
-            bytes.AddRange((0 | (Settings is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Default ? 2 : 0) | (Dark ? 16 : 0) | (Settings is not null ? 4 : 0) ).TlSerialize());
             if(Settings is not null) bytes.AddRange(Settings.TlSerialize());
             return bytes.ToArray();
         }
@@ -5405,8 +5405,8 @@ namespace SharpGram.Tl.Constructors.UserFullNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (About is not null ? 2 : 0) | (PersonalPhoto is not null ? 2097152 : 0) | (ProfilePhoto is not null ? 4 : 0) | (FallbackPhoto is not null ? 4194304 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (TtlPeriod is not null ? 16384 : 0) | (ThemeEmoticon is not null ? 32768 : 0) | (PrivateForwardName is not null ? 65536 : 0) | (BotGroupAdminRights is not null ? 131072 : 0) | (BotBroadcastAdminRights is not null ? 262144 : 0) | (PremiumGifts is not null ? 524288 : 0) | (Wallpaper is not null ? 16777216 : 0) | (Stories is not null ? 33554432 : 0) | (BusinessWorkHours is not null ? 1 : 0) | (BusinessLocation is not null ? 2 : 0) | (BusinessGreetingMessage is not null ? 4 : 0) | (BusinessAwayMessage is not null ? 8 : 0) | (BusinessIntro is not null ? 16 : 0) | (Birthday is not null ? 32 : 0) | (PersonalChannelId is not null ? 64 : 0) | (PersonalChannelMessage is not null ? 64 : 0) ).TlSerialize());
-            bytes.AddRange((0 | (About is not null ? 2 : 0) | (PersonalPhoto is not null ? 2097152 : 0) | (ProfilePhoto is not null ? 4 : 0) | (FallbackPhoto is not null ? 4194304 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (TtlPeriod is not null ? 16384 : 0) | (ThemeEmoticon is not null ? 32768 : 0) | (PrivateForwardName is not null ? 65536 : 0) | (BotGroupAdminRights is not null ? 131072 : 0) | (BotBroadcastAdminRights is not null ? 262144 : 0) | (PremiumGifts is not null ? 524288 : 0) | (Wallpaper is not null ? 16777216 : 0) | (Stories is not null ? 33554432 : 0) | (BusinessWorkHours is not null ? 1 : 0) | (BusinessLocation is not null ? 2 : 0) | (BusinessGreetingMessage is not null ? 4 : 0) | (BusinessAwayMessage is not null ? 8 : 0) | (BusinessIntro is not null ? 16 : 0) | (Birthday is not null ? 32 : 0) | (PersonalChannelId is not null ? 64 : 0) | (PersonalChannelMessage is not null ? 64 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Blocked ? 1 : 0) | (PhoneCallsAvailable ? 16 : 0) | (PhoneCallsPrivate ? 32 : 0) | (CanPinMessage ? 128 : 0) | (HasScheduled ? 4096 : 0) | (VideoCallsAvailable ? 8192 : 0) | (VoiceMessagesForbidden ? 1048576 : 0) | (TranslationsDisabled ? 8388608 : 0) | (StoriesPinnedAvailable ? 67108864 : 0) | (BlockedMyStoriesFrom ? 134217728 : 0) | (WallpaperOverridden ? 268435456 : 0) | (ContactRequirePremium ? 536870912 : 0) | (ReadDatesPrivate ? 1073741824 : 0) | (SponsoredEnabled ? 128 : 0) | (About is not null ? 2 : 0) | (PersonalPhoto is not null ? 2097152 : 0) | (ProfilePhoto is not null ? 4 : 0) | (FallbackPhoto is not null ? 4194304 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (TtlPeriod is not null ? 16384 : 0) | (ThemeEmoticon is not null ? 32768 : 0) | (PrivateForwardName is not null ? 65536 : 0) | (BotGroupAdminRights is not null ? 131072 : 0) | (BotBroadcastAdminRights is not null ? 262144 : 0) | (PremiumGifts is not null ? 524288 : 0) | (Wallpaper is not null ? 16777216 : 0) | (Stories is not null ? 33554432 : 0) | (BusinessWorkHours is not null ? 1 : 0) | (BusinessLocation is not null ? 2 : 0) | (BusinessGreetingMessage is not null ? 4 : 0) | (BusinessAwayMessage is not null ? 8 : 0) | (BusinessIntro is not null ? 16 : 0) | (Birthday is not null ? 32 : 0) | (PersonalChannelId is not null ? 64 : 0) | (PersonalChannelMessage is not null ? 64 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Blocked ? 1 : 0) | (PhoneCallsAvailable ? 16 : 0) | (PhoneCallsPrivate ? 32 : 0) | (CanPinMessage ? 128 : 0) | (HasScheduled ? 4096 : 0) | (VideoCallsAvailable ? 8192 : 0) | (VoiceMessagesForbidden ? 1048576 : 0) | (TranslationsDisabled ? 8388608 : 0) | (StoriesPinnedAvailable ? 67108864 : 0) | (BlockedMyStoriesFrom ? 134217728 : 0) | (WallpaperOverridden ? 268435456 : 0) | (ContactRequirePremium ? 536870912 : 0) | (ReadDatesPrivate ? 1073741824 : 0) | (SponsoredEnabled ? 128 : 0) | (About is not null ? 2 : 0) | (PersonalPhoto is not null ? 2097152 : 0) | (ProfilePhoto is not null ? 4 : 0) | (FallbackPhoto is not null ? 4194304 : 0) | (BotInfo is not null ? 8 : 0) | (PinnedMsgId is not null ? 64 : 0) | (FolderId is not null ? 2048 : 0) | (TtlPeriod is not null ? 16384 : 0) | (ThemeEmoticon is not null ? 32768 : 0) | (PrivateForwardName is not null ? 65536 : 0) | (BotGroupAdminRights is not null ? 131072 : 0) | (BotBroadcastAdminRights is not null ? 262144 : 0) | (PremiumGifts is not null ? 524288 : 0) | (Wallpaper is not null ? 16777216 : 0) | (Stories is not null ? 33554432 : 0) | (BusinessWorkHours is not null ? 1 : 0) | (BusinessLocation is not null ? 2 : 0) | (BusinessGreetingMessage is not null ? 4 : 0) | (BusinessAwayMessage is not null ? 8 : 0) | (BusinessIntro is not null ? 16 : 0) | (Birthday is not null ? 32 : 0) | (PersonalChannelId is not null ? 64 : 0) | (PersonalChannelMessage is not null ? 64 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(About is not null) bytes.AddRange(About.TlSerialize());
             bytes.AddRange(Settings.TlSerialize());
@@ -5864,7 +5864,7 @@ namespace SharpGram.Tl.Constructors.MessagesMessagesNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (NextRate is not null ? 1 : 0) | (OffsetIdOffset is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Inexact ? 2 : 0) | (NextRate is not null ? 1 : 0) | (OffsetIdOffset is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Count.TlSerialize());
             if(NextRate is not null) bytes.AddRange(NextRate.TlSerialize());
             if(OffsetIdOffset is not null) bytes.AddRange(OffsetIdOffset.TlSerialize());
@@ -5908,7 +5908,7 @@ namespace SharpGram.Tl.Constructors.MessagesMessagesNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (OffsetIdOffset is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Inexact ? 2 : 0) | (OffsetIdOffset is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Pts.TlSerialize());
             bytes.AddRange(Count.TlSerialize());
             if(OffsetIdOffset is not null) bytes.AddRange(OffsetIdOffset.TlSerialize());
@@ -6212,7 +6212,7 @@ namespace SharpGram.Tl.Constructors.MessagesFilterNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Missed ? 1 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -6515,7 +6515,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Date is not null ? 1 : 0) | (Device is not null ? 1 : 0) | (Location is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Unconfirmed ? 1 : 0) | (Date is not null ? 1 : 0) | (Device is not null ? 1 : 0) | (Location is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Hash.TlSerialize());
             if(Date is not null) bytes.AddRange(Date.TlSerialize());
             if(Device is not null) bytes.AddRange(Device.TlSerialize());
@@ -6740,7 +6740,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (InboxDate is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Popup ? 1 : 0) | (InvertMedia ? 4 : 0) | (InboxDate is not null ? 2 : 0) ).TlSerialize());
             if(InboxDate is not null) bytes.AddRange(InboxDate.TlSerialize());
             bytes.AddRange(Type.TlSerialize());
             bytes.AddRange(Message.TlSerialize());
@@ -7157,7 +7157,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Masks ? 1 : 0) | (Emojis ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Order.TlSerialize());
             return bytes.ToArray();
         }
@@ -7182,7 +7182,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Masks ? 1 : 0) | (Emojis ? 2 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -7567,7 +7567,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FolderId is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Pinned ? 1 : 0) | (FolderId is not null ? 2 : 0) ).TlSerialize());
             if(FolderId is not null) bytes.AddRange(FolderId.TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             return bytes.ToArray();
@@ -7867,7 +7867,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Unread ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             return bytes.ToArray();
         }
@@ -8301,7 +8301,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Blocked ? 1 : 0) | (BlockedMyStoriesFrom ? 2 : 0) ).TlSerialize());
             bytes.AddRange(PeerId.TlSerialize());
             return bytes.ToArray();
         }
@@ -8361,7 +8361,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Pinned ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(Messages.TlSerialize());
             bytes.AddRange(Pts.TlSerialize());
@@ -8396,7 +8396,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Pinned ? 1 : 0) ).TlSerialize());
             bytes.AddRange(ChannelId.TlSerialize());
             bytes.AddRange(Messages.TlSerialize());
             bytes.AddRange(Pts.TlSerialize());
@@ -8573,7 +8573,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (PrevParticipant is not null ? 1 : 0) | (NewParticipant is not null ? 2 : 0) | (Invite is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ViaChatlist ? 8 : 0) | (PrevParticipant is not null ? 1 : 0) | (NewParticipant is not null ? 2 : 0) | (Invite is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(ChannelId.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             bytes.AddRange(ActorId.TlSerialize());
@@ -8646,7 +8646,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Presentation ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Params.TlSerialize());
             return bytes.ToArray();
         }
@@ -8862,7 +8862,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Pending ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(MsgId.TlSerialize());
             bytes.AddRange(TranscriptionId.TlSerialize());
@@ -8959,7 +8959,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Masks ? 1 : 0) | (Emojis ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Stickerset.TlSerialize());
             return bytes.ToArray();
         }
@@ -9011,7 +9011,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Pinned ? 1 : 0) ).TlSerialize());
             bytes.AddRange(ChannelId.TlSerialize());
             bytes.AddRange(TopicId.TlSerialize());
             return bytes.ToArray();
@@ -9251,7 +9251,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Wallpaper is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (WallpaperOverridden ? 2 : 0) | (Wallpaper is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             if(Wallpaper is not null) bytes.AddRange(Wallpaper.TlSerialize());
             return bytes.ToArray();
@@ -9353,7 +9353,7 @@ namespace SharpGram.Tl.Constructors.UpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Pinned ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             return bytes.ToArray();
         }
@@ -9959,7 +9959,7 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ReplyTo is not null ? 8 : 0) | (Entities is not null ? 128 : 0) | (TtlPeriod is not null ? 33554432 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Out ? 2 : 0) | (Mentioned ? 16 : 0) | (MediaUnread ? 32 : 0) | (Silent ? 8192 : 0) | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ReplyTo is not null ? 8 : 0) | (Entities is not null ? 128 : 0) | (TtlPeriod is not null ? 33554432 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(UserId.TlSerialize());
             bytes.AddRange(Message.TlSerialize());
@@ -10032,7 +10032,7 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ReplyTo is not null ? 8 : 0) | (Entities is not null ? 128 : 0) | (TtlPeriod is not null ? 33554432 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Out ? 2 : 0) | (Mentioned ? 16 : 0) | (MediaUnread ? 32 : 0) | (Silent ? 8192 : 0) | (FwdFrom is not null ? 4 : 0) | (ViaBotId is not null ? 2048 : 0) | (ReplyTo is not null ? 8 : 0) | (Entities is not null ? 128 : 0) | (TtlPeriod is not null ? 33554432 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(FromId.TlSerialize());
             bytes.AddRange(ChatId.TlSerialize());
@@ -10194,7 +10194,7 @@ namespace SharpGram.Tl.Constructors.UpdatesNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Media is not null ? 512 : 0) | (Entities is not null ? 128 : 0) | (TtlPeriod is not null ? 33554432 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Out ? 2 : 0) | (Media is not null ? 512 : 0) | (Entities is not null ? 128 : 0) | (TtlPeriod is not null ? 33554432 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Pts.TlSerialize());
             bytes.AddRange(PtsCount.TlSerialize());
@@ -10385,7 +10385,7 @@ namespace SharpGram.Tl.Constructors.DcOptionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Secret is not null ? 1024 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Ipv6 ? 1 : 0) | (MediaOnly ? 2 : 0) | (TcpoOnly ? 4 : 0) | (Cdn ? 8 : 0) | (Static ? 16 : 0) | (ThisPortOnly ? 32 : 0) | (Secret is not null ? 1024 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(IpAddress.TlSerialize());
             bytes.AddRange(Port.TlSerialize());
@@ -10476,7 +10476,7 @@ namespace SharpGram.Tl.Constructors.ConfigNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (TmpSessions is not null ? 1 : 0) | (AutoupdateUrlPrefix is not null ? 128 : 0) | (GifSearchUsername is not null ? 512 : 0) | (VenueSearchUsername is not null ? 1024 : 0) | (ImgSearchUsername is not null ? 2048 : 0) | (StaticMapsProvider is not null ? 4096 : 0) | (SuggestedLangCode is not null ? 4 : 0) | (LangPackVersion is not null ? 4 : 0) | (BaseLangPackVersion is not null ? 4 : 0) | (ReactionsDefault is not null ? 32768 : 0) | (AutologinToken is not null ? 65536 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (DefaultP2pContacts ? 8 : 0) | (PreloadFeaturedStickers ? 16 : 0) | (RevokePmInbox ? 64 : 0) | (BlockedMode ? 256 : 0) | (ForceTryIpv6 ? 16384 : 0) | (TestMode ? 0 : 0) | (TmpSessions is not null ? 1 : 0) | (AutoupdateUrlPrefix is not null ? 128 : 0) | (GifSearchUsername is not null ? 512 : 0) | (VenueSearchUsername is not null ? 1024 : 0) | (ImgSearchUsername is not null ? 2048 : 0) | (StaticMapsProvider is not null ? 4096 : 0) | (SuggestedLangCode is not null ? 4 : 0) | (LangPackVersion is not null ? 4 : 0) | (BaseLangPackVersion is not null ? 4 : 0) | (ReactionsDefault is not null ? 32768 : 0) | (AutologinToken is not null ? 65536 : 0) ).TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             bytes.AddRange(Expires.TlSerialize());
             bytes.AddRange(ThisDc.TlSerialize());
@@ -10669,7 +10669,7 @@ namespace SharpGram.Tl.Constructors.HelpAppUpdateNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Document is not null ? 2 : 0) | (Url is not null ? 4 : 0) | (Sticker is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (CanNotSkip ? 1 : 0) | (Document is not null ? 2 : 0) | (Url is not null ? 4 : 0) | (Sticker is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Version.TlSerialize());
             bytes.AddRange(Text.TlSerialize());
@@ -10883,7 +10883,7 @@ namespace SharpGram.Tl.Constructors.EncryptedChatNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (HistoryDeleted ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             return bytes.ToArray();
         }
@@ -12524,7 +12524,7 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (MaskCoords is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Mask ? 2 : 0) | (MaskCoords is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Alt.TlSerialize());
             bytes.AddRange(Stickerset.TlSerialize());
             if(MaskCoords is not null) bytes.AddRange(MaskCoords.TlSerialize());
@@ -12558,7 +12558,7 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (PreloadPrefixSize is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (RoundMessage ? 1 : 0) | (SupportsStreaming ? 2 : 0) | (Nosound ? 8 : 0) | (PreloadPrefixSize is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Duration.TlSerialize());
             bytes.AddRange(W.TlSerialize());
             bytes.AddRange(H.TlSerialize());
@@ -12597,7 +12597,7 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Title is not null ? 1 : 0) | (Performer is not null ? 2 : 0) | (Waveform is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Voice ? 1024 : 0) | (Title is not null ? 1 : 0) | (Performer is not null ? 2 : 0) | (Waveform is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Duration.TlSerialize());
             if(Title is not null) bytes.AddRange(Title.TlSerialize());
             if(Performer is not null) bytes.AddRange(Performer.TlSerialize());
@@ -12663,7 +12663,7 @@ namespace SharpGram.Tl.Constructors.DocumentAttributeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Free ? 1 : 0) | (TextColor ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Alt.TlSerialize());
             bytes.AddRange(Stickerset.TlSerialize());
             return bytes.ToArray();
@@ -12896,7 +12896,7 @@ namespace SharpGram.Tl.Constructors.WebPageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Type is not null ? 1 : 0) | (SiteName is not null ? 2 : 0) | (Title is not null ? 4 : 0) | (Description is not null ? 8 : 0) | (Photo is not null ? 16 : 0) | (EmbedUrl is not null ? 32 : 0) | (EmbedType is not null ? 32 : 0) | (EmbedWidth is not null ? 64 : 0) | (EmbedHeight is not null ? 64 : 0) | (Duration is not null ? 128 : 0) | (Author is not null ? 256 : 0) | (Document is not null ? 512 : 0) | (CachedPage is not null ? 1024 : 0) | (Attributes is not null ? 4096 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (HasLargeMedia ? 8192 : 0) | (Type is not null ? 1 : 0) | (SiteName is not null ? 2 : 0) | (Title is not null ? 4 : 0) | (Description is not null ? 8 : 0) | (Photo is not null ? 16 : 0) | (EmbedUrl is not null ? 32 : 0) | (EmbedType is not null ? 32 : 0) | (EmbedWidth is not null ? 64 : 0) | (EmbedHeight is not null ? 64 : 0) | (Duration is not null ? 128 : 0) | (Author is not null ? 256 : 0) | (Document is not null ? 512 : 0) | (CachedPage is not null ? 1024 : 0) | (Attributes is not null ? 4096 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Url.TlSerialize());
             bytes.AddRange(DisplayUrl.TlSerialize());
@@ -13010,7 +13010,7 @@ namespace SharpGram.Tl.Constructors.AuthorizationNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Current ? 1 : 0) | (OfficialApp ? 2 : 0) | (PasswordPending ? 4 : 0) | (EncryptedRequestsDisabled ? 8 : 0) | (CallRequestsDisabled ? 16 : 0) | (Unconfirmed ? 32 : 0) ).TlSerialize());
             bytes.AddRange(Hash.TlSerialize());
             bytes.AddRange(DeviceModel.TlSerialize());
             bytes.AddRange(Platform.TlSerialize());
@@ -13117,7 +13117,7 @@ namespace SharpGram.Tl.Constructors.AccountPasswordNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (CurrentAlgo is not null ? 4 : 0) | (SrpB is not null ? 4 : 0) | (SrpId is not null ? 4 : 0) | (Hint is not null ? 8 : 0) | (EmailUnconfirmedPattern is not null ? 16 : 0) | (PendingResetDate is not null ? 32 : 0) | (LoginEmailPattern is not null ? 64 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (HasRecovery ? 1 : 0) | (HasSecureValues ? 2 : 0) | (HasPassword ? 4 : 0) | (CurrentAlgo is not null ? 4 : 0) | (SrpB is not null ? 4 : 0) | (SrpId is not null ? 4 : 0) | (Hint is not null ? 8 : 0) | (EmailUnconfirmedPattern is not null ? 16 : 0) | (PendingResetDate is not null ? 32 : 0) | (LoginEmailPattern is not null ? 64 : 0) ).TlSerialize());
             if(CurrentAlgo is not null) bytes.AddRange(CurrentAlgo.TlSerialize());
             if(SrpB is not null) bytes.AddRange(SrpB.TlSerialize());
             if(SrpId is not null) bytes.AddRange(SrpId.TlSerialize());
@@ -13301,7 +13301,7 @@ namespace SharpGram.Tl.Constructors.ExportedChatInviteNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (StartDate is not null ? 16 : 0) | (ExpireDate is not null ? 2 : 0) | (UsageLimit is not null ? 4 : 0) | (Usage is not null ? 8 : 0) | (Requested is not null ? 128 : 0) | (Title is not null ? 256 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Revoked ? 1 : 0) | (Permanent ? 32 : 0) | (RequestNeeded ? 64 : 0) | (StartDate is not null ? 16 : 0) | (ExpireDate is not null ? 2 : 0) | (UsageLimit is not null ? 4 : 0) | (Usage is not null ? 8 : 0) | (Requested is not null ? 128 : 0) | (Title is not null ? 256 : 0) ).TlSerialize());
             bytes.AddRange(Link.TlSerialize());
             bytes.AddRange(AdminId.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
@@ -13400,7 +13400,7 @@ namespace SharpGram.Tl.Constructors.ChatInviteNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (About is not null ? 32 : 0) | (Participants is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Channel ? 1 : 0) | (Broadcast ? 2 : 0) | (Public ? 4 : 0) | (Megagroup ? 8 : 0) | (RequestNeeded ? 64 : 0) | (Verified ? 128 : 0) | (Scam ? 256 : 0) | (Fake ? 512 : 0) | (About is not null ? 32 : 0) | (Participants is not null ? 16 : 0) ).TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             if(About is not null) bytes.AddRange(About.TlSerialize());
             bytes.AddRange(Photo.TlSerialize());
@@ -13668,7 +13668,7 @@ namespace SharpGram.Tl.Constructors.StickerSetNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (InstalledDate is not null ? 1 : 0) | (Thumbs is not null ? 16 : 0) | (ThumbDcId is not null ? 16 : 0) | (ThumbVersion is not null ? 16 : 0) | (ThumbDocumentId is not null ? 256 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Archived ? 2 : 0) | (Official ? 4 : 0) | (Masks ? 8 : 0) | (Emojis ? 128 : 0) | (TextColor ? 512 : 0) | (ChannelEmojiStatus ? 1024 : 0) | (Creator ? 2048 : 0) | (InstalledDate is not null ? 1 : 0) | (Thumbs is not null ? 16 : 0) | (ThumbDcId is not null ? 16 : 0) | (ThumbVersion is not null ? 16 : 0) | (ThumbDocumentId is not null ? 256 : 0) ).TlSerialize());
             if(InstalledDate is not null) bytes.AddRange(InstalledDate.TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
@@ -13893,7 +13893,7 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (RequiresPassword ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Text.TlSerialize());
             bytes.AddRange(Data.TlSerialize());
             return bytes.ToArray();
@@ -13954,7 +13954,7 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (PeerTypes is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (SamePeer ? 1 : 0) | (PeerTypes is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Text.TlSerialize());
             bytes.AddRange(Query.TlSerialize());
             if(PeerTypes is not null) bytes.AddRange(PeerTypes.TlSerialize());
@@ -14050,7 +14050,7 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FwdText is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (RequestWriteAccess ? 1 : 0) | (FwdText is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Text.TlSerialize());
             if(FwdText is not null) bytes.AddRange(FwdText.TlSerialize());
             bytes.AddRange(Url.TlSerialize());
@@ -14081,7 +14081,7 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Quiz ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Text.TlSerialize());
             return bytes.ToArray();
         }
@@ -14221,7 +14221,7 @@ namespace SharpGram.Tl.Constructors.KeyboardButtonNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (NameRequested ? 1 : 0) | (UsernameRequested ? 2 : 0) | (PhotoRequested ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Text.TlSerialize());
             bytes.AddRange(ButtonId.TlSerialize());
             bytes.AddRange(PeerType.TlSerialize());
@@ -14282,7 +14282,7 @@ namespace SharpGram.Tl.Constructors.ReplyMarkupNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Selective ? 4 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -14303,7 +14303,7 @@ namespace SharpGram.Tl.Constructors.ReplyMarkupNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Placeholder is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (SingleUse ? 2 : 0) | (Selective ? 4 : 0) | (Placeholder is not null ? 8 : 0) ).TlSerialize());
             if(Placeholder is not null) bytes.AddRange(Placeholder.TlSerialize());
             return bytes.ToArray();
         }
@@ -14332,7 +14332,7 @@ namespace SharpGram.Tl.Constructors.ReplyMarkupNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Placeholder is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Resize ? 1 : 0) | (SingleUse ? 2 : 0) | (Selective ? 4 : 0) | (Persistent ? 16 : 0) | (Placeholder is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(Rows.TlSerialize());
             if(Placeholder is not null) bytes.AddRange(Placeholder.TlSerialize());
             return bytes.ToArray();
@@ -14805,7 +14805,7 @@ namespace SharpGram.Tl.Constructors.MessageEntityNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Collapsed ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Offset.TlSerialize());
             bytes.AddRange(Length.TlSerialize());
             return bytes.ToArray();
@@ -14956,7 +14956,7 @@ namespace SharpGram.Tl.Constructors.UpdatesChannelDifferenceNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Timeout is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Final ? 1 : 0) | (Timeout is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Pts.TlSerialize());
             if(Timeout is not null) bytes.AddRange(Timeout.TlSerialize());
             return bytes.ToArray();
@@ -14984,7 +14984,7 @@ namespace SharpGram.Tl.Constructors.UpdatesChannelDifferenceNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Timeout is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Final ? 1 : 0) | (Timeout is not null ? 2 : 0) ).TlSerialize());
             if(Timeout is not null) bytes.AddRange(Timeout.TlSerialize());
             bytes.AddRange(Dialog.TlSerialize());
             bytes.AddRange(Messages.TlSerialize());
@@ -15022,7 +15022,7 @@ namespace SharpGram.Tl.Constructors.UpdatesChannelDifferenceNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Timeout is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Final ? 1 : 0) | (Timeout is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Pts.TlSerialize());
             if(Timeout is not null) bytes.AddRange(Timeout.TlSerialize());
             bytes.AddRange(NewMessages.TlSerialize());
@@ -15078,7 +15078,7 @@ namespace SharpGram.Tl.Constructors.ChannelMessagesFilterNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ExcludeNewMessages ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Ranges.TlSerialize());
             return bytes.ToArray();
         }
@@ -15129,7 +15129,7 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ViaRequest ? 1 : 0) ).TlSerialize());
             bytes.AddRange(UserId.TlSerialize());
             bytes.AddRange(InviterId.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
@@ -15192,7 +15192,7 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (InviterId is not null ? 2 : 0) | (Rank is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (CanEdit ? 1 : 0) | (Self ? 2 : 0) | (InviterId is not null ? 2 : 0) | (Rank is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(UserId.TlSerialize());
             if(InviterId is not null) bytes.AddRange(InviterId.TlSerialize());
             bytes.AddRange(PromotedBy.TlSerialize());
@@ -15235,7 +15235,7 @@ namespace SharpGram.Tl.Constructors.ChannelParticipantNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Left ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(KickedBy.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
@@ -15512,7 +15512,7 @@ namespace SharpGram.Tl.Constructors.HelpTermsOfServiceNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (MinAgeConfirm is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Popup ? 1 : 0) | (MinAgeConfirm is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Text.TlSerialize());
             bytes.AddRange(Entities.TlSerialize());
@@ -15589,7 +15589,7 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (InvertMedia ? 8 : 0) | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
             if(ReplyMarkup is not null) bytes.AddRange(ReplyMarkup.TlSerialize());
@@ -15620,7 +15620,7 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (NoWebpage ? 1 : 0) | (InvertMedia ? 8 : 0) | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
             if(ReplyMarkup is not null) bytes.AddRange(ReplyMarkup.TlSerialize());
@@ -15835,7 +15835,7 @@ namespace SharpGram.Tl.Constructors.InputBotInlineMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (InvertMedia ? 8 : 0) | (ForceLargeMedia ? 16 : 0) | (ForceSmallMedia ? 32 : 0) | (Optional ? 64 : 0) | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
             bytes.AddRange(Url.TlSerialize());
@@ -16018,7 +16018,7 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (InvertMedia ? 8 : 0) | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
             if(ReplyMarkup is not null) bytes.AddRange(ReplyMarkup.TlSerialize());
@@ -16049,7 +16049,7 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (NoWebpage ? 1 : 0) | (InvertMedia ? 8 : 0) | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
             if(ReplyMarkup is not null) bytes.AddRange(ReplyMarkup.TlSerialize());
@@ -16198,7 +16198,7 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Photo is not null ? 1 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ShippingAddressRequested ? 2 : 0) | (Test ? 8 : 0) | (Photo is not null ? 1 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             bytes.AddRange(Description.TlSerialize());
             if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
@@ -16244,7 +16244,7 @@ namespace SharpGram.Tl.Constructors.BotInlineMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (InvertMedia ? 8 : 0) | (ForceLargeMedia ? 16 : 0) | (ForceSmallMedia ? 32 : 0) | (Manual ? 128 : 0) | (Safe ? 256 : 0) | (Entities is not null ? 2 : 0) | (ReplyMarkup is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
             bytes.AddRange(Url.TlSerialize());
@@ -16380,7 +16380,7 @@ namespace SharpGram.Tl.Constructors.MessagesBotResultsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (NextOffset is not null ? 2 : 0) | (SwitchPm is not null ? 4 : 0) | (SwitchWebview is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Gallery ? 1 : 0) | (NextOffset is not null ? 2 : 0) | (SwitchPm is not null ? 4 : 0) | (SwitchWebview is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(QueryId.TlSerialize());
             if(NextOffset is not null) bytes.AddRange(NextOffset.TlSerialize());
             if(SwitchPm is not null) bytes.AddRange(SwitchPm.TlSerialize());
@@ -16462,7 +16462,7 @@ namespace SharpGram.Tl.Constructors.MessageFwdHeaderNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FromId is not null ? 1 : 0) | (FromName is not null ? 32 : 0) | (ChannelPost is not null ? 4 : 0) | (PostAuthor is not null ? 8 : 0) | (SavedFromPeer is not null ? 16 : 0) | (SavedFromMsgId is not null ? 16 : 0) | (SavedFromId is not null ? 256 : 0) | (SavedFromName is not null ? 512 : 0) | (SavedDate is not null ? 1024 : 0) | (PsaType is not null ? 64 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Imported ? 128 : 0) | (SavedOut ? 2048 : 0) | (FromId is not null ? 1 : 0) | (FromName is not null ? 32 : 0) | (ChannelPost is not null ? 4 : 0) | (PostAuthor is not null ? 8 : 0) | (SavedFromPeer is not null ? 16 : 0) | (SavedFromMsgId is not null ? 16 : 0) | (SavedFromId is not null ? 256 : 0) | (SavedFromName is not null ? 512 : 0) | (SavedDate is not null ? 1024 : 0) | (PsaType is not null ? 64 : 0) ).TlSerialize());
             if(FromId is not null) bytes.AddRange(FromId.TlSerialize());
             if(FromName is not null) bytes.AddRange(FromName.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
@@ -16693,7 +16693,7 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ResetAvailablePeriod is not null ? 8 : 0) | (ResetPendingDate is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (AppleSigninAllowed ? 1 : 0) | (GoogleSigninAllowed ? 2 : 0) | (ResetAvailablePeriod is not null ? 8 : 0) | (ResetPendingDate is not null ? 16 : 0) ).TlSerialize());
             bytes.AddRange(EmailPattern.TlSerialize());
             bytes.AddRange(Length.TlSerialize());
             if(ResetAvailablePeriod is not null) bytes.AddRange(ResetAvailablePeriod.TlSerialize());
@@ -16727,7 +16727,7 @@ namespace SharpGram.Tl.Constructors.AuthSentCodeTypeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (AppleSigninAllowed ? 1 : 0) | (GoogleSigninAllowed ? 2 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -16859,7 +16859,7 @@ namespace SharpGram.Tl.Constructors.MessagesBotCallbackAnswerNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Message is not null ? 1 : 0) | (Url is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Alert ? 2 : 0) | (HasUrl ? 8 : 0) | (NativeUi ? 16 : 0) | (Message is not null ? 1 : 0) | (Url is not null ? 4 : 0) ).TlSerialize());
             if(Message is not null) bytes.AddRange(Message.TlSerialize());
             if(Url is not null) bytes.AddRange(Url.TlSerialize());
             bytes.AddRange(CacheTime.TlSerialize());
@@ -16895,7 +16895,7 @@ namespace SharpGram.Tl.Constructors.MessagesMessageEditDataNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Caption ? 1 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -17295,7 +17295,7 @@ namespace SharpGram.Tl.Constructors.DraftMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ReplyTo is not null ? 16 : 0) | (Entities is not null ? 8 : 0) | (Media is not null ? 32 : 0) | (Effect is not null ? 128 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (NoWebpage ? 2 : 0) | (InvertMedia ? 64 : 0) | (ReplyTo is not null ? 16 : 0) | (Entities is not null ? 8 : 0) | (Media is not null ? 32 : 0) | (Effect is not null ? 128 : 0) ).TlSerialize());
             if(ReplyTo is not null) bytes.AddRange(ReplyTo.TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
@@ -17358,7 +17358,7 @@ namespace SharpGram.Tl.Constructors.MessagesFeaturedStickersNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Premium ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Hash.TlSerialize());
             bytes.AddRange(Count.TlSerialize());
             bytes.AddRange(Sets.TlSerialize());
@@ -18432,7 +18432,7 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Autoplay ? 1 : 0) | (Loop ? 2 : 0) ).TlSerialize());
             bytes.AddRange(VideoId.TlSerialize());
             bytes.AddRange(Caption.TlSerialize());
             return bytes.ToArray();
@@ -18484,7 +18484,7 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Url is not null ? 2 : 0) | (Html is not null ? 4 : 0) | (PosterPhotoId is not null ? 16 : 0) | (W is not null ? 32 : 0) | (H is not null ? 32 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (FullWidth ? 1 : 0) | (AllowScrolling ? 8 : 0) | (Url is not null ? 2 : 0) | (Html is not null ? 4 : 0) | (PosterPhotoId is not null ? 16 : 0) | (W is not null ? 32 : 0) | (H is not null ? 32 : 0) ).TlSerialize());
             if(Url is not null) bytes.AddRange(Url.TlSerialize());
             if(Html is not null) bytes.AddRange(Html.TlSerialize());
             if(PosterPhotoId is not null) bytes.AddRange(PosterPhotoId.TlSerialize());
@@ -18670,7 +18670,7 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Bordered ? 1 : 0) | (Striped ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             bytes.AddRange(Rows.TlSerialize());
             return bytes.ToArray();
@@ -18717,7 +18717,7 @@ namespace SharpGram.Tl.Constructors.PageBlockNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Open ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Blocks.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             return bytes.ToArray();
@@ -18923,7 +18923,7 @@ namespace SharpGram.Tl.Constructors.InvoiceNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (MaxTipAmount is not null ? 256 : 0) | (SuggestedTipAmounts is not null ? 256 : 0) | (TermsUrl is not null ? 1024 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Test ? 1 : 0) | (NameRequested ? 2 : 0) | (PhoneRequested ? 4 : 0) | (EmailRequested ? 8 : 0) | (ShippingAddressRequested ? 16 : 0) | (Flexible ? 32 : 0) | (PhoneToProvider ? 64 : 0) | (EmailToProvider ? 128 : 0) | (Recurring ? 512 : 0) | (MaxTipAmount is not null ? 256 : 0) | (SuggestedTipAmounts is not null ? 256 : 0) | (TermsUrl is not null ? 1024 : 0) ).TlSerialize());
             bytes.AddRange(Currency.TlSerialize());
             bytes.AddRange(Prices.TlSerialize());
             if(MaxTipAmount is not null) bytes.AddRange(MaxTipAmount.TlSerialize());
@@ -19264,7 +19264,7 @@ namespace SharpGram.Tl.Constructors.InputWebFileLocationNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Document is not null ? 1 : 0) | (Title is not null ? 2 : 0) | (Performer is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Small ? 4 : 0) | (Document is not null ? 1 : 0) | (Title is not null ? 2 : 0) | (Performer is not null ? 2 : 0) ).TlSerialize());
             if(Document is not null) bytes.AddRange(Document.TlSerialize());
             if(Title is not null) bytes.AddRange(Title.TlSerialize());
             if(Performer is not null) bytes.AddRange(Performer.TlSerialize());
@@ -19342,7 +19342,7 @@ namespace SharpGram.Tl.Constructors.PaymentsPaymentFormNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Photo is not null ? 32 : 0) | (NativeProvider is not null ? 16 : 0) | (NativeParams is not null ? 16 : 0) | (AdditionalMethods is not null ? 64 : 0) | (SavedInfo is not null ? 1 : 0) | (SavedCredentials is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (CanSaveCredentials ? 4 : 0) | (PasswordMissing ? 8 : 0) | (Photo is not null ? 32 : 0) | (NativeProvider is not null ? 16 : 0) | (NativeParams is not null ? 16 : 0) | (AdditionalMethods is not null ? 64 : 0) | (SavedInfo is not null ? 1 : 0) | (SavedCredentials is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(FormId.TlSerialize());
             bytes.AddRange(BotId.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
@@ -19629,7 +19629,7 @@ namespace SharpGram.Tl.Constructors.PaymentsSavedInfoNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (SavedInfo is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (HasSavedCredentials ? 2 : 0) | (SavedInfo is not null ? 1 : 0) ).TlSerialize());
             if(SavedInfo is not null) bytes.AddRange(SavedInfo.TlSerialize());
             return bytes.ToArray();
         }
@@ -19678,7 +19678,7 @@ namespace SharpGram.Tl.Constructors.InputPaymentCredentialsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Save ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Data.TlSerialize());
             return bytes.ToArray();
         }
@@ -19881,7 +19881,7 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ReceiveDate is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Video ? 64 : 0) | (ReceiveDate is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
@@ -19927,7 +19927,7 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Video ? 64 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
@@ -19973,7 +19973,7 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Video ? 64 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
@@ -20024,7 +20024,7 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (CustomParameters is not null ? 128 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (P2pAllowed ? 32 : 0) | (Video ? 64 : 0) | (CustomParameters is not null ? 128 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
@@ -20082,7 +20082,7 @@ namespace SharpGram.Tl.Constructors.PhoneCallNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Reason is not null ? 1 : 0) | (Duration is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (NeedRating ? 4 : 0) | (NeedDebug ? 8 : 0) | (Video ? 64 : 0) | (Reason is not null ? 1 : 0) | (Duration is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(Reason is not null) bytes.AddRange(Reason.TlSerialize());
             if(Duration is not null) bytes.AddRange(Duration.TlSerialize());
@@ -20119,7 +20119,7 @@ namespace SharpGram.Tl.Constructors.PhoneConnectionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Tcp ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Ip.TlSerialize());
             bytes.AddRange(Ipv6.TlSerialize());
@@ -20156,7 +20156,7 @@ namespace SharpGram.Tl.Constructors.PhoneConnectionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Turn ? 1 : 0) | (Stun ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Ip.TlSerialize());
             bytes.AddRange(Ipv6.TlSerialize());
@@ -20203,7 +20203,7 @@ namespace SharpGram.Tl.Constructors.PhoneCallProtocolNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (UdpP2p ? 1 : 0) | (UdpReflector ? 2 : 0) ).TlSerialize());
             bytes.AddRange(MinLayer.TlSerialize());
             bytes.AddRange(MaxLayer.TlSerialize());
             bytes.AddRange(LibraryVersions.TlSerialize());
@@ -20480,7 +20480,7 @@ namespace SharpGram.Tl.Constructors.LangPackLanguageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (BaseLangCode is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Official ? 1 : 0) | (Rtl ? 4 : 0) | (Beta ? 8 : 0) | (BaseLangCode is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Name.TlSerialize());
             bytes.AddRange(NativeName.TlSerialize());
             bytes.AddRange(LangCode.TlSerialize());
@@ -21036,7 +21036,7 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventActionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ViaChatlist ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Invite.TlSerialize());
             return bytes.ToArray();
         }
@@ -21568,7 +21568,7 @@ namespace SharpGram.Tl.Constructors.ChannelAdminLogEventsFilterNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Join ? 1 : 0) | (Leave ? 2 : 0) | (Invite ? 4 : 0) | (Ban ? 8 : 0) | (Unban ? 16 : 0) | (Kick ? 32 : 0) | (Unkick ? 64 : 0) | (Promote ? 128 : 0) | (Demote ? 256 : 0) | (Info ? 512 : 0) | (Settings ? 1024 : 0) | (Pinned ? 2048 : 0) | (Edit ? 4096 : 0) | (Delete ? 8192 : 0) | (GroupCall ? 16384 : 0) | (Invites ? 32768 : 0) | (Send ? 65536 : 0) | (Forums ? 131072 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -23084,7 +23084,7 @@ namespace SharpGram.Tl.Constructors.HelpDeepLinkInfoNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Entities is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (UpdateApp ? 1 : 0) | (Entities is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             if(Entities is not null) bytes.AddRange(Entities.TlSerialize());
             return bytes.ToArray();
@@ -23348,7 +23348,7 @@ namespace SharpGram.Tl.Constructors.SecureRequiredTypeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (NativeNames ? 1 : 0) | (SelfieRequired ? 2 : 0) | (TranslationRequired ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Type.TlSerialize());
             return bytes.ToArray();
         }
@@ -23610,7 +23610,7 @@ namespace SharpGram.Tl.Constructors.PageTableCellNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Text is not null ? 128 : 0) | (Colspan is not null ? 2 : 0) | (Rowspan is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Header ? 1 : 0) | (AlignCenter ? 8 : 0) | (AlignRight ? 16 : 0) | (ValignMiddle ? 32 : 0) | (ValignBottom ? 64 : 0) | (Text is not null ? 128 : 0) | (Colspan is not null ? 2 : 0) | (Rowspan is not null ? 4 : 0) ).TlSerialize());
             if(Text is not null) bytes.AddRange(Text.TlSerialize());
             if(Colspan is not null) bytes.AddRange(Colspan.TlSerialize());
             if(Rowspan is not null) bytes.AddRange(Rowspan.TlSerialize());
@@ -23839,7 +23839,7 @@ namespace SharpGram.Tl.Constructors.PageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Views is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Part ? 1 : 0) | (Rtl ? 2 : 0) | (V2 ? 4 : 0) | (Views is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(Url.TlSerialize());
             bytes.AddRange(Blocks.TlSerialize());
             bytes.AddRange(Photos.TlSerialize());
@@ -23986,7 +23986,7 @@ namespace SharpGram.Tl.Constructors.PollNs {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
             bytes.AddRange(Id.TlSerialize());
-            bytes.AddRange((0 | (ClosePeriod is not null ? 16 : 0) | (CloseDate is not null ? 32 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Closed ? 1 : 0) | (PublicVoters ? 2 : 0) | (MultipleChoice ? 4 : 0) | (Quiz ? 8 : 0) | (ClosePeriod is not null ? 16 : 0) | (CloseDate is not null ? 32 : 0) ).TlSerialize());
             bytes.AddRange(Question.TlSerialize());
             bytes.AddRange(Answers.TlSerialize());
             if(ClosePeriod is not null) bytes.AddRange(ClosePeriod.TlSerialize());
@@ -24032,7 +24032,7 @@ namespace SharpGram.Tl.Constructors.PollAnswerVotersNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Chosen ? 1 : 0) | (Correct ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Option.TlSerialize());
             bytes.AddRange(Voters.TlSerialize());
             return bytes.ToArray();
@@ -24068,7 +24068,7 @@ namespace SharpGram.Tl.Constructors.PollResultsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Results is not null ? 2 : 0) | (TotalVoters is not null ? 4 : 0) | (RecentVoters is not null ? 8 : 0) | (Solution is not null ? 16 : 0) | (SolutionEntities is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Min ? 1 : 0) | (Results is not null ? 2 : 0) | (TotalVoters is not null ? 4 : 0) | (RecentVoters is not null ? 8 : 0) | (Solution is not null ? 16 : 0) | (SolutionEntities is not null ? 16 : 0) ).TlSerialize());
             if(Results is not null) bytes.AddRange(Results.TlSerialize());
             if(TotalVoters is not null) bytes.AddRange(TotalVoters.TlSerialize());
             if(RecentVoters is not null) bytes.AddRange(RecentVoters.TlSerialize());
@@ -24164,7 +24164,7 @@ namespace SharpGram.Tl.Constructors.ChatAdminRightsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ChangeInfo ? 1 : 0) | (PostMessages ? 2 : 0) | (EditMessages ? 4 : 0) | (DeleteMessages ? 8 : 0) | (BanUsers ? 16 : 0) | (InviteUsers ? 32 : 0) | (PinMessages ? 128 : 0) | (AddAdmins ? 512 : 0) | (Anonymous ? 1024 : 0) | (ManageCall ? 2048 : 0) | (Other ? 4096 : 0) | (ManageTopics ? 8192 : 0) | (PostStories ? 16384 : 0) | (EditStories ? 32768 : 0) | (DeleteStories ? 65536 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -24235,7 +24235,7 @@ namespace SharpGram.Tl.Constructors.ChatBannedRightsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ViewMessages ? 1 : 0) | (SendMessages ? 2 : 0) | (SendMedia ? 4 : 0) | (SendStickers ? 8 : 0) | (SendGifs ? 16 : 0) | (SendGames ? 32 : 0) | (SendInline ? 64 : 0) | (EmbedLinks ? 128 : 0) | (SendPolls ? 256 : 0) | (ChangeInfo ? 1024 : 0) | (InviteUsers ? 32768 : 0) | (PinMessages ? 131072 : 0) | (ManageTopics ? 262144 : 0) | (SendPhotos ? 524288 : 0) | (SendVideos ? 1048576 : 0) | (SendRoundvideos ? 2097152 : 0) | (SendAudios ? 4194304 : 0) | (SendVoices ? 8388608 : 0) | (SendDocs ? 16777216 : 0) | (SendPlain ? 33554432 : 0) ).TlSerialize());
             bytes.AddRange(UntilDate.TlSerialize());
             return bytes.ToArray();
         }
@@ -24409,7 +24409,7 @@ namespace SharpGram.Tl.Constructors.CodeSettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (LogoutTokens is not null ? 64 : 0) | (Token is not null ? 256 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (AllowFlashcall ? 1 : 0) | (CurrentNumber ? 2 : 0) | (AllowAppHash ? 16 : 0) | (AllowMissedCall ? 32 : 0) | (AllowFirebase ? 128 : 0) | (UnknownNumber ? 512 : 0) | (LogoutTokens is not null ? 64 : 0) | (Token is not null ? 256 : 0) | (AppSandbox ? 256 : 0) ).TlSerialize());
             if(LogoutTokens is not null) bytes.AddRange(LogoutTokens.TlSerialize());
             if(Token is not null) bytes.AddRange(Token.TlSerialize());
             return bytes.ToArray();
@@ -24458,7 +24458,7 @@ namespace SharpGram.Tl.Constructors.WallPaperSettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (BackgroundColor is not null ? 1 : 0) | (SecondBackgroundColor is not null ? 16 : 0) | (ThirdBackgroundColor is not null ? 32 : 0) | (FourthBackgroundColor is not null ? 64 : 0) | (Intensity is not null ? 8 : 0) | (Rotation is not null ? 16 : 0) | (Emoticon is not null ? 128 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Blur ? 2 : 0) | (Motion ? 4 : 0) | (BackgroundColor is not null ? 1 : 0) | (SecondBackgroundColor is not null ? 16 : 0) | (ThirdBackgroundColor is not null ? 32 : 0) | (FourthBackgroundColor is not null ? 64 : 0) | (Intensity is not null ? 8 : 0) | (Rotation is not null ? 16 : 0) | (Emoticon is not null ? 128 : 0) ).TlSerialize());
             if(BackgroundColor is not null) bytes.AddRange(BackgroundColor.TlSerialize());
             if(SecondBackgroundColor is not null) bytes.AddRange(SecondBackgroundColor.TlSerialize());
             if(ThirdBackgroundColor is not null) bytes.AddRange(ThirdBackgroundColor.TlSerialize());
@@ -24514,7 +24514,7 @@ namespace SharpGram.Tl.Constructors.AutoDownloadSettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Disabled ? 1 : 0) | (VideoPreloadLarge ? 2 : 0) | (AudioPreloadNext ? 4 : 0) | (PhonecallsLessData ? 8 : 0) | (StoriesPreload ? 16 : 0) ).TlSerialize());
             bytes.AddRange(PhotoSizeMax.TlSerialize());
             bytes.AddRange(VideoSizeMax.TlSerialize());
             bytes.AddRange(FileSizeMax.TlSerialize());
@@ -24720,7 +24720,7 @@ namespace SharpGram.Tl.Constructors.FolderNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Photo is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (AutofillNewBroadcasts ? 1 : 0) | (AutofillPublicGroups ? 2 : 0) | (AutofillNewCorrespondents ? 4 : 0) | (Photo is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             if(Photo is not null) bytes.AddRange(Photo.TlSerialize());
@@ -24810,7 +24810,7 @@ namespace SharpGram.Tl.Constructors.MessagesSearchCounterNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Inexact ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Filter.TlSerialize());
             bytes.AddRange(Count.TlSerialize());
             return bytes.ToArray();
@@ -24841,7 +24841,7 @@ namespace SharpGram.Tl.Constructors.UrlAuthResultNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (RequestWriteAccess ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Bot.TlSerialize());
             bytes.AddRange(Domain.TlSerialize());
             return bytes.ToArray();
@@ -25072,7 +25072,7 @@ namespace SharpGram.Tl.Constructors.ThemeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Document is not null ? 4 : 0) | (Settings is not null ? 8 : 0) | (Emoticon is not null ? 64 : 0) | (InstallsCount is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Creator ? 1 : 0) | (Default ? 2 : 0) | (ForChat ? 32 : 0) | (Document is not null ? 4 : 0) | (Settings is not null ? 8 : 0) | (Emoticon is not null ? 64 : 0) | (InstallsCount is not null ? 16 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(Slug.TlSerialize());
@@ -25230,7 +25230,7 @@ namespace SharpGram.Tl.Constructors.AccountContentSettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (SensitiveEnabled ? 1 : 0) | (SensitiveCanChange ? 2 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -25365,7 +25365,7 @@ namespace SharpGram.Tl.Constructors.InputThemeSettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (OutboxAccentColor is not null ? 8 : 0) | (MessageColors is not null ? 1 : 0) | (Wallpaper is not null ? 2 : 0) | (WallpaperSettings is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (MessageColorsAnimated ? 4 : 0) | (OutboxAccentColor is not null ? 8 : 0) | (MessageColors is not null ? 1 : 0) | (Wallpaper is not null ? 2 : 0) | (WallpaperSettings is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(BaseTheme.TlSerialize());
             bytes.AddRange(AccentColor.TlSerialize());
             if(OutboxAccentColor is not null) bytes.AddRange(OutboxAccentColor.TlSerialize());
@@ -25411,7 +25411,7 @@ namespace SharpGram.Tl.Constructors.ThemeSettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (OutboxAccentColor is not null ? 8 : 0) | (MessageColors is not null ? 1 : 0) | (Wallpaper is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (MessageColorsAnimated ? 4 : 0) | (OutboxAccentColor is not null ? 8 : 0) | (MessageColors is not null ? 1 : 0) | (Wallpaper is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(BaseTheme.TlSerialize());
             bytes.AddRange(AccentColor.TlSerialize());
             if(OutboxAccentColor is not null) bytes.AddRange(OutboxAccentColor.TlSerialize());
@@ -25503,7 +25503,7 @@ namespace SharpGram.Tl.Constructors.WebPageAttributeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Emojis ? 1 : 0) | (TextColor ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Stickers.TlSerialize());
             return bytes.ToArray();
         }
@@ -25637,7 +25637,7 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Emoticon is not null ? 33554432 : 0) | (Color is not null ? 134217728 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Contacts ? 1 : 0) | (NonContacts ? 2 : 0) | (Groups ? 4 : 0) | (Broadcasts ? 8 : 0) | (Bots ? 16 : 0) | (ExcludeMuted ? 2048 : 0) | (ExcludeRead ? 4096 : 0) | (ExcludeArchived ? 8192 : 0) | (Emoticon is not null ? 33554432 : 0) | (Color is not null ? 134217728 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             if(Emoticon is not null) bytes.AddRange(Emoticon.TlSerialize());
@@ -25711,7 +25711,7 @@ namespace SharpGram.Tl.Constructors.DialogFilterNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Emoticon is not null ? 33554432 : 0) | (Color is not null ? 134217728 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (HasMyInvites ? 67108864 : 0) | (Emoticon is not null ? 33554432 : 0) | (Color is not null ? 134217728 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             if(Emoticon is not null) bytes.AddRange(Emoticon.TlSerialize());
@@ -26048,7 +26048,7 @@ namespace SharpGram.Tl.Constructors.HelpPromoDataNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (PsaType is not null ? 2 : 0) | (PsaMessage is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Proxy ? 1 : 0) | (PsaType is not null ? 2 : 0) | (PsaMessage is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Expires.TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(Chats.TlSerialize());
@@ -26357,7 +26357,7 @@ namespace SharpGram.Tl.Constructors.GlobalPrivacySettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (ArchiveAndMuteNewNoncontactPeers ? 1 : 0) | (KeepArchivedUnmuted ? 2 : 0) | (KeepArchivedFolders ? 4 : 0) | (HideReadMarks ? 8 : 0) | (NewNoncontactPeersRequirePremium ? 16 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -26424,7 +26424,7 @@ namespace SharpGram.Tl.Constructors.HelpCountryNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Name is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Hidden ? 1 : 0) | (Name is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Iso2.TlSerialize());
             bytes.AddRange(DefaultName.TlSerialize());
             if(Name is not null) bytes.AddRange(Name.TlSerialize());
@@ -26619,7 +26619,7 @@ namespace SharpGram.Tl.Constructors.MessageReplyHeaderNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ReplyToMsgId is not null ? 16 : 0) | (ReplyToPeerId is not null ? 1 : 0) | (ReplyFrom is not null ? 32 : 0) | (ReplyMedia is not null ? 256 : 0) | (ReplyToTopId is not null ? 2 : 0) | (QuoteText is not null ? 64 : 0) | (QuoteEntities is not null ? 128 : 0) | (QuoteOffset is not null ? 1024 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ReplyToScheduled ? 4 : 0) | (ForumTopic ? 8 : 0) | (Quote ? 512 : 0) | (ReplyToMsgId is not null ? 16 : 0) | (ReplyToPeerId is not null ? 1 : 0) | (ReplyFrom is not null ? 32 : 0) | (ReplyMedia is not null ? 256 : 0) | (ReplyToTopId is not null ? 2 : 0) | (QuoteText is not null ? 64 : 0) | (QuoteEntities is not null ? 128 : 0) | (QuoteOffset is not null ? 1024 : 0) ).TlSerialize());
             if(ReplyToMsgId is not null) bytes.AddRange(ReplyToMsgId.TlSerialize());
             if(ReplyToPeerId is not null) bytes.AddRange(ReplyToPeerId.TlSerialize());
             if(ReplyFrom is not null) bytes.AddRange(ReplyFrom.TlSerialize());
@@ -26698,7 +26698,7 @@ namespace SharpGram.Tl.Constructors.MessageRepliesNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (RecentRepliers is not null ? 2 : 0) | (ChannelId is not null ? 1 : 0) | (MaxId is not null ? 4 : 0) | (ReadMaxId is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Comments ? 1 : 0) | (RecentRepliers is not null ? 2 : 0) | (ChannelId is not null ? 1 : 0) | (MaxId is not null ? 4 : 0) | (ReadMaxId is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(Replies.TlSerialize());
             bytes.AddRange(RepliesPts.TlSerialize());
             if(RecentRepliers is not null) bytes.AddRange(RecentRepliers.TlSerialize());
@@ -26830,7 +26830,7 @@ namespace SharpGram.Tl.Constructors.GroupCallNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Title is not null ? 8 : 0) | (StreamDcId is not null ? 16 : 0) | (RecordStartDate is not null ? 32 : 0) | (ScheduleDate is not null ? 128 : 0) | (UnmutedVideoCount is not null ? 1024 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (JoinMuted ? 2 : 0) | (CanChangeJoinMuted ? 4 : 0) | (JoinDateAsc ? 64 : 0) | (ScheduleStartSubscribed ? 256 : 0) | (CanStartVideo ? 512 : 0) | (RecordVideoActive ? 2048 : 0) | (RtmpStream ? 4096 : 0) | (ListenersHidden ? 8192 : 0) | (Title is not null ? 8 : 0) | (StreamDcId is not null ? 16 : 0) | (RecordStartDate is not null ? 32 : 0) | (ScheduleDate is not null ? 128 : 0) | (UnmutedVideoCount is not null ? 1024 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(AccessHash.TlSerialize());
             bytes.AddRange(ParticipantsCount.TlSerialize());
@@ -26941,7 +26941,7 @@ namespace SharpGram.Tl.Constructors.GroupCallParticipantNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ActiveDate is not null ? 8 : 0) | (Volume is not null ? 128 : 0) | (About is not null ? 2048 : 0) | (RaiseHandRating is not null ? 8192 : 0) | (Video is not null ? 64 : 0) | (Presentation is not null ? 16384 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Muted ? 1 : 0) | (Left ? 2 : 0) | (CanSelfUnmute ? 4 : 0) | (JustJoined ? 16 : 0) | (Versioned ? 32 : 0) | (Min ? 256 : 0) | (MutedByYou ? 512 : 0) | (VolumeByAdmin ? 1024 : 0) | (Self ? 4096 : 0) | (VideoJoined ? 32768 : 0) | (ActiveDate is not null ? 8 : 0) | (Volume is not null ? 128 : 0) | (About is not null ? 2048 : 0) | (RaiseHandRating is not null ? 8192 : 0) | (Video is not null ? 64 : 0) | (Presentation is not null ? 16384 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             if(ActiveDate is not null) bytes.AddRange(ActiveDate.TlSerialize());
@@ -27201,7 +27201,7 @@ namespace SharpGram.Tl.Constructors.MessagesHistoryImportParsedNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Title is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Pm ? 1 : 0) | (Group ? 2 : 0) | (Title is not null ? 4 : 0) ).TlSerialize());
             if(Title is not null) bytes.AddRange(Title.TlSerialize());
             return bytes.ToArray();
         }
@@ -27268,7 +27268,7 @@ namespace SharpGram.Tl.Constructors.ChatInviteImporterNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (About is not null ? 4 : 0) | (ApprovedBy is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Requested ? 1 : 0) | (ViaChatlist ? 8 : 0) | (About is not null ? 4 : 0) | (ApprovedBy is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(UserId.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             if(About is not null) bytes.AddRange(About.TlSerialize());
@@ -27572,7 +27572,7 @@ namespace SharpGram.Tl.Constructors.GroupCallParticipantVideoNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (AudioSource is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Paused ? 1 : 0) | (AudioSource is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Endpoint.TlSerialize());
             bytes.AddRange(SourceGroups.TlSerialize());
             if(AudioSource is not null) bytes.AddRange(AudioSource.TlSerialize());
@@ -27809,7 +27809,7 @@ namespace SharpGram.Tl.Constructors.SponsoredMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Entities is not null ? 2 : 0) | (Photo is not null ? 64 : 0) | (Color is not null ? 8192 : 0) | (SponsorInfo is not null ? 128 : 0) | (AdditionalInfo is not null ? 256 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Recommended ? 32 : 0) | (CanReport ? 4096 : 0) | (Entities is not null ? 2 : 0) | (Photo is not null ? 64 : 0) | (Color is not null ? 8192 : 0) | (SponsorInfo is not null ? 128 : 0) | (AdditionalInfo is not null ? 256 : 0) ).TlSerialize());
             bytes.AddRange(RandomId.TlSerialize());
             bytes.AddRange(Url.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
@@ -27956,7 +27956,7 @@ namespace SharpGram.Tl.Constructors.MessagesSearchResultsCalendarNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (OffsetIdOffset is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Inexact ? 1 : 0) | (OffsetIdOffset is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Count.TlSerialize());
             bytes.AddRange(MinDate.TlSerialize());
             bytes.AddRange(MinMsgId.TlSerialize());
@@ -28209,7 +28209,7 @@ namespace SharpGram.Tl.Constructors.MessageReactionsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (RecentReactions is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Min ? 1 : 0) | (CanSeeList ? 4 : 0) | (ReactionsAsTags ? 8 : 0) | (RecentReactions is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Results.TlSerialize());
             if(RecentReactions is not null) bytes.AddRange(RecentReactions.TlSerialize());
             return bytes.ToArray();
@@ -28292,7 +28292,7 @@ namespace SharpGram.Tl.Constructors.AvailableReactionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (AroundAnimation is not null ? 2 : 0) | (CenterIcon is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Inactive ? 1 : 0) | (Premium ? 4 : 0) | (AroundAnimation is not null ? 2 : 0) | (CenterIcon is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Reaction.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
             bytes.AddRange(StaticIcon.TlSerialize());
@@ -28389,7 +28389,7 @@ namespace SharpGram.Tl.Constructors.MessagePeerReactionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Big ? 1 : 0) | (Unread ? 2 : 0) | (My ? 4 : 0) ).TlSerialize());
             bytes.AddRange(PeerId.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             bytes.AddRange(Reaction.TlSerialize());
@@ -28570,7 +28570,7 @@ namespace SharpGram.Tl.Constructors.AttachMenuBotNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (PeerTypes is not null ? 8 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Inactive ? 1 : 0) | (HasSettings ? 2 : 0) | (RequestWriteAccess ? 4 : 0) | (ShowInAttachMenu ? 8 : 0) | (ShowInSideMenu ? 16 : 0) | (SideMenuDisclaimerNeeded ? 32 : 0) | (PeerTypes is not null ? 8 : 0) ).TlSerialize());
             bytes.AddRange(BotId.TlSerialize());
             bytes.AddRange(ShortName.TlSerialize());
             if(PeerTypes is not null) bytes.AddRange(PeerTypes.TlSerialize());
@@ -28687,7 +28687,7 @@ namespace SharpGram.Tl.Constructors.WebViewResultNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (QueryId is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Fullsize ? 2 : 0) | (QueryId is not null ? 1 : 0) ).TlSerialize());
             if(QueryId is not null) bytes.AddRange(QueryId.TlSerialize());
             bytes.AddRange(Url.TlSerialize());
             return bytes.ToArray();
@@ -29126,7 +29126,7 @@ namespace SharpGram.Tl.Constructors.MessagesTranscribedAudioNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (TrialRemainsNum is not null ? 2 : 0) | (TrialRemainsUntilDate is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Pending ? 1 : 0) | (TrialRemainsNum is not null ? 2 : 0) | (TrialRemainsUntilDate is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(TranscriptionId.TlSerialize());
             bytes.AddRange(Text.TlSerialize());
             if(TrialRemainsNum is not null) bytes.AddRange(TrialRemainsNum.TlSerialize());
@@ -29204,7 +29204,7 @@ namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Restore ? 1 : 0) | (Upgrade ? 2 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -29292,7 +29292,7 @@ namespace SharpGram.Tl.Constructors.InputStorePaymentPurposeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (AdditionalPeers is not null ? 2 : 0) | (CountriesIso2 is not null ? 4 : 0) | (PrizeDescription is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (OnlyNewSubscribers ? 1 : 0) | (WinnersAreVisible ? 8 : 0) | (AdditionalPeers is not null ? 2 : 0) | (CountriesIso2 is not null ? 4 : 0) | (PrizeDescription is not null ? 16 : 0) ).TlSerialize());
             bytes.AddRange(BoostPeer.TlSerialize());
             if(AdditionalPeers is not null) bytes.AddRange(AdditionalPeers.TlSerialize());
             if(CountriesIso2 is not null) bytes.AddRange(CountriesIso2.TlSerialize());
@@ -29601,7 +29601,7 @@ namespace SharpGram.Tl.Constructors.ChatReactionsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (AllowCustom ? 1 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -29843,7 +29843,7 @@ namespace SharpGram.Tl.Constructors.PremiumSubscriptionOptionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Transaction is not null ? 8 : 0) | (StoreProduct is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Current ? 2 : 0) | (CanPurchaseUpgrade ? 4 : 0) | (Transaction is not null ? 8 : 0) | (StoreProduct is not null ? 1 : 0) ).TlSerialize());
             if(Transaction is not null) bytes.AddRange(Transaction.TlSerialize());
             bytes.AddRange(Months.TlSerialize());
             bytes.AddRange(Currency.TlSerialize());
@@ -29887,7 +29887,7 @@ namespace SharpGram.Tl.Constructors.SendAsPeerNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (PremiumRequired ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             return bytes.ToArray();
         }
@@ -29995,7 +29995,7 @@ namespace SharpGram.Tl.Constructors.UsernameNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Editable ? 1 : 0) | (Active ? 2 : 0) ).TlSerialize());
             bytes.AddRange(UsernameInner.TlSerialize());
             return bytes.ToArray();
         }
@@ -30057,7 +30057,7 @@ namespace SharpGram.Tl.Constructors.ForumTopicNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (IconEmojiId is not null ? 1 : 0) | (Draft is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (My ? 2 : 0) | (Closed ? 4 : 0) | (Pinned ? 8 : 0) | (Short ? 32 : 0) | (Hidden ? 64 : 0) | (IconEmojiId is not null ? 1 : 0) | (Draft is not null ? 16 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             bytes.AddRange(Title.TlSerialize());
@@ -30136,7 +30136,7 @@ namespace SharpGram.Tl.Constructors.MessagesForumTopicsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (OrderByCreateDate ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Count.TlSerialize());
             bytes.AddRange(Topics.TlSerialize());
             bytes.AddRange(Messages.TlSerialize());
@@ -30226,7 +30226,7 @@ namespace SharpGram.Tl.Constructors.RequestPeerTypeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Bot ? 1 : 0) | (Premium ? 2 : 0) ).TlSerialize());
             return bytes.ToArray();
         }
 
@@ -30252,7 +30252,7 @@ namespace SharpGram.Tl.Constructors.RequestPeerTypeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (UserAdminRights is not null ? 2 : 0) | (BotAdminRights is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Creator ? 1 : 0) | (BotParticipant ? 32 : 0) | (HasUsername ? 8 : 0) | (Forum ? 16 : 0) | (UserAdminRights is not null ? 2 : 0) | (BotAdminRights is not null ? 4 : 0) ).TlSerialize());
             if(UserAdminRights is not null) bytes.AddRange(UserAdminRights.TlSerialize());
             if(BotAdminRights is not null) bytes.AddRange(BotAdminRights.TlSerialize());
             return bytes.ToArray();
@@ -30286,7 +30286,7 @@ namespace SharpGram.Tl.Constructors.RequestPeerTypeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (UserAdminRights is not null ? 2 : 0) | (BotAdminRights is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Creator ? 1 : 0) | (HasUsername ? 8 : 0) | (UserAdminRights is not null ? 2 : 0) | (BotAdminRights is not null ? 4 : 0) ).TlSerialize());
             if(UserAdminRights is not null) bytes.AddRange(UserAdminRights.TlSerialize());
             if(BotAdminRights is not null) bytes.AddRange(BotAdminRights.TlSerialize());
             return bytes.ToArray();
@@ -30519,7 +30519,7 @@ namespace SharpGram.Tl.Constructors.AutoSaveSettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (VideoMaxSize is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Photos ? 1 : 0) | (Videos ? 2 : 0) | (VideoMaxSize is not null ? 4 : 0) ).TlSerialize());
             if(VideoMaxSize is not null) bytes.AddRange(VideoMaxSize.TlSerialize());
             return bytes.ToArray();
         }
@@ -30772,7 +30772,7 @@ namespace SharpGram.Tl.Constructors.MessagesBotAppNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Inactive ? 1 : 0) | (RequestWriteAccess ? 2 : 0) | (HasSettings ? 4 : 0) ).TlSerialize());
             bytes.AddRange(App.TlSerialize());
             return bytes.ToArray();
         }
@@ -31171,7 +31171,7 @@ namespace SharpGram.Tl.Constructors.StoryViewsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (ForwardsCount is not null ? 4 : 0) | (Reactions is not null ? 8 : 0) | (ReactionsCount is not null ? 16 : 0) | (RecentViewers is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (HasViewers ? 2 : 0) | (ForwardsCount is not null ? 4 : 0) | (Reactions is not null ? 8 : 0) | (ReactionsCount is not null ? 16 : 0) | (RecentViewers is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(ViewsCount.TlSerialize());
             if(ForwardsCount is not null) bytes.AddRange(ForwardsCount.TlSerialize());
             if(Reactions is not null) bytes.AddRange(Reactions.TlSerialize());
@@ -31228,7 +31228,7 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (CloseFriends ? 256 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             bytes.AddRange(ExpireDate.TlSerialize());
@@ -31275,7 +31275,7 @@ namespace SharpGram.Tl.Constructors.StoryItemNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FromId is not null ? 262144 : 0) | (FwdFrom is not null ? 131072 : 0) | (Caption is not null ? 1 : 0) | (Entities is not null ? 2 : 0) | (MediaAreas is not null ? 16384 : 0) | (Privacy is not null ? 4 : 0) | (Views is not null ? 8 : 0) | (SentReaction is not null ? 32768 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Pinned ? 32 : 0) | (Public ? 128 : 0) | (CloseFriends ? 256 : 0) | (Min ? 512 : 0) | (Noforwards ? 1024 : 0) | (Edited ? 2048 : 0) | (Contacts ? 4096 : 0) | (SelectedContacts ? 8192 : 0) | (Out ? 65536 : 0) | (FromId is not null ? 262144 : 0) | (FwdFrom is not null ? 131072 : 0) | (Caption is not null ? 1 : 0) | (Entities is not null ? 2 : 0) | (MediaAreas is not null ? 16384 : 0) | (Privacy is not null ? 4 : 0) | (Views is not null ? 8 : 0) | (SentReaction is not null ? 32768 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             if(FromId is not null) bytes.AddRange(FromId.TlSerialize());
@@ -31376,7 +31376,7 @@ namespace SharpGram.Tl.Constructors.StoriesAllStoriesNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (HasMore ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Count.TlSerialize());
             bytes.AddRange(State.TlSerialize());
             bytes.AddRange(PeerStories.TlSerialize());
@@ -31459,7 +31459,7 @@ namespace SharpGram.Tl.Constructors.StoryViewNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Reaction is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Blocked ? 1 : 0) | (BlockedMyStoriesFrom ? 2 : 0) | (Reaction is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(UserId.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             if(Reaction is not null) bytes.AddRange(Reaction.TlSerialize());
@@ -31489,7 +31489,7 @@ namespace SharpGram.Tl.Constructors.StoryViewNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Blocked ? 1 : 0) | (BlockedMyStoriesFrom ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Message.TlSerialize());
             return bytes.ToArray();
         }
@@ -31514,7 +31514,7 @@ namespace SharpGram.Tl.Constructors.StoryViewNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Blocked ? 1 : 0) | (BlockedMyStoriesFrom ? 2 : 0) ).TlSerialize());
             bytes.AddRange(PeerId.TlSerialize());
             bytes.AddRange(Story.TlSerialize());
             return bytes.ToArray();
@@ -31878,7 +31878,7 @@ namespace SharpGram.Tl.Constructors.MediaAreaNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Dark ? 1 : 0) | (Flipped ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Coordinates.TlSerialize());
             bytes.AddRange(Reaction.TlSerialize());
             return bytes.ToArray();
@@ -32124,7 +32124,7 @@ namespace SharpGram.Tl.Constructors.PaymentsCheckedGiftCodeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (FromId is not null ? 16 : 0) | (GiveawayMsgId is not null ? 8 : 0) | (ToId is not null ? 1 : 0) | (UsedDate is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ViaGiveaway ? 4 : 0) | (FromId is not null ? 16 : 0) | (GiveawayMsgId is not null ? 8 : 0) | (ToId is not null ? 1 : 0) | (UsedDate is not null ? 2 : 0) ).TlSerialize());
             if(FromId is not null) bytes.AddRange(FromId.TlSerialize());
             if(GiveawayMsgId is not null) bytes.AddRange(GiveawayMsgId.TlSerialize());
             if(ToId is not null) bytes.AddRange(ToId.TlSerialize());
@@ -32175,7 +32175,7 @@ namespace SharpGram.Tl.Constructors.PaymentsGiveawayInfoNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (JoinedTooEarlyDate is not null ? 2 : 0) | (AdminDisallowedChatId is not null ? 4 : 0) | (DisallowedCountry is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Participating ? 1 : 0) | (PreparingResults ? 8 : 0) | (JoinedTooEarlyDate is not null ? 2 : 0) | (AdminDisallowedChatId is not null ? 4 : 0) | (DisallowedCountry is not null ? 16 : 0) ).TlSerialize());
             bytes.AddRange(StartDate.TlSerialize());
             if(JoinedTooEarlyDate is not null) bytes.AddRange(JoinedTooEarlyDate.TlSerialize());
             if(AdminDisallowedChatId is not null) bytes.AddRange(AdminDisallowedChatId.TlSerialize());
@@ -32213,7 +32213,7 @@ namespace SharpGram.Tl.Constructors.PaymentsGiveawayInfoNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (GiftCodeSlug is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Winner ? 1 : 0) | (Refunded ? 2 : 0) | (GiftCodeSlug is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(StartDate.TlSerialize());
             if(GiftCodeSlug is not null) bytes.AddRange(GiftCodeSlug.TlSerialize());
             bytes.AddRange(FinishDate.TlSerialize());
@@ -32296,7 +32296,7 @@ namespace SharpGram.Tl.Constructors.BoostNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (UserId is not null ? 1 : 0) | (GiveawayMsgId is not null ? 4 : 0) | (UsedGiftSlug is not null ? 16 : 0) | (Multiplier is not null ? 32 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Gift ? 2 : 0) | (Giveaway ? 4 : 0) | (Unclaimed ? 8 : 0) | (UserId is not null ? 1 : 0) | (GiveawayMsgId is not null ? 4 : 0) | (UsedGiftSlug is not null ? 16 : 0) | (Multiplier is not null ? 32 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             if(UserId is not null) bytes.AddRange(UserId.TlSerialize());
             if(GiveawayMsgId is not null) bytes.AddRange(GiveawayMsgId.TlSerialize());
@@ -32459,7 +32459,7 @@ namespace SharpGram.Tl.Constructors.PremiumBoostsStatusNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (GiftBoosts is not null ? 16 : 0) | (NextLevelBoosts is not null ? 1 : 0) | (PremiumAudience is not null ? 2 : 0) | (PrepaidGiveaways is not null ? 8 : 0) | (MyBoostSlots is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (MyBoost ? 4 : 0) | (GiftBoosts is not null ? 16 : 0) | (NextLevelBoosts is not null ? 1 : 0) | (PremiumAudience is not null ? 2 : 0) | (PrepaidGiveaways is not null ? 8 : 0) | (MyBoostSlots is not null ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Level.TlSerialize());
             bytes.AddRange(CurrentLevelBoosts.TlSerialize());
             bytes.AddRange(Boosts.TlSerialize());
@@ -32512,7 +32512,7 @@ namespace SharpGram.Tl.Constructors.StoryFwdHeaderNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (From is not null ? 1 : 0) | (FromName is not null ? 2 : 0) | (StoryId is not null ? 4 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Modified ? 8 : 0) | (From is not null ? 1 : 0) | (FromName is not null ? 2 : 0) | (StoryId is not null ? 4 : 0) ).TlSerialize());
             if(From is not null) bytes.AddRange(From.TlSerialize());
             if(FromName is not null) bytes.AddRange(FromName.TlSerialize());
             if(StoryId is not null) bytes.AddRange(StoryId.TlSerialize());
@@ -32793,7 +32793,7 @@ namespace SharpGram.Tl.Constructors.HelpPeerColorOptionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Colors is not null ? 2 : 0) | (DarkColors is not null ? 4 : 0) | (ChannelMinLevel is not null ? 8 : 0) | (GroupMinLevel is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Hidden ? 1 : 0) | (Colors is not null ? 2 : 0) | (DarkColors is not null ? 4 : 0) | (ChannelMinLevel is not null ? 8 : 0) | (GroupMinLevel is not null ? 16 : 0) ).TlSerialize());
             bytes.AddRange(ColorId.TlSerialize());
             if(Colors is not null) bytes.AddRange(Colors.TlSerialize());
             if(DarkColors is not null) bytes.AddRange(DarkColors.TlSerialize());
@@ -32983,7 +32983,7 @@ namespace SharpGram.Tl.Constructors.SavedDialogNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Pinned ? 4 : 0) ).TlSerialize());
             bytes.AddRange(Peer.TlSerialize());
             bytes.AddRange(TopMessage.TlSerialize());
             return bytes.ToArray();
@@ -33225,7 +33225,7 @@ namespace SharpGram.Tl.Constructors.SmsjobsStatusNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (LastGiftSlug is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (AllowInternational ? 1 : 0) | (LastGiftSlug is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(RecentSent.TlSerialize());
             bytes.AddRange(RecentSince.TlSerialize());
             bytes.AddRange(RecentRemains.TlSerialize());
@@ -33327,7 +33327,7 @@ namespace SharpGram.Tl.Constructors.BusinessWorkHoursNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (OpenNow ? 1 : 0) ).TlSerialize());
             bytes.AddRange(TimezoneId.TlSerialize());
             bytes.AddRange(WeeklyOpen.TlSerialize());
             return bytes.ToArray();
@@ -33389,7 +33389,7 @@ namespace SharpGram.Tl.Constructors.InputBusinessRecipientsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Users is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ExistingChats ? 1 : 0) | (NewChats ? 2 : 0) | (Contacts ? 4 : 0) | (NonContacts ? 8 : 0) | (ExcludeSelected ? 32 : 0) | (Users is not null ? 16 : 0) ).TlSerialize());
             if(Users is not null) bytes.AddRange(Users.TlSerialize());
             return bytes.ToArray();
         }
@@ -33428,7 +33428,7 @@ namespace SharpGram.Tl.Constructors.BusinessRecipientsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Users is not null ? 16 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ExistingChats ? 1 : 0) | (NewChats ? 2 : 0) | (Contacts ? 4 : 0) | (NonContacts ? 8 : 0) | (ExcludeSelected ? 32 : 0) | (Users is not null ? 16 : 0) ).TlSerialize());
             if(Users is not null) bytes.AddRange(Users.TlSerialize());
             return bytes.ToArray();
         }
@@ -33579,7 +33579,7 @@ namespace SharpGram.Tl.Constructors.InputBusinessAwayMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (OfflineOnly ? 1 : 0) ).TlSerialize());
             bytes.AddRange(ShortcutId.TlSerialize());
             bytes.AddRange(Schedule.TlSerialize());
             bytes.AddRange(Recipients.TlSerialize());
@@ -33614,7 +33614,7 @@ namespace SharpGram.Tl.Constructors.BusinessAwayMessageNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (OfflineOnly ? 1 : 0) ).TlSerialize());
             bytes.AddRange(ShortcutId.TlSerialize());
             bytes.AddRange(Schedule.TlSerialize());
             bytes.AddRange(Recipients.TlSerialize());
@@ -33840,7 +33840,7 @@ namespace SharpGram.Tl.Constructors.ConnectedBotNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (CanReply ? 1 : 0) ).TlSerialize());
             bytes.AddRange(BotId.TlSerialize());
             bytes.AddRange(Recipients.TlSerialize());
             return bytes.ToArray();
@@ -33896,7 +33896,7 @@ namespace SharpGram.Tl.Constructors.MessagesDialogFiltersNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (TagsEnabled ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Filters.TlSerialize());
             return bytes.ToArray();
         }
@@ -33959,7 +33959,7 @@ namespace SharpGram.Tl.Constructors.BotBusinessConnectionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (CanReply ? 1 : 0) | (Disabled ? 2 : 0) ).TlSerialize());
             bytes.AddRange(ConnectionId.TlSerialize());
             bytes.AddRange(UserId.TlSerialize());
             bytes.AddRange(DcId.TlSerialize());
@@ -34174,7 +34174,7 @@ namespace SharpGram.Tl.Constructors.InputBusinessBotRecipientsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Users is not null ? 16 : 0) | (ExcludeUsers is not null ? 64 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ExistingChats ? 1 : 0) | (NewChats ? 2 : 0) | (Contacts ? 4 : 0) | (NonContacts ? 8 : 0) | (ExcludeSelected ? 32 : 0) | (Users is not null ? 16 : 0) | (ExcludeUsers is not null ? 64 : 0) ).TlSerialize());
             if(Users is not null) bytes.AddRange(Users.TlSerialize());
             if(ExcludeUsers is not null) bytes.AddRange(ExcludeUsers.TlSerialize());
             return bytes.ToArray();
@@ -34217,7 +34217,7 @@ namespace SharpGram.Tl.Constructors.BusinessBotRecipientsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Users is not null ? 16 : 0) | (ExcludeUsers is not null ? 64 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (ExistingChats ? 1 : 0) | (NewChats ? 2 : 0) | (Contacts ? 4 : 0) | (NonContacts ? 8 : 0) | (ExcludeSelected ? 32 : 0) | (Users is not null ? 16 : 0) | (ExcludeUsers is not null ? 64 : 0) ).TlSerialize());
             if(Users is not null) bytes.AddRange(Users.TlSerialize());
             if(ExcludeUsers is not null) bytes.AddRange(ExcludeUsers.TlSerialize());
             return bytes.ToArray();
@@ -34308,7 +34308,7 @@ namespace SharpGram.Tl.Constructors.MissingInviteeNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (PremiumWouldAllowInvite ? 1 : 0) | (PremiumRequiredForPm ? 2 : 0) ).TlSerialize());
             bytes.AddRange(UserId.TlSerialize());
             return bytes.ToArray();
         }
@@ -34767,7 +34767,7 @@ namespace SharpGram.Tl.Constructors.BroadcastRevenueTransactionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (TransactionDate is not null ? 2 : 0) | (TransactionUrl is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Pending ? 1 : 0) | (Failed ? 4 : 0) | (TransactionDate is not null ? 2 : 0) | (TransactionUrl is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Amount.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
             bytes.AddRange(Provider.TlSerialize());
@@ -34893,7 +34893,7 @@ namespace SharpGram.Tl.Constructors.ReactionsNotifySettingsNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (MessagesNotifyFrom is not null ? 1 : 0) | (StoriesNotifyFrom is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (MessagesNotifyFrom is not null ? 1 : 0) | (StoriesNotifyFrom is not null ? 2 : 0) | (ShowPreviews ? 0 : 0) ).TlSerialize());
             if(MessagesNotifyFrom is not null) bytes.AddRange(MessagesNotifyFrom.TlSerialize());
             if(StoriesNotifyFrom is not null) bytes.AddRange(StoriesNotifyFrom.TlSerialize());
             bytes.AddRange(Sound.TlSerialize());
@@ -34960,7 +34960,7 @@ namespace SharpGram.Tl.Constructors.AvailableEffectNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (StaticIconId is not null ? 1 : 0) | (EffectAnimationId is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (PremiumRequired ? 4 : 0) | (StaticIconId is not null ? 1 : 0) | (EffectAnimationId is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Emoticon.TlSerialize());
             if(StaticIconId is not null) bytes.AddRange(StaticIconId.TlSerialize());
@@ -35045,7 +35045,7 @@ namespace SharpGram.Tl.Constructors.FactCheckNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Country is not null ? 2 : 0) | (Text is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (NeedCheck ? 1 : 0) | (Country is not null ? 2 : 0) | (Text is not null ? 2 : 0) ).TlSerialize());
             if(Country is not null) bytes.AddRange(Country.TlSerialize());
             if(Text is not null) bytes.AddRange(Text.TlSerialize());
             bytes.AddRange(Hash.TlSerialize());
@@ -35187,7 +35187,7 @@ namespace SharpGram.Tl.Constructors.StarsTopupOptionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (StoreProduct is not null ? 1 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Extended ? 2 : 0) | (StoreProduct is not null ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Stars.TlSerialize());
             if(StoreProduct is not null) bytes.AddRange(StoreProduct.TlSerialize());
             bytes.AddRange(Currency.TlSerialize());
@@ -35236,7 +35236,7 @@ namespace SharpGram.Tl.Constructors.StarsTransactionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (Title is not null ? 1 : 0) | (Description is not null ? 2 : 0) | (Photo is not null ? 4 : 0) | (TransactionDate is not null ? 32 : 0) | (TransactionUrl is not null ? 32 : 0) | (BotPayload is not null ? 128 : 0) | (MsgId is not null ? 256 : 0) | (ExtendedMedia is not null ? 512 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (Refund ? 8 : 0) | (Pending ? 16 : 0) | (Failed ? 64 : 0) | (Title is not null ? 1 : 0) | (Description is not null ? 2 : 0) | (Photo is not null ? 4 : 0) | (TransactionDate is not null ? 32 : 0) | (TransactionUrl is not null ? 32 : 0) | (BotPayload is not null ? 128 : 0) | (MsgId is not null ? 256 : 0) | (ExtendedMedia is not null ? 512 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             bytes.AddRange(Stars.TlSerialize());
             bytes.AddRange(Date.TlSerialize());
@@ -35445,7 +35445,7 @@ namespace SharpGram.Tl.Constructors.StarsRevenueStatusNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange((0 | (NextWithdrawalAt is not null ? 2 : 0) ).TlSerialize());
+            bytes.AddRange((0 | (WithdrawalEnabled ? 1 : 0) | (NextWithdrawalAt is not null ? 2 : 0) ).TlSerialize());
             bytes.AddRange(CurrentBalance.TlSerialize());
             bytes.AddRange(AvailableBalance.TlSerialize());
             bytes.AddRange(OverallRevenue.TlSerialize());
@@ -35555,7 +35555,7 @@ namespace SharpGram.Tl.Constructors.InputStarsTransactionNs {
         public new byte[] TlSerialize() {
             List<byte> bytes = [];
             bytes.AddRange(Identifier);
-            bytes.AddRange(0.TlSerialize());
+            bytes.AddRange((0 | (Refund ? 1 : 0) ).TlSerialize());
             bytes.AddRange(Id.TlSerialize());
             return bytes.ToArray();
         }
