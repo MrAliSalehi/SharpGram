@@ -1,5 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using SharpGram.Client;
+using SharpGram.Tl.Constructors.UpdatesStateNs;
+using SharpGram.Tl.Functions.Updates;
 
 var cts = new CancellationTokenSource();
 var secrets = (dynamic)JObject.Parse(await File.ReadAllTextAsync("devSecrets.json"));
@@ -31,7 +33,16 @@ if (result.TryPickT1(out var err, out _))
 
 if (client.IsAuthorized(out var writer))
 {
-    Console.WriteLine("we are authorized");
+    var t = await client.InvokeAsync(new UpdatesGetState());
+    if (t.TryPickT1(out var e, out var updateBase))
+    {
+        Console.WriteLine($"err:{e}");
+        return;
+    }
+    var state = (UpdatesState)updateBase;
+
+
+    await File.WriteAllBytesAsync("testSession", client.Session.Save());
     return;
 }
 
@@ -53,9 +64,7 @@ if (authResult.TryPickT1(out var authErr, out _))
 Console.WriteLine("press any key");
 Console.ReadKey();
 
-var data = client.Session.Save();
-
-await File.WriteAllBytesAsync("testSession", data);
+await File.WriteAllBytesAsync("testSession", client.Session.Save());
 
 await cts.CancelAsync();
 cts.Dispose();

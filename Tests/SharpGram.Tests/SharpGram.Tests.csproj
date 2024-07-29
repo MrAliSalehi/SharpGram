@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Src\SharpGram.Client\SharpGram.Client.csproj" />
       <ProjectReference Include="..\..\Src\SharpGram.Core\SharpGram.Core.csproj" />
     </ItemGroup>
 
