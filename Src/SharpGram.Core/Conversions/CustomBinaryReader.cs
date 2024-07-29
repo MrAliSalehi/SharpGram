@@ -36,7 +36,7 @@ public class CustomBinaryReader
         Buffer[Position..(Position + data.Length)].CopyTo(data);
         Position += data.Length;
     }
-    private OneOf<byte, None> ReadOneByte()
+    public OneOf<byte, None> ReadOneByte()
     {
         if (Position >= Buffer.Length) return StaticData.None;
         var b = Buffer[Position];
@@ -84,7 +84,7 @@ public class CustomBinaryReader
     public byte[] ReadStrAsBytes()
     {
         var tryFirst = ReadOneByte();
-        if (tryFirst.IsT1) return Array.Empty<byte>();
+        if (tryFirst.IsT1) return [];
         var first = tryFirst.AsT0;
 
         int len, padding;

@@ -4,10 +4,10 @@ namespace SharpGram.Core.Models.Types;
 
 public readonly struct Int128 : IEquatable<Int128>
 {
-    private int Int1 {get; init;}
-    private int Int2 {get; init;}
-    private int Int3 {get; init;}
-    private int Int4 {get; init;}
+    internal int Int1 {get; init;}
+    internal int Int2 {get; init;}
+    internal int Int3 {get; init;}
+    internal int Int4 {get; init;}
     public Int128() { }
 
     public static Int128 GenerateRandom() => FromBytes(Helpers.GenRandomBytes(16));

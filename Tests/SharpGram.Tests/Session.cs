@@ -43,6 +43,15 @@ public class Session
 
         //FutureSalts
         loadedSession.ConnectionSession.FutureSalts.SequenceEqual(session.ConnectionSession.FutureSalts).Should().BeTrue();
+
+        //is authorized
+        loadedSession.ConnectionSession.AuthKey = Core.Cryptography.AuthKey.Empty;
+        loadedSession.ConnectionSession.IsAuthorized().Should().BeFalse();
+
+        //reset
+
+        loadedSession.ConnectionSession.Reset();
+        loadedSession.ConnectionSession.AuthKey.Should().BeEquivalentTo(Core.Cryptography.AuthKey.Empty);
     }
 
     [Test]
