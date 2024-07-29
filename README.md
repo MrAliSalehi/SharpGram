@@ -25,7 +25,7 @@ there are a lot of `//TODO` comments everywhere in project. I'll mention the imp
 - [ ] update handling.
 - [ ] Proper logging (allow users to choose between log levels and the ability to have any log implementation they want, e.x serilog, nlog...etc.).
 - [ ] writing more unit tests for the project.
-- [ ] Proper session implementation. (currently its just plain normal json... which is not very awesome). it can be more flexible and generic, so it can be stored anywhere with ease.
+- [ ] Proper session implementation. (currently its just plain normal json... which is not very awesome). it can be more flexible and generic, so it can be stored anywhere with ease. and maybe it can automatically sync its state without needing the user to manually `Save()` it.
 - [ ] handling more errors and making the library more resilient.
 - [ ] custom reconnection and retry policies (allow uses to check their own condition to decide if they want to retry/reconnect on different cases).
 - [ ] more abstractions for the Client in general.
@@ -35,6 +35,7 @@ there are a lot of `//TODO` comments everywhere in project. I'll mention the imp
 - [ ] multi account management.
 - [ ] writing a better generator. (at the beginning it was written with source-generator but due to its limitations around `File` and `HttpClient` it was refactored into normal console app.) currently the schema has to be updated manually and be deployed with the core library, which isn't very optimal.
 - [ ] add build and test actions on GitHub.
+- [ ] enabling AOT (there shouldn't be much todo, it just needs a review and enabling it in the config).
 ## Credits
 
 writing this project was a great (and hard) journey for me, but it could not be achieved alone.
