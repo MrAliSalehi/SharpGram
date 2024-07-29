@@ -111,9 +111,14 @@ public class AuthConnection : IConnection
     }
     private int GetSequenceNumber(bool content)
     {
-        if (!content) return ConnectionSession.Sequence;
-        ConnectionSession.Sequence += 2;
-        return ConnectionSession.Sequence - 1;
+        var seq = ConnectionSession.Sequence;
+        if (content)
+        {
+            seq |= 1;
+            ConnectionSession.Sequence += 2;
+        }
+
+        return seq;
     }
     private void CheckContent(Message msg)
     {

@@ -2,12 +2,12 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using SharpGram.Client.Models;
 using SharpGram.Core.Common;
 using SharpGram.Core.Cryptography;
 using SharpGram.Core.Mtproto;
 using SharpGram.Tl.Constructors.ConfigNs;
 using SharpGram.Tl.Constructors.DcOptionNs;
-using SharpGram.Tl.Constructors.UserNs;
 using SharpGram.Tl.Mtproto;
 
 namespace SharpGram.Client;
@@ -25,10 +25,17 @@ public sealed class TelegramSession
     public string Phone { get; set; } = "-";
     public ushort MaxConnectionRetries { get; set; } = 3;
     public string? TwoFactorPassword { get; set; }
+
     public Config Config { get; internal set; } = new() { DcOptions = [], DcTxtDomainName = "", MeUrlPrefix = "" };
+
+    [JsonInclude, JsonRequired]
     public ClientOptions ClientOptions { get; set; } = new();
-    public DcOption? CurrentDc { get; set; }
-    public User? User { get; set; }
+
+    [JsonInclude, JsonRequired]
+    public DcOption? CurrentDc { get; internal set; }
+
+    [JsonInclude, JsonRequired]
+    public CompactUser? User { get; internal set; }
 
     private static readonly JsonTypeInfo<TelegramSession> DefOption = SessionSerializerContext.Default.TelegramSession;
     [JsonInclude, JsonRequired] internal ConnectionSessionPoco ConnSessionPoco = default!;
@@ -43,6 +50,7 @@ public sealed class TelegramSession
         }
         catch
         {
+            Console.WriteLine("failed to deserialize the session");
             return new TelegramSession();
         }
     }
@@ -58,7 +66,7 @@ public sealed class TelegramSession
             return CurrentDc;
 
         var dcId = ClientOptions.IsLocalServer ? 3 : ClientOptions.IsTest ? 2 : 1;
-       return StaticData.DcList.FirstOrDefault(p => p.Key == dcId && !p.Value.Ipv6).Value;
+        return StaticData.DcList.FirstOrDefault(p => p.Key == dcId && !p.Value.Ipv6).Value;
     }
 }
 

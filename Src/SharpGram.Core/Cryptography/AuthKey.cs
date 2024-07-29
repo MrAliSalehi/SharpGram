@@ -5,7 +5,7 @@ using SharpGram.Core.Conversions;
 
 namespace SharpGram.Core.Cryptography;
 
-public sealed class AuthKey : ITlSerializable, ITlDeserializable<AuthKey>
+public sealed class AuthKey : ITlSerializable, ITlDeserializable<AuthKey>, IEquatable<AuthKey>
 {
     //256
     public required byte[] AuthKeyData { get; init; }
@@ -59,4 +59,12 @@ public sealed class AuthKey : ITlSerializable, ITlDeserializable<AuthKey>
             KeyId = keyId
         };
     }
+    public bool Equals(AuthKey? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return AuthKeyData.SequenceEqual(other.AuthKeyData) && AuxHash.SequenceEqual(other.AuxHash) && KeyId.SequenceEqual(other.KeyId);
+    }
+    public override bool Equals(object? obj) => ReferenceEquals(this, obj) || obj is AuthKey other && Equals(other);
+    public override int GetHashCode() => HashCode.Combine(AuthKeyData, AuxHash, KeyId);
 }

@@ -18,12 +18,13 @@ public sealed class TcpConnection<TConnection, TTransport> : IDisposable
     private readonly SemaphoreSlim _lockWrite = new(1);
     private TcpClient TcpClient { get; init; } = default!;
     private IPEndPoint? EndPoint { get; init; }
+    public DcOption? Dc { get; init; }
     internal TConnection Connection { get; private init; } = default!;
     private TTransport Transport { get; init; } = default!;
     private readonly byte[] _lenBuff = new byte[4];
-    public TcpConnection<AuthConnection, TTransport> IntoAuthenticated(AuthConnection conn)
+    public TcpConnection<AuthConnection, TTransport> IntoAuthenticated(AuthConnection conn, DcOption? dc = null)
     {
-        return New(null, Transport, TcpClient, conn).AsT0; //already connected to socket so its safe to cast
+        return New(dc, Transport, TcpClient, conn).AsT0; //already connected to socket so its safe to cast
     }
 
     /// this is ugly AF
@@ -51,6 +52,7 @@ public sealed class TcpConnection<TConnection, TTransport> : IDisposable
             EndPoint = endpoint,
             Transport = tr ?? new T2(),
             Connection = conn ?? new T1(),
+            Dc = dc
         };
     }
 

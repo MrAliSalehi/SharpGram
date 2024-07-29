@@ -44,22 +44,27 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
         if (tryCreateAuthKey.TryPickT1(out var ea, out var con))
             return ea;
 
-        var authorizedConnection = new AuthConnection { ConnectionSession = Session.ConnectionSession };
-
-        _requestManager = new NetworkManager<Intermediate>(authorizedConnection, con);
+        _requestManager = new NetworkManager<Intermediate>(con);
 
         await _requestManager.RunAsync(ct);
+        await _requestManager.GetSaltsAsync(ct);
+        if (Session.User is not null)
+            return StaticData.Success;
 
-        var initConn = await InvokeAsync(new InitConnection<ConfigBase>
+        //first time
+        var initConn = await InvokeAsync(new InvokeWithLayer<ConfigBase>
         {
-            ApiId = Session.ApiId,
-            DeviceModel = Session.ClientOptions.DeviceModel,
-            SystemVersion = Session.ClientOptions.SystemVersion,
-            AppVersion = Session.ClientOptions.AppVersion,
-            SystemLangCode = Session.ClientOptions.SystemLangCode,
-            LangCode = Session.ClientOptions.LangCode,
-            LangPack = Session.ClientOptions.LangPack,
-            Query = new HelpGetConfig()
+            Query = new InitConnection<ConfigBase>
+            {
+                ApiId = Session.ApiId,
+                DeviceModel = Session.ClientOptions.DeviceModel,
+                SystemVersion = Session.ClientOptions.SystemVersion,
+                AppVersion = Session.ClientOptions.AppVersion,
+                SystemLangCode = Session.ClientOptions.SystemLangCode,
+                LangCode = Session.ClientOptions.LangCode,
+                LangPack = Session.ClientOptions.LangPack,
+                Query = new HelpGetConfig()
+            }
         });
 
         if (initConn.TryPickT1(out var er, out var init))
@@ -67,12 +72,10 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
         Session.Config = (Config)init; //the only possibility
 
-        if (Session.User is null)
-        {
-            var tryGetMe = await InvokeAsync(new UsersGetUsers { Id = [new InputUserSelf()] });
-            if (tryGetMe.TryPickT0(out var me, out _))
-                Session.User = me.InnerList.OfType<User>().First();
-        }
+        var tryGetMe = await InvokeAsync(new UsersGetUsers { Id = [new InputUserSelf()] });
+        if (tryGetMe.TryPickT0(out var me, out _))
+            Session.User = me.InnerList.OfType<User>().First();
+
 
         return StaticData.Success;
     }
@@ -209,18 +212,28 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
     }
     public async Task<OneOf<TRet, ErrorBase>> InvokeAsync<TRet>(TlFunction<TRet> request) where TRet : ITlDeserializable<TRet>
     {
-        TlFunction<TRet> func;
+        var func = request;
 
-        if (Session.ConnectionSession.IgnoreUpdates && request is not InitConnection<TRet>)
+        if (Session.ConnectionSession.IgnoreUpdates && request is not InvokeWithLayer<TRet>)
             func = new InvokeWithoutUpdates<TRet> { Query = request };
-        else
-            func = new InvokeWithLayer<TRet> { Query = request };
 
         //TODO reconnection policy
         retry:
 
         var reader = _requestManager.Push(func.TlSerialize().ToArray());
-        await reader.WaitToReadAsync(ct);
+
+        var cts = new CancellationTokenSource();
+        cts.CancelAfter(TimeSpan.FromSeconds(5));
+        try
+        {
+            await reader.WaitToReadAsync(cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            Console.WriteLine($"timeout for request with response of [{typeof(TRet)}]");
+            return ConnectionError.New(ConnectionErrType.Timeout);
+        }
+
         var response = await reader.ReadAsync(ct);
 
         if (response.TryPickT0(out var data, out var err))
@@ -257,13 +270,14 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
         return err;
     }
-    private async ValueTask<OneOf<TcpConnection<UnAuthConnection, Intermediate>, ErrorBase>> CreateAuthKeyAsync()
+    private async ValueTask<OneOf<TcpConnection<AuthConnection, Intermediate>, ErrorBase>> CreateAuthKeyAsync()
     {
         var dc = Session.GetDc();
-        TcpConnection<UnAuthConnection, Intermediate> con;
+        TcpConnection<AuthConnection, Intermediate> con;
+        var authConnection = new AuthConnection { ConnectionSession = Session.ConnectionSession };
         if (Session.ConnectionSession.IsAuthorized())
         {
-            var tryConnect = TcpConnection<UnAuthConnection, Intermediate>.New<UnAuthConnection, Intermediate>(dc);
+            var tryConnect = TcpConnection<AuthConnection, Intermediate>.New<AuthConnection, Intermediate>(dc, conn: authConnection);
             if (tryConnect.TryPickT1(out var e, out con))
                 return e;
         }
@@ -276,8 +290,8 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
             var result = await auth.AuthorizeAsync();
             var authKey = AuthKey.FromBytes(result.AuthKey);
-            con = auth.GetConnection();
-
+            var unAuthCon = auth.GetConnection();
+            con = unAuthCon.IntoAuthenticated(authConnection, dc);
             Session.ConnectionSession.AuthKey = authKey;
             Session.ConnectionSession.FutureSalts = [FutureSalt.New(result.Salt)];
             Session.ConnectionSession.TimeOffsetSeconds = result.Offset;

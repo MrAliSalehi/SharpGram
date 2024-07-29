@@ -23,7 +23,7 @@ public sealed class RpcError : ErrorBase
         rp.Msg = msg.ParseRpcErr();
         return rp;
     }
-    public override string ToString() => Msg.ToStringFast();
+    public override string ToString() => RawMessage;
 }
 
 //TODO add more errors

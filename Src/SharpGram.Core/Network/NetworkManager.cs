@@ -16,12 +16,12 @@ using ResultChannel = System.Threading.Channels.Channel<OneOf.OneOf<byte[], Shar
 
 namespace SharpGram.Core.Network;
 
-public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthConnection, T> tcpConnection) : IDisposable
+public sealed class NetworkManager<T>(TcpConnection<AuthConnection, T> t) : IDisposable
     where T : ITransport, new()
 {
     //TODO this is stupid as well, ig the whole "Event" thing needs to be changed...
     private static readonly object Sender = "NetworkManager";
-    private TcpConnection<AuthConnection, T> Tcp { get; set; } = tcpConnection.IntoAuthenticated(comm);
+    private TcpConnection<AuthConnection, T> Tcp { get; set; } = t;
     private BlockingCollection<Request> RequestQueue { get; set; } = [];
     private readonly ConcurrentDictionary<MsgId, ResultChannel> _resultChannels = [];
     private readonly SemaphoreSlim _pushLock = new(1);
@@ -35,7 +35,7 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
         _handles[0] = Task.Run(async () => await RunListenerAsync(ct), ct);
         _handles[1] = Task.Run(async () => await RunSenderAsync(ct), ct);
         //don't need the extra noise while debugging
-#if DEBUG
+#if RELEASE
         _handles[2] = Task.Run(async () => await AckHandlerAsync(ct), ct);
         await SaltHandlerAsync(ct);
         await PingHandlerAsync(ct);
@@ -49,6 +49,21 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
         _pushLock.Release();
         return rp.Reader;
     }
+    public async Task GetSaltsAsync(CancellationToken ct)
+    {
+        Console.WriteLine("asking for salts...");
+        var getSalt = new GetFutureSalts { Num = 1 }.TlSerialize();
+        var reader = Push(getSalt, true, ct);
+        await reader.WaitToReadAsync(ct);
+
+        if ((await reader.ReadAsync(ct)).TryPickT1(out var e, out var result))
+            throw e;
+
+        var futureSalts = FutureSalts.TlDeserialize(Deserializer.New(result));
+        Console.WriteLine($"[{futureSalts.ReqMsgId}] fetched some new Salts ({futureSalts.Now}): {futureSalts}");
+        Tcp.Connection.ConnectionSession.FutureSalts.Clear();
+        Tcp.Connection.ConnectionSession.FutureSalts.AddRange(futureSalts.Salts);
+    }
     private async Task RunListenerAsync(CancellationToken ct)
     {
         while (!ct.IsCancellationRequested)
@@ -57,11 +72,11 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
             var response = await Tcp.ReadFullAsync(ct);
             if (response.TryPickT1(out var err, out var deserialization)) //if failed
             {
+                Console.WriteLine($"reading rpc failed: [{err}]");
                 //TODO retry instead of failing all the channels
                 foreach (var (_, c) in _resultChannels)
                 {
                     await c.Writer.WriteAsync(err, ct);
-                    c.Writer.Complete();
                 }
 
                 _resultChannels.Clear();
@@ -134,18 +149,7 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
         await AsyncObservable.Timer(TimeSpan.FromSeconds(6), every).SubscribeAsync(async _ =>
         {
             if (!Tcp.Connection.ConnectionSession.IsAuthorized()) return;
-            Console.WriteLine("asking for salts...");
-            var getSalt = new GetFutureSalts { Num = 1 }.TlSerialize();
-            var reader = Push(getSalt, true, ct);
-            await reader.WaitToReadAsync(ct);
-
-            if ((await reader.ReadAsync(ct)).TryPickT1(out var e, out var result))
-                throw e;
-
-            var futureSalts = FutureSalts.TlDeserialize(Deserializer.New(result));
-            Console.WriteLine($"[{futureSalts.ReqMsgId}] fetched some new Salts ({futureSalts.Now}): {futureSalts}");
-            Tcp.Connection.ConnectionSession.FutureSalts.Clear();
-            Tcp.Connection.ConnectionSession.FutureSalts.AddRange(futureSalts.Salts);
+            await GetSaltsAsync(ct);
         });
     }
     private async Task PingHandlerAsync(CancellationToken ct)
@@ -169,7 +173,6 @@ public sealed class NetworkManager<T>(AuthConnection comm, TcpConnection<UnAuthC
     public void Dispose()
     {
         _pushLock.Dispose();
-        tcpConnection.Dispose();
         Tcp.Dispose();
         RequestQueue.Dispose();
         foreach (var handle in _handles)
