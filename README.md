@@ -3,10 +3,10 @@
 > #### Telegram [Mtproto](https://core.telegram.org/mtproto) Library written in C#
 
 ***
-*this is an opinion(around code design not mtproto itself) based implementation mainly
-focused on features and alongside with code best practices.*
+*this is an opinion-based(around code design not mtproto itself) implementation mainly
+focusing on the features alongside with code best practices.*
 
-*it should not bring extra complexity to the projects and allow developers to focus and business logic rather than dealing with
+*it should not bring extra complexity to the projects and allow developers to focus on business logic rather than dealing with
 implementation details around mtproto*
 
 **this library does not focus on being the backend for GUI clients and creating apps for normal users;
@@ -15,13 +15,14 @@ the main focus of this library is creating automated tasks and user bots.**
 ***
 ## Use
 
-~~this project is on [nuget](https://www.nuget.org/packages/SharpGram/)~~ temporally unlisted, BUT it's not ready to be used in the real world, yet.
+this project is on [nuget](https://www.nuget.org/packages/SharpGram/), BUT it's not stable and ready to be used in the real world, yet.
 and there are no documentations yet.
 
 ## Todo list
 
 there are a lot of `//TODO` comments everywhere in project. I'll mention the important ones here.
 
+- [ ] writing documentation, preferably a static website.
 - [ ] update handling.
 - [ ] Proper logging (allow users to choose between log levels and the ability to have any log implementation they want, e.x serilog, nlog...etc.).
 - [ ] writing more unit tests for the project.
