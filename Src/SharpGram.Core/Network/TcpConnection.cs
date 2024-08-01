@@ -107,15 +107,6 @@ public sealed class TcpConnection<TConnection, TTransport> : IDisposable
         return id.AsT0; //shouldn't fail
     }
 
-    public async Task WriteUnsafeAsync(byte[] b) => await TcpClient.GetStream().WriteAsync(b);
-    public async Task<byte[]> ReadUnsafeAsync()
-    {
-        var b = new byte[1204];
-        var r = await TcpClient.GetStream().ReadAsync(b);
-        if (b.Length > r)
-            Array.Resize(ref b, r);
-        return b;
-    }
     public bool IsConnected() => TcpClient.Connected;
 
     public void Dispose() => TcpClient.Dispose();

@@ -87,7 +87,7 @@ public sealed class Deserializer : IDeserializer<int>, IDeserializer<uint>, IDes
     byte[] IDeserializer<byte[]>.Read()
     {
         var tryFirst = ReadOneByte();
-        if (tryFirst.IsT1) return Array.Empty<byte>();
+        if (tryFirst.IsT1) return [];
         var first = tryFirst.AsT0;
 
         int len, padding;

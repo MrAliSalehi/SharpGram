@@ -9,11 +9,12 @@
         <Description>Telegram Client(Mtproto) Library</Description>
         <Copyright>Apache-2.0</Copyright>
         <PackageProjectUrl>https://github.com/MrAliSalehi/SharpGram</PackageProjectUrl>
-        <Version>1.0.0</Version>
+        <Version>1.0.1</Version>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
         <PackageId>SharpGram</PackageId>
+        <PackageTags>Mtproto;Telegram;TelegramClient;TelegramLibrary</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

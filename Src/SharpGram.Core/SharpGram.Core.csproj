@@ -6,6 +6,15 @@
         <Nullable>enable</Nullable>
         <IsAotCompatible>true</IsAotCompatible>
         <RootNamespace>SharpGram.Core</RootNamespace>
+        <Authors>Qwxp</Authors>
+        <Description>The Core Implementation for Sharpgram</Description>
+        <Copyright>Apache-2.0</Copyright>
+        <PackageProjectUrl>https://github.com/MrAliSalehi/SharpGram</PackageProjectUrl>
+        <Version>1.0.1</Version>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageLicenseFile>LICENSE</PackageLicenseFile>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <PackageTags>Mtproto;Telegram;TelegramClient;TelegramLibrary</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>
@@ -13,6 +22,11 @@
         <PackageReference Include="System.IO.Hashing" Version="8.0.0"/>
         <PackageReference Include="NetEscapades.EnumGenerators" Version="1.0.0-beta08" PrivateAssets="all" ExcludeAssets="runtime"/>
         <PackageReference Include="System.Reactive.Async" Version="6.0.0-alpha.18"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="../../LICENSE" Pack="true" PackagePath="/"/>
+        <None Include="README.md" Pack="true" PackagePath="/"/>
     </ItemGroup>
 
 </Project>
