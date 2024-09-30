@@ -25,4 +25,14 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test -p:CollectCoverage=true -p:CoverletOutput=.github/tests/ -p:CoverletOutputFormat=opencover --no-build --verbosity normal
+    - name: Create Test Coverage Badge
+      uses: simon-k/dotnet-code-coverage-badge@v1.0.0
+      id: create_coverage_badge
+      with:
+        label: Unit Test Coverage
+        color: brightgreen
+        path: ../../.github/tests/coverage.opencover.xml
+        gist-filename: sharpgram-coverage.json
+        gist-id: 7e37706c2cdef28ee452cd83721f6a3c
+        gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}  
