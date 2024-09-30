@@ -68,7 +68,6 @@ public sealed class NetworkManager<T>(TcpConnection<AuthConnection, T> t) : IDis
     {
         while (!ct.IsCancellationRequested)
         {
-            Console.WriteLine("listening");
             var response = await Tcp.ReadFullAsync(ct);
             if (response.TryPickT1(out var err, out var deserialization)) //if failed
             {

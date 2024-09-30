@@ -210,15 +210,13 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
 
         return StaticData.Success;
     }
-    public async Task<OneOf<TRet, ErrorBase>> InvokeAsync<TRet>(TlFunction<TRet> request) where TRet : ITlDeserializable<TRet>
+
+    private async Task<OneOf<TRet, ErrorBase>> InvokeInternalAsync<TRet>(TlFunction<TRet> request) where TRet : ITlDeserializable<TRet>
     {
         var func = request;
 
         if (Session.ConnectionSession.IgnoreUpdates && request is not InvokeWithLayer<TRet>)
             func = new InvokeWithoutUpdates<TRet> { Query = request };
-
-        //TODO reconnection policy
-        retry:
 
         var reader = _requestManager.Push(func.TlSerialize().ToArray());
 
@@ -239,37 +237,49 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
         if (response.TryPickT0(out var data, out var err))
             return func.DeserializeResponse(Deserializer.New(data));
 
-        Console.WriteLine($"err : {err}");
-
         //TODO handle errors
         if (err.Is(TransportErrType.RetryRequest))
         {
-            Console.WriteLine("retrying the request");
             if (ct.IsCancellationRequested)
                 return err;
-            goto retry; //TODO perhaps there is no need of this
+            return RetryError.Retry();
         }
 
         if (err.Is(RpcErrorTypes.Migrate))
         {
-            Console.WriteLine("migration requested...changing the dc");
-            var rpcErr = (RpcError)err;
-            var dcToMigrate = rpcErr.Value;
-            if (Session.Config.ThisDc == dcToMigrate)
-                throw new FatalException("the requested dc and currentDc are the same, this should not happen");
-            var targetDc = Session.Config.DcOptions.OfType<DcOption>().FirstOrDefault(p => p.Id == dcToMigrate && !p.Ipv6);
-            Session.ConnectionSession.Reset();
-            Session.CurrentDc = targetDc;
-
-            _requestManager.Dispose();
-
-            await ConnectAsync();
-
-            goto retry;
+            await RequestMigrationAsync(((RpcError)err).Value);
+            return RetryError.RetryMigrate();
         }
 
         return err;
     }
+    public async Task<OneOf<TRet, ErrorBase>> InvokeAsync<TRet>(TlFunction<TRet> request) where TRet : ITlDeserializable<TRet>
+    {
+        for (uint retryCount = 0;; retryCount++)
+        {
+            var result = await InvokeInternalAsync(request);
+            if (result.TryPickT0(out var success, out var err))
+                return success;
+
+            //migrate err has to be retried
+            if (err.Is(RetryErrType.MigrationRetry))
+                continue;
+
+            //if the error is not the library's responsibility to handle
+            if (!err.Is(ConnectionErrType.Timeout) && !err.Is(RetryErrType.Retry))
+                return err;
+
+            //if there is not retryPolicy
+            if (ts.RetryPolicy is null)
+                return err;
+
+            var retryPolicyResult = await ts.RetryPolicy.ShouldRetryAsync(this, request, retryCount);
+            if (!retryPolicyResult.ShouldRetry)
+                return err;
+            await Task.Delay(retryPolicyResult.Delay);
+        }
+    }
+
     private async ValueTask<OneOf<TcpConnection<AuthConnection, Intermediate>, ErrorBase>> CreateAuthKeyAsync()
     {
         var dc = Session.GetDc();
@@ -300,6 +310,19 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
         return con;
     }
 
+    private async Task RequestMigrationAsync(uint dcToMigrate)
+    {
+        Console.WriteLine("migration requested...changing the dc");
+        if (Session.Config.ThisDc == dcToMigrate)
+            throw new FatalException("the requested dc and currentDc are the same, this should not happen");
+
+        var targetDc = Session.Config.DcOptions.OfType<DcOption>().FirstOrDefault(p => p.Id == dcToMigrate && !p.Ipv6);
+        Session.ConnectionSession.Reset();
+        Session.CurrentDc = targetDc;
+        _requestManager.Dispose();
+
+        await ConnectAsync();
+    }
     public void Dispose()
     {
         _requestManager.Dispose();

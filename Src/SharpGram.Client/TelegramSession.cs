@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.Json.Serialization.Metadata;
+using SharpGram.Client.Contracts;
 using SharpGram.Client.Models;
 using SharpGram.Core.Common;
 using SharpGram.Core.Cryptography;
@@ -36,6 +37,9 @@ public sealed class TelegramSession
 
     [JsonInclude, JsonRequired]
     public CompactUser? User { get; internal set; }
+
+    [JsonInclude, JsonRequired]
+    public IRetryPolicy? RetryPolicy { get; set; }
 
     private static readonly JsonTypeInfo<TelegramSession> DefOption = SessionSerializerContext.Default.TelegramSession;
     [JsonInclude, JsonRequired] internal ConnectionSessionPoco ConnSessionPoco = default!;
