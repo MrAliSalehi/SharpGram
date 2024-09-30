@@ -1,3 +1,5 @@
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/mralisalehi/7e37706c2cdef28ee452cd83721f6a3c/raw/sharpgram-coverage.json)
+
 # SharpGram
 
 > #### Telegram [Mtproto](https://core.telegram.org/mtproto) Library written in C#
