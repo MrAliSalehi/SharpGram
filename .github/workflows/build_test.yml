@@ -32,7 +32,7 @@ jobs:
       with:
         label: Unit Test Coverage
         color: brightgreen
-        path: SharpGram.Tests/testResult/coverage.opencover.xml
+        path: Tests/SharpGram.Tests/testResult/coverage.opencover.xml
         gist-filename: sharpgram-coverage.json
         gist-id: 7e37706c2cdef28ee452cd83721f6a3c
         gist-auth-token: ${{ secrets.GIST_AUTH_TOKEN }}  
