@@ -23,9 +23,9 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore -p:DeterministicSourcePaths=false -p:DebugType=pdbonly
     - name: Test
-      run: dotnet test -p:CollectCoverage=true -p:CoverletOutput=testResult/ -p:CoverletOutputFormat=opencover --verbosity normal
+      run: dotnet test -p:CollectCoverage=true -p:CoverletOutput=testResult/ -p:CoverletOutputFormat=opencover --verbosity normal --no-build
     - name: Create Test Coverage Badge
       uses: simon-k/dotnet-code-coverage-badge@v1.0.0
       id: create_coverage_badge
