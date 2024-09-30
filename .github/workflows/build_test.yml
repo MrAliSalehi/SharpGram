@@ -25,12 +25,12 @@ jobs:
     - name: Build
       run: dotnet build --no-restore -p:DeterministicSourcePaths=false -p:DebugType=pdbonly
     - name: Test
-      run: dotnet test -p:CollectCoverage=true -p:CoverletOutput=testResult/ -p:CoverletOutputFormat=opencover --verbosity normal --no-build
+      run: dotnet test  -p:CollectCoverage=true -p:CoverletOutput=testResult/ -p:CoverletOutputFormat=opencover --no-build -p:Exclude=[*]*tests?*%2c[*]SharpGram.Tl.*%2c[*]SharpGram.Models.* -p:ExcludeByFile="*.g.*" -p:Include=[SharpGram.Client]*%2c[SharpGram.Core]*
     - name: Create Test Coverage Badge
       uses: simon-k/dotnet-code-coverage-badge@v1.0.0
       id: create_coverage_badge
       with:
-        label: Unit Test Coverage
+        label: Test Coverage
         color: brightgreen
         path: Tests/SharpGram.Tests/testResult/coverage.opencover.xml
         gist-filename: sharpgram-coverage.json
