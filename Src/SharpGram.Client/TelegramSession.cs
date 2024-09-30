@@ -54,7 +54,7 @@ public sealed class TelegramSession
         }
         catch
         {
-            Console.WriteLine("failed to deserialize the session");
+            //Console.WriteLine("failed to deserialize the session");
             return new TelegramSession();
         }
     }
