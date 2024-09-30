@@ -270,10 +270,10 @@ public sealed class TelegramClient(TelegramSession ts, CancellationToken ct = de
                 return err;
 
             //if there is not retryPolicy
-            if (ts.RetryPolicy is null)
+            if (Session.RetryPolicy is null)
                 return err;
 
-            var retryPolicyResult = await ts.RetryPolicy.ShouldRetryAsync(this, request, retryCount);
+            var retryPolicyResult = await Session.RetryPolicy.ShouldRetryAsync(this, request, retryCount);
             if (!retryPolicyResult.ShouldRetry)
                 return err;
             await Task.Delay(retryPolicyResult.Delay);
